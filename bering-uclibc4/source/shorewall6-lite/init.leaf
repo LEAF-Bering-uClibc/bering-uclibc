@@ -1,0 +1,88 @@
+#!/bin/sh
+
+
+RCDLINKS="2,S19 3,S19 4,S19 5,S19 0,K91 6,K91"
+SRWL=/sbin/shorewall6-lite
+WAIT_FOR_IFUP=/usr/share/shorewall6-lite/wait4ifup
+
+# parse the shorewall params file in order to use params in
+# /etc/default/shorewall
+
+if [ -f "/etc/default/shorewall6-init" ]
+then
+	. /etc/default/shorewall6-init
+fi
+
+[ "$INITLOG" = "/dev/null" ] && SHOREWALL_INIT_SCRIPT=1 || SHOREWALL_INIT_SCRIPT=0
+
+export SHOREWALL_INIT_SCRIPT
+
+# wait for an unconfigured interface 
+wait_for_pppd () {
+	if [ "$wait_interface" != "" ]
+	then
+           if [ -f $WAIT_FOR_IFUP ]
+           then
+		for i in $wait_interface
+		do
+			$WAIT_FOR_IFUP $i 60
+		done
+           else
+               echo "$WAIT_FOR_IFUP: File not found"
+               exit 2
+           fi
+	fi
+}
+
+# start the firewall
+shorewall6_start () {
+  echo -n "Starting \"Shorewall6 firewall\": "
+  wait_for_pppd
+  $SRWL $OPTIONS start 2>&1 && echo "done."
+  return 0
+}
+
+# stop the firewall
+shorewall6_stop () {
+  echo -n "Stopping \"Shorewall6 firewall\": "
+  if [ "$SAFESTOP" = 1 ]; then
+  $SRWL $OPTIONS stop 2>&1 && echo "done."
+  else
+  $SRWL $OPTIONS clear 2>&1 && echo "done."
+  fi      
+  return 0
+}
+
+# restart the firewall
+shorewall6_restart () {
+  echo -n "Restarting \"Shorewall6 firewall\": "
+  $SRWL $OPTIONS start 2>&1 && echo "done."
+  return 0
+}
+
+# refresh the firewall
+shorewall6_refresh () {
+  echo -n "Refreshing \"Shorewall6 firewall\": "
+  $SRWL refresh 2>&1 && echo "done."
+  return 0
+}
+
+case "$1" in
+  start)
+     shorewall6_start
+     ;;
+  stop)
+     shorewall6_stop
+     ;;
+  refresh)
+     shorewall6_refresh
+     ;;
+  force-reload|restart)
+     shorewall6_restart
+     ;;
+  *)
+     echo "Usage: /etc/init.d/shorewall6-lite {start|stop|refresh|restart|force-reload}"
+     exit 1
+esac
+
+exit 0

@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# Start the RAID monitor daemon for all active md arrays if desired.
+#
+# Copyright (c) 2001-2004 Mario Jou/3en <joussen@debian.org>
+# Distributable under the terms of the GNU GPL version 2.
+RCDLINKS="2,S25 3,S25 4,S25 5,S25 0,K25 1,K25 6,K25"
+
+MDADM=/sbin/mdadm
+DEBIANCONFIG=/etc/default/mdadm
+PIDFILE=/var/run/mdadm.pid
+
+test -x $MDADM || exit 0
+
+test -f /proc/mdstat || exit 0
+
+START_DAEMON=true
+test -f $DEBIANCONFIG && . $DEBIANCONFIG
+
+case "$1" in
+    start)
+        if [ "x$START_DAEMON" = "xtrue" ] ; then
+            echo -n "Starting RAID monitor daemon: mdadm --monitor"
+            start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $MDADM -- \
+			--monitor --pid-file $PIDFILE --daemonise --scan
+            echo "."
+        fi
+        ;;
+    stop)
+        if [ -f $PIDFILE ] ; then
+            echo -n "Stopping RAID monitor daemon: mdadm --monitor"
+            start-stop-daemon --stop --quiet --pidfile $PIDFILE --exec $MDADM
+            rm -f $PIDFILE
+            echo "."
+        fi
+        ;;
+    restart|reload|force-reload)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+        exit 1
+        ;;
+esac
+
+exit 0

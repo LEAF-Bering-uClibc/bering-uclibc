@@ -1,0 +1,45 @@
+#! /bin/sh
+# /etc/init.d/upsd: start snmp daemon.
+RCDLINKS="2,S55 3,S55 4,S55 5,S55 0,K55 1,K55 6,K55"
+
+test -x /usr/sbin/upsd || exit 0
+
+# Read our control file.
+. /etc/default/upsmon
+
+UPSMONCONF=/etc/nut/upsd.conf
+# if there are no config file, bail out
+[ -f $UPSMONCONF ] || exit 0
+
+# Cd to / before starting any daemons.
+cd /
+
+case "$1" in
+  start)
+    if [ "$UPSMONRUN" = "yes" -a -f $UPSMONCONF ]; then
+        echo -n "NUT Starting UPS monitor:"
+	/usr/sbin/upsmon -u $NUTUSER
+        echo "."
+    fi
+    ;;
+  stop)
+    echo -n "NUT Stopping UPS monitor:"
+    /usr/sbin/upsmon -c stop
+    echo -n " upsmon"
+    echo "."
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  reload|force-reload)
+    echo -n "NUT Reloading config files:"
+    /usr/sbin/upsmon -c reload
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/upsd {start|stop|restart|reload|force-reload}"
+    exit 1
+esac
+
+exit 0

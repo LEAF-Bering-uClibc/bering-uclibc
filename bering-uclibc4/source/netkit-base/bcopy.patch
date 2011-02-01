@@ -1,0 +1,31 @@
+diff -aur netkit-base.orig/inetd/builtins.c netkit-base/inetd/builtins.c
+--- netkit-base.orig/inetd/builtins.c	2001-01-29 04:03:20.000000000 +0200
++++ netkit-base/inetd/builtins.c	2010-03-23 16:10:42.000000000 +0200
+@@ -226,10 +226,10 @@
+ 	text[LINESIZ + 1] = '\n';
+ 	for (rs = ring;;) {
+ 		if ((len = endring - rs) >= LINESIZ)
+-			bcopy(rs, text, LINESIZ);
++			memmove(text, rs, LINESIZ);
+ 		else {
+-			bcopy(rs, text, len);
+-			bcopy(ring, text + len, LINESIZ - len);
++			memmove(text, rs, len);
++			memmove(text + len, ring, LINESIZ - len);
+ 		}
+ 		if (++rs == endring)
+ 			rs = ring;
+@@ -273,10 +273,10 @@
+ 		return;
+ 
+ 	if ((len = endring - rs) >= LINESIZ)
+-		bcopy(rs, text, LINESIZ);
++		memmove(text, rs, LINESIZ);
+ 	else {
+-		bcopy(rs, text, len);
+-		bcopy(ring, text + len, LINESIZ - len);
++		memmove(text, rs, len);
++		memmove(text + len, ring, LINESIZ - len);
+ 	}
+ 	if (++rs == endring)
+ 		rs = ring;

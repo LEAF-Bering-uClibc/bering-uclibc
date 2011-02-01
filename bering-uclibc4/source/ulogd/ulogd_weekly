@@ -1,0 +1,10 @@
+#!/bin/sh
+# Save weekly LOGDEPTH versions of ulogd status file 
+LOGDEPTH=4
+# status file name
+LOGFILE=/var/log/ulogd.log
+
+if [ -f $LOGFILE ]; then
+	savelog -g wheel -m 640 -u root -c $LOGDEPTH $LOGFILE >/dev/null
+	/etc/init.d/ulogd reload
+fi

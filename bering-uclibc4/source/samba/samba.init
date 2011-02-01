@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# Start/stops the Samba daemons (nmbd and smbd).
+#
+# $Id: samba.init,v 1.1 2010/09/18 15:33:44 nitr0man Exp $
+#
+RCDLINKS="0,K19 1,K19 2,S20 3,S20 4,S20 5,S20 6,K19"
+
+NMBDPID=/var/run/nmbd.pid
+SMBDPID=/var/run/smbd.pid
+
+# clear conflicting settings from the environment
+unset TMPDIR
+
+# See if the daemons are there
+test -x /usr/sbin/nmbd -a -x /usr/sbin/smbd || exit 0
+
+case "$1" in
+	start)
+		echo -n "Starting Samba daemons:"
+		
+		echo -n " nmbd"
+		start-stop-daemon --start --quiet --exec /usr/sbin/nmbd -- -D
+
+		echo -n " smbd"
+		start-stop-daemon --start --quiet --exec /usr/sbin/smbd -- -D
+
+		echo "."
+		;;
+	stop)
+		echo -n "Stopping Samba daemons:"
+
+		echo -n " nmbd"
+		start-stop-daemon --stop --quiet --pidfile $NMBDPID
+		sleep 1
+		# remove stale PID file
+		[ -f $NMBDPID ] && rm -f $NMBDPID
+
+		echo -n " smbd"
+		start-stop-daemon --stop --quiet --pidfile $SMBDPID
+		sleep 1
+		# remove stale PID file
+		[ -f $SMBDPID ] && rm -f $SMBDPID
+
+		echo "."
+		;;
+	reload)
+		echo -n "Reloading /etc/samba/smb.conf (smbd only)"
+		start-stop-daemon --stop --signal 1 --pidfile $SMBDPID
+
+		echo "."
+		;;
+	restart|force-reload)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	*)
+		echo "Usage: /etc/init.d/samba {start|stop|reload|restart|force-reload}"
+		exit 1
+		;;
+esac
+
+exit 0

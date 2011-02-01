@@ -1,0 +1,12 @@
+diff -urN openntpd-3.9p1.orig/ntpd.h openntpd-3.9p1/ntpd.h
+--- openntpd-3.9p1.orig/ntpd.h	2006-05-14 07:29:21.000000000 +0200
++++ openntpd-3.9p1/ntpd.h	2006-09-05 17:19:22.000000000 +0200
+@@ -31,7 +31,7 @@
+ #include "ntp.h"
+ 
+ #ifndef NTPD_USER
+-#define	NTPD_USER	"_ntp"
++#define	NTPD_USER	"root"
+ #endif
+ #define	CONFFILE	SYSCONFDIR "/ntpd.conf"
+ 

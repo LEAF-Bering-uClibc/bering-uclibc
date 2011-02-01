@@ -1,0 +1,12 @@
+diff -aur aiccu.orig/unix-console/Makefile aiccu/unix-console/Makefile
+--- aiccu.orig/unix-console/Makefile	2010-07-07 02:06:04.000000000 +0300
++++ aiccu/unix-console/Makefile	2010-07-07 02:06:45.963457362 +0300
+@@ -29,7 +29,7 @@
+ 
+ #CFLAGS	+= $(CWARNS) -D_GNU_SOURCE -D_DEBUG -g3 -O0
+ CFLAGS	+= $(CWARNS) -D_GNU_SOURCE
+-CC      = @gcc
++CC      ?= @gcc
+ RM      = rm
+ 
+ # Add -O3 when nothing is specified yet

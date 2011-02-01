@@ -1,0 +1,55 @@
+#! /bin/sh
+# /etc/init.d/upsd: start snmp daemon.
+RCDLINKS="2,S50 3,S50 4,S50 5,S50 0,K50 1,K50 6,K50"
+
+test -x /usr/sbin/upsd || exit 0
+
+# Read our control file.
+. /etc/default/upsd
+
+UPSDCONF=/etc/nut/upsd.conf
+UPSCONF=/etc/nut/ups.conf
+# if there are no config file, bail out
+[ -f $UPSDCONF ] && [ -f $UPSCONF ] || exit 0
+
+# Cd to / before starting any daemons.
+cd /
+
+case "$1" in
+  start)
+    if [ "$UPSDRUN" = "yes" -a -f /etc/nut/upsd.conf ]; then
+        echo -n "NUT Starting UPS model drivers:"
+	start-stop-daemon --user $NUTUSER --quiet --start --exec /usr/bin/upsdrvctl start
+	echo -n " upsdrvctl"
+        if [ $? -eq 0 ]; then
+            echo "."
+	    echo -n "NUT Starting UPS daemon: "
+	    # starting ase nut user
+	    start-stop-daemon --user $NUTUSER --quiet --start --exec /usr/sbin/upsd
+	fi
+        echo "."
+    fi
+    ;;
+  stop)
+    echo -n "NUT Stopping UPS daemon:"
+    /usr/sbin/upsd -c stop
+    echo -n " upsd"
+    /usr/bin/upsdrvctl stop
+    echo -n " upsdrvctl"
+    echo "."
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  reload|force-reload)
+    echo -n "NUT Reloading config files:"
+    upsd -c reload
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/upsd {start|stop|restart|reload|force-reload}"
+    exit 1
+esac
+
+exit 0

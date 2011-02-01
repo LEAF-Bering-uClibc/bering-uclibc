@@ -1,0 +1,48 @@
+From: Jouni Malinen <jouni.malinen@atheros.com>
+Date: Thu, 12 Mar 2009 19:57:08 +0000 (+0200)
+Subject: Move DTIM period configuration into Beacon set operation
+X-Git-Tag: hostap_0_7_0~455
+X-Git-Url: http://hostap.epitest.fi/gitweb/gitweb.cgi?p=hostap-07.git;a=commitdiff_plain;h=eb1f7446b5b86cceb1508f060f5e66e5dd791a4d
+
+Move DTIM period configuration into Beacon set operation
+
+This is needed to make mac80211 work with multi-BSS configuration. The
+previous design ended up setting DTIM period for secondary BSSes before
+setting the Beacon and driver_nl80211.c was not really prepared for
+that. Eventually, the Beacon configuration routines should be combined
+into a single driver operation, but for now, just moving this call is
+the simplest workaround.
+---
+
+diff --git a/hostapd/beacon.c b/hostapd/beacon.c
+index b7eb86a..8ccfa12 100644
+--- a/hostapd/beacon.c
++++ b/hostapd/beacon.c
+@@ -434,6 +434,10 @@ void ieee802_11_set_beacon(struct hostapd_data *hapd)
+ 	os_free(tail);
+ 	os_free(head);
+ 
++	if (hostapd_set_dtim_period(hapd, hapd->conf->dtim_period))
++		wpa_printf(MSG_ERROR, "Could not set DTIM period for kernel "
++			   "driver");
++
+ 	if (hostapd_set_cts_protect(hapd, cts_protection))
+ 		wpa_printf(MSG_ERROR, "Failed to set CTS protect in kernel "
+ 			   "driver");
+diff --git a/hostapd/hostapd.c b/hostapd/hostapd.c
+index 308d816..8531d0a 100644
+--- a/hostapd/hostapd.c
++++ b/hostapd/hostapd.c
+@@ -1292,12 +1292,6 @@ static int hostapd_setup_bss(struct hostapd_data *hapd, int first)
+ 		return -1;
+ 	}
+ 
+-	if (hostapd_set_dtim_period(hapd, hapd->conf->dtim_period)) {
+-		wpa_printf(MSG_ERROR, "Could not set DTIM period for kernel "
+-			   "driver");
+-		return -1;
+-	}
+-
+ 	/* Set SSID for the kernel driver (to be used in beacon and probe
+ 	 * response frames) */
+ 	if (set_ssid && hostapd_set_ssid(hapd, (u8 *) conf->ssid.ssid,

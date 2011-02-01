@@ -1,0 +1,51 @@
+#! /bin/sh
+# /etc/init.d/modules: loads the appropriate modules
+
+# Editted for LRP -- Dave Cinege
+# Optimized by Eric Wolzak
+
+RCDLINKS="S,S20"
+
+. /etc/modutils.conf
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+
+lsalias () {	for i in $@; do
+		    cat /sys/bus/$i/devices/*/modalias 2>/dev/null;
+		done; }
+
+#kernel=`uname -r`
+#ln -s /lib/modules /lib/modules/$kernel
+
+# Loop over every line in /etc/modules.
+echo 'Loading modules: '
+depmod
+grep ^[a-z0-9A-Z] /etc/modules |
+while read module args
+do
+	modprobe $module $args 2>/dev/null
+	lsmod | grep -n -q ^$module || \
+	logger modutils module $module could not be loaded
+done
+
+#read /etc/modules.d
+cat /etc/modules.d/* 2>/dev/null| grep ^[a-z0-9A-Z] | sed 's/\.ko//' |
+while read module args
+do
+	modprobe $module $args 2>/dev/null
+	lsmod | grep -n -q ^$module || \
+	logger modutils module $module could not be loaded
+done
+
+#autodetection of hardware
+MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
+TMODALIAS=""
+while [ `echo "$MODALIAS"|wc -l` -gt `echo "$TMODALIAS"|wc -l` ]; do
+	for i in $MODALIAS; do
+		/sbin/modprobe $i 2>/dev/null
+	done
+	[ "$VERBOSE" ] && echo Loaded `echo "$MODALIAS"|wc -l` modaliases
+	[ "$DRV_WAIT" -gt 0 ] && sleep $DRV_WAIT
+	TMODALIAS="$MODALIAS"
+	MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
+done

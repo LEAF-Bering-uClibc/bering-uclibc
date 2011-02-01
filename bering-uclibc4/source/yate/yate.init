@@ -1,0 +1,50 @@
+#! /bin/sh
+# /etc/init.d/yate: start and stop YATE Telephony Engine
+
+RCDLINKS="2,S95 3,S95 4,S95 5,S95 0,K11 1,K11 6,K11"
+
+NAME="YATE Telephony Engine"
+YATE=/bin/yate
+PIDFILE=/var/run/yate.pid
+
+test -x $YATE || exit 0
+
+# default options
+LOGFILE="/var/log/yate.log"
+OPTIONS="-d -p $PIDFILE"
+
+# custom config options
+test -f /etc/default/yate && . /etc/default/yate
+
+if test "x$LOGFILE" != "x"; then
+	OPTIONS="-l $LOGFILE $OPTIONS"
+fi
+
+case "$1" in
+  start)
+        echo -n "Starting ${NAME}: "
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $YATE -- $OPTIONS
+	echo "yate."
+	;;
+  stop)
+        echo -n "Stopping ${NAME}: "
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --oknodo
+        # remove stale PID file
+	[ -f $PIDFILE ] && rm -f $PIDFILE
+	echo "yate."
+	;;
+  restart)
+        echo -n "Restarting ${NAME}: "
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --oknodo
+        # remove stale PID file
+	[ -f $PIDFILE ] && rm -f $PIDFILE
+	sleep 2
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $YATE -- $OPTIONS
+	echo "yate."
+	;;
+  *)
+	echo "Usage: /etc/init.d/yate {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

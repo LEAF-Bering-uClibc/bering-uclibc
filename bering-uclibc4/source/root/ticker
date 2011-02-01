@@ -1,0 +1,10 @@
+#!/bin/sh
+trap 'exit' 0 2 5 15
+echo -n " "
+while : ; do
+	for i in \\\\ \| / - ; do
+		echo -e -n "\b$i"
+		sleep 1
+	done
+done
+            

@@ -1,0 +1,13 @@
+#! /bin/sh
+#
+# rmnologin	This script removes the /etc/nologin file as the last
+#		step in the boot process.
+#
+RCDLINKS="2,S99"
+
+. /etc/default/rcS
+
+if [ "$DELAYLOGIN" = yes ] && [ -f /etc/nologin ]
+then
+	rm -f /etc/nologin
+fi

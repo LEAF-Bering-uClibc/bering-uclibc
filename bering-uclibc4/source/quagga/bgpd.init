@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+# /etc/init.d/zebra -- start/stop the Zebra routing daemon
+#
+# Written by Endre Hirling <endre@mail.elte.hu>
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+D_PATH=/usr/sbin
+DAEMON="bgpd"
+
+# Pidfile name
+
+pidfile()
+{
+	echo "/var/run/$1.pid"
+}
+
+# Check if daemon is started (by
+# checking for the pidfile)
+
+started()
+{
+	[ -e `pidfile $1` ] && return 0
+	return 1
+}
+
+
+# Main program #
+
+case "$1" in
+
+# Start daemon if 'start' is given
+
+  start)
+	echo -n "Starting Zebra daemon:"
+	echo -n " $DAEMON"
+	started $DAEMON || start-stop-daemon --start --exec "$D_PATH/$DAEMON" -- -d
+	echo "."
+  ;;
+	
+# Stop daemon at 'stop'
+
+  stop)
+	echo -n "Stopping Zebra daemon:"
+        if ! started "$DAEMON" ; then
+	    echo -n " ($DAEMON)"
+	    return 0
+	else
+	    start-stop-daemon --stop --quiet --oknodo --exec "$D_PATH/$DAEMON"
+	    echo -n " $DAEMON"
+	    rm -f `pidfile $DAEMON`
+	fi
+	echo "."
+    ;;
+
+  restart|force-reload)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/$DAEMON {start|stop|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0

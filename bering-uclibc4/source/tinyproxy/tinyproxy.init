@@ -1,0 +1,48 @@
+#! /bin/sh
+#
+# Tinyproxy init.d script
+# Ed Boraas 1999
+# 
+
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/tinyproxy
+NAME=tinyproxy
+DESC=tinyproxy
+FLAGS=
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --quiet -o --exec $DAEMON -- $FLAGS
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --stop --quiet -o --exec $DAEMON
+	echo "$NAME."
+	;;
+  reload|force-reload)
+	 echo "Reloading $DESC configuration files."
+	 start-stop-daemon --stop --signal 1 --quiet -o --exec $DAEMON
+	;;
+  restart)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --stop --quiet -o --exec $DAEMON
+	sleep 1
+	start-stop-daemon --start --quiet -o --exec $DAEMON -- $FLAGS
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

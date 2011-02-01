@@ -1,0 +1,12 @@
+diff -urN mdadm-2.5.2.orig/util.c mdadm-2.5.2/util.c
+--- mdadm-2.5.2.orig/util.c	2006-06-26 07:10:45.000000000 +0200
++++ mdadm-2.5.2/util.c	2006-07-27 18:24:36.000000000 +0200
+@@ -389,7 +389,7 @@
+ 	return ftw(path, add_dev_1, nopenfd);
+ }
+ #else
+-int add_dev(const char *name, const struct stat *stb, int flag, struct FTW *s)
++int add_dev_1(const char *name, const struct stat *stb, int flag, struct FTW *s)
+ {
+ 	return 0;
+ }

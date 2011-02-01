@@ -1,0 +1,11 @@
+# /etc/hosts.deny: list of hosts that are _not_ allowed to access the system.
+#		   See hosts_access(5) and /usr/doc/net/portmapper.txt
+#
+# Example:    ALL: some.host.name, .some.domain
+#             ALL EXCEPT in.fingerd: other.host.name, .other.domain
+#
+# The PARANOID wildcard matches any host whose name does not match its
+# address.
+#ALL: PARANOID
+# Prevent all access not explicitly allowed in hosts.allow
+ALL: ALL

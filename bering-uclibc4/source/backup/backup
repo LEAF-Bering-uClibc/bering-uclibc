@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. /etc/backup.conf
+
+with_storage $MNT /sbin/backup.sh

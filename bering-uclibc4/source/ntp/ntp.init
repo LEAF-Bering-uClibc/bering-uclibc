@@ -1,0 +1,47 @@
+#! /bin/sh
+# Ntp time server daemon
+
+RCDLINKS="0,K21 1,K21 2,S21 3,S21 4,S21 5,S21 6,K21"
+
+test -f /usr/sbin/ntpd || exit 0
+
+if [ ! -d /var/lib/ntp ]; then
+	mkdir /var/lib/ntp
+	echo "0.0" > /var/lib/ntp/ntp.drift
+fi
+
+if [ ! -d /var/log/ntpstats ]; then
+	mkdir /var/log/ntpstats
+fi
+
+# Include ntp defaults if available
+if [ -r /etc/default/ntp ] ; then
+	. /etc/default/ntp
+fi
+
+case "$1" in
+	start)
+		echo -n "Starting NTP server: ntpd"
+  		start-stop-daemon --start --quiet --exec /usr/sbin/ntpd -- $NTPD_OPTS
+		[ "$NTP_WAIT" == "YES" -a -x /usr/sbin/ntp-wait ] && /usr/sbin/ntp-wait $NTP_WAIT_TIMEOUT
+		echo "."
+  		;;
+	stop)
+		echo -n "Stopping NTP server: ntpd"
+  		start-stop-daemon --stop --quiet --exec /usr/sbin/ntpd
+		echo "."
+  		;;
+	restart|force-reload)
+		echo -n "Restarting NTP server: ntpd... "
+  		start-stop-daemon --stop --quiet --exec /usr/sbin/ntpd
+  		sleep 2
+  		start-stop-daemon --start --quiet --exec /usr/sbin/ntpd -- $NTPD_OPTS
+		echo "done."
+  		;;
+	*)
+  		echo "Usage: /etc/init.d/ntp {start|stop|restart|force-reload}"
+  		exit 1
+		;;
+esac
+
+exit 0

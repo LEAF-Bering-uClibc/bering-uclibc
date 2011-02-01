@@ -1,0 +1,61 @@
+#! /bin/sh
+
+# Modified for use with Siproxd by Dan Weber <dan@mirrorlynx.com>
+# Author:	Miquel van Smoorenburg <miquels@cistron.nl>.
+#		Ian Murdock <imurdock@gnu.ai.mit.edu>.
+#
+#		You may remove the "Author" lines above and replace them
+#		with your own name if you copy and modify this script.
+#
+# Version:	@(#)skeleton  1.9.4  21-Mar-2004  miquels@cistron.nl
+#
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 6,K20 0,K20 1,K20"
+
+set -e
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/siproxd
+NAME=siproxd
+DESC="SIP proxy"
+PIDFILE=/var/run/$NAME/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Gracefully exit if the package has been removed.
+test -x $DAEMON || exit 0
+
+start()
+{
+    echo -n "Starting $DESC: $NAME"
+    start-stop-daemon --start --quiet --pidfile $PIDFILE \
+	 --exec $DAEMON -- -p $PIDFILE
+    echo "."
+}
+
+stop()
+{
+	echo -n "Stopping $DESC: $NAME"
+	if test -e $PIDFILE; then
+	    start-stop-daemon --stop --quiet --pidfile $PIDFILE
+	fi
+	echo "."
+	rm -f $PIDFILE
+}    
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|force-reload)
+	stop
+	start
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

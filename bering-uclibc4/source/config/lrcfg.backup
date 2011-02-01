@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+# Back up the configuration or modules database
+#
+# Linux Router Project - GPL v2
+#
+# Based on work by:
+# Dave Cinege, Charles Steinkuehler, Eric Wolzak
+#
+CWRT=on
+
+. /etc/config.cfg
+
+usage () {
+	cat <<-EOF
+	usage:
+	$(basename $0): { configdb | moddb } [directory]
+EOF
+	exit 1
+}
+
+test $# -lt 1 && usage
+
+STORAGE_MEDIA=${2:-$STORAGE_MEDIA}
+BACKUP_PATH=$(echo $STORAGE_MEDIA | sed -e 's/ .*//')
+MNT=$BACKUP_PATH;	test -d $MNT || usage
+PACKAGE=$1;		test $PACKAGE != "configdb" -a $PACKAGE != "moddb" && usage
+DIR="/tmp"
+
+echo -n "Creating $PACKAGE.lrp Please wait: "
+ticker &
+	cd /
+        if [ $PACKAGE = configdb ] ; then 
+	    /usr/sbin/apkg -o $DIR > /dev/null 2>&1
+        fi
+	if [ $PACKAGE = moddb ] ; then
+	    /usr/sbin/apkg -d $DIR > /dev/null 2>&1
+	fi
+killall ticker >/dev/null 2>&1
+echo -n \
+
+if [ "$CWRT" = "on" ]; then 
+	echo
+	echo "New Package:"
+	ls -l $DIR/$PACKAGE.lrp
+	echo "Old Package:"
+	ls -l $MNT/$PACKAGE.lrp
+	df $MNT
+	echo
+	echo -n "Enough freespace? (y/N) "
+
+	read YN
+
+	if [ ! "$YN" = "y" ]; then 
+		echo "Exiting..."
+		rm $DIR/$PACKAGE.lrp
+		sleep 2
+		exit 1
+	fi
+fi
+		
+echo -n "Copying $PACKAGE.lrp Please wait: "
+ticker & 
+if ! cp $DIR/$PACKAGE.lrp $MNT/$PACKAGE.lrp >/dev/null 2>&1; then
+	echo "Could not move $DIR/$PACKAGE.lrp to $MNT/$PACKAGE.lrp"
+	sleep 2
+	killall ticker >/dev/null 2>&1
+	exit 1
+fi
+killall ticker >/dev/null 2>&1
+echo -n \
+		
+rm $DIR/$PACKAGE.lrp
+
+exit 0

@@ -1,0 +1,9 @@
+0.?
+- remove build dir and use (if needed) internal build dirs in the source directories
+ (like debian does).
+
+0.7:
+- add support for continue building even if a package build failes (can be used
+for automatic/nightly building of all sources)
+- add support for automatically build the packages (call buildpacket)
+

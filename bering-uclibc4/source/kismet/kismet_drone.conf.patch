@@ -1,0 +1,53 @@
+*** kismet_drone.conf.orig	2010-09-27 20:20:28.000000000 +0100
+--- kismet_drone.conf	2010-09-27 20:37:35.000000000 +0100
+***************
+*** 3,9 ****
+  version=newcore.1
+  
+  # Name of drone server (informational)
+! servername=Kismet-Drone
+  
+  # Drone configuration
+  # Protocol, interface, and port to listen on
+--- 3,9 ----
+  version=newcore.1
+  
+  # Name of drone server (informational)
+! servername=LEAF-Drone
+  
+  # Drone configuration
+  # Protocol, interface, and port to listen on
+***************
+*** 16,22 ****
+  droneringlen=65535
+  
+  # Do we have a GPS?
+! gps=true
+  # Do we use a locally serial attached GPS, or use a gpsd server?
+  # (Pick only one)
+  gpstype=gpsd
+--- 16,22 ----
+  droneringlen=65535
+  
+  # Do we have a GPS?
+! gps=false
+  # Do we use a locally serial attached GPS, or use a gpsd server?
+  # (Pick only one)
+  gpstype=gpsd
+***************
+*** 35,41 ****
+  
+  # See the README for full information on the new source format
+  # ncsource=interface:options
+! ncsource=null
+  # for example:
+  # ncsource=wlan0
+  # ncsource=wifi0:type=madwifi
+--- 35,41 ----
+  
+  # See the README for full information on the new source format
+  # ncsource=interface:options
+! ncsource=wlan0
+  # for example:
+  # ncsource=wlan0
+  # ncsource=wifi0:type=madwifi

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo -n "    Press return...";read n;echo

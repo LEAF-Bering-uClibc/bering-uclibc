@@ -1,0 +1,50 @@
+#!/bin/sh
+# /etc/init.d/vsftpd
+#
+# Written by Sander Smeenk <ssmeenk@debian.org>
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+set -e
+
+# Exit if vsftpd.conf doesn't have listen=yes or listen_ipv6=yes
+# (mandatory for standalone operation)
+if [ -f /etc/vsftpd.conf ] && ! egrep -iq "^ *listen(_ipv6)? *= *yes" /etc/vsftpd.conf; then 
+    exit 0
+fi
+
+DAEMON=/usr/sbin/vsftpd
+NAME=vsftpd
+
+test -x $DAEMON || exit 0
+
+[ -d /home/ftp ] || mkdir /home/ftp
+
+case "$1" in
+  start)
+    echo -n "Starting FTP server: $NAME"
+    start-stop-daemon --start --exec $DAEMON
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping FTP server: $NAME"
+    start-stop-daemon --stop --oknodo --exec $DAEMON
+    echo "."
+      ;;
+  restart)
+    echo -n "Restarting FTP server: $NAME"
+    start-stop-daemon --stop --oknodo --exec $DAEMON
+    start-stop-daemon --start --exec $DAEMON
+    echo "."
+    ;;
+  reload|force-reload)
+    echo "Reloading $NAME configuration files"
+    start-stop-daemon --stop --signal 1 --exec $DAEMON
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/$NAME {start|stop|restart|reload}"
+    exit 1
+    ;;
+esac
+
+exit 0

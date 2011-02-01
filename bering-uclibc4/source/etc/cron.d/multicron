@@ -1,0 +1,5 @@
+#Periodic schedule for multicron. (Ping check, Space check, etc)
+#Default: Every 15 minutes
+HOSTNAME=$HOSTNAME
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+*/15	* * * *	root	/etc/multicron-p

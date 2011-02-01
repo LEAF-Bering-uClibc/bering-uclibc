@@ -1,0 +1,18 @@
+#!/bin/bash
+source $BT_BUILDROOT/conf/uname.inc
+OUT_UNM=""
+[ -z "$1" ] && OUT_UNM="Linux"
+for i in $@; do
+   case $i in
+       -s) OUT_UNM="$OUT_UNM Linux";;
+       -n) OUT_UNM="$OUT_UNM $GNU_HOST_NAME";;
+       -i) OUT_UNM="$OUT_UNM $CPU";;
+       -p) OUT_UNM="$OUT_UNM $PLATFORM";;
+       -m) OUT_UNM="$OUT_UNM $ARCH";;
+       -o) OUT_UNM="$OUT_UNM Gnu/Linux";;
+       -r) OUT_UNM="$OUT_UNM $KERN_REL";;
+       -v) OUT_UNM="$OUT_UNM $KERN_VER";;
+       -a) OUT_UNM="$OUT_UNM `uname -s -n -m -r -v -p -i -o`";;
+   esac
+done
+echo $OUT_UNM 

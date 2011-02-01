@@ -1,0 +1,64 @@
+#!/bin/sh
+
+RCDLINKS="0,K41 1,K41 2,S43 3,S43 4,S43 5,S43 6,K41"
+
+test -x /usr/sbin/pppoe-relay || exit 0
+
+IFACES=""
+
+[ -f /etc/default/pppoe-relay ] && . /etc/default/pppoe-relay
+
+ARGS=""
+
+check_arg () {
+	[ -n "$(eval echo \$$2)" ] && ARGS="$ARGS -$1 $(eval echo \$$2)"
+}
+
+if [ -n "$CIFREGEXP" ]; then
+	for i in `ip l | awk '$2 ~ '"/$CIFREGEXP/"'{split($2,A,"(@|:)"); print A[1]}' | sort`; do
+		CIFACES="$CIFACES $i"
+	done
+fi  
+
+check_arg i TIMEOUT
+check_arg S SIFACE
+check_arg n SESSIONS
+
+for i in $CIFACES; do
+	ARGS="$ARGS -C $i"
+done
+
+for i in $BIFACES; do
+	ARGS="$ARGS -B $i"
+done
+
+
+case "$1" in
+  start)
+    echo -n "Starting PPPoE relay daemon... "
+    if start-stop-daemon --start --quiet --exec /usr/sbin/pppoe-relay -- $ARGS ; then
+	echo "."
+    else
+	echo "failed!"
+    fi
+    ;;
+  stop)
+    echo -n "Stopping PPPoE relay daemon... "
+    if start-stop-daemon --stop --quiet --oknodo --exec /usr/sbin/pppoe-relay
+    then
+      echo "."
+    else
+      echo "failed!"
+    fi
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

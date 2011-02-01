@@ -1,0 +1,13 @@
+# ISP login script
+# What follows is OK for PAP/CHAP ISP's
+# Adjust to your taste
+REPORT CONNECT
+ABORT "BUSY"
+ABORT "NO CARRIER"
+ABORT "VOICE"
+ABORT "NO DIALTONE" 
+ABORT "NO ANSWER"
+"" ATZ
+# ISP telephone number: 1245678
+OK ATDT12345678
+CONNECT "" 

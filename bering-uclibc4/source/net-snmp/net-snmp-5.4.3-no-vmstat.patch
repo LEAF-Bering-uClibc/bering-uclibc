@@ -1,0 +1,56 @@
+diff -aur orig/agent/mibgroup/hardware/cpu/cpu_linux.c net-snmp-5.4.3/agent/mibgroup/hardware/cpu/cpu_linux.c
+--- orig/agent/mibgroup/hardware/cpu/cpu_linux.c.orig	2009-03-18 12:52:30.000000000 +0200
++++ net-snmp-5.4.3/agent/mibgroup/hardware/cpu/cpu_linux.c	2010-07-22 21:45:10.801705510 +0300
+@@ -199,7 +199,7 @@
+     static int   has_vmstat = 1;
+     static char *vmbuff  = NULL;
+     static int   vmbsize = 0;
+-    static int   first   = 1;
++    static int   first   = 0;
+     int          bytes_read, vmstatfd;
+     char        *b;
+     unsigned long long pin, pout, swpin, swpout;
+diff -aur orig/agent/mibgroup/ucd-snmp/vmstat_linux.c net-snmp-5.4.3/agent/mibgroup/ucd-snmp/vmstat_linux.c
+--- orig/agent/mibgroup/ucd-snmp/vmstat_linux.c	2006-09-15 03:48:50.000000000 +0300
++++ net-snmp-5.4.3/agent/mibgroup/ucd-snmp/vmstat_linux.c	2010-03-25 22:03:54.000000000 +0200
+@@ -281,32 +281,32 @@
+ 	if (b)
+ 	    sscanf(b, "pgpgin %u", pin);
+ 	else {
+-	    if (first)
+-		snmp_log(LOG_ERR, "No pgpgin line in %s\n", VMSTAT_FILE);
++//	    if (first)
++//		snmp_log(LOG_ERR, "No pgpgin line in %s\n", VMSTAT_FILE);
+ 	    *pin = 0;
+ 	}
+ 	b = strstr(vmbuff, "pgpgout ");
+ 	if (b)
+ 	    sscanf(b, "pgpgout %u", pout);
+ 	else {
+-	    if (first)
+-		snmp_log(LOG_ERR, "No pgpgout line in %s\n", VMSTAT_FILE);
++//	    if (first)
++//		snmp_log(LOG_ERR, "No pgpgout line in %s\n", VMSTAT_FILE);
+ 	    *pout = 0;
+ 	}
+ 	b = strstr(vmbuff, "pswpin ");
+ 	if (b)
+ 	    sscanf(b, "pswpin %u", swpin);
+ 	else {
+-	    if (first)
+-		snmp_log(LOG_ERR, "No pswpin line in %s\n", VMSTAT_FILE);
++//	    if (first)
++//		snmp_log(LOG_ERR, "No pswpin line in %s\n", VMSTAT_FILE);
+ 	    *swpin = 0;
+ 	}
+ 	b = strstr(vmbuff, "pswpout ");
+ 	if (b)
+ 	    sscanf(b, "pswpout %u", swpout);
+ 	else {
+-	    if (first)
+-		snmp_log(LOG_ERR, "No pswpout line in %s\n", VMSTAT_FILE);
++//	    if (first)
++//		snmp_log(LOG_ERR, "No pswpout line in %s\n", VMSTAT_FILE);
+ 	    *swpout = 0;
+ 	}
+     }

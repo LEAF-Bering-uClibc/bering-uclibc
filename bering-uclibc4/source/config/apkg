@@ -1,0 +1,476 @@
+#!/bin/sh
+# apkg - A Package manager for PC-R platform
+# rewritten from apkg by David Douthitt's "oxygen" distro
+# This code written by Nathan Angelacos and Natanael Copa
+# Changed for modified backup by Eric Spakman 
+# Upgrade code by Cedric Schieli
+# Rundiff code and various improvements by Paul Traina
+#
+# Licensed under the terms of the GPL-2
+
+
+# ---------------------------------------------------------
+# expandpath - given a path, expand it
+# code from apkg by David Douthitt
+expandpath () {
+	local D=$(dirname $1)
+        if `echo "$D" | grep -v "^/" > /dev/null`; then
+    	    [ `dirname $1` = "." ] && D=$PWD || D=$PWD/$(dirname $1)
+        fi
+       	echo $D/$(basename $1)
+        }
+
+# ---------------------------------------------------------
+
+PKGROOT=`expandpath ${PKGROOT:-"/"}`
+LRPKG=${LRPKG:-"var/lib/lrpkg"}
+PKGDIR="$PKGROOT/$LRPKG"
+TMP=${TMP:-"/tmp"}
+PKGDB=${PKGDB:-"$PKGDIR/packages"}
+SESSIONID=$(dd if=/dev/urandom bs=10 count=3 2>/dev/null | sha1sum | sed -e 's/  -//')
+STORAGE_MEDIA=${STORAGE_MEDIA:-"/mnt"}
+BACKUP_PATH=$(echo $STORAGE_MEDIA | sed -e 's/ .*//')
+
+trap "rm -rf $TMP/$SESSIONID*" EXIT
+
+. $PKGDIR/backup
+
+# ---------------------------------------------------------
+# package_part - given a path, print just the basename,
+# without the .lrp - code from apkg by David Douthitt
+
+package_part () {
+	local F=${1##*/}
+	F=${F%%.lrp}
+	echo $F
+	}
+                                                
+# ---------------------------------------------------------
+# Make FN - given a filename, make it a lrp name
+# code from apkg by David Douthitt
+makeFN () {
+        F=$1
+        if [ ! -f $F ]; then
+                F=$F.lrp
+                if [ ! -f $F ]; then
+                        F="$(expandpath $F)"
+                        #if [ ! -f $F ]; then
+                        #        err "file ($F) does not exist!"
+                        #        echo $1
+                        #        return 1
+                        #fi
+                fi
+        fi
+        expandpath $F
+        }
+
+
+remsuffix () {
+        echo ${1%.lrp}
+        }
+
+addsuffix () {
+        echo $(remsuffix $1).lrp
+        }
+
+# ---------------------------------------------------------
+# list_pkgs - list installed packages 
+# if a package name is given, list it, or return 1
+list_pkgs () {
+	local m x
+	if [ -n "$1" ]; then
+	    m=$( grep "^\(.*/\)\?$(package_part $1)$" $PKGDB )
+	    if [ -n "$m" ]; then
+		x=$( basename $m )
+		echo $m $( cat $PKGDIR/$x.version 2>/dev/null )
+		return 0
+	    else
+		echo "package $1 is not installed"
+		return 1
+	    fi
+	fi
+	for x in $( cat $PKGDB  ); do
+	    m=$( basename $x )
+	    echo $x $( cat $PKGDIR/$m.version 2>/dev/null )
+	done
+	return 0
+	}
+
+# ---------------------------------------------------------
+# create_sha1 - given a package, create the sha1sum of it
+#   assumes the package exists...
+create_sha1 () {
+    ( cd $PKGROOT
+	[ -f $PKGDIR/$1.local ] && \
+	    find $( cat $PKGDIR/$1.local ) -type f | xargs sha1sum > $PKGDIR/$1.sha1
+    )
+}
+
+#----------------------------------------------------------
+# prepkg - run a prepkg script if it exist
+run_prepkg() {
+    local pkg
+    pkg=$( package_part $1 )	
+
+    ( 
+	cd $PKGROOT
+	[ -f $PKGDIR/$pkg.prepkg ] && sh $PKGDIR/$pkg.prepkg
+    )
+}
+
+# ---------------------------------------------------------
+# install - installs a package
+
+install () {
+	local pkg pth
+
+	if [ -z "$1" ]; then
+	    echo "No package name given." ; return 1
+	fi
+	
+	pth=$( makeFN $1 )
+	pkg=$( package_part $pth )
+
+	if [ -z "$pkg" ]; then
+	    echo "No package name given."; return 1
+	fi
+	if list_pkgs "$pkg" >/dev/null; then
+	    echo "$pkg already installed."; return 1 
+	fi
+	if [ ! -f "$pth" ]; then
+	    echo "$pth not found."; return 1 
+	fi
+	
+	# ok, its there, not installed... let's install it...
+	( 
+	cd $PKGROOT
+	tar -zxvpf $pth > $PKGDIR/$pkg.list
+	)
+	echo "$pkg" >> $PKGDB
+	create_sha1 $pkg
+	echo "$pkg installed"
+	return 0
+	}
+
+# ---------------------------------------------------------
+# figure out which files have changed from this package
+
+package_changed_files () {
+	local tmp
+	tmp=$TMP/$SESSIONID.sha1
+
+	(
+	cd $PKGROOT
+	echo > $tmp
+	
+	for pkg in $@ ; do
+		if [ -f $PKGDIR/$pkg.local ]; then
+			for a in $(find $(cat $PKGDIR/$pkg.local) -type f 2>/dev/null); do
+			    ! grep -h "[ /]${a}\$" $PKGDIR/*.sha1 >>$tmp 2>/dev/null && \
+			    echo "0000000000000000000000000000000000000000  ${a}" >>$tmp
+			done
+		fi	
+	done	    
+	
+	sha1sum -c $tmp 2>/dev/null | grep FAILED | sed -e "s/: FAILED//" | \
+		sort | uniq
+	)
+
+	rm -f $tmp
+	return 0
+	}
+
+# ---------------------------------------------------------
+# upgrade - upgrades a package
+
+upgrade () {
+	local pkg pth
+
+	if [ -z "$1" ]; then
+	    echo "No package name given." ; return 1
+	fi
+	
+	pth=$( makeFN $1 )
+	pkg=$( package_part $pth )
+
+	if [ -z "$pkg" ]; then
+	    echo "No package name given."; return 1
+	fi
+	if ! list_pkgs "$pkg" >/dev/null; then
+	    echo "$pkg not installed."; return 1 
+	fi
+	if [ ! -f "$pth" ]; then
+	    echo "$pth not found."; return 1 
+	fi
+	
+	# ok, its there, installed... let's upgrade it...
+	(
+	if [ -f $PKGDIR/$pkg.local ]; then
+		package_changed_files $pkg >$TMP/$SESSIONID.changed
+
+		mkdir $TMP/$SESSIONID.tmpdir
+		cd    $TMP/$SESSIONID.tmpdir
+
+		tar -zxpf $pth $LRPKG/$pkg.local
+
+		if [ -f $LRPKG/$pkg.local ] ; then
+			tar -zxpf $pth -T $LRPKG/$pkg.local
+			tar -ztf  $pth   >$LRPKG/$pkg.list
+
+			find $(cat $LRPKG/$pkg.local) -type f | \
+				xargs sha1sum > $LRPKG/$pkg.sha1
+
+			# remove local files that have not changed from
+			# the installed version of this package
+			rm -f $(cat $PKGDIR/$pkg.sha1 | sed '/  -/d' | \
+				sha1sum -c 2>/dev/null | grep OK | sed 's/: OK$//')
+
+			for file in $(cat $TMP/$SESSIONID.changed); do
+				if [ "$2" = 1 ]; then
+		            		test -f $file && echo "$pkg upgrade failed - config file(s) are changed, try manual upgrade" && return 1
+				fi
+												     
+				test -f $file && apkg.merge $PKGROOT . $file
+				test -f $file && mv $file $PKGROOT/$file
+			done
+
+			tar -zxpf $pth -X $TMP/$SESSIONID.changed -C $PKGROOT
+			mv $LRPKG/$pkg.list $PKGDIR
+			mv $LRPKG/$pkg.sha1 $PKGDIR
+		else
+			tar -zxvpf $pth -C $PKGROOT >$PKGDIR/$pkg.list
+			create_sha1 $pkg
+		fi
+	else
+		tar -zxvpf $pth -C $PKGROOT >$PKGDIR/$pkg.list
+		create_sha1 $pkg
+	fi
+	)
+	if [ $? -eq 0 ]; then
+		echo "$pkg upgraded"
+		return 0
+	else
+	    return $?
+	fi
+	}
+
+# ---------------------------------------------------------
+# create_local - create a lrp from the local files list
+
+create_local () {
+	local pkg pth
+
+	pth=${1:-$BACKUP_PATH}
+	pth=$( expandpath $pth )
+	pkg=$( package_part $configdb )
+	
+	if [ -z $pth ]; then 
+	    echo "You must enter a dest path."; return 1; 
+	fi
+		 
+	if ! ( cd $pth ); then
+	    echo "Dest path ($pth) not found."; return 1
+	fi
+	pth="${pth}/$pkg.lrp"
+                                           
+	# touch didn't work for us, so we try an echo instead.
+	echo "" >$pth 2>/dev/null
+	if [ $? -gt 0 ]; then
+	    echo "Unable to create the dest pkg (pth)"; return 1
+	fi
+
+	echo "Creating package of local files for ${pkg} ($pth)..." 
+	tar -zcf $pth -C $PKGROOT $(package_changed_files $(cat $PKGDB))
+	}
+
+# ---------------------------------------------------------
+# create_mod - creates a modules db
+create_mod () {
+	local pkg pth
+
+	pth=${1:-$BACKUP_PATH}
+	pth=$( expandpath $pth )
+	pkg=$( package_part $moddb )
+
+	if [ -z "$pth" ]; then 
+	    echo "You must enter a dest path."; return 1; 
+	fi
+
+	if ! ( cd $pth ); then
+	    echo "Dest path ($pth) not found."; return 1 
+	fi
+	pth="${pth}/$pkg.lrp"
+		 
+	echo "" >$pth 2>/dev/null
+	if [ $? -gt 0 ]; then
+	    return 1
+	fi
+
+	echo "Creating ${pkg} ($pth)..." 
+	(
+		cd $PKGROOT
+		modules=lib/modules
+		firmware=lib/firmware
+		kernel=`uname -r`
+		echo $modules/$kernel > $TMP/$SESSIONID.exclude
+		echo $modules/modules.symbols >> $TMP/$SESSIONID.exclude
+		echo $modules/modules.alias >> $TMP/$SESSIONID.exclude
+		echo $modules/modules.dep >> $TMP/$SESSIONID.exclude
+		for i in `cat $PKGDIR/*.modules 2>/dev/null`; do
+			[ -`echo $i|grep $modules` = - ] && echo -n $modules/ >> $TMP/$SESSIONID.exclude
+			echo $i >> $TMP/$SESSIONID.exclude
+		done
+		tar -czf ${pth} -X $TMP/$SESSIONID.exclude $modules $firmware
+	)
+	return 0
+	}
+
+# ---------------------------------------------------------
+# contents - lists contents of a package
+
+contents () {
+	local pkg pth
+
+	if [ -z "$1" ]; then
+	    echo "No package name given." ; return 1
+	fi
+
+	pth=$( makeFN $1)
+	pkg=$( package_part $pth )
+
+	if [ -z "$pkg" ]; then
+	    echo "No package name given."; return 1
+	fi
+	if [ ! -f "$pth" ]; then
+	    echo "$pth not found."; return 1
+	fi
+	
+	echo "Package $pth contents:"
+	tar -tzvf $pth
+	return 0
+	}
+
+# ---------------------------------------------------------
+# rundiff - take a diff between saved and running config
+#
+
+rundiff () {
+	local backup_path vs_saved saved changed interest lrp
+	vs_saved=$1
+
+	if [ ! -f $BACKUP_PATH/$configdb.lrp ] ; then
+	    echo "$0: $BACKUP_PATH/$configdb.lrp not found"
+	    exit 1;
+	fi 
+
+	mkdir -p $TMP/$SESSIONID/saved
+	mkdir -p $TMP/$SESSIONID/distribution
+	cd $TMP/$SESSIONID
+	ln -s $PKGROOT running
+
+	saved=$(tar xvzf $BACKUP_PATH/$configdb.lrp -C saved)
+
+	if [ "$vs_saved" = "saved" ] ; then
+	    interest=$saved
+	fi
+
+	for pkg in $(cat $PKGDB) ; do
+	    changed=$(package_changed_files $pkg)
+	    if [ -n "$changed" ] ; then
+		interest="$interest $changed"
+		for lrp in $STORAGE_MEDIA ; do
+		    if [ -f $lrp/$pkg.lrp ] ; then
+			tar xzf $lrp/$pkg.lrp -C distribution $changed 2>/dev/null
+			break
+		    fi
+		done
+	    fi
+	done
+
+	interest=$(for file in $interest ; do echo $file ; done | sort | uniq)
+
+	for file in $interest ; do
+	    if [ ! -f running/$file ] ; then
+		echo "*** $file has been deleted"
+	    elif [ -f $vs_saved/$file ] ; then
+		diff -u $vs_saved/$file running/$file
+	    elif [ -f distribution/$file ] ; then
+		diff -u distribution/$file running/$file
+	    else
+		diff -u /dev/null running/$file
+	    fi
+	done
+	}
+
+# ---------------------------------------------------------
+# Syntax
+
+usage () {
+	cat <<-EOF
+	usage:
+
+	$( basename $0 ) - A Package Manager
+	
+	Commands are:
+		
+	-i [path]<package>	install package
+	-u [path]<package>	upgrade package
+	-f [path]<package>	freshen package (fail if config files are changed)
+	-c [path]<package>	list contents of package
+	-l [<package>]		list installed packages;
+	                        if <package> given, tell if it is installed
+	-h			this help	
+
+	package is a package name, the ".lrp" extension is optional.
+	
+	EOF
+	}
+
+#-----------------------------------------
+
+case $1 in
+
+	"-d")	create_mod $2
+		exit $?
+		;;
+
+	"-h" | "") usage
+		exit 1
+	   	;;
+	   	
+	"-c")	contents $2
+		exit $?
+		;;
+
+	"-l")	list_pkgs $2
+		exit $?
+		;;
+
+	"-i")	install $2
+		exit $?
+		;;
+		
+	"-o")	create_local $2
+		exit $?
+		;;
+		
+	"-u")	upgrade $2
+		exit $?
+		;;
+
+	"-f")	upgrade $2 1
+		exit $?
+		;;
+		
+	"-r")	rundiff saved
+		exit $?
+		;;
+
+	"-R")	rundiff distribution
+		exit $?
+		;;
+
+	*)  	echo "$1 is an unknown command.  Try -h for help."
+	    	;;
+	    
+	esac

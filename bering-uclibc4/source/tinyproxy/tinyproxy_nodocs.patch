@@ -1,0 +1,28 @@
+diff -aur tinyproxy-1.8.2.orig/configure.ac tinyproxy-1.8.2/configure.ac
+--- tinyproxy-1.8.2.orig/configure.ac	2010-06-02 08:10:08.000000000 +0300
++++ tinyproxy-1.8.2/configure.ac	2010-10-22 00:34:55.430222588 +0300
+@@ -282,24 +282,12 @@
+ AC_SUBST(LIBS)
+ AC_SUBST(ADDITIONAL_OBJECTS)
+ 
+-# Check for asciidoc
+-AC_PATH_PROG(A2X, a2x, no)
+-AM_CONDITIONAL(HAVE_A2X, test "x$A2X" != "xno")
+-if test x"$A2X" = x"no"; then
+-  AC_MSG_ERROR([Test for asciidoc failed. See the file 'INSTALL' for help.])
+-fi
+-
+ AC_CONFIG_FILES([
+ Makefile
+ src/Makefile
+ data/Makefile
+ data/templates/Makefile
+ etc/Makefile
+-docs/Makefile
+-docs/man5/Makefile
+-docs/man5/tinyproxy.conf.txt
+-docs/man8/Makefile
+-docs/man8/tinyproxy.txt
+ m4macros/Makefile
+ tests/Makefile
+ tests/scripts/Makefile

@@ -1,0 +1,150 @@
+#!/bin/sh
+#
+# /etc/init.d/nfs-utils: start and stop NFS server daemons
+#
+RCDLINKS="0,K10 2,S90"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Crude check for "portmap" dependency
+[ -x /sbin/portmap ] || echo "Warning: NFS daemon needs /sbin/portmap for full functionality"
+
+# Check for existence of daemon executables
+[ -x /usr/sbin/rpc.idmapd ] || exit 2
+[ -x /usr/sbin/rpc.nfsd ] || exit 2
+[ -x /usr/sbin/rpc.mountd ] || exit 2
+[ -x /usr/sbin/rpc.statd ] || exit 2
+[ -x /usr/sbin/exportfs ] || exit 2
+
+# Include nfs-utils settings if available
+if [ -f /etc/default/nfs-utils ] ; then
+	. /etc/default/nfs-utils
+fi
+
+# Define fall-back default settings
+[ -z "$NFSDOPTS" ] && NFSDOPTS=""
+[ -z "$NFSDCOUNT" ] && NFSDCOUNT="8"
+[ -z "$MOUNTDOPTS" ] && MOUNTDOPTS=""
+[ -z "$STATDOPTS" ] && STATDOPTS=""
+[ -z "$IDMAPDOPTS" ] && IDMAPDOPTS=""
+
+RETVAL=0
+
+# See how we were called
+case "$1" in
+  start)
+	# Create required directories
+	mkdir -p /var/lib/nfs/sm /var/lib/nfs/v4recovery
+
+	# Create working files
+	touch /var/lib/nfs/etab /var/lib/nfs/rmtab /var/lib/nfs/xtab /var/lib/nfs/state
+        # Start daemons
+	/usr/sbin/exportfs -r
+	if [ "$NFSPDRUN" == "yes" ]; then
+	    echo -n "Starting NFS daemon: "
+	    start-stop-daemon --start --exec /usr/sbin/rpc.nfsd --quiet -- $NFSDOPTS $NFSDCOUNT
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+	        echo "succeeded."
+	    else
+	        echo "failed."
+	    fi
+	fi
+	if [ "$MOUNTDRUN" == "yes" ]; then
+	    echo -n "Starting NFS mountd: "
+	    start-stop-daemon --start --exec /usr/sbin/rpc.mountd --quiet -- $MOUNTDOPTS
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+		echo "succeeded."
+	    else
+		echo "failed."
+	    fi
+	fi
+	if [ "$STATDRUN" == "yes" ]; then
+	    echo -n "Starting NFS statd: "
+	    start-stop-daemon --start --exec /usr/sbin/rpc.statd --quiet -- $STATDOPTS
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+		echo "succeeded."
+	    else
+		echo "failed."
+	    fi
+	fi
+	if [ "$IDMAPDRUN" == "yes" ]; then
+	    echo -n "Starting NFS idmapd: "
+	    # First ensure that rpc_pipefs filesystem is available
+	    mkdir -p /var/lib/nfs/rpc_pipefs/nfs
+	    if ! /sbin/lsmod | grep sunrpc > /dev/null ; then
+		/sbin/modprobe sunrpc
+	    fi
+	    if ! grep ^rpc_pipefs /proc/mounts > /dev/null ; then
+		mount -t rpc_pipefs rpc_pipefs /var/lib/nfs/rpc_pipefs
+	    fi
+	    start-stop-daemon --start --exec /usr/sbin/rpc.idmapd --quiet -- $IDMAPDOPTS
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+		echo "succeeded."
+	    else
+		echo "failed."
+	    fi
+	fi
+        ;;
+  stop)
+        # Stop daemons
+	if [ "$IDMAPDRUN" == "yes" ]; then
+	    echo -n "Shutting down NFS idmapd: "
+	    start-stop-daemon --stop --exec /usr/sbin/rpc.idmapd --quiet
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+		echo "succeeded."
+	    else
+		echo "failed."
+	    fi
+	    if grep ^rpc_pipefs /proc/mounts > /dev/null ; then
+		umount /var/lib/nfs/rpc_pipefs
+	    fi
+	fi
+	if [ "$STATDRUN" == "yes" ]; then
+	    echo -n "Shutting down NFS statd: "
+	    start-stop-daemon --stop --exec /usr/sbin/rpc.statd --quiet
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+		echo "succeeded."
+	    else
+		echo "failed."
+	    fi
+	fi
+	if [ "$MOUNTDRUN" == "yes" ]; then
+	    echo -n "Shutting down NFS mountd: "
+	    start-stop-daemon --stop --exec /usr/sbin/rpc.mountd --quiet
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+		echo "succeeded."
+	    else
+		echo "failed."
+	    fi
+	fi
+	if [ "$NFSPDRUN" == "yes" ]; then
+	    echo -n "Shutting down NFS daemon: "
+	    # The "--start" below really is correct. We start the 
+	    # user-space daemon and ask it to stop the kernel daemon(s)
+	    start-stop-daemon --start --exec /usr/sbin/rpc.nfsd --quiet -- stop
+	    RETVAL=$?
+	    if [ $RETVAL == "0" ]; then
+		echo "succeeded."
+	    else
+		echo "failed."
+	    fi
+	fi
+        ;;
+  restart)
+        $0 stop
+	sleep 1
+	$0 start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0

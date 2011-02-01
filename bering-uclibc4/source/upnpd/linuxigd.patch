@@ -1,0 +1,55 @@
+diff -urN linuxigd-0.95.orig/Makefile linuxigd-0.95/Makefile
+--- linuxigd-0.95.orig/Makefile	2006-05-24 00:16:36.000000000 +0200
++++ linuxigd-0.95/Makefile	2006-11-12 22:15:17.000000000 +0100
+@@ -33,11 +33,11 @@
+ 	rm -f *.o upnpd
+ 
+ install: upnpd
+-	install -d /etc/linuxigd
+-	install etc/gatedesc.xml /etc/linuxigd
+-	install etc/gateconnSCPD.xml  /etc/linuxigd
+-	install etc/gateicfgSCPD.xml /etc/linuxigd
+-	install etc/dummy.xml /etc/linuxigd
+-	install upnpd $(PREFIX)/sbin
+-	install upnpd.8 $(PREFIX)/share/man/man8
+-	if [ ! -f /etc/upnpd.conf ]; then install etc/upnpd.conf /etc; fi
++	install -d $(DESTDIR)/etc/linuxigd
++	install -d $(DESTDIR)/$(PREFIX)/sbin
++	install etc/gatedesc.xml $(DESTDIR)/etc/linuxigd
++	install etc/gateconnSCPD.xml $(DESTDIR)/etc/linuxigd
++	install etc/gateicfgSCPD.xml $(DESTDIR)/etc/linuxigd
++	install etc/dummy.xml $(DESTDIR)/etc/linuxigd
++	install upnpd $(DESTDIR)/$(PREFIX)/sbin
++	install etc/upnpd.conf $(DESTDIR)/etc/upnpd.conf
+diff -urN linuxigd-0.95.orig/etc/upnpd.conf linuxigd-0.95/etc/upnpd.conf
+--- linuxigd-0.95.orig/etc/upnpd.conf	2006-02-02 00:53:39.000000000 +0100
++++ linuxigd-0.95/etc/upnpd.conf	2006-11-12 22:15:08.000000000 +0100
+@@ -28,13 +28,17 @@
+ # allowed values: a-z, A-Z, _, -
+ # default = FORWARD
+ #
+-forward_chain_name = FORWARD
++#forward_chain_name = FORWARD
+ 
+ #
+ # The name of the chain to put prerouting rules in.
+ # allowed values: a-z, A-Z, _, -
+ # default = PREROUTING
+-prerouting_chain_name = PREROUTING 
++#prerouting_chain_name = PREROUTING 
++
++# modified for intergration with shorewall
++forward_chain_name = forwardUPnP
++prerouting_chain_name = UPnP
+ 
+ #
+ # The internet line upstream bit rate reported from
+@@ -46,7 +50,7 @@
+ # The internet line downstream bit rate reported from
+ # the daemon. Value in bits per second
+ # default = 0
+-downstream_bitrate = 512000
++downstream_bitrate = 1512000
+ 
+ #
+ # The default duration of port mappings, used when the client

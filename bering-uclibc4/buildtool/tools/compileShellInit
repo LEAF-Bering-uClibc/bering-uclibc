@@ -1,0 +1,6 @@
+# $Id: compileShellInit,v 1.1.1.1 2010/04/26 09:03:16 nitr0man Exp $
+# set some init stuff for compile shell
+export PS1="\[\e[32;1m\]compileShell \[\e[0m\]\w>"
+eval dircolors
+alias ls='ls --color=auto'
+

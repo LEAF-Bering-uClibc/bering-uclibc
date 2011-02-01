@@ -1,0 +1,19 @@
+*** module-init-tools-3.12/build/Makefile.orig	2011-01-14 19:26:00.000000000 +0000
+--- module-init-tools-3.12/build/Makefile	2011-01-14 19:30:01.000000000 +0000
+***************
+*** 172,178 ****
+  CFLAGS = -Os -march=i486 -mtune=pentiumpro -Wunused -Wall
+  CPPFLAGS = 
+  CYGPATH_W = echo
+! DEFS = -DPACKAGE_NAME=\"module-init-tools\" -DPACKAGE_TARNAME=\"module-init-tools\" -DPACKAGE_VERSION=\"3.12\" -DPACKAGE_STRING=\"module-init-tools\ 3.12\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE=\"module-init-tools\" -DVERSION=\"3.12\"
+  DEPDIR = .deps
+  DOCBOOKTOMAN = docbook2man
+  ECHO_C = 
+--- 172,178 ----
+  CFLAGS = -Os -march=i486 -mtune=pentiumpro -Wunused -Wall
+  CPPFLAGS = 
+  CYGPATH_W = echo
+! DEFS = -DPACKAGE_NAME=\"module-init-tools\" -DPACKAGE_TARNAME=\"module-init-tools\" -DPACKAGE_VERSION=\"3.12\" -DPACKAGE_STRING=\"module-init-tools-3.12\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE=\"module-init-tools\" -DVERSION=\"3.12\"
+  DEPDIR = .deps
+  DOCBOOKTOMAN = docbook2man
+  ECHO_C = 

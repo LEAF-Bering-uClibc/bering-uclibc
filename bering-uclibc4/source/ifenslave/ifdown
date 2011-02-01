@@ -1,0 +1,29 @@
+#!/bin/sh
+
+IFENSLAVE=/sbin/ifenslave
+IFSTATE=/var/run/ifstate
+
+if [ ! -x $IFENSLAVE ] ; then
+	exit 0
+fi
+
+case "$IF_SLAVES" in
+	"")
+		exit 0
+		;;
+	none)
+		INTERFACES=""
+		;;
+	all)
+		INTERFACES=`grep eth /proc/net/dev|sed 's/\(\ *\)\(eth[^:]*\)\(.*\)/\2/'`
+		;;
+	*)
+		INTERFACES="$IF_SLAVES"
+		;;
+esac
+
+if [ -n "$INTERFACES" ] ; then
+		for slave in $INTERFACES ; do
+			$IFENSLAVE --detach "$IFACE" "$slave"
+		done
+fi

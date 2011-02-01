@@ -1,0 +1,50 @@
+$Id: writing-mkfiles,v 1.1.1.1 2010/04/26 09:03:14 nitr0man Exp $
+
+some comments about writing the buildtool.mk files used by buildtool.
+The mk files have to provide some targets to work properly, if they don√'t
+provide them , things will fail. So include them even if you don't have
+anything to say in there. An example mk file should look like this:
+
+---------------------------------------------------------------
+# example makefile for buildroot
+# include the master settings (like BUILD_DIR, ARCH...).
+ifneq ($(MASTERMAKEFILE),"") 
+	include $(MASTERMAKEFILE)
+endif
+
+MYSRC_DIR=example-1.1.1
+MYINSTALL_DIR=$(BUILD_DIR)/example
+
+.source:
+	tar xvzf example.src.tgz
+	(cd $(MYSRC_DIR) ; patch -p1 < ../example-1.patch ;\
+	patch -p1 < ../example-2.patch)
+	touch .source
+source: .source
+ 
+.configure:
+	(cd $(MYSRC_DIR) ; ./configure --PREFIX=/usr \
+	--SYSCONFDIR=/etc \
+	--enable-example )
+	touch .configure
+
+.build: .configure
+	(cd $(MYSRC_DIR) ; make all CC=$(TARGET_CC) LD=$(TARGET_LD) )
+	(cd $(MYSRC_DIR) ; make install INSTALL_PREFIX=$(MYINSTALL_DIR))
+	touch .build
+build: .build
+
+clean:
+	make -C $(MYSRC_DIR) clean
+	rm .build
+	rm .configure
+
+------------------------------------------------------------------------
+
+if you have a look at it you might note that some of the vars are set
+by the outside MASTERMAKEFILE. These include the TARGET_CC and 
+TARGET_LD as well as the BUILD_DIR ...
+
+
+
+

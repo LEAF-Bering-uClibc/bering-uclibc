@@ -1,0 +1,34 @@
+diff -aur linux-2.6.35.7/Makefile linux-2.6.35.7.new/Makefile
+--- linux-2.6.35.7/Makefile	2010-09-29 04:09:08.000000000 +0300
++++ linux-2.6.35.7.new/Makefile	2010-11-01 01:04:05.232770267 +0200
+@@ -400,7 +400,8 @@
+ ifneq ($(KBUILD_SRC),)
+ 	$(Q)ln -fsn $(srctree) source
+ 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile \
+-	    $(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
++	    $(srctree) $(objtree) $(VERSION) $(PATCHLEVEL) \
++	    $(SUBLEVEL) $(EXTRAVERSION)
+ endif
+ 
+ # To make sure we do not include .config for any of the *config targets
+diff -aur linux-2.6.35.7/scripts/mkmakefile linux-2.6.35.7.new/scripts/mkmakefile
+--- linux-2.6.35.7/scripts/mkmakefile	2010-09-29 04:09:08.000000000 +0300
++++ linux-2.6.35.7.new/scripts/mkmakefile	2010-11-01 01:03:29.748316337 +0200
+@@ -8,6 +8,8 @@
+ # $2 - Output directory
+ # $3 - version
+ # $4 - patchlevel
++# $5 - sublevel
++# $6 - extraversion
+ 
+ 
+ test ! -r $2/Makefile -o -O $2/Makefile || exit 0
+@@ -26,6 +28,8 @@
+ 
+ VERSION = $3
+ PATCHLEVEL = $4
++SUBLEVEL = $5
++EXTRAVERSION = $6
+ 
+ lastword = \$(word \$(words \$(1)),\$(1))
+ makedir := \$(dir \$(call lastword,\$(MAKEFILE_LIST)))

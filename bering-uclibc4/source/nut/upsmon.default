@@ -1,0 +1,6 @@
+# This file controls the activity of nut
+
+# upsd/upsmon control (yes means start daemon).
+UPSMONRUN=yes
+
+NUTUSER=root

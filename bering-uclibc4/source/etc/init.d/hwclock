@@ -1,0 +1,30 @@
+#!/bin/sh
+# hwclock.sh	Set and adjust the CMOS clock, according to the UTC
+#		setting in /etc/default/rcS.
+#
+# Changes for LRP - Matthew Grant
+#
+RCDLINKS="S,S50 0,K25"
+
+. /etc/default/rcS
+[ "$GMT" = "-u" ] && GMT="--utc"
+
+case "$1" in
+	start)
+		hwclock --hctosys $GMT
+		#echo "Local time: `date`"
+		;;
+	stop|restart|reload)
+		hwclock --systohc $GMT
+		echo "CMOS clock updated to `date`."
+		;;
+	show)
+		hwclock --show $GMT
+		;;
+	*)
+		echo "Usage: hwclock {start|stop|reload|show}" >&2
+		echo "       start sets kernel clock from CMOS clock" >&2
+		echo "       stop and reload set CMOS clock from kernel clock" >&2
+		exit 1
+		;;
+esac

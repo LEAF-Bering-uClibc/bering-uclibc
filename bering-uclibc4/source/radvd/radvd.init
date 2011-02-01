@@ -1,0 +1,69 @@
+#! /bin/sh
+
+RCDLINKS="0,K50 1,K50 2,S50 3,S50 4,S50 5,S50 6,K50"
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/radvd
+NAME=radvd
+DESC=radvd
+CONFIG=/etc/radvd.conf
+
+test -x $DAEMON || exit 0
+
+set -e
+
+# Check for IPv6 support in kernel
+if test \! -e /proc/sys/net/ipv6; then
+  echo "IPv6 support must be enabled in the kernel for $DESC to work."
+  exit
+fi
+
+# We must enable IPv6 forwarding for radvd to work
+echo 1 > /proc/sys/net/ipv6/conf/all/forwarding
+
+chkconfig() {
+    if [ ! -e $CONFIG ]; then
+	echo "$CONFIG does NOT exist." && exit 1
+    elif [ ! -s $CONFIG ]; then
+	echo "$CONFIG is empty." && exit 1
+    fi
+}
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	chkconfig
+	if ! start-stop-daemon --oknodo --start --pidfile /var/run/$NAME.pid \
+		--exec $DAEMON; then
+	  echo "failed." && exit 1
+	fi
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --oknodo --stop --pidfile /var/run/$NAME.pid \
+		--exec $DAEMON
+	echo "$NAME."
+	;;
+  reload|force-reload)
+	echo "Reloading $DESC configuration files."
+	start-stop-daemon --stop --signal 1 --quiet --pidfile \
+	    /var/run/$NAME.pid --exec $DAEMON
+	
+	;;
+  restart)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --stop --quiet --pidfile \
+		/var/run/$NAME.pid --exec $DAEMON
+	sleep 1
+	start-stop-daemon --start --quiet --pidfile \
+		/var/run/$NAME.pid --exec $DAEMON
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

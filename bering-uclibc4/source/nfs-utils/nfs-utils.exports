@@ -1,0 +1,13 @@
+# Sample /etc/exports for nfs-utils
+#
+# The following line would make local directory /export/media available
+# for mounting by host 192.168.1.1, as read-write, and also for any host
+# on the local network, as read-only. Both use option "no_subtree_check".
+#
+# /export/media		-no_subtree_check 192.168.1.1(rw) 192.168.1.0/24(ro)
+#
+#
+# The following line would make local directory /export/media available
+# for mounting by any host on the local network, as read-write, using NFSv4
+#
+# /export/media		192.168.1.0/24(rw,fsid=0)

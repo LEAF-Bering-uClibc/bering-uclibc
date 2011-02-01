@@ -1,0 +1,44 @@
+--- getloadavg.c.orig	2005-08-05 06:16:02.000000000 +0300
++++ getloadavg.c	2009-11-05 19:53:58.000000000 +0200
+@@ -66,11 +66,11 @@
+ 
+ /* This should always be first.  */
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+-#include "lisp.h"
+-#include "sysfile.h" /* for encapsulated open, close, read, write */
++//#include "lisp.h"
++//#include "sysfile.h" /* for encapsulated open, close, read, write */
+ 
+ #ifndef HAVE_GETLOADAVG
+ 
+@@ -572,19 +572,16 @@
+ 
+   char ldavgbuf[40];
+   double load_ave[3];
+-  int fd, count;
++  FILE *fp;
++  int count;
+ 
+-  fd = open (LINUX_LDAV_FILE, O_RDONLY);
+-  if (fd == -1)
+-    return -1;
+-  count = read (fd, ldavgbuf, 40);
+-  (void) close (fd);
+-  if (count <= 0)
++  fp = fopen (LINUX_LDAV_FILE, "r");
++  if (fp == NULL)
+     return -1;
+-
+-  count = sscanf (ldavgbuf, "%lf %lf %lf",
++  count = fscanf (fp, "%lf %lf %lf",
+ 		  &load_ave[0], &load_ave[1], &load_ave[2]);
+-  if (count < 1)
++  (void) fclose (fp);
++  if (count != 3)
+     return -1;
+ 
+   for (elem = 0; elem < nelem && elem < count; elem++)

@@ -1,0 +1,38 @@
+#!/bin/sh
+
+RCDLINKS="2,S50 3,S50 4,S50 5,S50 0,K50 1,K50 6,K50"
+
+test -x /usr/sbin/atd || exit 0
+
+ATDPID=/var/run/atd.pid
+
+case "$1" in
+	start)
+		echo -n "Starting at daemon: "
+
+		start-stop-daemon --start --quiet --pidfile $ATDPID \
+			--exec /usr/sbin/atd
+		sleep 2
+
+		if [ -f "$ATDPID" ] && ps h `cat "$ATDPID"` >/dev/null; then
+			echo "atd."
+		else
+			echo "atd failed to start - check syslog for diagnostics."
+		fi
+		;;
+	stop)
+		echo -n "Stopping at daemon: atd"
+		start-stop-daemon --stop --quiet --pidfile $ATDPID
+		echo "."
+		;;
+	restart | force-reload)
+		$0 stop
+		sleep 2
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|force-reload}"
+		exit 1 
+esac
+
+exit 0

@@ -1,0 +1,116 @@
+0.7
+- added new file type - 'module', it'll be ignored during backup
+- added auto-loading of 'module' files (if it needed parameters - just load it manually in /etc/modules)
+- hacks for cross-compilation on x86_64
+- some other small changes
+
+0.6pre2
+- removed itrace support
+- added builtin (perl based) file installation tracing for build and staging dir,
+  disabled by default (enable via buildtool.conf)
+
+0.6pre1
+- added support for cvs ext (ssh)
+- added support for overriding package config servers
+- better commandline parsing
+- cleanup of help message
+- put itrace back in again (DISABLED by default)
+- renamed global.cfg to sources.cfg
+
+0.2-0.5:
+- lots...
+
+0.2pre4:
+- show list of required sources/packages on screen
+- minor cleanups in source_files
+- added helloworld example (thanks to Luis F. Correia for this!)
+- show a message to the screen if things are already built or sourced
+- added support for setting env vars via buildtool.cfg (envname entry
+  in file section, thanks Martin!)
+- added support for -f switch on commandline for building and sourcing
+
+0.2pre3:
+- changed describe so it tells us a bit more what is available
+- fixed a typo in describe
+- dlclean calls clean for each package
+- added global.cfg servers to package/source in buildtool.cfgs
+ (no need to define them in there anymore)
+- cleanups
+- added the possibility to add defaults to sources and packages
+
+
+0.2pre2:
+- minor cleanups in the README
+- add support for downloading removed (Attic) files via viewcvs and 
+  auto detection for this
+- fixed a bug that prevented files from being added to the required packagelist
+- added upx to kernel buildfile
+
+
+0.2pre1:
+- put ther version into the logfile each time the buildtool starts
+- changes to Readme
+- cleanups in buildtool.pm , mostly build_files and source_files
+  to handle build dependencies (Required packages).
+- added use strict
+- moved buildtool.pm to buildtool dir and include buildtool::buildtool for now
+
+
+0.1.2:
+- changed all config vars to be handled as lowercase internally,
+  and use -LowerCaseNames when reading them in conf files
+- fixed another bug in source_files
+- 'dlclean' looks now at the installed packages not on the list
+  from the global.cfg
+- the same is true for 'clean'
+- added a edited var that is set to 0 when making a maketar,
+  to be sure people edit the config fil√e!
+- check if there is source and package with same name, if so, die 
+ 
+0.1.1:
+- fixed a warning in show_description
+- fixed a bug in handling of the source dependencies (reported by K.-P. 
+  Kirchd√∂fer <kapeka@epost.de>)
+- started to reorganize the TODO file
+
+0.1:
+- added Copying and copyright notice
+- added maketar command for distributing
+  of multiple servers)
+  easier to define one server for viewcvs and use Directory entries instead
+- changed handling of directory entries in downloading (should make it
+  and building packages or sources twice.
+- added support for a list of installed packages. This avoids downloading
+- moved configs to conf dir 
+  instead of 37m , this seems to work better for some terminals (Martin Hejl <martin@hejl.de>)
+- changed the functions for giving back red and green text to use 39m 
+- changed usage message
+- die if logfile cannot be opened
+- make sure the log dir is created before writing to it
+  download files already there, quite useful for developing
+- added OverwriteFiles to config, if set to 0 buildtool will not try to
+
+0.1pre4:
+  the finished packages should go to.
+- added PACKAGEDIR to mastermakefile and buildtool, this is where
+  by buildenv (and others).
+- added export to the vars of the mastermakefile.mk as this is needed
+  and can be overwritten in the Makefiles (mk files)
+  before the host compiler... So PATH is now set as environment var
+  compiling a new buildenv fails as the cross-compiler is in the path
+  was calling make and setting PATH via commandline. When this is done,
+- changed setting the PATH value when calling makefiles. Until now it
+  buildroot in much more easier.
+  it and no seperate source package. This makes putting new versions from
+- changed the buildenv package: uclibc, gcc and binutils are now part of 
+- fixed a typo in make_distclean
+
+0.1pre3:
+- added distclean to buildtool commands
+- added checkenv for doing some tests on startup.
+  else (for cross-gcc).
+- added exporting of a path containing the staging dir before anything
+  sources.
+- fixed a bug in build_files that prevented build step to be called for 
+
+

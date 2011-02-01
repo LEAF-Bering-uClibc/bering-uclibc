@@ -1,0 +1,7 @@
+<Server local>
+	Type = http
+	Name = localhost
+	Serverpath = /leaf
+</Server>
+
+# Here placed packages that aren't in maintree

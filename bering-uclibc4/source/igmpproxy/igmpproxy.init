@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# start igmpproxy
+
+RCDLINKS="0,K04 1,K04 2,S80 3,S80 4,S80 5,S80 6,K04"
+
+CONF=/etc/igmpproxy.conf
+
+case "$1" in
+    start)
+	echo "Starting igmpproxy"
+	/usr/sbin/igmpproxy "$CONF" &
+	;;
+	
+    stop)
+	echo "Stopping igmpproxy"
+	killall igmpproxy
+	;;
+    *)
+	echo "Usage: /etc/init.d/igmpproxy {start|stop}"
+	exit 1
+	;;
+esac
+
+exit 0

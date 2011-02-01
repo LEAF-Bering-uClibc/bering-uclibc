@@ -1,0 +1,123 @@
+#!/bin/sh
+#
+# When the ppp link comes up, this script is called with the following
+# parameters
+#       $1      the interface name used by pppd (e.g. ppp3)
+#       $2      the tty device name
+#       $3      the tty device speed
+#       $4      the local IP address for the interface
+#       $5      the remote IP address
+#       $6      the parameter specified by the 'ipparam' option to pppd
+#
+
+. /etc/ppp/shaper.conf
+
+OUTPUT=$1
+if [ "$OUTPUT" = "" ]; 
+then
+  OUTPUT="$PPP_IFACE"
+fi
+
+if [ -f /var/run/radattr.$OUTPUT ]
+then
+   PPPNUM=`echo $OUTPUT|$SED 's/ppp//'`
+   HEXPPP=`echo $(($PPPNUM+2048))|awk '{printf("%0x\n", $1)}'`
+   PPPNUM=`echo $PPPNUM|$AWK '{printf "%03d",$1}'`
+   IP=$5
+   if [ "$IP" = "" ]; 
+   then
+     IP="$PPP_REMOTE"
+   fi
+   
+   QDISC_OUT=`$TC qdisc show dev $INPUT|$GREP -v sfq|$AWK '{print $2}'`
+   DOWNSPEED=`$AWK  '/PPPD-Downstream-Speed-Limit/ {print $2}'  /var/run/radattr.$OUTPUT`
+   UPSPEED=`$AWK  '/PPPD-Upstream-Speed-Limit/ {print $2}'  /var/run/radattr.$OUTPUT`
+   FILTERS=`$AWK  '/Filter-Id/ {print $2}'  /var/run/radattr.$OUTPUT`
+
+   if [ "$QDISC_OUT" != "htb" ];
+   then
+     $IPLS $INPUT up 
+     $TCQD dev $INPUT root >/dev/null
+     $TCQA dev $INPUT root handle 1: htb default 2
+     $TCCR dev $INPUT parent 1: classid 1:1 htb rate 100mbit ceil 1000mbit burst 1024k cburst 64k prio 2 quantum 1514
+     $TCCR dev $INPUT parent 1: classid 1:2 htb rate 100mbit ceil 1000mbit burst 1024k cburst 64k prio 1 quantum 1514
+     $IPT -N PPP 2>/dev/null || $IPTM -F PPP
+     $IPT -N LAN 2>/dev/null || $IPTM -F LAN
+     $IPT -D FORWARD -i ppp+ -j PPP 2>/dev/null
+     $IPT -A FORWARD -i ppp+ -j PPP
+     $IPT -A LAN -d 192.168.7.10/32 -j ACCEPT
+     $IPT -A LAN -s 10.250.0.0/16 -j ACCEPT
+     $IPT -A LAN -d 10.255.0.2/32 -j ACCEPT
+     $IPT -A LAN -d 10.255.0.12/32 -j ACCEPT
+     $IPT -A LAN -d 10.255.0.13/32 -j ACCEPT
+     $IPT -A LAN -d 10.255.0.14/32 -j ACCEPT
+     $IPT -A LAN -d 10.255.0.15/32 -j ACCEPT
+     $IPT -A LAN -d 91.202.132.1/32 -j ACCEPT
+     $IPT -A LAN -d 91.202.132.4/32 -j ACCEPT
+     $IPT -A LAN -d 91.202.132.5/32 -j ACCEPT
+     $IPT -A LAN -j REJECT 
+     $IPT -A PPP -d 192.168.0.0/16 -j REJECT 
+     $IPT -A PPP -d 10.0.0.0/8 -j LAN
+     $IPT -A PPP -d 91.202.132.0/22 -j LAN
+     $IPTM -N PPP 2>/dev/null || $IPTM -F PPP
+     $IPTM -D PREROUTING -i ppp+ -d ! 172.31.255.0/24 -j PPP 2>/dev/null
+     $IPTM -A PREROUTING -i ppp+ -d ! 172.31.255.0/24 -j PPP
+     $IPTM -A PPP -p tcp -m tcp --tcp-flags SYN,RST,ACK SYN -j TOS --set-tos Minimize-Delay
+     $IPTM -A PPP -p icmp -j TOS --set-tos Minimize-Delay
+     $IPTM -A PPP -j IMQ --todev 0
+  fi
+   
+
+   if [ w${debug} = w1 ] ; then
+     echo "Debug mode" >>/tmp/pptpd
+     echo $DOWNSPEED >>/tmp/pptpd
+     echo $UPSPEED >>/tmp/pptpd
+     echo $FILTERS >>/tmp/pptpd
+   fi;
+
+    /sbin/tc qdisc del dev $OUTPUT root    > /dev/null
+
+##### speed server->client
+   if [ "$UPSPEED" != "0" ] ;
+   then
+     if [ -n "$COEF" ] ; 
+     then
+        UPSPEED=$(($UPSPEED*$COEF))
+     fi
+     URATE=$(($UPSPEED/2))
+     $TCQA dev $OUTPUT root handle 1: htb default 20
+     $TCCR dev $OUTPUT parent 1: classid 1:1 htb rate ${UPSPEED}kbit $UBURST quantum 1514
+     $TCCR dev $OUTPUT parent 1:1 classid 1:10 htb rate ${URATE}kbit ceil ${UPSPEED}kbit $UBURST prio 1 quantum 1514
+     $TCCR dev $OUTPUT parent 1:1 classid 1:20 htb rate ${URATE}kbit ceil ${UPSPEED}kbit $UBURST prio 2 quantum 1514
+     $TCQA dev $OUTPUT parent 1:10 handle 10: sfq perturb 10 quantum 1514
+     $TCQA dev $OUTPUT parent 1:20 handle 20: sfq perturb 10 quantum 1514
+     $TCFR dev $OUTPUT parent 1:0 protocol ip prio 10 u32 match ip tos 0x10 0xff flowid 1:10
+     $TCFR dev $OUTPUT parent 1:0 protocol ip prio 10 u32 match ip protocol 1 0xff flowid 1:10
+
+   fi 
+
+##### speed client->server
+   if [ "$DOWNSPEED" != "0" ] ;
+   then
+     if [ -n "$COEF" ] ; 
+     then
+         DOWNSPEED=$(($DOWNSPEED*$COEF))
+     fi
+     DRATE=$(($DOWNSPEED/2))
+     $TCCR dev $INPUT parent 1:1 classid 1:1$PPPNUM htb rate ${DOWNSPEED}kbit $DBURST quantum 1514
+     $TCCR dev $INPUT parent 1:1$PPPNUM classid 1:2$PPPNUM htb rate ${DRATE}kbit ceil ${DOWNSPEED}kbit $DBURST prio 4 quantum 1514
+     $TCCR dev $INPUT parent 1:1$PPPNUM classid 1:3$PPPNUM htb rate ${DRATE}kbit ceil ${DOWNSPEED}kbit $DBURST prio 3 quantum 1514
+     $TCQA dev $INPUT parent 1:2$PPPNUM handle 2$PPPNUM: sfq perturb 10 quantum 1514
+     $TCQA dev $INPUT parent 1:3$PPPNUM handle 3$PPPNUM: sfq perturb 10 quantum 1514
+
+     $TCFR dev $INPUT parent 1:0 handle 800::$HEXPPP protocol ip prio 1 u32 match ip src $IP/32 match ip tos 0x10 0xff flowid 1:3$PPPNUM
+     $TCFR dev $INPUT parent 1:0 handle 801::$HEXPPP protocol ip prio 2 u32 match ip src $IP/32 flowid 1:2$PPPNUM
+   fi
+
+#### Filters
+  if [ w$FILTERS != w ] ;
+  then
+    echo "filters not supported"
+  fi
+fi
+

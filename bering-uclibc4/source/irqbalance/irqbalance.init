@@ -1,0 +1,37 @@
+#! /bin/sh
+# /etc/init.d/irqbalance: start the irqbalance
+RCDLINKS="0,K10 2,S90"
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+binpath=/usr/sbin/irqbalance
+daemon=irqbalance
+
+test -x $binpath || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting system log daemon: $daemon "
+    start-stop-daemon --start --quiet --exec $binpath 
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping system log daemon: $daemon "
+    start-stop-daemon --stop --quiet --exec $binpath 
+    echo "."
+    ;;
+  restart)
+    echo -n "Stopping system log daemon: $daemon "
+    start-stop-daemon --stop --quiet --exec $binpath 
+    echo "."
+    sleep 1
+    echo -n "Starting system log daemon: $daemon "
+    start-stop-daemon --start --quiet --exec $binpath 
+    echo "."
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

@@ -1,0 +1,49 @@
+#! /bin/sh
+#
+# rcS		Call all S??* scripts in /etc/rcS.d in
+#		numerical/alphabetical order.
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+umask 022
+export PATH
+
+. /etc/default/rcS
+
+#
+#	Create wtmp file.
+#
+! test -f /var/log/wtmp  && touch /var/log/wtmp
+
+#
+#	Trap CTRL-C &c only in this shell so we can interrupt subprocesses.
+#
+trap ":" 2 3 20
+
+#
+#	Dynamic creation of rc?.d symlinks. [LRP]
+#
+[ "$DYNARCD" != no ] && update-rc.d -a -f -w >/dev/null 2>&1
+
+#
+#	Call all parts in order.
+#
+for i in /etc/rcS.d/S??*
+do
+	# Ignore dangling symlinks for now.
+	[ ! -f "$i" ] && continue
+
+	case "$i" in
+		*.sh)
+			# Source shell script for speed.
+			(
+				trap - 2 3 20
+				. $i start
+			)
+			;;
+		*)
+			# No sh extension, so fork subprocess.
+			$i start
+			;;
+	esac
+done

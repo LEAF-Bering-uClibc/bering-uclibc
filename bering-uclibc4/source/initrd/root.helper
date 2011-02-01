@@ -1,0 +1,15 @@
+#!/bin/busybox sh
+#
+# Helper for switch_root
+# Mounts /proc and /sys after switch_root and calls init
+#
+# Copyright Andrew Denisenko - LRP  GPL2
+
+mkdir /proc 
+mount -nt proc /proc /proc
+mkdir /sys 
+mount -nt sysfs sysfs /sys
+
+exec /sbin/init
+
+exit 0

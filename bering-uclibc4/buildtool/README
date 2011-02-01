@@ -1,0 +1,162 @@
+General:
+========
+This is the second attempt to build a tool to be able to build
+bering-uclibc from scratch. The first one was heavily based on buildroot
+from erik andersen (from uclibc.org), but this time things are a bit
+different. This tool is mainly written in Perl, although it still uses Makefiles
+and the buildenvironment is uses comes still from buildroot (which won't change
+anyway)
+
+Requirements:
+=============
+- a working compile environment gcc+binutils+libs
+- wget
+- fakeroot (you can find it in the tools directory)
+- Perl (testesd only with 5.6.1)
+
+Perl modules:
+- Config::General (you can install it with  perl -MCPAN -e 'install Config::General')
+- libvcs-perl > 1.00 , you can get it from http://www.ucbering.de/download/libcvs-perl.tgz
+
+
+Configuration:
+==============
+- Proxy: If you need to use a http proxy to download , please set the 
+environment var http_proxy according to it before you start buildtool,
+e.g export http_proxy="http://proxy.example.com:8080/"
+Note that at this time no user authentication for a proxy is supported.
+
+
+Usage:
+======
+edit buildconf.cfg to adjust to your needs (especially the dir stuff).
+start with a './buildtool.pl build buildenv ' to get a working build
+ environment. This will download the required sources for you automatically.
+
+You can make a ./buildtool.pl --help to get a full listing of what is
+ supported now. To be honest, i already did this for you:
+
+usage: ./buildtool.pl command [pkgname]|[srcname] [...]
+
+commands:
+describe [pkgname]|[srcname]     shows descriptionlines of package
+list                     shows a list of build/sourced packages and sources 
+[-f] source [pkgname]|[srcname]  downloads, unpacks and patches
+                                 the wanted package/source
+[-f] build [pkgname]|[srcname]   the same as source, but builds
+                                 and installs sources/packages also
+[-f] buildclean [pkgname]|[srcname]      removes everything that is outside
+                                         the source dir
+[-f] remove [pkgname|srcname]    remove everything from dldir or all
+distclean                        remove everything
+maketar                          make a tar for distribution
+
+The -f switch allows you to force building sourcing and cleaning
+ even if it seems the packages/sources are already installed or cleaned.
+
+
+How things work:
+================
+First buildtool reads its config (buildtool.conf), after that it reads
+the global.cfg file , which both reside in the conf subdir. 
+The global.cfg defines what packages and sources are out there 
+and how to find the buildtool.cfg file which must be provided for each
+package. After that, buildtool searches for commands from the commandline.
+Assume you make a './buildtool.pl build example-package' and the example-package
+section (<Package example-package>) in the global.cfg says:
+<Requires>
+	Name = example-src1
+	Name = example-src2
+</Requires>
+
+buildtool will download the sources and files for the two sources as well. So 
+first of all, it will download the buildtool.cfg file from the location
+defined in global.cfg. It will download such a file for every packages/source
+that should be downloaded and build. After that it will download all the files 
+defined in buildtool.cfg and place them in the source dir (in an subdir named as
+the package, "source/example" for this example). 
+Having done that, the same is done for the Required packages (downloading 
+buildtool.cfg, downloading all files defined there).
+Note that you have to define a file called buildtool.mk in the files section
+as this is the one that will be used by buildtool to do a 'make source' later.
+This leads us to the next step. Going into each source sub-directory and 
+calling a 'make -f ./buildtool.mk source'. This should unpack the sources
+in this subdir, do the patching and whatever is needed to get a clean source
+tree. But nothing is configured or made here, just unpacked.
+A call to ./configure would be called by the next step , the build step. 
+buildtool goes into each subdir (like before) and do a 
+'make -f ./buildtool.mk build'
+to have everything build. How the makefile actually make things is not 
+of any interest for us right now, thats the part of the file. It only
+has to provide some targets (see doc/writing-mkfiles). Note that build
+for any source dir is done before a 'make build' in the package directory
+where the sources belog too (the programs should be compiled before they
+are packed ;-)...
+So that's how things (should) work.
+
+Directories
+===========
+A few words about the directories in here:
+source		contains all the (unpacked and even compiled) sources
+		for both packages and sources, in subdirs named like
+		the package/source.
+		After compiling the sources should always be installed in:
+
+build		holds the installed programs that are used to build the 
+		packages. Like in source there should be always a
+		subdir named as the package/source
+
+staging		This is the place where everything needed for compiling
+		should go, e.g. the gcc lives here as well as (at least 
+		a copy of) all libraries that programs are compiled
+		against.
+
+doc		as you suggest, here is the documentation
+
+make		The mastermakefile (which sets some vars and should
+		be included in every mk file for soruces/packages) is here
+		nothing more right now
+
+log		In here you find the buildtoollog which is the logfile
+		of buildtool. Most messages (and errors) go here, so
+		you might want to have a look if things go wrong (
+		or if they don't - if you like ;-)
+
+package		In here you will find the builded packages, ready to
+		use
+
+conf		the buildtool config files are here (buildtool.conf, 
+		global.conf, and installed)
+
+tools		includes some tool√s that are needed to build stuff
+
+
+Developing
+==========
+A few words how you can use this for developing new packages. Perhaps i should
+mention first that there is a switch in the buildtool.conf that can be used
+to prevent buildtool from overwriting existing files. If this (OverwriteFiles)
+is set to 0 buildtool will not overwrite anything, but it will also not
+download. This is ment to be used if you are a developer and want to change
+the buildtool or patchfiles before updating them on the server. If you don't 
+use it, buildtool will overwrite your work and that's mostly not what you
+wish.
+
+If you wish (for whatever reason) to use the buildtool.mk file to build 
+by hand you should call it with something like:
+'make -f buildtool.mk source BT_BUILDROOT=/my/example/dir \
+MASTERMAKEFILE=/my/example/dir/make/MasterInclude.mk'
+or export the BT_BUILDROOT and MASTERMAKEFILE vars into the environment. 
+If you do this , everything should be fine (at least if your makefiles are
+o.k. ;-)
+
+@FIXME@ write more about developing a new package!
+
+Copying
+=======
+Please have a look at the file COPYING in this directory
+
+(C) 2003-2004 Arne Bernin & Martin Hejl
+
+
+

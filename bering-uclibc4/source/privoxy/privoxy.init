@@ -1,0 +1,34 @@
+#!/bin/sh
+
+RCDLINKS="2,S62 3,S62 6,K62"
+case "$1" in
+    start)
+        echo "Starting Privoxy"
+        if [ ! -f /var/run/privoxy.pid ] || ! kill -0 `cat /var/run/privoxy.pid` 2> /dev/null; then
+           /usr/sbin/privoxy --pidfile /var/run/privoxy.pid /etc/privoxy/config 2> /dev/null
+        else     
+           false 
+        fi
+        ;;
+    stop)
+        echo "Shutting down Privoxy"
+        kill -TERM `cat /var/run/privoxy.pid`
+        rm -f /var/run/privoxy.pid
+        ;;
+    reload)
+        echo "Reloading Privoxy"
+        kill -HUP `cat /var/run/privoxy.pid`
+        ;;
+    try-restart)
+        $0 stop && $0 start
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        ;;           
+    *)
+        echo "Usage: $0 {start|restart|reload|stop}"
+        exit 1
+esac
+
+exit 0

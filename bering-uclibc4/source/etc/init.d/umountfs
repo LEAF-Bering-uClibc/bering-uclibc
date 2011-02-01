@@ -1,0 +1,11 @@
+#! /bin/sh
+#
+# umountfs	unmount all file systems.
+#
+RCDLINKS="0,S40"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+echo -n "Unmounting file systems... "
+umount -a -r
+echo "done."

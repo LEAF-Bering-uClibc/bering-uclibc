@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Run user-defined commands at the end of boot process
+#
+
+RCDLINKS="2,S90 3,S90 6,K10"
+
+
+case "$1" in
+	start)
+		echo -n "Running all from local.start... "
+		. /etc/default/local.start
+		echo "Done."
+	;;
+	stop)
+		echo -n "Running all from local.stop... "
+		. /etc/default/local.stop
+		echo "Done."
+	;;
+	restart)
+		$0 stop
+		$0 start
+	;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+	;;
+esac
+exit 0

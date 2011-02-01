@@ -1,0 +1,10 @@
+
+sources dir:
+the sources dir should be exactly how the apps dir in cvs look like,
+so that it is possible to use real cvs for this (when changing the src 
+var pointing to this). easier for developmentm (just ggo in there and make a 
+cvs commit).
+
+
+http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/*checkout*/leaf/src/bering-uclibc/apps/ash/ash-0.4.0.tar.gz?rev=1.1.1.1
+

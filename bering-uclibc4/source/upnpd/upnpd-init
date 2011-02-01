@@ -1,0 +1,77 @@
+#!/bin/sh
+#
+# UPnPd		linux-igd ported for leaf
+#
+RCDLINKS="0,K90 1,K90 2,S90 3,S90 4,S90 5,S90 6,K90"
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/upnpd
+NAME=upnpd
+DESC=upnpd
+PIDFILE=/var/run/${NAME}.pid
+
+test -f $DAEMON || exit 0
+
+IF_INTERNAL="eth1"
+IF_EXTERNAL="ppp0"
+
+# SSDP announcements go out on 239.255.255.250
+# IGMP joins go out on 224.0.0.22
+#
+# Our choices are to set MC_ROUTE for just SSDP, for all of Multicast,
+# or leave it empty and let the user manage multicast routing on his own.
+# By default, we'll do all of multicast, as most users using upnpd will
+# be two-port SOHO gateways anyway...
+#
+MC_ROUTE="224.0.0.0/4"
+
+#
+# Override defaults in this script for upnpd
+#
+if [ -f /etc/default/upnpd ] ; then
+	. /etc/default/upnpd
+fi
+
+set -e
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+
+	if [ -n "$MC_ROUTE" ] ; then
+		ip route add $MC_ROUTE dev $IF_INTERNAL
+	fi
+
+	start-stop-daemon --quiet --start --exec $DAEMON \
+		-- $IF_EXTERNAL $IF_INTERNAL
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --quiet --oknodo --stop --exec $DAEMON
+	
+	sleep 1
+	if [ -n "$MC_ROUTE" ] ; then
+		ip route delete $MC_ROUTE dev $IF_INTERNAL
+	fi		
+	
+	echo "$NAME."
+	;;
+  reload)
+	killall -HUP $NAME &2> /dev/null 
+	;;
+  restart)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --quiet --stop --exec $DAEMON
+	sleep 3
+	start-stop-daemon --quiet --start --exec $DAEMON \
+		-- $IF_EXTERNAL $IF_INTERNAL
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|reload|restart}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

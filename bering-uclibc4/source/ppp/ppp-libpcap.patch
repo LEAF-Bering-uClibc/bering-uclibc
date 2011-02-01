@@ -1,0 +1,14 @@
+diff -urN ppp-2.4.3.orig/pppd/Makefile.linux ppp-2.4.3/pppd/Makefile.linux
+--- ppp-2.4.3.orig/pppd/Makefile.linux	Sat Nov 13 13:02:22 2004
++++ ppp-2.4.3/pppd/Makefile.linux	Wed Nov 24 14:52:27 2004
+@@ -171,10 +171,8 @@
+ endif
+ 
+ ifdef FILTER
+-ifneq ($(wildcard /usr/include/pcap-bpf.h),)
+ LIBS    += -lpcap
+ CFLAGS  += -DPPP_FILTER
+-endif
+ endif
+ 
+ ifdef HAVE_INET6

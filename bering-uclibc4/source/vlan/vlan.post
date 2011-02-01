@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ -z "$IF_VLAN_RAW_DEVICE" ]
+then
+	exit 0
+fi
+if [ ! -x /sbin/vconfig ]
+then
+  exit 0
+fi
+
+vconfig rem $IFACE

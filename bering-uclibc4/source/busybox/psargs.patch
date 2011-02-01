@@ -1,0 +1,15 @@
+--- busybox-1.17.1.orig/procps/ps.c	2007-10-24 19:09:58.000000000 +0200
++++ busybox-1.17.1/procps/ps.c	2007-10-24 19:11:16.000000000 +0200
+@@ -567,7 +567,11 @@
+ 	/* -w is a bit complicated */
+ 	int w_count = 0;
+ 	opt_complementary = "-:ww";
+-	opts = getopt32(argv, IF_SELINUX("Z")IF_FEATURE_SHOW_THREADS("T")"w", &w_count);
++	for (int len = 1; len < argc; len++) {
++		char *c;
++		for (c = argv[len]; *c; c++)
++			if (*c == 'w') w_count++;
++	}
+ 	/* if w is given once, GNU ps sets the width to 132,
+ 	 * if w is given more than once, it is "unlimited"
+ 	 */

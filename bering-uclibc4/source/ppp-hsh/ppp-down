@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# When the ppp link comes up, this script is called with the following
+# parameters
+#       $1      the interface name used by pppd (e.g. ppp3)
+#       $2      the tty device name
+#       $3      the tty device speed
+#       $4      the local IP address for the interface
+#       $5      the remote IP address
+#       $6      the parameter specified by the 'ipparam' option to pppd
+#
+
+. /etc/ppp/ppp-hsh.conf
+
+OUTPUT=$1
+if [ "$OUTPUT" = "" ];
+then
+  OUTPUT="$PPP_IFACE"
+fi
+  
+
+if [ -f /var/run/radattr.$OUTPUT ]
+then
+   PPPNUM=`echo $OUTPUT|$SED 's/ppp//''`
+   HEXPPP=`echo $(($PPPNUM+2048))|awk '{printf("%0x\n", $1)}'`
+   PPPNUM=`echo $PPPNUM|$AWK '{printf "%03d",$1}'`
+   IP=$5
+   QDISC_ETH=`$TC qdisc show dev $INPUT|$GREP root|$AWK '{print $2}'`
+   DOWNSPEED=`$AWK  '/PPPD-Downstream-Speed-Limit/ {print $2}'  /var/run/radattr.$OUTPUT`
+   UPSPEED=`$AWK  '/PPPD-Upstream-Speed-Limit/ {print $2}'  /var/run/radattr.$OUTPUT`
+   FILTERS=`$AWK  '/Filter-Id/ {print $2}'  /var/run/radattr.$OUTPUT`
+   if [ "$IP" = "" ];
+      then
+      IP="$PPP_REMOTE"
+   fi	         
+
+   if [ w${debug} = w1 ] ; then
+     echo "Debug mode" >>/tmp/pptpd
+     echo $DOWNSPEED >>/tmp/pptpd
+     echo $UPSPEED >>/tmp/pptpd
+     echo $FILTERS >>/tmp/pptpd
+   fi;
+
+
+##### speed server->client
+   if [ "$UPSPEED" != "0" ] ;
+   then
+     $TC qdisc del dev $OUTPUT root    2>/dev/null
+   fi 
+
+##### speed client->server
+   if [ "$DOWNSPEED" != "0" ] ;
+   then
+     /usr/sbin/hsh.sh $IP 102400
+   fi
+
+#### Filters
+#  if [ w$FILTERS != w ] ;
+#  then
+#    
+#  fi
+
+ fi
+

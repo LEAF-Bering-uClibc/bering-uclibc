@@ -1,0 +1,17 @@
+# Defaults for portmap initscript (/etc/init.d/portmap)
+# This is a POSIX shell fragment
+#
+# Command-line options for portmap
+# Select from:
+#         -d: debugging mode
+#         -f: don't daemonize, log to standard error
+#     -t dir: chroot into dir
+#         -v: verbose logging
+# -i address: bind to address
+#         -l: same as -i 127.0.0.1
+#    -u uid : setuid to this uid
+#    -g uid : setgid to this gid
+#
+# For NFSv2 & v3, clients need to contact portmap so use e.g. "-i 192.168.1.254"
+# For NFSv4, no need for NFS clients to contact portmap so "-l" is recommended
+PORTMAPOPTS="-l"

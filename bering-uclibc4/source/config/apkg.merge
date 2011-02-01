@@ -1,0 +1,62 @@
+#!/bin/sh
+
+TMP=${TMP:-"/tmp"}
+SESSIONID=$( dd if=/dev/urandom bs=10 count=3 2>/dev/null | sha1sum | sed -e 's/  -//' )
+
+usage() {
+	echo "Usage: $0 OLDDIR NEWDIR SUBPATH"
+	exit 1
+}
+
+[ $# -eq 3 ] || usage
+[ -d $1 ] || usage
+[ -d $2 ] || usage
+[ -f $3 ] || usage
+
+while [ 1 ]; do
+
+clear
+cat <<EOF
+Following file has been locally modified and a new version is to be installed :
+$3
+
+  K ) Keep old file
+  R ) Replace old file with new one
+  D ) Show differences between old and new file
+  M ) Edit a merged version of the files
+
+  -----------------------------------------------------------------------------
+EOF
+echo -n "	Selection: "
+
+read OPT
+echo
+
+case $OPT in
+k|K)
+	rm $2/$3
+	break
+	;;
+r|R)
+	break
+	;;
+d|D)
+	clear
+	diff -u $1/$3 $2/$3 | more
+	pauseme
+	;;
+m|M)
+	tmp=$TMP/$SESSIONID.tmp
+	apkg.mergefile $1/$3 $2/$3 > $tmp
+	sha1=$(sha1sum $tmp)
+	$EDITOR $tmp
+	if echo "$sha1" | sha1sum -c >/dev/null 2>&1; then
+		rm $tmp
+	else
+		mv $tmp $2/$3
+		break
+	fi
+	;;
+esac
+
+done

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+prog=${0##*/}
+
+[ "$1" = "" ] && echo "Usage: $prog file" && exit 1
+[ ! -f "/etc/init.d/$1" ] && echo "$1: No such file or directory" && exit 1
+
+/etc/init.d/$@

@@ -1,0 +1,68 @@
+#
+# Defaults for nfs-utils initscript (/etc/init.d/nfs-utils)
+# This is a POSIX shell fragment
+#
+# Should we run rpc.nfsd at all?
+NFSPDRUN="yes"
+# Command-line options for rpc.nfsd
+# Select from:
+#     -d or --debug
+#     -H or --host hostname
+#     -p or --port port
+#     -N or --no-nfs-version vers
+#     -s or --syslog
+#     -T or --no-tcp
+#     -U or --no-udp
+NFSDOPTS="--no-nfs-version 2 --no-nfs-version 3"
+# Number of threads for nfsd
+NFSDCOUNT="4"
+#
+# Should we run rpc.mountd at all?
+MOUNTDRUN="yes"
+# Command-line options for rpc.mountd
+# Select from:
+#     -d or --debug kind (all, auth, call, general, parse)
+#     -F or --foreground
+#     -f or --exports-file filename (default is /etc/exports)
+#     -g or --manage-gids
+#     -H or --ha-callout prog
+#     -o or --descriptors num
+#     -N or --no-nfs-version vers
+#     -n or --no-tcp
+#     -p or --port port
+#     -r or --reverse-lookup
+#     -s or --state-directory-path
+#     -t or --num-threads num
+#     -V or --nfs-version num
+MOUNTDOPTS="--nfs-version 4"
+#
+# Should we run rpc.statd at all?
+STATDRUN="no"
+# Command-line options for rpc.mountd
+# Select from:
+#     -d or --no-syslog
+#     -F or --foreground
+#     -H
+#     -L
+#     -N
+#     -n or --name
+#     -o or --outgoing-port
+#     -P
+#     -p or --port
+#     -v or -V
+STATDOPTS=""
+#
+# Should we run rpc.idmapd at all?
+IDMAPDRUN="yes"
+# Command-line options for rpc.idmapd
+# Select from:
+#     -C
+#     -c configurationfile
+#     -d domain
+#     -f
+#     -G groupname
+#     -p path
+#     -S
+#     -U username
+#     -v
+IDMAPDOPTS=""

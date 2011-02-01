@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# Linux Router Project - GPL v2
+#
+# Based on work by:
+# Dave Cinege
+#
+LRPKG="/var/lib/lrpkg"
+MNT="$LRPKG/mnt"
+
+while [ 1 ]; do
+    clear
+    cat <<EOF
+
+                        LEAF configuration menu
+
+
+	1) Network configuration
+
+	2) System configuration
+
+	3) Packages configuration
+
+				s) Save configuration
+				m) Backup modules
+				f) Find & load modules for hardware
+
+				c) Show configuration changes since last save
+				d) Show configuration changes from defaults
+
+				h) Help
+  q) quit
+  ----------------------------------------------------------------------------
+EOF
+
+    echo -n "	Selection: "
+    read OPT
+    case $OPT in
+	q | Q)	exit 0 ;;
+	1 )	lrcfg.conf '			Network configuration menu' \
+			'conf' '$LRPKG/etc.net.conf' '' 'edit $CONF1'  ;;
+	2 )	lrcfg.conf '			System configuration menu' \
+			'conf' '$LRPKG/etc.sys.conf' '' 'edit $CONF1'  ;;
+	3 )	lrcfg.conf '			Packages configuration menu' \
+			'pack' '$LRPKG/packages' '-f $LRPKG/$CONF.conf' \
+		'lrcfg.conf.packs "$CONF" "$LRPKG" ' ;;
+
+	s | S)	with_storage $MNT lrcfg.backup configdb ;;
+	m | M)	with_storage $MNT lrcfg.backup moddb ;;
+	c | C)	with_storage -r $MNT apkg -r | more ; pauseme ;;
+	d | D)	with_storage -r $MNT apkg -R | more ; pauseme ;;
+	f | F)	with_storage -r $MNT hwdetect ; pauseme ;;
+
+	h | H)	lrcfg.conf '			Packages Help Menu' \
+			'pack' '$LRPKG/packages' '-f $LRPKG/$CONF.help' \
+			'help $CONF; pauseme'  ;;
+    esac
+done

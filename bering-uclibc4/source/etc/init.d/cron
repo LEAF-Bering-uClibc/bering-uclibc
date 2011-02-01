@@ -1,0 +1,35 @@
+#!/bin/sh
+# Start/stop the cron daemon.
+
+RCDLINKS="0,K11 2,S89"
+
+test -f /usr/sbin/cron || exit 0
+
+case "$1" in
+start)	
+	echo -n "Starting periodic command scheduler: cron"
+        start-stop-daemon --start --quiet --exec /usr/sbin/cron
+        echo "." 
+	;;
+stop)	
+	echo -n "Stopping periodic command scheduler: cron"
+        start-stop-daemon --stop --quiet --exec /usr/sbin/cron
+        echo "."
+        ;;
+restart)
+	echo -n "Re-starting periodic command scheduler: cron"
+        start-stop-daemon --stop --quiet --exec /usr/sbin/cron
+        start-stop-daemon --start --quiet --exec /usr/sbin/cron
+        echo "."
+        ;;
+reload|force-reload) 
+	echo -n "Re-loading configuration files for periodic command scheduler: cron"
+	# cron reloads automatically
+        echo "."
+        ;;
+*)	
+	echo "Usage: /etc/init.d/cron start|stop"; exit 1 
+        ;;
+esac
+
+exit 0

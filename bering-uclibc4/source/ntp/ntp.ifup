@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# remove (or comment out) the next line if your network addresses change
+exit 0
+
+case $IFACE in
+	eth*)
+		/etc/init.d/ntp restart
+		;;
+esac

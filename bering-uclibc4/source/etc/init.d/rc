@@ -1,0 +1,65 @@
+#! /bin/sh
+#
+# rc		This file is responsible for starting/stopping
+#		services when the runlevel changes.
+#
+# Author:	Miquel van Smoorenburg <miquels@cistron.nl>
+#		Bruce Perens <Bruce@Pixar.com>
+#
+#		Made sh compatible by Philip Hands via proxy of Dave Cinege
+#		  (In other words I couldn't figure it out on my own)
+#
+
+# Un-comment the following for debugging.
+# debug=echo
+
+#
+# Start script or program.
+#
+startup() {
+  case "$1" in
+	*.sh)
+		$debug sh "$@"
+		;;
+	*)
+		$debug "$@"
+		;;
+  esac
+}
+
+  # Ignore CTRL-C only in this shell, so we can interrupt subprocesses.
+  trap ":" 2 3 20
+
+  # Set onlcr to avoid staircase effect.
+  stty onlcr 0>&1
+
+  # Get first argument. Set runlevel to this argument.
+  [ "$1" != "" ] && runlevel=$1
+
+  # Is there an rc directory for this runlevel?
+  if [ -d /etc/rc$runlevel.d ]
+  then
+	# First, run the KILL scripts.
+	for i in /etc/rc$runlevel.d/K[0-9][0-9]*
+	do
+		# Check if the script is there.
+		[ ! -f $i ] && continue
+
+		# Stop the service.
+		startup $i stop
+	done
+	# Now run the START scripts for this runlevel.
+	for i in /etc/rc$runlevel.d/S*
+	do
+		[ ! -f $i ] && continue
+		case "$runlevel" in
+			0|6)
+				startup $i stop
+				;;
+			*)
+				startup $i start
+				;;
+		esac
+	done
+  fi
+# eof /etc/init.d/rc

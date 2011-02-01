@@ -1,0 +1,118 @@
+#!/bin/sh
+
+RCDLINKS="0,K20 1,K20 2,S20 3,S20 4,S20 5,S20 6,K20"
+
+IPVSADM="/sbin/ipvsadm"
+IPVSADM_RULES="/etc/ipvsadm.rules"
+IPVSADM_CONFIG="/etc/default/ipvsadm"
+
+AUTO="false"
+DAEMON="none"		# none|master|backup
+IFACE="eth0"
+
+start () {
+    case $DAEMON in
+	master|backup)
+	    echo -n "Starting IPVS Connection Synchronization Daemon ($DAEMON): "
+	    $IPVSADM --start-daemon $DAEMON --mcast-interface $IFACE
+	    echo "Done."
+	    ;;
+    esac
+}
+
+stop () {
+    case $DAEMON in
+	master|backup)
+	    echo -n "Stopping IPVS Connection Synchronization Daemon ($DAEMON): "
+	    $IPVSADM --stop-daemon 
+	    echo "Done."
+	    ;;
+    esac
+}
+
+flush () {
+    echo -n "Clearing the current IPVS table: " 
+    ipvsadm -C
+    echo "Done."
+}
+
+load () {
+    echo -n "Loading IPVS configuration: "
+    grep -v "^#" $IPVSADM_RULES | $IPVSADM -R
+    echo "Done."
+}
+
+save () {
+    echo -n "Saving IPVS configuration: "
+    echo "# ipvsadm.rules" > $IPVSADM_RULES 
+    $IPVSADM -S -n >> $IPVSADM_RULES 
+    echo "Done."
+}
+
+if [ -f $IPVSADM_CONFIG ]; then
+    . $IPVSADM_CONFIG
+fi
+
+if [ ! -x $IPVSADM ]; then
+    exit 0
+fi
+
+if [ ! -f "/proc/net/ip_vs_conn" ]; then
+    echo "Kernel does not support IPVS!"
+    exit 0
+fi
+
+if [ ! -f $IPVSADM_RULES ]; then
+    echo "# ipvsadm.rules" > $IPVSADM_RULES
+fi
+
+case "$1" in
+    start)
+	if [ "$AUTO" = "true" ]; then
+	    flush
+	    load
+	fi
+	start
+        ;;
+    stop)
+	stop
+	if [ "$AUTO" = "true" ]; then
+	    save
+	    flush
+	fi
+	;;
+    restart)
+	stop
+	if [ "$AUTO" = "true" ]; then
+	    flush
+	    load
+	fi
+	start
+	;;
+    reload|force-reload)
+	if [ "$AUTO" = "true" ]; then
+	    flush
+	    load
+	fi
+	;;
+    status)
+	ipvsadm -L -n
+	;;
+    rate)
+	ipvsadm -L --rate -n
+	;;
+    load)
+	flush
+	load
+	;;
+    save)
+	save
+	;;
+    *)
+	echo "Usage: $0
+	  {start|stop|restart|status|rate|load|save|reload|force-reload}"
+	exit 1
+	;;
+esac
+
+exit 0

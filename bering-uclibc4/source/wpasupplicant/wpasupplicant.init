@@ -1,0 +1,87 @@
+#!/bin/sh
+
+# Buyer beware! This is really only useful if you want to use
+# wpasupplicant in roaming mode. 
+#
+RCDLINKS="2,S15 3,S15 4,S15 5,S15 0,K90 1,K90 6,K90"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+ENABLED=0
+INTERFACE=""
+CONFIG="/etc/wpa_supplicant.conf"
+DAEMON="/usr/sbin/wpa_supplicant"
+PNAME="wpa_supplicant"
+
+# exit silently if daemon is not installed/executable
+[ -x $DAEMON ] || exit 0
+
+[ -f /etc/default/wpasupplicant ] && . /etc/default/wpasupplicant
+
+if [ "$ENABLED" = "0" ]; then
+	echo "wpasupplicant: disabled, see /etc/default/wpasupplicant"
+        exit 0;
+fi
+
+if [ -z "$INTERFACE" ]; then
+        echo "No INTERFACE was defined, not starting.";
+        exit 1;
+fi
+
+if [ ! -r "$CONFIG" ]; then
+	echo "No configuration file found, not starting.";
+	exit 1;
+fi
+
+if [ -z "$DRIVER" ]; then
+	DRIVER="wext"
+fi
+
+PIDFILE="/var/run/wpa_supplicant.$INTERFACE.pid"
+
+OPTIONS="-B -w -i $INTERFACE -D $DRIVER -c $CONFIG -P $PIDFILE"
+
+set -e
+
+case "$1" in
+        start)
+                if [ -f "$PIDFILE" ]; then
+			echo "$PNAME not starting, $PIDFILE already exists."
+			exit 1
+		fi
+		echo "Starting $PNAME."
+                start-stop-daemon --start --name $PNAME \
+                        --oknodo --startas $DAEMON -- $OPTIONS
+                ;;
+        stop)
+                echo "Stopping $PNAME."
+                start-stop-daemon --stop --name $PNAME \
+                        --oknodo
+                if [ -f "$PIDFILE" ]; then
+                        rm -f $PIDFILE;
+                fi
+                ;;
+        reload|force-reload)
+                echo "Reloading $PNAME."
+                start-stop-daemon --stop --signal 1 \
+                        --name $PNAME
+                ;;
+        restart)
+                echo "Stopping $PNAME."
+                start-stop-daemon --stop --name $PNAME \
+                        --oknodo
+                if [ -f "$PIDFILE" ]; then
+                        rm -f $PIDFILE;
+                fi
+
+                echo "Starting $PNAME."
+                start-stop-daemon --start --name $PNAME \
+                        --oknodo --startas $DAEMON -- $OPTIONS
+                ;;
+        *)
+                echo "Usage: $0 {start|stop|restart|reload|force-reload}" >&2
+                exit 1
+                ;;
+esac
+
+exit 0 

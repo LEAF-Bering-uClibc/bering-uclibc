@@ -1,0 +1,27 @@
+#!/bin/sh
+# Start/stop the atm daemon(s).
+RCDLINKS="S,S39 6,K39"
+DAEMON="/sbin/atmarpd"
+
+test -f $DAEMON || exit 0
+
+case "$1" in
+start)  echo -n "Starting ATM ARP Daemon: "
+        start-stop-daemon --start --quiet --exec $DAEMON -- -b
+        /bin/sleep 2
+        echo "atmarpd."
+        ;;
+stop)   echo -n "Stopping ATM ARP Daemon: "
+        start-stop-daemon --stop --quiet --exec $DAEMON
+        echo "atmarpd."
+        ;;
+restart|force-reload) echo -n "Re-starting ATM ARP Daemon: "
+        start-stop-daemon --stop --quiet --exec $DAEMON
+        start-stop-daemon --start --quiet --exec $DAEMON -- -b
+        /bin/sleep 2
+        echo "atmarpd."
+        ;;
+*)      echo "Usage: /etc/init.d/atm start|stop|restart|force-reload"; exit 1
+        ;;
+esac
+exit 0

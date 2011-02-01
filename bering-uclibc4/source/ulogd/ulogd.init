@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# ulogd		ulogd init.d script. Modified by Daniel Stone & J. Nilo
+#
+RCDLINKS="0,K22 1,K22 2,S18 3,S18 4,S18 5,S18 6,K22"
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/ulogd
+NAME=ulogd
+DESC=ulogd
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon --quiet --start --exec $DAEMON -- -d > /dev/null 2>&1
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --quiet --oknodo --stop --exec $DAEMON
+	echo "$NAME."
+	;;
+  reload)
+	killall -HUP ulogd &2> /dev/null 
+	;;
+  restart)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --quiet --stop --exec $DAEMON
+	sleep 1
+	start-stop-daemon --quiet --start --exec $DAEMON -- -d > /dev/null 2>&1
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|reload|restart}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

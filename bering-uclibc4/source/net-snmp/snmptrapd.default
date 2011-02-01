@@ -1,0 +1,9 @@
+# This file controls the activity of snmptrapd
+
+# snmptrapd control (yes means start daemon).
+# master agentx support must be enabled in snmpd before snmptrapd
+# can be run. See snmpd.conf(5) for how to do this.
+TRAPDRUN=yes
+
+# snmptrapd options (use syslog).
+TRAPDOPTS='-Lsd -p /var/run/snmptrapd.pid'

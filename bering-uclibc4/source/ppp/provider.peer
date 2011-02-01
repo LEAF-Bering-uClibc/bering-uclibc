@@ -1,0 +1,16 @@
+# ISP pppd options file
+# What follows is OK for PAP/CHAP ISP's
+#
+noauth
+debug		# log transaction to /var/log/messages     
+/dev/ttyS0	# (ttyS0=com1, ttyS1=com2, ...)
+115200		# baud  rate
+modem
+crtscts		# use hardware flow control
+asyncmap 0
+defaultroute	# ppp becomes default route to the internet
+noipdefault
+lock		# don't let other processes besides PPP use the device      
+#MUST CHANGE
+user your_ISP_login
+connect "/usr/sbin/chat -v -f /etc/chatscripts/provider"

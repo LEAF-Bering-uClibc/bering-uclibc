@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# radiusd	Start the radius daemon.
+#
+#		This is a script suitable for the Debian Linux distribution.
+#		Copy it to /etc/init.d/radiusd, make it executable, and
+#		execute "update-rc.d radiusd defaults 50".
+#
+# This is a hint for webconf: --exec /usr/sbin/radiusd
+RCDLINKS="0,K50 1,K50 2,S50 3,S50 4,S50 5,S50 6,K50"
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+RADIUSD=/usr/sbin/radcoad
+DESC="Radius CoA/DR helper for pppd"
+NAME1=radcoad
+
+[ -d /var/log/radacct ] || mkdir /var/log/radacct
+
+# These are the defaults.
+RADIUS_ARGS="-l syslog -g local0"
+
+# This is useful if you want to replicate accounting packets
+# to another radius server - see README.radrelay
+#RADIUS_ARGS="-y -w -F %N/detail -F detail.rep"
+#RADRELAY_ARGS="-a /var/log/radacct XX.SERVER.HERE.XX detail.rep"
+
+test -f $RADIUSD || exit 0
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC:"
+	echo -n " $NAME1"
+	start-stop-daemon --start --quiet \
+		--pidfile /var/run/$NAME1.pid \
+		--exec $RADIUSD -- $RADIUS_ARGS
+	echo "."
+	;;
+  stop)
+	[ -z "$2" ] && echo -n "Stopping $DESC:"
+	[ -z "$2" ] && echo -n " radiusd"
+	start-stop-daemon --stop --quiet \
+		--pidfile /var/run/$NAME1.pid --exec $RADIUSD
+	[ -z "$2" ] && echo "."
+	;;
+  reload|force-reload)
+	echo "Reloading $DESC configuration files."
+	start-stop-daemon --stop --signal 1 --quiet --pidfile \
+		/var/run/$NAME1.pid --exec $RADIUSD
+	;;
+  restart)
+	sh /etc/init.d/$NAME1 stop quiet
+	sleep 3
+	/etc/init.d/$NAME1 start
+	;;
+  *)
+        echo "Usage: /etc/init.d/$NAME1 {start|stop|reload|restart}"
+        exit 1
+esac
+
+exit 0

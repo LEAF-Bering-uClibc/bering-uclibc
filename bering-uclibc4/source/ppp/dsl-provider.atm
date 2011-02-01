@@ -1,0 +1,20 @@
+#
+# Adjust here VP/VC - depends on country & ISP
+# UK/BT: 0.38 - US/BE/FR: 8.35
+#
+plugin /usr/lib/pppd/pppoatm.so 0.38 
+# 
+# If chap or pap identification uncomment the #name "ISPUserID" line
+# and replace ISPUserID with your ISP user name 
+# There should be a matching entry in /etc/ppp/pap-secrets or chap-secrets
+#
+#name "ISPUserID"
+lock
+noipdefault
+noauth
+defaultroute
+hide-password
+lcp-echo-interval 20
+lcp-echo-failure 3
+maxfail 0
+persist

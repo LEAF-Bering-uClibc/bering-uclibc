@@ -1,0 +1,98 @@
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file should contain the names of kernel modules that are
+# to be loaded at boot time, one per line.  Comments begin with
+# a `#', and everything on the line after them are ignored.
+#
+# All modules should reside in /lib/modules.
+# How they are loaded:  modprobe [mount][dir]/"$module" $args
+# For additional modules check the modules.dep file in the modules
+# tarball for the dependencies.
+
+########################################################################
+# More modules available from:
+# http://leaf.cvs.sourceforge.net/leaf/bin/bering-uclibc/packages/
+########################################################################
+
+# Modules needed for PPP connection
+#slhc
+#ppp_generic
+#ppp_async
+# The three following modules are not always needed
+#zlib_inflate
+#zlib_deflate
+#ppp_deflate
+
+# Modules needed for PPP/PPPOE connection
+#slhc
+#pppoe
+
+# Modules needed for PPTP connection
+#pptp
+ 
+# Modules needed for L2TP connection
+#slhc
+#pppol2tp
+#ppp_mppe
+
+# Modules needed for PPPOA connection
+# An ATM adapter module must be loaded for this to work
+# (e.g. unicorn_pci_atm or unicorn_usb_atm)
+#slhc
+#ppp_generic
+#pppoatm
+
+# Modules needed for ISDN
+# Look for type, io and irq settings at help page of isdn.lrp documentation
+#slhc
+#isdn
+#hisax type= io= irq=
+
+# Watchdog support, always choose one
+# standard software watchdog
+softdog
+# .. or ..
+# wd1100 module available in kernel/drivers/char
+#wd1100 timeout=25 graceful=0
+
+# ipv6 support
+#ipv6
+
+# Templates for extra functionnalities 
+# Warning: the following modules are not provided on Bering-uClibc floppy
+# they must be downloaded
+
+#
+# Bridge support
+#bridge
+
+# Vlan 8021q support
+8021q
+
+# IFB support
+ifb
+
+#
+# USB support
+# do not forget to mount none /proc/bus/usb -t usbdevfs
+#usbcore
+#usb-uhci
+# .. or ..
+#usb-ohci
+
+#
+# Traffic control modules
+act_police
+cls_fw
+cls_flow
+sch_tbf
+sch_prio
+
+# review needed
+sch_ingress
+cls_u32
+sch_htb
+sch_sfq
+
+# uncomment if you want hfsc support
+#sch_hfsc

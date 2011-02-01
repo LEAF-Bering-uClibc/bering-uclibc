@@ -1,0 +1,9 @@
+# This file controls the activity of ntpd
+
+# ntpd control (yes means start daemon).
+NTPDRUN=no
+
+# ntpd options 
+# -l activates server mode
+# -p peer (can be more than one)
+NTPDOPTS='-l -p 0.pool.ntp.org -p 1.pool.ntp.org'

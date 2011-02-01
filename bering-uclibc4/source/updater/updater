@@ -1,0 +1,2 @@
+# run every hour on 7th minute
+7   * * * *	root	/sbin/updater.sh silent

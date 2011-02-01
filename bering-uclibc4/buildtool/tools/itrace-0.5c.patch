@@ -1,0 +1,249 @@
+diff -uNr itrace-0.5c/config.h.in itrace-0.5c-new/config.h.in
+--- itrace-0.5c/config.h.in	2002-07-16 13:35:59.000000000 +0200
++++ itrace-0.5c-new/config.h.in	2004-10-07 22:58:04.000000000 +0200
+@@ -24,4 +24,5 @@
+ 
+ #define TRACELOG_VAR "ITRACE_LOGFNAME"
+ #define TRACELIST_VAR "ITRACE_LISTFNAME"
++#define TRACEEXCLUDE_VAR "ITRACE_EXCLUDE_DIR"
+ 
+diff -uNr itrace-0.5c/itrace.c itrace-0.5c-new/itrace.c
+--- itrace-0.5c/itrace.c	2002-07-16 09:43:21.000000000 +0200
++++ itrace-0.5c-new/itrace.c	2004-10-05 03:23:28.000000000 +0200
+@@ -67,12 +67,13 @@
+ #endif
+   printf("   -l, --log      sets the log file name.\n");
+   printf("   -L, --list     sets the list file name.\n\n");
++  printf("   -X, --exclude  don't include files in this dir in list file.\n\n");
+ }
+ 
+ int main(int argc, char **argv)
+ {
+   int c;
+-  char *args[4], *list = NULL, *log = NULL;
++  char *args[4], *list = NULL, *log = NULL, *exclude = NULL;
+ 
+   static struct option long_options[] = {
+     {"help", 0, 0, 'h'},
+@@ -80,13 +81,15 @@
+     {"version", 0, 0, 'v'},
+ #endif
+     {"log", 1, 0, 'l'},
+-    {"list", 1, 0, 'L'}
++    {"list", 1, 0, 'L'},
++    {"exclude", 1, 0, 'X'},
++    {0,0,0,0}
+   };
+ 
+   while (!NULL) {
+     int option_index = 0;
+ 
+-    c = getopt_long(argc, argv, "hl:L:", long_options, &option_index);
++    c = getopt_long(argc, argv, "hl:L:X:", long_options, &option_index);
+     if (c == -1)
+       break;
+ 
+@@ -108,7 +111,9 @@
+     case 'L':
+       list = optarg;
+       break;
+-
++    case 'X':
++      exclude = optarg;
++      break;
+     default:
+     }
+   }
+@@ -134,6 +139,15 @@
+     free(real_log);
+   }
+ 
++  if(exclude != NULL) {
++    char *real_exclude = get_absolute_path(exclude);
++    setenv(TRACEEXCLUDE_VAR, real_exclude, 1);
++    fprintf(stderr, "itrace> exclude dir . . . : %s\n", real_exclude);
++    free(real_exclude);
++    
++  
++  }
++
+   if (list != NULL) {
+     char *real_list = get_absolute_path(list);
+ 
+diff -uNr itrace-0.5c/libitcore.c itrace-0.5c-new/libitcore.c
+--- itrace-0.5c/libitcore.c	2002-07-15 20:22:31.000000000 +0200
++++ itrace-0.5c-new/libitcore.c	2004-10-07 22:12:50.000000000 +0200
+@@ -23,6 +23,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <string.h>
++#include <libgen.h>
+ 
+ #include <fcntl.h>
+ #include <dlfcn.h>
+@@ -79,11 +80,19 @@
+ void itrace_list(const char *path)
+ {
+   char *real;
++  char *exclude;
+ 
+   if (getenv(TRACELIST_VAR) == NULL) return;
+ 
+   real = get_absolute_path(path);
+ 
++  /* check if we do want to lock this: */
++  exclude = getenv(TRACEEXCLUDE_VAR);
++  if (exclude != NULL) {
++    if (strncmp(exclude, real, strlen(exclude)) == 0 ) 
++    	return;
++  } 
++
+   if (listf == NULL) itrace_list_open();
+ 
+   fprintf(listf, "%s\n", real);
+@@ -91,6 +100,45 @@
+   free(real);
+ }
+ 
++void itrace_link_list(const char *path)
++{
++  char *bname, *dname, *realpath, *dirc, *basec, *exclude;
++
++  if (getenv(TRACELIST_VAR) == NULL) return;
++
++  dirc = strdup(path);
++  basec = strdup(path);
++  dname = dirname(strdup(path));
++  bname = basename(strdup(path));
++  dname = get_absolute_path(dname);
++
++  realpath = (char *) malloc(strlen(dname) + strlen(bname) +1);
++
++  sprintf(realpath, "%s/%s",dname, bname);
++
++  free(dirc);
++  free(basec);
++
++
++  /* check if we do want to lock this: */
++  exclude = getenv(TRACEEXCLUDE_VAR);
++  if (exclude != NULL) {
++    if (strncmp(exclude, realpath, strlen(exclude)) == 0 ) 
++    	return;
++  }
++
++
++  /* write to the file */
++  if (listf == NULL) itrace_list_open();
++
++
++
++  fprintf(listf, "%s\n", realpath);
++
++  
++  free(realpath);
++}
++
+ void check_libc(void)
+ {
+   void *lib = NULL;
+diff -uNr itrace-0.5c/libitrace.c itrace-0.5c-new/libitrace.c
+--- itrace-0.5c/libitrace.c	2002-07-16 09:59:34.000000000 +0200
++++ itrace-0.5c-new/libitrace.c	2004-10-06 15:00:33.000000000 +0200
+@@ -79,8 +79,12 @@
+   ret = libc_open(pathname, flags, mode);
+   va_end(ap);
+ 
++  itrace_log("open33(\"%s\", 0x%08x, %04o) = %i\n", pathname, flags, mode,
++	       ret);
++
+   if (check_path(pathname)) return ret;
+ 
++
+   if ((flags & O_WRONLY) || (flags & O_RDWR) || (flags & O_CREAT)) {
+     itrace_log("open(\"%s\", 0x%08x, %04o) = %i\n", pathname, flags, mode,
+ 	       ret);
+@@ -144,7 +148,7 @@
+ 
+   itrace_log("link(\"%s\", \"%s\") = %i\n", oldpath, newpath, ret);
+   if (!ret)
+-    itrace_list(newpath);
++    itrace_link_list(newpath);
+ 
+   return ret;
+ }
+@@ -158,8 +162,7 @@
+ 
+   itrace_log("symlink(\"%s\", \"%s\") = %i\n", oldpath, newpath, ret);
+   if (!ret)
+-    itrace_list(newpath);
+-
++    itrace_link_list(newpath);
+   return ret;
+ }
+ 
+diff -uNr itrace-0.5c/libitrace.h itrace-0.5c-new/libitrace.h
+--- itrace-0.5c/libitrace.h	2002-05-08 23:08:54.000000000 +0200
++++ itrace-0.5c-new/libitrace.h	2004-10-05 03:07:19.000000000 +0200
+@@ -48,7 +48,7 @@
+ 
+ void itrace_log(const char *, ...);
+ void itrace_list(const char *);
+-
++void itrace_link_list(const char *);
+ 
+ void check_libc(void);
+ 
+diff -uNr itrace-0.5c/libitrace64.c itrace-0.5c-new/libitrace64.c
+--- itrace-0.5c/libitrace64.c	2002-07-16 13:27:33.000000000 +0200
++++ itrace-0.5c-new/libitrace64.c	2004-10-07 22:14:38.000000000 +0200
+@@ -46,7 +46,7 @@
+   va_start(ap, flags);
+   mode = va_arg(ap, mode_t);
+   va_end(ap);
+-
++    
+   check_libc();
+   ret = libc_open64(pathname, flags, mode);
+ 
+diff -uNr itrace-0.5c/util.c itrace-0.5c-new/util.c
+--- itrace-0.5c/util.c	2002-07-16 13:21:22.000000000 +0200
++++ itrace-0.5c-new/util.c	2004-10-06 15:14:20.000000000 +0200
+@@ -39,19 +39,22 @@
+ char *get_absolute_path(char *path)
+ {
+   char *real_path = NULL;
++  char *start_path = NULL;
+   int path_len;
+ 
+   path_len = strlen(path);
+ 
+   real_path = malloc(MAXPATHLEN + path_len + 1);
++  start_path = malloc(MAXPATHLEN + path_len + 1);
+   real_path[MAXPATHLEN + path_len] = real_path[0] = 0x00;
++  start_path[MAXPATHLEN + path_len] = start_path[0] = 0x00;
+ 
+   if (path[0] != '/') {
+-    getcwd(real_path, MAXPATHLEN);
+-    strcat(real_path, "/");
++    getcwd(start_path, MAXPATHLEN);
++    strcat(start_path, "/");
+   }
+-  strcat(real_path, path);
+-  realpath(real_path, real_path);
+-
++  strcat(start_path, path);
++  realpath(start_path, real_path);
++  free(start_path);
+   return real_path;
+ }
+diff -uNr itrace-0.5c/util.h itrace-0.5c-new/util.h
+--- itrace-0.5c/util.h	2002-07-16 10:00:29.000000000 +0200
++++ itrace-0.5c-new/util.h	2004-10-05 03:07:19.000000000 +0200
+@@ -22,5 +22,6 @@
+ 
+ int check_path(const char *);
+ char *get_absolute_path(const char *);
++char *strdup(const char *s);
+ 
+ #endif

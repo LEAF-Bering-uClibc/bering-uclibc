@@ -1,0 +1,33 @@
+#!/bin/sh
+
+PKGLIST=`apkg -l|awk '{print $1 ";" $2 ":" $4}'`
+
+. /etc/updater.conf
+
+cd /tmp
+wget $MIRROR/verinfo.cgi -O updatelist
+UPDLIST=`cat updatelist`
+
+if [ -n "$(echo "$UPDLIST"|grep -e "^$1;")" ]; then
+    PSCR=$(echo "${UPDLIST//;/ }" | grep -e "^$1 " | awk '{print $3}')
+    wget $MIRROR/$1.lrp -O $1.lrp
+    if [ "$PSCR" = "1" ]; then
+        wget $MIRROR/pkgscripts/$1 -O $1
+    fi
+    if [ -z "$(echo "$PKGLIST"|grep "^$1;")" ]; then
+        apkg -i $1.lrp
+        PSCR=1
+	echo "#!/bin/sh" >>$1
+	echo 'e3 $STORAGE_MEDIA/leaf.cfg' >>$1
+    else
+        apkg -u $1
+    fi
+    with_storage $MNT ipkg.move $1 "$PSCR"
+    if [ -n "$LOGGING" ]; then
+        echo "`date`: $1 installed" >>/var/log/updater.log
+    fi
+
+else
+    echo "Package \"$1\" not found"
+fi
+rm -f updatelist

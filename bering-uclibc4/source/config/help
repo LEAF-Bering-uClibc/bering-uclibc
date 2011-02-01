@@ -1,0 +1,5 @@
+#!/bin/sh
+
+HF="$1"
+[ $# -eq 0 ] && HF="root" 
+more "/var/lib/lrpkg/$HF.help"

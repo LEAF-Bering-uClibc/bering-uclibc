@@ -1,0 +1,44 @@
+#!/bin/sh
+#/etc/init.d/watchdog: start watchdog daemon.
+
+RCDLINKS="0,K80 2,S10"
+
+test -x /sbin/watchdog || exit 0
+
+# Set run_watchdog to 1 to start watchdog or 0 to disable it.
+run_watchdog=1
+
+case "$1" in
+  start)
+    if [ $run_watchdog = 1 ]
+    then
+        echo -n "Starting software watchdog... "
+        if start-stop-daemon --start --quiet --exec /sbin/watchdog /dev/watchdog
+        then
+            echo done.
+        else
+            echo failed.
+        fi
+    fi
+    ;;
+
+  stop)
+    if [ $run_watchdog = 1 ]
+    then
+        echo -n "Stopping software watchdog..."
+	if start-stop-daemon --stop --quiet --oknodo --exec /sbin/watchdog
+        then
+            echo done.
+        else
+            echo failed.
+        fi
+    fi
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/watchdog {start|stop}"
+    exit 1
+
+esac
+
+exit 0

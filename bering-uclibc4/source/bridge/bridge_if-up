@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# You don't usually need to touch this file at all, the full configuration
+# of the bridge can be done in a standard way on /etc/network/interfaces.
+
+# Have a look at /usr/share/doc/bridge-utils/README.Debian.gz if you want
+# more info about the way on wich a bridge is set up on Debian.
+
+if [ ! "$IF_BRIDGE_PORTS" -o ! -x /usr/sbin/brctl ]
+then
+  exit 0
+fi
+
+if [ "$IF_BRIDGE_MAXWAIT" ]
+then
+  MAXWAIT=$IF_BRIDGE_MAXWAIT
+else
+  MAXWAIT=`brctl showstp $IFACE|sed -n 's/^.*forward delay[ 	]*\(.*\)\..*bridge forward delay[ 	]*\(.*\)\..*$/\1 \2/p'`
+  if [ "$MAXWAIT" ]
+  then
+    if [ ${MAXWAIT% *} -gt ${MAXWAIT#* } ]
+    then
+      MAXWAIT=$((2*(${MAXWAIT% *}+1)))
+    else
+      MAXWAIT=$((2*(${MAXWAIT#* }+1)))
+    fi
+  else
+    if [ "$IF_BRIDGE_FD" ]
+    then
+      MAXWAIT=$((2*(${IF_BRIDGE_FD%.*}+1)))
+    else
+      MAXWAIT=32
+    fi
+    echo Waiting $MAXWAIT seconds for $IFACE to get ready.
+    sleep $MAXWAIT
+    MAXWAIT=0
+  fi
+fi
+
+if [ "$MAXWAIT" != 0 ]
+then
+  echo "Waiting for $IFACE to get ready (MAXWAIT is $MAXWAIT seconds)."
+
+  unset BREADY
+  COUNT=0
+
+  while [ ! "$BREADY" -a $COUNT -lt $MAXWAIT ]
+  do
+    sleep 1
+    COUNT=$(($COUNT+1))
+    BREADY=true
+    for i in `brctl showstp $IFACE|sed -n 's/^.*port id.*state[ 	]*\(.*\)$/\1/p'`
+    do
+      if [ "$i" != "forwarding" -a "$i" != "blocking" ]
+      then
+        unset BREADY
+      fi
+    done
+  done
+
+fi

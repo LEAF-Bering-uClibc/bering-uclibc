@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# Copyleft 2006 Erich Titl (erich.titl@think.ch)
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2 of the License, or (at your
+# option) any later version.  See <http://www.fsf.org/copyleft/gpl.txt>.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+# set a default of 100 seconds (loops), else use the number passed as first parameter
+loops=${1:-100}
+
+while [ $loops -gt 0 ]
+do
+export `ntpq -c "rv 0 state" | grep state`
+
+case $state in
+        3|4) break;;
+        *) logger -p info -t "$0" ntpd not yet synchronized;;
+esac
+
+sleep 1
+loops=$(($loops - 1))
+done
+
+case $loops in
+        0) logger -s -p err -t "$0" ntp could not synchronize to external time source;
+           exit 255;;
+        *) logger -p info -t "$0" ntpd synchronized;;
+esac
+
+exit 0

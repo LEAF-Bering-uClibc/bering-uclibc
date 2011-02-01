@@ -1,0 +1,3 @@
+#!/bin/bash
+
+i486-pc-linux-uclibc-gcc -m32 "$@"

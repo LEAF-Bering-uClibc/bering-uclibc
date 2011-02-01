@@ -1,0 +1,44 @@
+#! /bin/sh
+# /etc/init.d/snmptrapd: start snmptrap daemon.
+RCDLINKS="2,S50 3,S50 4,S50 5,S50 0,K50 1,K50 6,K50"
+
+test -x /usr/sbin/snmptrapd || exit 0
+
+# Read our control file.
+. /etc/default/snmptrapd
+
+# Cd to / before starting any daemons.
+cd /
+
+case "$1" in
+  start)
+    echo -n "Starting network management services:"
+    if [ "$TRAPDRUN" = "yes" -a -f /etc/snmp/snmptrapd.conf ]; then
+	start-stop-daemon --quiet --start --exec /usr/sbin/snmptrapd -- $TRAPDOPTS
+	echo -n " snmptrapd"
+    fi
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping network management services:"
+    start-stop-daemon --quiet --stop --exec /usr/sbin/snmptrapd
+    echo -n " snmptrapd"
+    echo "."
+    ;;
+  restart|reload|force-reload)
+    echo -n "Restarting network management services:"
+    start-stop-daemon --quiet --stop --exec /usr/sbin/snmptrapd
+    # Allow the daemons time to exit completely.
+    sleep 2
+    if [ "$TRAPDRUN" = "yes" -a -f /etc/snmp/snmptrapd.conf ]; then
+	start-stop-daemon --quiet --start --exec /usr/sbin/snmptrapd -- $TRAPDOPTS
+	echo -n " snmptrapd"
+    fi
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/snmptrapd {start|stop|restart|reload|force-reload}"
+    exit 1
+esac
+
+exit 0

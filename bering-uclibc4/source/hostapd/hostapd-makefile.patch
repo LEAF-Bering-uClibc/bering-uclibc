@@ -1,0 +1,12 @@
+diff -urN hostapd-0.3.7.orig/Makefile hostapd-0.3.7/Makefile
+--- hostapd-0.3.7.orig/Makefile	2005-02-12 17:12:56.000000000 +0100
++++ hostapd-0.3.7/Makefile	2005-02-13 10:55:33.000000000 +0100
+@@ -8,7 +8,7 @@
+ 
+ # define HOSTAPD_DUMP_STATE to include SIGUSR1 handler for dumping state to
+ # a file (undefine it, if you want to save in binary size)
+-CFLAGS += -DHOSTAPD_DUMP_STATE
++#CFLAGS += -DHOSTAPD_DUMP_STATE
+ 
+ # Include directories for CVS version
+ CFLAGS += -I. -I$(DIR_HOSTAP) -I../utils -I$(DIR_WPA_SUPPLICANT)

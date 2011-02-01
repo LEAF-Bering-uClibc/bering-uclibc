@@ -1,0 +1,8 @@
+# NTPD options
+NTPD_OPTS="-g"
+
+# should we wait for ntpd to be synchronized 
+#NTP_WAIT=YES
+#NTP_WAIT_TIMEOUT=60
+
+

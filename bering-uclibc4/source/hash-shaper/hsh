@@ -1,0 +1,74 @@
+#!/bin/sh
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later
+# version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# ===
+#
+# htb.init
+# 
+# A shell-script wrapper for HTB.INIT designed for
+# use in the SysV-init system (/etc/init.d).
+#
+# usage: htb.init { start | stop | restart | stats }
+#
+
+RCDLINKS="0,K89 1,K89 2,S11 3,S11 4,S11 5,S11 6,K89"
+
+# check the command line
+#
+usage="{ start | stop | restart | reload }"
+if test $# -eq 0
+then
+	echo usage: `basename $0` "${usage}" >&2
+	exit 2
+fi
+
+# process the command line
+#
+if test "${1}" = "start"
+then
+	# "start"
+	#
+	echo -n "starting hash shaper (QoS) ..."
+	/usr/sbin/hsh.sh init
+	echo "hsh"
+
+elif test "${1}" = "stop"
+then
+	# "stop"
+	#
+	echo -n "stopping hash shaper (QoS) ..."
+	/usr/sbin/hsh.sh stop
+	echo "hsh"
+
+elif test "${1}" = "restart"
+then
+	# "restart"
+	#
+	echo -n "restarting hash shaper (QoS) ..."
+	/usr/sbin/hsh.sh stop
+	/usr/sbin/hsh.sh init
+	echo "hsh"
+
+elif test "${1}" = "reload"
+then
+	# "restart"
+	#
+	echo -n "reloading hash shaper (QoS) ..."
+	/usr/sbin/hsh.sh stop
+	/usr/sbin/hsh.sh init
+	echo "hsh"
+
+
+else
+	echo usage: `basename $0` "${usage}" >&2
+	exit 2
+fi

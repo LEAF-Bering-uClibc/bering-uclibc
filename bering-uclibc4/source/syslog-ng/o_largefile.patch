@@ -1,0 +1,13 @@
+diff -aur syslog-ng-1.6.12.orig/src/syslog-ng.h syslog-ng-1.6.12/src/syslog-ng.h
+--- syslog-ng-1.6.12.orig/src/syslog-ng.h	2006-06-12 10:50:47.000000000 +0300
++++ syslog-ng-1.6.12/src/syslog-ng.h	2010-03-23 15:44:07.000000000 +0200
+@@ -51,5 +51,9 @@
+ #define O_LARGEFILE 0
+ #endif
+ 
++#ifndef O_LARGEFILE
++#define O_LARGEFILE 0
++#endif
++
+ #endif
+ 

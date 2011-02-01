@@ -1,0 +1,28 @@
+#!/bin/sh
+
+RCDLINKS="S,S36"
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+PROGRAM=/usr/bin/sensors
+
+test -x $PROGRAM || exit 0
+
+case "$1" in
+  start)
+	echo -n "Setting sensors limits:"
+	/usr/bin/sensors -s 1> /dev/null 2> /dev/null
+	/usr/bin/sensors 1> /dev/null 2> /dev/null
+	echo " done."
+	;;
+  stop)
+	;;
+  force-reload|restart)
+	$0 stop
+	$0 start
+	;;
+  *)
+	echo "Usage: /etc/init.d/sensors {start|stop|restart|force-reload}"
+	exit 1
+esac
+
+exit 0

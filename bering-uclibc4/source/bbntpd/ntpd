@@ -1,0 +1,56 @@
+#! /bin/sh
+#
+# skeleton	example file to build /etc/init.d/ scripts.
+#		This file should be used to construct scripts for /etc/init.d.
+#
+#		Written by Miquel van Smoorenburg <miquels@cistron.nl>.
+#		Modified for Debian 
+#		by Ian Murdock <imurdock@gnu.ai.mit.edu>.
+#
+# Version:	@(#)skeleton  1.9  26-Feb-2001  miquels@cistron.nl
+#
+RCDLINKS="2,S25 3,S25 4,S25 5,S25 0,K25 1,K25 6,K25"
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/ntpd
+NAME=ntpd
+DESC="BusyBox ntpd"
+
+test -x $DAEMON || exit 0
+
+# read our control file
+. /etc/default/ntpd
+
+
+set -e
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC "
+	if [ "$NTPDRUN" = "yes" ]; then
+	start-stop-daemon --start --quiet --exec $DAEMON -- $NTPDOPTS
+	echo 
+	fi
+	;;
+  stop)
+	echo -n "Stopping $DESC "
+	start-stop-daemon --stop --oknodo --quiet --exec $DAEMON 2>/dev/null
+	echo 
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC "
+	start-stop-daemon --stop --oknodo --quiet --exec $DAEMON 2>/dev/null
+	sleep 1
+	if [ "$NTPDRUN" = "yes" ]; then
+	start-stop-daemon --start --quiet --exec $DAEMON -- $NTPDOPTS
+	echo 
+	fi
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

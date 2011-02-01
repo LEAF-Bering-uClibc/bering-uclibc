@@ -1,0 +1,194 @@
+#!/bin/busybox sh
+#
+# /linuxrc (rc.-1)  Prepares root for normal inittab and boot.
+# Allows main root to be a multiple parts
+#
+# Copyright Dave Cinege - LRP  GPL2
+# Multiple disk handling portions written by JamesSturdevant 1999
+# Fix corruption of linuxrc.err by LarrySettle Jan 2000
+# Fix corruption of /var/lib/lrpkg/backdisk by LarrySettle Jan 2000
+# Modified to load modules before looking for packages by
+# Charles Steinkuehler 2001
+# J. Nilo Nov 2001: Get rid of grep & cut statements for non-patched distro
+# and pivot_root to tmpfs
+#
+# Modified Eric Wolzak april 2002 for cdrom, module loading 
+# Major changes by Charles Steinkuehler, Mar. 2004
+#
+
+# Uncomment for more verbose execution.
+#VERBOSE=1
+
+if [ $DEBUG ] ; then
+	qt () { "$@" ; }
+else
+	qt () { "$@" >>/linuxrc.err 2>&1 ; }
+fi
+
+Lecho () { echo "LINUXRC2: $@"; }
+
+Lecho "Vars: PFX=$PFX LRP=$LRP log_size=$log_size"
+
+Lecho "Bering - Initrd pt.2 - $VERSION"
+
+mount -t proc procfs /proc
+mount -t sysfs sysfs /sys
+
+cd /
+
+[ "$VERBOSE" ] && Lecho "Generating default dirs..."
+
+qt mkdir /dev/inet 
+qt mkdir /dev/net
+qt mkdir /etc
+qt mkdir /tmp
+qt mkdir /mnt
+qt mkdir /nfs
+qt mkdir /var/lock
+qt mkdir /var/run
+
+qt ln -s tmp /var/tmp
+qt ln -s tmp /usr/tmp
+
+[ "$VERBOSE" ] && Lecho "Generating /tmp & /var/log partitions ..."
+qt mount -t tmpfs tmpfs /tmp -o defaults${tmp_size:+,size=$tmp_size}
+qt mount -t tmpfs tmpfs /var/log -o size=$log_size
+
+[ "$VERBOSE" ] && Lecho "Populating /dev..."
+source $PFX/root.dev.mk
+
+#Set some permissions
+chmod 1777 /var/lock
+chmod 1777 /tmp
+
+# Query /proc/cmdline to see if we want to ask for a second disk
+# to be inserted for use as a rescue set
+case $KCMD_diskwait in
+	Y*|y*|1)
+Lecho
+Lecho "***   Insert 2nd disk.  Press <enter> to continue.   ***"
+Lecho
+		read KEYCHAR
+		unset KEYCHAR
+		;;
+esac
+if [ -n "$PKGPATH" ];  then
+	: >$PFX/pkgpath.disks
+	[ "$VERBOSE" ] && Lecho "PKGPATH: $PKGPATH"
+	devcount=1
+	IFS="$IFS,"
+	for dev in ${PKGPATH}; do
+		IFS=':'
+		set -- ${dev}
+		dev=$1
+		qt mkdir /mnt$devcount
+		IFS="$OIFS"
+		for t in $2 ${FILESYSTEMS}; do
+			[ "$VERBOSE" ] && Lecho "Mounting $dev on /mnt$devcount as $t"
+			if qt mount -rt $t $dev /mnt$devcount ; then
+				[ "$VERBOSE" ] && Lecho "Mounted $dev as $t"
+				echo "$dev $t" >>$PFX/pkgpath.disks
+				devlist="$dev:+/mnt$devcount:-$t,$devlist"
+				rdevlist="$rdevlist,$dev:+/mnt$devcount:-$t"
+				if [ $devcount -eq 1 ] ; then 
+					echo "${KCMD_initrd%.lrp}">$PFX/packages
+				fi
+				break
+			fi
+		done
+		devcount=$(expr $devcount + 1)
+	done
+	IFS="$OIFS"
+else
+	Lecho "PKGPATH is empty or unset. Can not install packages."
+fi
+
+devlist=${devlist%,}
+rdevlist=${rdevlist#,}
+
+if [ ! "$LRP" = "" ]; then
+
+	echo -n "LINUXRC: Installing -"
+	
+	echo configdb=$CONFIGDB >$PFX/backup
+	echo moddb=$MODDB >>$PFX/backup
+	
+	IFS="$IFS,"
+	for f in ${LRP} $CONFIGDB $MODDB; do
+		IFS=':'
+		set -- $f
+		f=$1
+		usedevlist=$rdevlist
+		fnd=0
+		echo -n "  $f:"
+		IFS=","
+		for devtype in ${usedevlist}; do
+			dev="${devtype%:+*}"
+			mnt="${devtype%:-*}"
+			mnt="${mnt#*:+}"
+			t="${devtype#*:-}"
+			[ "$VERBOSE" ] && echo -n " dev: $dev mnt: $mnt t: $t f: $mnt/$f.lrp"
+			[ "$VERBOSE2" ] && ls -l $dev
+			if [ $fnd -ne 1 ]; then
+			if [ -f $mnt/$f.lrp ]; then
+				echo -n " $dev"
+				gunzip -c $mnt/$f.lrp > /dev/null
+				if [ $? -eq 0 ]; then
+					tar -zxvpf $mnt/$f.lrp > $PFX/$f.list
+					#Update installed packages file
+					[ $fnd -ne 1 ] && echo "$f">>$PFX/packages
+					#Calculate sha1sum
+					if [ -f $PFX/$f.local ] ; then
+					    cat $PFX/$f.local | while read x ; do
+						[ -e "$x" ] && find "$x" -type f | xargs sha1sum >> $PFX/$f.sha1
+					    done
+					fi
+					fnd=1
+				else
+					echo -n "(cpt!)"
+					[ $fnd -eq 0 ] && fnd=2
+				fi
+			fi
+			fi
+		done
+		if [ $fnd -eq 0 ]; then
+			echo -n " $f(nf!)"
+		fi
+	done
+	IFS="$OIFS"
+	echo " - Finished."
+else
+	Lecho "LRP= is empty or unset.  Can not install packages."
+fi
+
+# We need to set permissons after etc is installed, so it sets owner and
+# group correctly. (No /etc/passwd and /etc/group on the first run : P )
+[ "$VERBOSE" ] && Lecho "chown and chmod /dev..."
+source $PFX/root.dev.own
+source $PFX/root.dev.mod
+
+#Can't hurt
+sync
+sleep 1
+
+IFS=","
+for devtype in ${devlist}; do
+	mnt="${devtype%:-*}"
+	mnt="${mnt#*:+}"
+	[ "$VERBOSE" ] && Lecho "Unmounting $mnt"
+	qt umount $mnt
+	[ "$VERBOSE" ] && Lecho "Removing $mnt"
+	qt rmdir $mnt
+done
+IFS="$OIFS"
+
+# qt umount /proc
+
+[ ! $VERBOSE ] && rm /linuxrc.err
+
+Lecho "Loaded Packages"
+
+#exec /usr/sbin/chroot . sh -c 'umount /initrd; freeramdisk /dev/ram0; exec /sbin/init' <dev/console >dev/console 2>&1
+exec /usr/sbin/chroot . /sbin/init
+
+exit 0

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+lrcfg.conf "			$1 configuration files" \
+		'conf' "$2/$1.conf" '' 'edit $CONF1'

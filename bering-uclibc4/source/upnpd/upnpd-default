@@ -1,0 +1,17 @@
+#
+# UPnPd		linux-igd ported for leaf
+#
+# Uncomment these to change defaults.
+#
+# The current implemetation of UPNPD is capable of dealing with just one
+# internal interface (where we listen for control messages) and one external
+# interface (where firewall rules are managed).
+#
+# IF_INTERNAL="eth1"
+# IF_EXTERNAL="ppp0"
+
+# By default, we'll add a route for the multicast packets out the
+# internal interface.  If you set MC_ROUTE to "", no route will be
+# added/managed.
+#
+# MC_ROUTE="224.0.0.0/4"

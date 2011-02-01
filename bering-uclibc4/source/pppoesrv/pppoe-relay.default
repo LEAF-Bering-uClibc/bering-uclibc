@@ -1,0 +1,21 @@
+# Interfaces for clients
+CIFACES="eth1"
+
+# Interface for server
+SIFACE=eth0
+
+# Interfaces for both server and cliant
+#BIFACES="eth0"
+
+# Interface to use; on blank - use default (eth0)
+#IFACES="eth0"
+
+# mawk regexp for selecting ifaces among present in system 
+# can be combined with CIFACES option
+#CIFREGEXP="vlan[1-3][0-9][0-9][0-9]"
+
+# Inactivity timeout (in seconds)
+#TIMEOUT=600
+
+# Max concurrent sessions (default - 5000)
+#SESSIONS=5

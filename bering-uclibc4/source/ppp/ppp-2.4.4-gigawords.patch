@@ -1,0 +1,297 @@
+diff -aur ppp-2.4.4.orig/pppd/main.c ppp-2.4.4/pppd/main.c
+--- ppp-2.4.4.orig/pppd/main.c	2006-06-04 06:52:50.000000000 +0300
++++ ppp-2.4.4/pppd/main.c	2010-03-24 21:52:01.000000000 +0200
+@@ -1246,9 +1246,9 @@
+ 
+     slprintf(numbuf, sizeof(numbuf), "%u", link_connect_time);
+     script_setenv("CONNECT_TIME", numbuf, 0);
+-    slprintf(numbuf, sizeof(numbuf), "%u", link_stats.bytes_out);
++    snprintf(numbuf, sizeof(numbuf), "%llu", link_stats.bytes_out);
+     script_setenv("BYTES_SENT", numbuf, 0);
+-    slprintf(numbuf, sizeof(numbuf), "%u", link_stats.bytes_in);
++    snprintf(numbuf, sizeof(numbuf), "%llu", link_stats.bytes_in);
+     script_setenv("BYTES_RCVD", numbuf, 0);
+ }
+ 
+Only in ppp-2.4.4.orig/pppd: pathnames.h.orig
+diff -aur ppp-2.4.4.orig/pppd/plugins/radius/avpair.c ppp-2.4.4/pppd/plugins/radius/avpair.c
+--- ppp-2.4.4.orig/pppd/plugins/radius/avpair.c	2004-11-14 09:26:26.000000000 +0200
++++ ppp-2.4.4/pppd/plugins/radius/avpair.c	2010-03-24 21:52:01.000000000 +0200
+@@ -291,9 +291,19 @@
+     /* Set attrlen to length of data */
+     attrlen -= 4;
+     for (; attrlen; attrlen -= vlen+2, ptr += vlen) {
+-	vtype = *ptr++;
+-	vlen = *ptr++;
+-	vlen -= 2;
++
++	if ( vendor_id == VENDOR_USR ) {
++		vlen = attrlen - 4;
++	        vtype = (ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | ptr[3];
++	        ptr += 4;
++	        /* fixup */ 
++	        attrlen -= 2;
++	} else {
++	        vtype = *ptr++;
++	        vlen = *ptr++;
++	        vlen -= 2;
++	}
++
+ 	if (vlen < 0 || vlen > attrlen - 2) {
+ 	    /* Do not log an error.  We are supposed to be able to cope with
+ 	       arbitrary vendor-specific gunk */
+diff -aur ppp-2.4.4.orig/pppd/plugins/radius/etc/dictionary ppp-2.4.4/pppd/plugins/radius/etc/dictionary
+--- ppp-2.4.4.orig/pppd/plugins/radius/etc/dictionary	2002-11-09 13:24:42.000000000 +0200
++++ ppp-2.4.4/pppd/plugins/radius/etc/dictionary	2010-03-24 21:52:01.000000000 +0200
+@@ -81,6 +81,8 @@
+ ATTRIBUTE	Acct-Session-Time	46	integer
+ ATTRIBUTE	Acct-Input-Packets	47	integer
+ ATTRIBUTE	Acct-Output-Packets	48	integer
++ATTRIBUTE      Acct-Input-Gigawords    52      integer
++ATTRIBUTE      Acct-Output-Gigawords   53      integer
+ ATTRIBUTE	Acct-Terminate-Cause	49	integer
+ ATTRIBUTE       Chap-Challenge          60      string
+ ATTRIBUTE	NAS-Port-Type		61	integer
+diff -aur ppp-2.4.4.orig/pppd/plugins/radius/radius.c ppp-2.4.4/pppd/plugins/radius/radius.c
+--- ppp-2.4.4.orig/pppd/plugins/radius/radius.c	2006-05-22 03:01:40.000000000 +0300
++++ ppp-2.4.4/pppd/plugins/radius/radius.c	2010-03-24 21:52:01.000000000 +0200
+@@ -963,18 +963,44 @@
+ 
+ 
+     if (link_stats_valid) {
++    	DICT_ATTR*      attr;
++	static char     bigint[64];
++
+ 	av_type = link_connect_time;
+ 	rc_avpair_add(&send, PW_ACCT_SESSION_TIME, &av_type, 0, VENDOR_NONE);
+ 
+-	av_type = link_stats.bytes_out;
++	if ( (attr=rc_dict_findattr("Acct-Output-Octets-64")) ) {
++		snprintf(bigint,sizeof(bigint),"%llu",link_stats.bytes_out);
++		rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++	}
++	av_type = (UINT4)link_stats.bytes_out;
+ 	rc_avpair_add(&send, PW_ACCT_OUTPUT_OCTETS, &av_type, 0, VENDOR_NONE);
+ 
+-	av_type = link_stats.bytes_in;
++	av_type = (UINT4)(link_stats.bytes_out >> 32);
++	rc_avpair_add(&send, PW_ACCT_OUTPUT_GIGAWORDS, &av_type, 0, VENDOR_NONE);
++	  
++	if ( (attr=rc_dict_findattr("Acct-Input-Octets-64")) ) {
++		snprintf(bigint,sizeof(bigint),"%llu",link_stats.bytes_in);
++		rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++	}
++	av_type = (UINT4)link_stats.bytes_in;
+ 	rc_avpair_add(&send, PW_ACCT_INPUT_OCTETS, &av_type, 0, VENDOR_NONE);
+ 
++	av_type = (UINT4)(link_stats.bytes_in >> 32);
++        rc_avpair_add(&send, PW_ACCT_INPUT_GIGAWORDS, &av_type, 0, VENDOR_NONE);
++  
++        if ( (attr=rc_dict_findattr("Acct-Output-Packets-64")) ) {
++        	snprintf(bigint,sizeof(bigint),"%llu",link_stats.pkts_out);
++	        rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++        }
++
+ 	av_type = link_stats.pkts_out;
+ 	rc_avpair_add(&send, PW_ACCT_OUTPUT_PACKETS, &av_type, 0, VENDOR_NONE);
+-
++ 
++        if ( (attr=rc_dict_findattr("Acct-Input-Packets-64")) ) {
++                snprintf(bigint,sizeof(bigint),"%llu",link_stats.pkts_in);
++                rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++        }
+ 	av_type = link_stats.pkts_in;
+ 	rc_avpair_add(&send, PW_ACCT_INPUT_PACKETS, &av_type, 0, VENDOR_NONE);
+     }
+@@ -1109,20 +1135,45 @@
+     update_link_stats(0);
+ 
+     if (link_stats_valid) {
++	DICT_ATTR*      attr;
++	static char     bigint[64];
++ 
+ 	link_stats_valid = 0; /* Force later code to update */
+ 
+ 	av_type = link_connect_time;
+ 	rc_avpair_add(&send, PW_ACCT_SESSION_TIME, &av_type, 0, VENDOR_NONE);
+ 
+-	av_type = link_stats.bytes_out;
++	if ( (attr=rc_dict_findattr("Acct-Output-Octets-64")) ) {
++		snprintf(bigint,sizeof(bigint),"%llu",link_stats.bytes_out);
++		rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++	}
++	av_type = (UINT4)link_stats.bytes_out;
+ 	rc_avpair_add(&send, PW_ACCT_OUTPUT_OCTETS, &av_type, 0, VENDOR_NONE);
+ 
+-	av_type = link_stats.bytes_in;
++	av_type = (UINT4)(link_stats.bytes_out >> 32);
++	rc_avpair_add(&send, PW_ACCT_OUTPUT_GIGAWORDS, &av_type, 0, VENDOR_NONE);
++	  
++	if ( (attr=rc_dict_findattr("Acct-Input-Octets-64")) ) {
++		snprintf(bigint,sizeof(bigint),"%llu",link_stats.bytes_in);
++		rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++	}
++	av_type = (UINT4)link_stats.bytes_in;
+ 	rc_avpair_add(&send, PW_ACCT_INPUT_OCTETS, &av_type, 0, VENDOR_NONE);
+ 
++	av_type = (UINT4)(link_stats.bytes_in >> 32);
++	rc_avpair_add(&send, PW_ACCT_INPUT_GIGAWORDS, &av_type, 0, VENDOR_NONE);
++	  
++	if ( (attr=rc_dict_findattr("Acct-Output-Packets-64")) ) {
++		snprintf(bigint,sizeof(bigint),"%llu",link_stats.pkts_out);
++		rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++	}
+ 	av_type = link_stats.pkts_out;
+ 	rc_avpair_add(&send, PW_ACCT_OUTPUT_PACKETS, &av_type, 0, VENDOR_NONE);
+ 
++	if ( (attr=rc_dict_findattr("Acct-Input-Packets-64")) ) {
++		snprintf(bigint,sizeof(bigint),"%llu",link_stats.pkts_in);
++		rc_avpair_add(&send,attr->value,bigint,0,attr->vendorcode);
++	}
+ 	av_type = link_stats.pkts_in;
+ 	rc_avpair_add(&send, PW_ACCT_INPUT_PACKETS, &av_type, 0, VENDOR_NONE);
+     }
+diff -aur ppp-2.4.4.orig/pppd/plugins/radius/radiusclient.h ppp-2.4.4/pppd/plugins/radius/radiusclient.h
+--- ppp-2.4.4.orig/pppd/plugins/radius/radiusclient.h	2004-11-14 09:26:26.000000000 +0200
++++ ppp-2.4.4/pppd/plugins/radius/radiusclient.h	2010-03-24 21:53:13.000000000 +0200
+@@ -167,6 +167,8 @@
+ #define PW_ACCT_TERMINATE_CAUSE		49	/* integer */
+ #define PW_ACCT_MULTI_SESSION_ID	50	/* string */
+ #define PW_ACCT_LINK_COUNT		51	/* integer */
++#define PW_ACCT_INPUT_GIGAWORDS         52      /* integer */
++#define PW_ACCT_OUTPUT_GIGAWORDS        53      /* integer */
+ 
+ /* From RFC 2869 */
+ #define PW_ACCT_INTERIM_INTERVAL        85	/* integer */
+@@ -292,6 +294,7 @@
+ /* Vendor codes */
+ #define VENDOR_NONE     (-1)
+ #define VENDOR_MICROSOFT	311
++#define VENDOR_USR	429
+ 
+ /* Server data structures */
+ 
+Only in ppp-2.4.4/pppd/plugins/radius: radius.c.orig
+diff -aur ppp-2.4.4.orig/pppd/plugins/radius/sendserver.c ppp-2.4.4/pppd/plugins/radius/sendserver.c
+--- ppp-2.4.4.orig/pppd/plugins/radius/sendserver.c	2004-11-14 09:26:26.000000000 +0200
++++ ppp-2.4.4/pppd/plugins/radius/sendserver.c	2010-03-24 21:52:01.000000000 +0200
+@@ -56,6 +56,14 @@
+ 		*buf++ = (((unsigned int) vp->vendorcode) >> 8) & 255;
+ 		*buf++ = ((unsigned int) vp->vendorcode) & 255;
+ 
++		/* Stolen from freeradius's source, that USR vendor
++		/* attributes are to handled otherwise */
++		if ( vp->vendorcode == VENDOR_USR ) {
++			*buf++ = (vp->attribute >> 24) & 0xff;
++			*buf++ = (vp->attribute >> 16) & 0xff;
++			*buf++ = (vp->attribute >> 8) & 0xff;
++		}
++
+ 		/* Insert vendor-type */
+ 		*buf++ = vp->attribute;
+ 
+@@ -64,7 +72,8 @@
+ 		case PW_TYPE_STRING:
+ 		    length = vp->lvalue;
+ 		    *lenptr = length + 8;
+-		    *buf++ = length+2;
++		    if ( vp->vendorcode != VENDOR_USR )
++		    	*buf++ = length+2;
+ 		    memcpy(buf, vp->strvalue, (size_t) length);
+ 		    buf += length;
+ 		    total_length += length+8;
+@@ -73,7 +82,8 @@
+ 		case PW_TYPE_IPADDR:
+ 		    length = sizeof(UINT4);
+ 		    *lenptr = length + 8;
+-		    *buf++ = length+2;
++		    if ( vp->vendorcode != VENDOR_USR )
++		    	*buf++ = length+2;
+ 		    lvalue = htonl(vp->lvalue);
+ 		    memcpy(buf, (char *) &lvalue, sizeof(UINT4));
+ 		    buf += length;
+@@ -82,6 +92,10 @@
+ 		default:
+ 		    break;
+ 		}
++		if ( vp->vendorcode == VENDOR_USR ) {
++			*lenptr += 2;
++			total_length += 2;
++		}
+ 	    } else {
+ 		*buf++ = vp->attribute;
+ 		switch (vp->attribute) {
+diff -aur ppp-2.4.4.orig/pppd/pppd.h ppp-2.4.4/pppd/pppd.h
+--- ppp-2.4.4.orig/pppd/pppd.h	2010-03-24 21:50:19.000000000 +0200
++++ ppp-2.4.4/pppd/pppd.h	2010-03-24 21:55:35.000000000 +0200
+@@ -170,10 +170,10 @@
+  * pppd needs.
+  */
+ struct pppd_stats {
+-    unsigned int	bytes_in;
+-    unsigned int	bytes_out;
+-    unsigned int	pkts_in;
+-    unsigned int	pkts_out;
++    unsigned long long	bytes_in;
++    unsigned long long	bytes_out;
++    unsigned long long	pkts_in;
++    unsigned long long	pkts_out;
+ };
+ 
+ /* Used for storing a sequence of words.  Usually malloced. */
+Only in ppp-2.4.4.orig/pppd: pppd.h.orig
+diff -aur ppp-2.4.4.orig/pppd/sys-linux.c ppp-2.4.4/pppd/sys-linux.c
+--- ppp-2.4.4.orig/pppd/sys-linux.c	2005-08-27 01:44:35.000000000 +0300
++++ ppp-2.4.4/pppd/sys-linux.c	2010-03-24 21:57:15.000000000 +0200
+@@ -1332,6 +1332,10 @@
+  *
+  * get_ppp_stats - return statistics for the link.
+  */
++
++static struct ifpppstatsreq prev_stat_req;
++static struct pppd_stats static_stats;
++
+ int
+ get_ppp_stats(u, stats)
+     int u;
+@@ -1351,6 +1355,20 @@
+     stats->bytes_out = req.stats.p.ppp_obytes;
+     stats->pkts_in = req.stats.p.ppp_ipackets;
+     stats->pkts_out = req.stats.p.ppp_opackets;
++    // Calculate the elapsed bytes since the last query
++     static_stats.bytes_in +=
++	(req.stats.p.ppp_ibytes - prev_stat_req.stats.p.ppp_ibytes);
++    static_stats.bytes_out +=
++	(req.stats.p.ppp_obytes - prev_stat_req.stats.p.ppp_obytes);
++    static_stats.pkts_in +=
++	(req.stats.p.ppp_ipackets - prev_stat_req.stats.p.ppp_ipackets);
++    static_stats.pkts_out +=
++	(req.stats.p.ppp_opackets - prev_stat_req.stats.p.ppp_opackets);
++    // Store the current state
++    memcpy(&prev_stat_req,&req,sizeof(prev_stat_req));
++
++    // Give out the statistics
++    memcpy(stats,&static_stats,sizeof(static_stats));
+     return 1;
+ }
+ 
+@@ -1373,7 +1391,7 @@
+ }
+ 
+ /********************************************************************
+- *
++ *  
+  * path_to_procfs - find the path to the proc file system mount point
+  */
+ static char proc_path[MAXPATHLEN];
+@@ -2236,6 +2254,10 @@
+ {
+     struct ifreq ifr;
+ 
++    // Initialize the 'previous stats struct'
++    memset(&prev_stat_req,0,sizeof(prev_stat_req));
++    // And the static statistics puffer
++    memset(&static_stats,0,sizeof(static_stats));
+     memset (&ifr, '\0', sizeof (ifr));
+     strlcpy(ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
+     if (ioctl(sock_fd, SIOCGIFFLAGS, (caddr_t) &ifr) < 0) {

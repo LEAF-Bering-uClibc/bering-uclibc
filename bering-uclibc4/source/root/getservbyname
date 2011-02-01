@@ -1,0 +1,10 @@
+#!/bin/sh
+
+TAB='	'
+prog=${0##*/}
+
+[ "$1" != "" ] && serv=$1 || \
+	{ echo "Usage: $prog service [type]"; exit 1; }
+proto=${2:-tcp}
+port="$(sed -n "s/^$serv[ |$TAB]*\([0-9]*\)\/$proto.*$/\1/p" /etc/services)"
+echo "${port:-0}"

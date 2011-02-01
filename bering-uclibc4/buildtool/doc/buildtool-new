@@ -1,0 +1,161 @@
+Hi all,
+
+I have some time to describe what i am thinking right now how a new buildtool could look like. I was influenced by what you wrote martin, also this is not a real response to your mail in detail. But after thinking about it a few days i would suggest the following:
+
+buildtool itself will be a script/program written in perl. This will make it extensible and be able to handle things that are difficult when using makefiles. Buildtool does only a minimum of things. basically it just downloads everything from cvs server and lets makefiles downloaded from cvs do the rest. I am not really sure what about the initial setup for the build environment, i think this should be included in buildtool, so consider the following example as to be executed when this initial step (building the cross compiler+binutils) is done. 
+
+
+mk files in src:
+There will be two files in each source directory on the cvs server: one mk file and one patchit file. The patchit file names the patches or files that are to be used.
+
+example assumes the environment is ready and you want to build the package: nettools (ifconfig, other tools). Please note that this is some kind of fake package as the real nettools package might contain other stuff. just an example...
+
+
+So you say buildtool : 
+
+arne@testmachine:~/projekte/buildtool$ buildtool buildpackage nettools
+
+
+
+lets start thinking about downloading: we use the cvs server for this, so buildtool needs to know how to download specific revisions of a file, cause there might be a newer version committed that does not work with this version of buildtool, etc.
+
+so, what buildtool needs is a definitions file like this:
+
+--------------------------------------------------------
+
+## general settings:
+Server:cvs.sourceforge.net
+Servertype:viewcvs
+Serverpath:cgi-bin/viewcvs.cgi/leaf/src/bering-uclibc/apps/
+
+# package definitions
+Package:nettools
+Revision:1.2
+Description:some commonly used tools on Unix systems
+Buildsources:net-tools netkit-base
+
+# sources
+Source:net-tools
+Description:some tools
+Revision:1.4
+
+Source:netkit-base
+Description:base network tools
+Revision:1.6
+
+--------------------------------------------------------
+
+what buildtool does is: it searches for nettools as a Package. It searches for Buildsources in this section. In our example it founds two: net-tools and netkit-base. So it searches for net-tools as a source section and finds it. It gets the revison number 1.4. From the general settings it knows that it should use the viewcvs method to download things (only method right now, others may follow). So it calls the viewcvs-download-function to download Revision 1.4 of the patchit file from the net-tools dir on cvs.sourceforge.net. This patchit file looks like this:
+
+
+-----------------------------------------------------------
+Source:net-tools
+
+File:config.h
+Revision:1.2
+
+File:config.make
+Revision:1.3
+
+File:net-tools.mk
+Revision:1.2
+
+File:net-tools_1.60-4.diff.gz
+Revisision:1.1.1.1 
+
+File:net-tools_1.60.orig.tar.gz
+Revision:1.1.1.1
+
+# how is the 
+SourceDir:net-tools-1.60
+# the following exec will be made in download dir
+# there are a few vars available: 
+# SourceDir is the name of the dir inside the source/<sourcenamedir>
+# in this example the full path would be source/net-tools/net-tools-1.60/
+
+exec:
+tar xvzf net-tools_1.60.orig.tar.gz
+zcat net-tools_1.60-4.diff.gz | patch -d net-tools-1.60 -p1
+cp config.make net-tools-1.60
+cp config.h net-tools-1.60
+cp net-tools.mk net-tools-1.60/leaf.mk
+---------------------------------------------------------------
+
+In the build-dir there is a directory with the source name created (net-tools). all files are copied there. the exec stuff is executed in this new dir. After this is finished buildtool assumes there is a file leaf.mk in the SourceDir. So if buildpackage is called it goes in there and does a 'make -f leaf.mk all MASTERMAKEFILE=/home/arne/projekte/leaf/buildtool/make/Master.mk '. The Mastermakefile should be included by the leaf.mk and sets things like CC or stuff like that. So leaf.mk builds the stuff correctly. If something goes wrong, buildtool will die and show the error message... 
+Assuming things go well buildtools will call a 'make -f leaf.mk install MASTERMAKEFILE=/home/arne/projekte/leaf/buildtool/make/Master.mk' and leaf.mk can use the vars set in mastermakefile BUIL_DDIR and STAGING_DIR. BUILD_DIR is the general builddir (e.g. /home/arne/projekte/leaf/buildtool/build) STAGINGDIR the main staging dir where the compiler , the tools and especially the libs reside /home/arne/projekte/leaf/buildtool/staging. so if net-tools would be a lib leaf.mk would install it in $(BUILD_DIR)/net-tools and $(STAGING_DIR). But it is not the case so it comes just into $(BUILD_DIR)/net-tools (with full path so we might have a $(BUILD_DIR)/net-tools/sbin/ifconfig.... libs are always installed in $(STAGING_DIR)/lib so gcc finds them.
+
+The same would be happening for netkit-base in this example.
+-------------------------------------------------------------------------------
+
+<look at the example above, would be the same>
+-------------------------------------------------------------------------------
+
+
+buildtool downloads the patchit file for the package from cvs. this file looks like this:
+
+----------------------------------------------------------------
+File:skeleton.tar.gz
+Revision:1.1.1.1
+
+File:chperms.sh
+Revision:1.2
+
+File:leaf.mk
+Revision:1.4
+----------------------------------------------------------------
+
+So buildtool would make a source/nettools dir put the files in there and does nothing mire right now, as no exec is provided.
+
+Now buildtools uses of this package mk file in the package source dir. So buildtools calls 'fakeroot make -f leaf.mk package MASTERMAKEFILE=/home/arne/projekte/leaf/buildtool/make/Master.mk'. this mk file includes the Mastermakefile and knows the global BUILD_DIR because of this. in the makefile it looks like this
+
+-----------------------------------------------------------------
+NETKITDIR:=$(BUILD_DIR)/netkit-base
+NETTOOLSDIR:=$(BUILD_DIR)/net-tools
+MYNAME=nettools
+MYBUILD=$(BUILDDIR)/nettools
+
+package:
+	tar -C $(MYBUILD) -xvzpf $(MYPACKAGEDIR)/skeleton.tar.gz
+	cp $(NETKIT_DIR)/sbin/ifconfig $(MYBUILD)/sbin/
+	...
+	$(MYPACKAGEDIR)/chperms.sh
+	tar -C $(MYBUILD) -cvf - . |gzip $(GZIP_OPTIONS) $(PACKAGESDIR)/$(MYNAME).lrp
+
+-----------------------------------------------------------------
+
+after this, the package is build.
+
+that's it.
+
+
+===================================================================
+Question: is this so clever for development ?? wouldn't it be better to have everyhting just in cvs so things can be just put in there if they have changed ??
+- should buildtool set the CC= stuff as environment vars ?
+- maybe the exec part in the patchit file could be done by the leaf.mk file ?
+- the procedure above does not work for root.lrp right now, as this requires a mount (this has to be fixed somehow (as workaround put it into fstab)).
+- what about automatically generated files (version , link list for busybox) ?
+- we need to think about how to get changes back on server (maybe add a new method: cvs instead of viewcvs ? or provide a tool that checks stuff in... How to better integrate this with CVS ??
+
+======================================================================
+appendix:
+
+
+the leaf.mk for the package has to know the following:
+package
+clean
+
+
+the leaf.mk file for the sources does know the following:
+clean		just cleaning up
+all 		the same as just a make
+install		install needed programs with use of INSTALL_PATH as base
+
+buildtool should know the following commands:
+
+buildpackage <packagename>|all
+describe <package>|<source>
+source <sourcname>
+build <sourcename>
+clean <package>|<sourcename>|all
+
+

@@ -1,0 +1,25 @@
+diff -aur libnl-1.1/include/netlink-local.h libnl-1.1.new/include/netlink-local.h
+--- libnl-1.1/include/netlink-local.h	2008-01-14 17:48:45.000000000 +0200
++++ libnl-1.1.new/include/netlink-local.h	2010-08-09 21:48:41.000000000 +0300
+@@ -370,8 +370,8 @@
+ 				      struct tc_ratespec *src)
+ {
+ 	dst->rs_cell_log = src->cell_log;
+-	dst->rs_feature = src->feature;
+-	dst->rs_addend = src->addend;
++//	dst->rs_feature = src->feature;
++//	dst->rs_addend = src->addend;
+ 	dst->rs_mpu = src->mpu;
+ 	dst->rs_rate = src->rate;
+ }
+@@ -380,8 +380,8 @@
+ 				       struct rtnl_ratespec *src)
+ {
+ 	dst->cell_log = src->rs_cell_log;
+-	dst->feature = src->rs_feature;
+-	dst->addend = src->rs_addend;
++//	dst->feature = src->rs_feature;
++//	dst->addend = src->rs_addend;
+ 	dst->mpu = src->rs_mpu;
+ 	dst->rate = src->rs_rate;
+ }

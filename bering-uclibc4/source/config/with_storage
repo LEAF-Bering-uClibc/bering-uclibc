@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# Mount the backup storage media, run a command, and then unmount everything
+# Linux Embedded Applications Framework
+# GPL v2
+#
+# Based upon work by:
+# Dave Cinege, James Sturdevant, Charles Steinkuehler
+#
+diskfile=/var/lib/lrpkg/pkgpath.disks
+
+progname=$(basename $0)
+
+if [ $# -lt 2 ]; then
+    echo "$progname: usage: with_storage [-r] <mount-point> <command>"
+    exit 1;
+fi
+
+if [ $1 = "-r" ]; then
+   readonly=$1
+   shift
+fi
+
+mount_root=$1 ; shift
+if [ ! -d $mount_root ] ; then
+   echo "$progname: mount point $mount_root not found"
+   exit 1;
+fi
+
+command="$@"
+
+if [ ! -f $diskfile ] ; then
+   echo "$progname: $diskfile not found"
+   exit 1;
+fi
+
+mount_points=""
+subpoint=0
+
+while read dev fs; do 
+    mp=${mount_root}${subpoint}
+    if test ! -d $mp && ! mkdir $mp; then
+	echo "$progname: unable to create $mp"
+	exit 1
+    fi
+    if ! mount -o noatime $readonly -t $fs $dev $mp ; then
+	echo "$progname: mounting storage media $dev:$fs on $mount_root failed"
+	exit 1
+    fi
+    mount_points="$mount_points $mp"
+    subpoint="$(($subpoint+1))"
+done < $diskfile
+
+STORAGE_MEDIA="$mount_points" $command
+success=$?
+
+if [ -z "$readonly" ]; then
+    sync
+    sleep 2
+fi
+
+for mp in $mount_points ; do
+    umount $mp || echo "$progname: unable to unmount $mp"
+    rmdir $mp
+done
+
+exit $success

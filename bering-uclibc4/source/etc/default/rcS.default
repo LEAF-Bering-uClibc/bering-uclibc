@@ -1,0 +1,15 @@
+#
+#	Defaults for the boot scripts in /etc/rcS.d
+#
+
+# Set to yes if you want sulogin to be spawned on bootup
+SULOGIN=no
+# Set to no if you want to be able to login over telnet/rlogin
+# before system startup is complete (as soon as inetd is started)
+DELAYLOGIN=yes
+# Set GMT="-u" if your system clock is set to GMT, and GMT="" if not.
+GMT="-u"
+# Set EDITMOTD to "no" if you don't want /etc/motd to be editted automatically
+EDITMOTD=yes
+# Update links in all rc?.d dirs from init.d/script headers at boot?
+DYNARCD=yes

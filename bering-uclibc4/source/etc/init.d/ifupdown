@@ -1,0 +1,14 @@
+#!/bin/sh -e
+RCDLINKS="2,S04"
+
+case "$1" in
+	start|restart)
+		if [ -e /var/run/ifstate ]; then
+			echo -n "Cleaning: /var/run/ifstate"
+			echo -n >/var/run/ifstate
+			echo "."
+		fi
+		;;
+	stop|reload|force-reload)
+		;;
+esac

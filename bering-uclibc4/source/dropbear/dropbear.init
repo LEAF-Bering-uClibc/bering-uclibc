@@ -1,0 +1,62 @@
+#! /bin/sh
+# /etc/init.d/dropbear: start and stop Dropbear ssh2 daemon
+# based on the OpenSSH init.d script
+RCDLINKS="2,S10 3,S10 4,S10 5,S10 0,K11 1,K11 6,K11"
+
+test -x /usr/sbin/dropbear || exit 0
+
+# default options
+DB_PORT=22
+DB_RSAFILE=/etc/dropbear/dropbear_rsa_host_key
+DB_DSSFILE=/etc/dropbear/dropbear_dss_host_key
+DB_BANNER=""
+
+# custom config options
+. /etc/default/dropbear
+
+if [ -n "$DB_PORT" ]; then
+	DB_OPTIONS="$DB_OPTIONS -p $DB_PORT"
+fi
+
+if [ -n "$DB_RSAFILE" ]; then
+	DB_OPTIONS="$DB_OPTIONS -r $DB_RSAFILE"
+	test -f $DB_RSAFILE || dropbearkey -t rsa -f $DB_RSAFILE
+fi
+
+if [ -n "$DB_DSSFILE" ]; then
+	DB_OPTIONS="$DB_OPTIONS -d $DB_DSSFILE"
+	test -f $DB_DSSFILE || dropbearkey -t dss -f $DB_DSSFILE
+fi
+
+if [ -n "$DB_BANNER" ]; then
+	DB_OPTIONS="$DB_OPTIONS -b $DB_BANNER"
+fi
+
+# Configurable options:
+
+case "$1" in
+  start)
+        echo -n "Starting Dropbear Secure Shell server: dropbear"
+	start-stop-daemon --start --quiet --pidfile /var/run/dropbear.pid --exec /usr/sbin/dropbear -- $DB_OPTIONS
+	echo "."
+	;;
+  stop)
+        echo -n "Stopping Dropbear Secure Shell server: dropbear"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/dropbear.pid
+        echo "."
+	;;
+
+  restart)
+        echo -n "Restarting Dropbear Secure Shell server: dropbear"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/dropbear.pid
+	sleep 2
+	start-stop-daemon --start --quiet --pidfile /var/run/dropbear.pid --exec /usr/sbin/dropbear -- $DB_OPTIONS
+	echo "."
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/dropbear {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

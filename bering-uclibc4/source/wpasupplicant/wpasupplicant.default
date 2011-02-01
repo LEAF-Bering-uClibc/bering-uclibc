@@ -1,0 +1,28 @@
+# To activate the wpasupplicant daemon, set ENABLED to 1
+
+ENABLED=0
+
+# Specify the network interface that the daemon will attach to.
+#
+# Examples: INTERFACE="eth1"
+#           INTERFACE="ath0"
+#
+# Failure to set INTERFACE to a valid network interface name will
+# cause the daemon to fail or exit immediately.
+
+INTERFACE=""
+
+# DRIVER specifies the driver type of the interface defined above.
+#
+# If DRIVER is not set, the daemon will default to the "wext" driver
+#
+# Currently, the following drivers are supported:
+#  hostap = Host AP driver (Intersil Prism2/2.5/3)
+#  madwifi = MADWIFI 802.11 support (Atheros, etc.)
+#  atmel = ATMEL AT76C5XXx (USB, PCMCIA)
+#  wext = Linux wireless extensions (generic, ipw2100/2200/3495, linux >= 2.6.14)
+#  ndiswrapper = Linux ndiswrapper
+#  ipw = Intel ipw2100/2200 driver (linux kernels 2.6.13 or older only)
+#  wired = wpa_supplicant wired Ethernet driver
+
+DRIVER=""

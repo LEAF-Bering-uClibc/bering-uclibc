@@ -1,0 +1,97 @@
+diff -aur ppp-2.4.4.orig/pppd/ipcp.c ppp-2.4.4/pppd/ipcp.c
+--- ppp-2.4.4.orig/pppd/ipcp.c	2005-08-26 02:59:34.000000000 +0300
++++ ppp-2.4.4/pppd/ipcp.c	2010-04-17 13:36:50.000000000 +0300
+@@ -264,7 +264,6 @@
+ };
+ 
+ static void ipcp_clear_addrs __P((int, u_int32_t, u_int32_t));
+-static void ipcp_script __P((char *, int));	/* Run an up/down script */
+ static void ipcp_script_done __P((void *));
+ 
+ /*
+@@ -1971,7 +1970,7 @@
+  * ipcp_script - Execute a script with arguments
+  * interface-name tty-name speed local-IP remote-IP.
+  */
+-static void
++void
+ ipcp_script(script, wait)
+     char *script;
+     int wait;
+diff -aur ppp-2.4.4.orig/pppd/ipcp.h ppp-2.4.4/pppd/ipcp.h
+--- ppp-2.4.4.orig/pppd/ipcp.h	2002-12-05 01:03:32.000000000 +0200
++++ ppp-2.4.4/pppd/ipcp.h	2010-04-17 13:36:54.000000000 +0300
+@@ -92,5 +92,6 @@
+ extern ipcp_options ipcp_hisoptions[];
+ 
+ char *ip_ntoa __P((u_int32_t));
++void ipcp_script __P((char *, int));     /* Run an up/down script */
+ 
+ extern struct protent ipcp_protent;
+diff -aur ppp-2.4.4.orig/pppd/main.c ppp-2.4.4/pppd/main.c
+--- ppp-2.4.4.orig/pppd/main.c	2010-03-24 22:44:00.000000000 +0200
++++ ppp-2.4.4/pppd/main.c	2010-04-17 13:26:10.000000000 +0300
+@@ -238,7 +238,7 @@
+ static void hup __P((int));
+ static void term __P((int));
+ static void chld __P((int));
+-static void toggle_debug __P((int));
++static void coa __P((int));
+ static void open_ccp __P((int));
+ static void bad_signal __P((int));
+ static void holdoff_end __P((void *));
+@@ -663,6 +663,7 @@
+     sigaddset(&signals_handled, SIGINT);
+     sigaddset(&signals_handled, SIGTERM);
+     sigaddset(&signals_handled, SIGCHLD);
++    sigaddset(&signals_handled, SIGUSR1);
+     sigaddset(&signals_handled, SIGUSR2);
+ 
+ #define SIGNAL(s, handler)	do { \
+@@ -678,7 +679,7 @@
+     SIGNAL(SIGTERM, term);		/* Terminate */
+     SIGNAL(SIGCHLD, chld);
+ 
+-    SIGNAL(SIGUSR1, toggle_debug);	/* Toggle debug flag */
++    SIGNAL(SIGUSR1, coa);		/* For CoA */
+     SIGNAL(SIGUSR2, open_ccp);		/* Reopen CCP */
+ 
+     /*
+@@ -1462,21 +1463,16 @@
+ 
+ 
+ /*
+- * toggle_debug - Catch SIGUSR1 signal.
++ * coa - Catch SIGUSR1 signal.
+  *
+- * Toggle debug flag.
++ * Process CoA request.
+  */
+-/*ARGSUSED*/
+ static void
+-toggle_debug(sig)
++coa(sig)
+     int sig;
+ {
+-    debug = !debug;
+-    if (debug) {
+-	setlogmask(LOG_UPTO(LOG_DEBUG));
+-    } else {
+-	setlogmask(LOG_UPTO(LOG_WARNING));
+-    }
++	//Modify shapers; it'll be good to also modify Session-Octets-Limit and Session-Timeout
++	ipcp_script(_PATH_IPMOD,0);
+ }
+ 
+ 
+diff -aur ppp-2.4.4.orig/pppd/pathnames.h ppp-2.4.4/pppd/pathnames.h
+--- ppp-2.4.4.orig/pppd/pathnames.h	2010-03-24 22:44:00.000000000 +0200
++++ ppp-2.4.4/pppd/pathnames.h	2010-04-17 13:20:50.000000000 +0300
+@@ -23,6 +23,7 @@
+ #define _PATH_SRPFILE 	 _ROOT_PATH "/etc/ppp/srp-secrets"
+ #define _PATH_SYSOPTIONS _ROOT_PATH "/etc/ppp/options"
+ #define _PATH_IPUP	 _ROOT_PATH "/etc/ppp/ip-up"
++#define _PATH_IPMOD	 _ROOT_PATH "/etc/ppp/ip-mod"
+ #define _PATH_IPDOWN	 _ROOT_PATH "/etc/ppp/ip-down"
+ #define _PATH_IPPREUP	 _ROOT_PATH "/etc/ppp/ip-pre-up"
+ #define _PATH_AUTHUP	 _ROOT_PATH "/etc/ppp/auth-up"

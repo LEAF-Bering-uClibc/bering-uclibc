@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# start/stop networking daemons.
+RCDLINKS="2,S05 0,K95"
+
+if ! [ -x /sbin/ifup ]; then
+    exit 0
+fi
+
+case "$1" in
+    start)
+        echo -n "Configuring network interfaces: "
+        ifup -a
+	echo "done."
+	;;
+    stop)
+        echo -n "Deconfiguring network interfaces: "
+        ifdown -a
+	echo "done."
+        ;;
+    reload)
+	;;
+    force-reload)
+	$0 restart
+	;;
+    restart)
+        echo -n "Reconfiguring network interfaces: "
+        ifdown -a
+        ifup -a
+	echo "done."
+	;;
+    *)
+	echo "Usage: /etc/init.d/networking {start|stop|reload|restart}"
+	exit 1
+	;;
+esac
+
+exit 0

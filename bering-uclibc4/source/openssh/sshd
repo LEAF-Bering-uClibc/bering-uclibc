@@ -1,0 +1,60 @@
+#! /bin/sh
+# /etc/init.d/ssh: start and stop the OpenBSD "secure shell(tm)" daemon
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+test -x /usr/sbin/sshd || exit 0
+( /usr/sbin/sshd -\? 2>&1 | grep -q OpenSSH ) 2>/dev/null || exit 0
+
+# forget it if we're trying to start, and /etc/ssh/sshd_not_to_be_run exists
+if [ -e /etc/ssh/sshd_not_to_be_run ]; then 
+    echo "OpenBSD Secure Shell server not in use (/etc/ssh/sshd_not_to_be_run)"
+    exit 0
+fi
+
+check_config() {
+	/usr/sbin/sshd -t || exit 1
+}
+
+# Configurable options:
+
+case "$1" in
+  start)
+	test -f /etc/ssh/sshd_not_to_be_run && exit 0
+#Create the PrivSep empty dir if necessary
+	if [ ! -d /var/run/sshd ]; then
+	    mkdir /var/run/sshd; chmod 0755 /var/run/sshd
+	fi
+        echo -n "Starting OpenBSD Secure Shell server: sshd"
+	start-stop-daemon --start --quiet --pidfile /var/run/sshd.pid --exec /usr/sbin/sshd
+        echo "."
+	;;
+  stop)
+        echo -n "Stopping OpenBSD Secure Shell server: sshd"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/sshd.pid
+        echo "."
+	;;
+
+  reload|force-reload)
+  	test -f /etc/ssh/sshd_not_to_be_run && exit 0
+	check_config
+        echo -n "Reloading OpenBSD Secure Shell server's configuration"
+	start-stop-daemon --stop --signal 1 --quiet --oknodo --pidfile /var/run/sshd.pid --exec /usr/sbin/sshd
+	echo "."
+	;;
+
+  restart)
+  	test -f /etc/ssh/sshd_not_to_be_run && exit 0
+	check_config
+        echo -n "Restarting OpenBSD Secure Shell server: sshd"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/sshd.pid
+	sleep 2
+	start-stop-daemon --start --quiet --pidfile /var/run/sshd.pid --exec /usr/sbin/sshd
+	echo "."
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/ssh {start|stop|reload|force-reload|restart}"
+	exit 1
+esac
+
+exit 0

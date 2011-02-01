@@ -1,0 +1,32 @@
+#!/bin/sh
+# Copyright Rene Mayrhofer, ViaNova, 1999
+# This script is distibuted under the GPL
+RCDLINKS="0,K20 1,K20 2,S80 3,S80 4,S80 5,S80 6,K20"
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/pptpd
+PIDFILE=/var/run/pptpd.pid
+
+case "$1" in
+  start)
+    echo -n "Starting PPTP Daemon: "
+    start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON 
+    echo "pptpd."
+    ;;
+  stop)
+    echo -n "Stopping PPTP: "
+    start-stop-daemon --stop --quiet --pidfile $PIDFILE --exec $DAEMON
+    echo "pptpd."
+    ;;
+  restart)
+    echo "Restarting PPTP: "
+    sh $0 stop
+    sh $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/pptpd {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# the default Debian ntp.conf enables logging of various statistics to the
+# /var/log/ntpstats directory.  the daemon automatically changes to a new
+# datestamped set of files at midnight, so all we need to do is delete old
+# ones, and compress the ones we're keeping so disk usage is controlled
+
+LOGDIR=/var/log/ntpstats
+
+if [ -d $LOGDIR ]
+then
+	# only keep a week's depth of these
+	rm -f `find $LOGDIR -type f -mtime +7`;
+
+	# compress whatever is left to save space
+	filelist=`find $LOGDIR -name *stats.\* -type f | grep -v .gz`;
+	[ "$filelist" != "" ] && gzip $filelist ;
+fi
+

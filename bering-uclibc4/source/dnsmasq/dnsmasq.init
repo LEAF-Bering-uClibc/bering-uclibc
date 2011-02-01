@@ -1,0 +1,48 @@
+#! /bin/sh
+# 
+
+RCDLINKS="2,S15 3,S15 4,S15 5,S15 0,K85 1,K85 6,K85"
+
+DAEMON=/usr/sbin/dnsmasq
+NAME="dnsmasq"
+DESC="caching dns forwarder"
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --quiet --pidfile \
+                /var/run/$NAME.pid --exec $DAEMON
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon -o --stop --quiet --pidfile \
+		/var/run/$NAME.pid --exec $DAEMON
+	echo "$NAME."
+	;;
+  reload|force-reload)
+        echo "Reloading $DESC configuration files."
+        start-stop-daemon --stop --signal 1 --quiet --pidfile \
+               /var/run/$NAME.pid --exec $DAEMON
+        ;;
+  restart)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon -o --stop --quiet --pidfile \
+		/var/run/$NAME.pid --exec $DAEMON
+	sleep 1
+	start-stop-daemon --start --quiet --pidfile \
+		/var/run/$NAME.pid --exec $DAEMON
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

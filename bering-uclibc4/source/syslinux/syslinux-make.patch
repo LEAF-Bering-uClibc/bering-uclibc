@@ -1,0 +1,16 @@
+diff -urN syslinux-3.11.orig/Makefile syslinux-3.11/Makefile
+--- syslinux-3.11.orig/Makefile	2005-08-31 00:54:14.000000000 +0200
++++ syslinux-3.11/Makefile	2006-04-09 19:31:07.000000000 +0200
+@@ -64,10 +64,10 @@
+ 	   pxelinux.0 mbr.bin isolinux.bin isolinux-debug.bin \
+ 	   extlinux.bin extlinux.bss extlinux.sys
+ BOBJECTS = $(BTARGET) dos/syslinux.com win32/syslinux.exe memdisk/memdisk
+-BSUBDIRS = memdisk dos win32
++BSUBDIRS = memdisk
+ ITARGET  = copybs.com gethostip mkdiskimage
+ IOBJECTS = $(ITARGET) mtools/syslinux unix/syslinux extlinux/extlinux
+-ISUBDIRS = mtools unix extlinux sample com32
++ISUBDIRS = mtools unix extlinux com32
+ DOCS     = COPYING NEWS README TODO BUGS *.doc sample menu com32
+ OTHER    = Makefile bin2c.pl now.pl genhash.pl keywords findpatch.pl \
+ 	   keytab-lilo.pl version version.pl sys2ansi.pl \

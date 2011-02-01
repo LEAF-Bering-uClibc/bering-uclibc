@@ -1,0 +1,31 @@
+#! /bin/sh
+RCDLINKS="2,S98 3,S98 4,S98 5,S98 0,K02 1,K02 6,K02"
+
+test -x /usr/sbin/lcd4linux || exit 0
+
+
+case "$1" in
+  start)
+        echo -n "Starting LCD4linux:"
+	start-stop-daemon --start --quiet --pidfile /var/run/lcd4linux.pid --exec /usr/sbin/lcd4linux -- -q
+	echo "."
+	;;
+  stop)
+        echo -n "Stopping LCD4linux:"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/lcd4linux.pid
+        echo "."
+	;;
+
+  restart)
+        echo -n "Restarting LCD4linux"
+	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/lcd4linux.pid
+	start-stop-daemon --start --quiet --pidfile /var/run/lcd4linux.pid --exec /usr/sbin/lcd4linux -- -q
+	echo "."
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/lcd4linux {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

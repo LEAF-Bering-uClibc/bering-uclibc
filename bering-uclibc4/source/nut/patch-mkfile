@@ -1,0 +1,4 @@
+#!/bin/sh
+
+BD=`echo $BT_ST_DIR | sed 's/\//\\\\\//g'`
+sed "s/\-I\/usr\/i/\-I$BD\/usr\/i/g" Makefile > Makefile.new && sed "s/\-L\/usr\/l/\-L$BD\/usr\/l/g" Makefile.new > Makefile

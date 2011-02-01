@@ -1,0 +1,96 @@
+#!/bin/sh
+
+RCDLINKS="0,K41 1,K41 2,S43 3,S43 4,S43 5,S43 6,K41"
+
+test -x /usr/sbin/pppoe-server || exit 0
+test -x /usr/lib/pppd/rp-pppoe.so || exit 0
+
+IFACES=""
+MAX_IARGS=128
+
+[ -f /etc/default/pppoe-server ] && . /etc/default/pppoe-server
+
+ARGS="-k"
+IARGS=""
+
+check_arg () {
+	[ -n "$(eval echo \$$2)" ] && ARGS="$ARGS -$1 $(eval echo \$$2)"
+}
+
+if [ -n "$IFREGEXP" ]; then
+	for i in `ip l | awk '$2 ~ '"/$IFREGEXP/"'{split($2,A,"(@|:)"); print A[1]}' | sort`; do
+		IFACES="$IFACES $i"
+	done
+fi  
+
+check_arg T TIMEOUT
+check_arg C AC
+check_arg S SERVICE
+check_arg m MSS
+check_arg L LOCAL
+check_arg R REMOTE
+check_arg O OPTIONS
+check_arg N SESSIONS
+
+case "$1" in
+  start)
+    echo -n "Starting PPPoE server daemon... "
+    if start-stop-daemon --start --quiet --test --exec /usr/sbin/pppoe-server -- -h &>/dev/null; then
+        if [ -n "$IFACES" ]; then
+	    INST=0
+	    for i in $IFACES; do
+		IARGS="$IARGS -I $i"
+		if [ `echo $IARGS | wc -w` -ge  $MAX_IARGS ]; then
+		    if /usr/sbin/pppoe-server $ARGS $IARGS
+		    then
+			echo -n "done #$INST... "
+		    else
+			echo -n "failed #$INST... "
+		    fi
+		    IARGS=""
+		    INST=$(($INST + 1))
+		fi
+	    done
+	    if [ `echo $IARGS | wc -w` -gt  0 ]; then
+		if /usr/sbin/pppoe-server $ARGS $IARGS
+		then
+		    echo "done #$INST."
+		else
+		    echo "failed #$INST."
+		fi
+		IARGS=""
+	    else
+		echo ""
+	    fi
+	else
+	    if start-stop-daemon --start --quiet --exec /usr/sbin/pppoe-server -- $ARGS
+	    then
+		echo done.
+	    else
+		echo failed.
+	    fi
+	fi
+    else
+	echo "failed (already running?)."
+    fi
+    ;;
+  stop)
+    echo -n "Stopping PPPoE server daemon... "
+    if start-stop-daemon --stop --quiet --oknodo --exec /usr/sbin/pppoe-server
+    then
+      echo done.
+    else
+      echo failed.
+    fi
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

@@ -1,0 +1,44 @@
+#! /bin/sh
+# /etc/init.d/snmpd: start snmp daemon.
+RCDLINKS="2,S50 3,S50 4,S50 5,S50 0,K50 1,K50 6,K50"
+
+test -x /usr/sbin/snmpd || exit 0
+
+# Read our control file.
+. /etc/default/snmpd
+
+# Cd to / before starting any daemons.
+cd /
+
+case "$1" in
+  start)
+    echo -n "Starting network management services:"
+    if [ "$SNMPDRUN" = "yes" -a -f /etc/snmp/snmpd.conf ]; then
+	start-stop-daemon --quiet --start --exec /usr/sbin/snmpd -- $SNMPDOPTS
+	echo -n " snmpd"
+    fi
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping network management services:"
+    start-stop-daemon --quiet --stop --exec /usr/sbin/snmpd
+    echo -n " snmpd"
+    echo "."
+    ;;
+  restart|reload|force-reload)
+    echo -n "Restarting network management services:"
+    start-stop-daemon --quiet --stop --exec /usr/sbin/snmpd
+    # Allow the daemons time to exit completely.
+    sleep 2
+    if [ "$SNMPDRUN" = "yes" -a -f /etc/snmp/snmpd.conf ]; then
+	start-stop-daemon --quiet --start --exec /usr/sbin/snmpd -- $SNMPDOPTS
+	echo -n " snmpd"
+    fi
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/snmpd {start|stop|restart|reload|force-reload}"
+    exit 1
+esac
+
+exit 0

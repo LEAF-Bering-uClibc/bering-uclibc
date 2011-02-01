@@ -1,0 +1,58 @@
+#!/bin/sh
+
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/hostapd
+NAME=hostapd
+DESC="advanced IEEE 802.11 management"
+PIDFILE=/var/run/hostapd.pid
+DAEMON_CONF=/etc/hostapd/hostapd.conf
+
+test -x $DAEMON || exit 0
+
+if [ -s /etc/default/hostapd ] ; then
+	. /etc/default/hostapd
+fi
+
+DAEMON_OPTS="-B -P $PIDFILE $DAEMON_OPTS $DAEMON_CONF"
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	if [ "$RUN_DAEMON" != "yes" ]; then
+		echo "disabled via /etc/default/hostapd"
+		exit 0
+	fi
+	echo -n "$NAME"
+	start-stop-daemon --start --oknodo --quiet \
+		--exec $DAEMON --pidfile $PIDFILE -- $DAEMON_OPTS > /dev/null
+	echo "."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	echo -n "$NAME"
+	start-stop-daemon --stop --oknodo --quiet \
+		--exec $DAEMON --pidfile $PIDFILE
+	echo "."
+	;;
+  reload)
+  	echo -n "Reloading $DESC: "
+	echo -n "$NAME"
+	start-stop-daemon --stop --signal 1 \
+		--exec $DAEMON --pidfile $PIDFILE
+	echo "."
+	;;
+  restart|force-reload)
+  	$0 stop
+	sleep 8
+	$0 start
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

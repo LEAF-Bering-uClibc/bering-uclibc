@@ -1,0 +1,12 @@
+diff -aur iproute2-2.6.31.orig/misc/Makefile iproute2-2.6.31/misc/Makefile
+--- iproute2-2.6.31.orig/misc/Makefile	2009-12-26 20:26:44.000000000 +0200
++++ iproute2-2.6.31/misc/Makefile	2010-03-23 13:06:46.000000000 +0200
+@@ -1,7 +1,7 @@
+ SSOBJ=ss.o ssfilter.o
+ LNSTATOBJ=lnstat.o lnstat_util.o
+ 
+-TARGETS=ss nstat ifstat rtacct arpd lnstat
++TARGETS=ss nstat ifstat rtacct lnstat
+ 
+ include ../Config
+ 

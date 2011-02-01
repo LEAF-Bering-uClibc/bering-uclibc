@@ -1,0 +1,56 @@
+#!/bin/sh
+#
+# /etc/init.d/portmap: start and stop RPC port mapper daemon
+#
+RCDLINKS="0,K11 2,S89"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Check for existence of daemon executable
+[ -x /sbin/portmap ] || exit 2
+
+# Include portmap settings if available
+if [ -f /etc/default/portmap ] ; then
+	. /etc/default/portmap
+fi
+
+# Define fall-back default settings
+[ -z "$PORTMAPOPTS" ] && PORTMAPOPTS=""
+
+RETVAL=0
+
+# See how we were called
+case "$1" in
+  start)
+        # Start daemon
+	echo -n "Starting portmap daemon: "
+	start-stop-daemon --start --exec /sbin/portmap --quiet -- $PORTMAPOPTS
+	RETVAL=$?
+	if [ $RETVAL == "0" ]; then
+	    echo "succeeded."
+	else
+	    echo "failed."
+	fi
+        ;;
+  stop)
+        # Stop daemon
+	echo -n "Shutting down portmap daemon: "
+	start-stop-daemon --stop --exec /sbin/portmap --quiet
+	RETVAL=$?
+	if [ $RETVAL == "0" ]; then
+	    echo "succeeded."
+	else
+	    echo "failed."
+	fi
+        ;;
+  restart)
+        $0 stop
+	sleep 1
+	$0 start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0

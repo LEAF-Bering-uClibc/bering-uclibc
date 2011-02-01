@@ -1,0 +1,72 @@
+diff -aur elfutils-0.148/libelf/elf_begin.c elfutils-0.148.new/libelf/elf_begin.c
+--- elfutils-0.148/libelf/elf_begin.c	2010-04-21 17:26:40.000000000 +0300
++++ elfutils-0.148.new/libelf/elf_begin.c	2010-12-11 19:16:34.000000000 +0200
+@@ -796,7 +796,8 @@
+     }
+ 
+   /* Copy the raw name over to a NUL terminated buffer.  */
+-  *((char *) __mempcpy (elf->state.ar.raw_name, ar_hdr->ar_name, 16)) = '\0';
++  mempcpy (elf->state.ar.raw_name, ar_hdr->ar_name, 16);
++  elf->state.ar.raw_name[16] = '\0';
+ 
+   elf_ar_hdr = &elf->state.ar.elf_ar_hdr;
+ 
+@@ -888,8 +889,8 @@
+       const char *string = ar_hdr->FIELD;				      \
+       if (ar_hdr->FIELD[sizeof (ar_hdr->FIELD) - 1] != ' ')		      \
+ 	{								      \
+-	  *((char *) __mempcpy (buf, ar_hdr->FIELD, sizeof (ar_hdr->FIELD)))  \
+-	    = '\0';							      \
++	  mempcpy (buf, ar_hdr->FIELD, sizeof (ar_hdr->FIELD));		      \
++	  buf[sizeof (ar_hdr->FIELD)] = '\0';				      \
+ 	  string = buf;							      \
+ 	}								      \
+       if (sizeof (elf_ar_hdr->FIELD) <= sizeof (long int))		      \
+diff -aur elfutils-0.148/libelf/elf_error.c elfutils-0.148.new/libelf/elf_error.c
+--- elfutils-0.148/libelf/elf_error.c	2010-04-13 23:08:02.000000000 +0300
++++ elfutils-0.148.new/libelf/elf_error.c	2010-12-11 19:24:15.000000000 +0200
+@@ -53,7 +53,7 @@
+ #endif
+ 
+ #include <assert.h>
+-#include <libintl.h>
++//#include <libintl.h>
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdlib.h>
+@@ -62,7 +62,7 @@
+ 
+ 
+ /* The error number.  */
+-static __thread int global_error;
++static int global_error;
+ 
+ 
+ int
+@@ -320,11 +320,11 @@
+   if (error == 0)
+     {
+       assert (msgidx[last_error] < sizeof (msgstr));
+-      return last_error != 0 ? _(msgstr + msgidx[last_error]) : NULL;
++      return last_error != 0 ? msgstr + msgidx[last_error] : NULL;
+     }
+   else if (error < -1 || error >= nmsgidx)
+-    return _(msgstr + ELF_E_UNKNOWN_ERROR_IDX);
++    return msgstr + ELF_E_UNKNOWN_ERROR_IDX;
+ 
+   assert (msgidx[error == -1 ? last_error : error] < sizeof (msgstr));
+-  return _(msgstr + msgidx[error == -1 ? last_error : error]);
++  return msgstr + msgidx[error == -1 ? last_error : error];
+ }
+diff -aur elfutils-0.148/libelf/libelfP.h elfutils-0.148.new/libelf/libelfP.h
+--- elfutils-0.148/libelf/libelfP.h	2010-01-12 18:57:54.000000000 +0200
++++ elfutils-0.148.new/libelf/libelfP.h	2010-12-11 19:54:42.000000000 +0200
+@@ -64,7 +64,7 @@
+ #include <string.h>
+ 
+ /* gettext helper macros.  */
+-#define _(Str) dgettext ("elfutils", Str)
++#define _(Str) Str
+ 
+ 
+ /* Helper Macros to write 32 bit and 64 bit functions.  */
