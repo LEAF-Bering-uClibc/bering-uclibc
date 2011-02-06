@@ -1,0 +1,17 @@
+# default file for keyboard, sourced by init script
+
+KEYMAP="us.map"
+
+# Replace KEYMAP="us.map" with your preferred keyboard layout
+# available maps are:
+# azerty.map  cz.map         fi.map         jp.map  ro.map       trq.map
+# be.map      la.map         ru.map         ua.map  bg.map       de.map
+# fr.map      lt.map         se.map         uk.map  br-a.map     dk.map
+# gr.map      mk.map         sg.map         us.map  br-l.map     dvorak.map
+# hu.map      nl.map         sk-y.map       wangbe.map           by.map      
+# es.map      il.map         no.map         sk-z.map             cf.map      
+# et.map      is.map         pl.map         slovene.map          croat.map   
+# it.map      pt.map         trf.map
+
+# you do not need to change this...
+KEYDIR="/usr/share/keymaps/"

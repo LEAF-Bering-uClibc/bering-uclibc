@@ -1,0 +1,27 @@
+#! /bin/sh
+
+# /etc/init.d/keyboard: start and stop keymap
+
+RCDLINKS="S,S05"
+
+if [ -f /etc/default/keyboard ] ; then
+	. /etc/default/keyboard
+else
+	echo "/etc/default/keyboard not found, exiting!"
+	exit 1
+fi
+
+case "$1" in
+  start|reload|force-reload)
+	echo -n "Loading keymap: $KEYMAP"
+	cat $KEYDIR$KEYMAP | /sbin/loadkmap
+        echo "."
+	;;
+  stop)
+	;;
+  *)
+	echo "Usage: /etc/init.d/keyboard {start|stop|reload|force-reload}"
+	exit 1
+esac
+
+exit 0
