@@ -1,0 +1,46 @@
+#! /bin/sh
+RCDLINKS="2,S50 3,S50 4,S50 5,S50 0,K50 1,K50 6,K50"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/upnpbridge
+NAME=upnpbridge
+DESC=upnpbridge
+CONFIGFILE=/etc/default/upnpbridge
+
+if [ ! -f "$CONFIGFILE" ]
+then
+    echo "warning: no configuration file $CONFIGFILE found"
+    exit
+fi
+. $CONFIGFILE
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --quiet --exec $DAEMON $INTERFACES
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --oknodo --stop --quiet --exec $DAEMON
+	echo "$NAME."
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --stop --quiet --exec $DAEMON
+	sleep 1
+	start-stop-daemon --start --quiet --exec $DAEMON $INTERFACES
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

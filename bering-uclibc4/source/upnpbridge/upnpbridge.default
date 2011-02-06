@@ -1,0 +1,4 @@
+# configuration for /etc/init.d/upnpbridge
+
+# space separated list of interfaces to upnp bridge
+INTERFACES="eth0 eth1"
