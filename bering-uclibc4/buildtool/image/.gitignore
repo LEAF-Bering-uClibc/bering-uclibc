@@ -1,0 +1,3 @@
+# Exclude any generated image files
+*.tar.gz
+*.iso
