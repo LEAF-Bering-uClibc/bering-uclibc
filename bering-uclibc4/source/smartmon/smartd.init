@@ -1,0 +1,75 @@
+#!/bin/sh -e
+# 
+# smartmontools init.d startup script
+#
+# (C) 2003,04 Guido Günther <agx@sigxcpu.org>
+# 
+# loosely based on the init script that comes with smartmontools which is
+# copyrighted 2002 by Bruce Allen <smartmontools-support@lists.sourceforge.net>
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+SMARTD=/usr/sbin/smartd
+SMARTDPID=/var/run/smartd.pid
+[ -x $SMARTD ] || exit 0
+RET=0
+
+[ -r /etc/default/smartd ] && . /etc/default/smartd
+
+smartd_opts="--pidfile $SMARTDPID $smartd_opts"
+
+check_start_smartd_option() {
+  if [ ! "$start_smartd" = "yes" ]; then
+    echo "Not starting S.M.A.R.T. daemon smartd, disabled via /etc/default/smartd"
+    return 1
+  else
+    return 0
+  fi
+}
+
+case "$1" in
+  start)
+	if check_start_smartd_option; then
+	    echo -n "Starting S.M.A.R.T. daemon: smartd"
+            if start-stop-daemon --start --quiet --pidfile $SMARTDPID \
+	    		--exec $SMARTD -- $smartd_opts; then 
+	    	echo "."
+	    else
+	        echo " (failed)"
+		RET=1
+	    fi
+	fi
+	;;
+  stop)
+	echo -n "Stopping S.M.A.R.T. daemon: smartd"
+	start-stop-daemon --stop --quiet --oknodo --pidfile $SMARTDPID
+	echo "."
+	;;
+  reload|force-reload)
+	echo -n "Reloading S.M.A.R.T. daemon: smartd"
+	if start-stop-daemon --stop --quiet --signal 1 \
+			--pidfile $SMARTDPID; then
+	     echo "."
+	else
+	     echo " (failed)"
+	     RET=1
+	fi
+  	;;
+  restart)
+	if check_start_smartd_option; then
+	    echo -n "Restarting S.M.A.R.T. daemon: smartd"
+	    start-stop-daemon --stop --quiet --oknodo --pidfile $SMARTDPID
+            if start-stop-daemon --start --quiet --pidfile $SMARTDPID \
+	    		--exec $SMARTD -- $smartd_opts; then 
+	    	echo "."
+	    else
+	        echo " (failed)"
+		RET=1
+	    fi
+	fi
+        ;;
+  *)
+	echo "Usage: /etc/init.d/smartd {start|stop|restart|reload|force-reload}"
+	exit 1
+esac
+
+exit $RET
