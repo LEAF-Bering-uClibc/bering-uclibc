@@ -1,0 +1,43 @@
+#! /bin/sh
+# /etc/init.d/dhcprelay: start and stop the dhcprelay daemon
+RCDLINKS="2,S90 3,S90 4,S90 5,S90 0,K90 1,K90 6,K90"
+# Source dhcprelay config
+test -r /etc/dhcprelay.conf || exit 0
+. /etc/dhcprelay.conf
+
+test -x /usr/sbin/dhcprelay || exit 0
+# Configurable options:
+
+case "$1" in
+  start)
+	#Create the PrivSep empty dir if necessary
+	echo -n "Starting DHCP Relay Agent: dhcprelay"
+	/usr/sbin/dhcprelay $DEVICES $SERVERDEVICE $DHCPSERVER >> $LOGFILE &
+        echo "."
+	;;
+  stop)
+        echo -n "Stopping DHCP Relay Agent: dhcprelay"
+	kill `pidof dhcprelay` 
+        echo "."
+	;;
+
+  reload|force-reload)
+        echo -n "Reloading DHCP Relay Agent configuration"
+	kill `pidof dhcprelay`
+	/usr/sbin/dhcprelay $DEVICES $SERVERDEVICE $DHCPSERVER >> $LOGFILE &
+	echo "."
+	;;
+
+  restart)
+       kill `pidof dhcprelay`
+       /usr/sbin/dhcprelay $DEVICES $SERVERDEVICE $DHCPSERVER >> $LOGFILE &
+       echo -n "Restarting DHCP Relay Agent: dhcprelay"
+       echo "."
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/dhcprelay {start|stop|reload|force-reload|restart}"
+	exit 1
+esac
+
+exit 0
