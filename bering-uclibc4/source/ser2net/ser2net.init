@@ -1,0 +1,59 @@
+#! /bin/sh
+#
+# ser2net	init script for ser2net
+#
+#		Written by Miquel van Smoorenburg <miquels@cistron.nl>.
+#		Modified for Debian GNU/Linux
+#		by Ian Murdock <imurdock@gnu.ai.mit.edu>.
+#		Modified for ser2net by Marc Haber <mh+debian-packages@zugschlus.de>
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/ser2net
+NAME=ser2net
+DESC=ser2net
+
+test -f $DAEMON || exit 0
+
+set -e
+
+start()
+{
+	start-stop-daemon --quiet --start --exec $DAEMON
+}
+
+stop()
+{
+	start-stop-daemon --quiet --oknodo --stop --exec $DAEMON
+}
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	stop
+	echo "$NAME."
+	;;
+  reload|force-reload)
+	echo -n "Reloading $DESC: "
+	start-stop-daemon --stop --quiet --oknodo --signal 1 --exec $DAEMON
+	echo "$NAME."
+	;;
+  restart)
+	echo -n "Restarting $DESC: "
+	stop
+	start
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
