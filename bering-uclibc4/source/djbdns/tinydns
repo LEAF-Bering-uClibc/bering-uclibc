@@ -1,0 +1,134 @@
+#!/bin/sh
+# Start tinydns with multilog if svscan is running (daemontl.lrp)
+# without multilog otherwise
+# J. Nilo, June 2001
+
+RCDLINKS="2,S47 3,S47 6,K47"
+
+UID=1002
+GID=100
+ENVPRI=/etc/tinydns-private/env
+ENVPUB=/etc/tinydns-public/env
+ENVDNS=/etc/dnscache/env
+LOGDNS=/var/log/tinydns
+VARRUN=/var/run/tinydns
+DAEMON=/usr/bin/tinydns
+RESET_DNS=N
+read IPINT < $ENVPRI/IP
+read IPEXT < $ENVPUB/IP
+read DNSTYPE < $ENVPRI/DNSTYPE
+
+error () {
+	echo "tinydns error: $1"
+	exit 1
+}
+cdb_create () {
+	cd /etc/tinydns-$1/root
+	[ -r data.cdb ] && [ data -ot data.cdb ] && return
+	echo "Creating cdb for tinydns-"$1
+	/usr/bin/tinydns-data
+}
+set_dnscache () {
+#		tell dnscache to look for internal domain in internal tinydns
+	[ $DNSTYPE = PUBLIC ] && return
+	[ -r /var/run/resetdns.pid ] && [ $ENVPRI/DOMAINS -ot /var/run/resetdns.pid ] && return
+	[ -r /var/run/dnscache.pid ] || error "dnscache must be active for PRIVATE/BOTH"
+	[ -s $ENVPRI/DOMAINS ] || error "internal domain file empty"
+	cd /etc/dnscache/root/servers
+	rm /etc/dnscache/root/servers/*
+	read FWD < $ENVDNS/FORWARDONLY
+	cp $ENVDNS/DNS$FWD  /etc/dnscache/root/servers/@
+	while read DOMAIN
+	do
+		[ -z "$DOMAIN" ] && error "check internal domain file" 
+		echo 127.0.0.1 > $DOMAIN
+	done < $ENVPRI/DOMAINS
+	echo "" > /var/run/resetdns.pid 
+	RESET_DNS=Y
+}
+start_dns () {
+	[ -r $VARRUN-$1.pid ] && error "$1 DNS server not started: already listening at $2"
+	chmod 3755 /etc/tinydns-$1
+	chmod 2755 /etc/tinydns-$1/run
+	chmod 2755 /etc/tinydns-$1/env
+	chmod 2755 /etc/tinydns-$1/root
+	set_dnscache
+	cdb_create $1
+	if [ $MULTI -eq 0 ]; then
+		echo "Starting $1 DNS server listening on $2 without daemontools"
+		read IP < /etc/tinydns-$1/env/IP
+		read ROOT < /etc/tinydns-$1/env/ROOT
+		export UID GID IP ROOT 
+		$DAEMON </dev/null >/dev/null 2>&1 &
+	else
+		echo "Starting $1 DNS server listening on $2 with daemontools"
+		read LOG < /etc/tinydns-$1/env/QUERYLOG
+		case $LOG in
+			Y|y|YES|Yes|yes) chmod 3755 /etc/tinydns-$1;;
+			*)		 chmod 2755 /etc/tinydns-$1;;
+		esac
+		if [ -r $LOGDNS-$1 ]; then
+			[ -r $LOGDNS-$1/current ] && rm $LOGDNS-$1/*
+	        else
+			mkdir $LOGDNS-$1
+			chown dnslog $LOGDNS-$1
+			chgrp users $LOGDNS-$1
+			chmod 2755 $LOGDNS-$1
+	        fi
+	ln -s /etc/tinydns-$1 /service
+	fi
+	echo $! > $VARRUN-$1.pid
+}
+stop_dns () {
+	if [ -r /var/run/svscan.pid  ]; then
+		svok /service/tinydns-$1 || continue
+		echo "Stopping $1 DNS server listening on $2 with daemontools ..."
+		cd /service/tinydns-$1
+		rm /service/tinydns-$1
+		svok /etc/tinydns-$1 && svc -dx .
+		svok /etc/tinydns-$1/log && svc -dx log
+	else
+		echo "Stopping $1 DNS server listening on $2 without daemontools..."
+		kill `cat $VARRUN-$1.pid`>/dev/null 2>&1 
+	fi
+	rm $VARRUN-$1.pid
+}
+
+# Multilog or not multilog ?
+MULTI=0
+SLEEP=1
+[ -r /var/run/svscan.pid ] && MULTI=1
+if [ $MULTI -eq 1 ]; then
+	test $(grep tinydns /etc/passwd) || error "undef. tinydns user"
+	test $(grep dnslog /etc/passwd) || error "undef. dnslog user"
+	SLEEP=6
+fi
+
+case "$1" in
+start)
+	case $DNSTYPE in
+	PRIVATE)[ -r $VARRUN-public.pid ] && stop_dns public $IPEXT
+		start_dns private $IPINT;;
+	PUBLIC)	[ -r $VARRUN-private.pid ] && stop_dns private $IPINT
+		start_dns public  $IPEXT;;
+	BOTH)	start_dns private $IPINT
+		start_dns public  $IPEXT;;
+	*)	error "tinydns start arg";;
+	esac
+	[ $RESET_DNS = Y ] && /etc/init.d/dnscache restart
+	;;
+stop)
+	[ -r $VARRUN-public.pid ] && stop_dns public $IPEXT
+	[ -r $VARRUN-private.pid ] && stop_dns private $IPINT
+	;;
+restart)
+	$0 stop
+	sleep $SLEEP
+	$0 start
+	;;
+*)
+	echo "Usage: /etc/init.d/tinydns {start|stop|restart}"
+	exit 1
+	;;
+esac
+exit 0

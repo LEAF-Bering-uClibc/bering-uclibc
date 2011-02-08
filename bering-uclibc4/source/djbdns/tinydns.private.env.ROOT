@@ -1,0 +1,1 @@
+/etc/tinydns-private/root

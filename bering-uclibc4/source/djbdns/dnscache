@@ -1,0 +1,112 @@
+#!/bin/sh
+# Start dnscache with multilog if svscan is running (daemontl.lrp)
+# without multilog otherwise
+# J. Nilo, June 2001
+
+RCDLINKS="2,S45 3,S45 6,K45"
+
+# Define function
+error () {
+  echo "dnscache error: $1"
+  exit 1
+}
+
+UID=1001
+GID=100 
+ENVDIR=/etc/dnscache/env
+DAEMON=/usr/bin/dnscache
+LOGDNS=/var/log/dnscache
+
+# Multilog or not multilog ?
+MULTI=0
+SLEEP=1
+[ -r /var/run/svscan.pid ] && MULTI=1
+if [ $MULTI -eq 1 ]; then
+	SLEEP=6
+	test $(grep dnscache /etc/passwd) || error "undef. dnscache user"
+	test $(grep dnslog /etc/passwd) || error "undef. dnslog user"
+fi
+
+# Fix directory attributes for LRP 2.9.8
+chmod 3755 /etc/dnscache
+chmod 2755 /etc/dnscache/run
+chmod 2755 /etc/dnscache/env
+chmod 2755 /etc/dnscache/root
+
+# Setup env variables
+read ROOT < $ENVDIR/ROOT          
+read FWD < $ENVDIR/QUERYFWD
+case $FWD in 
+	Y|y|YES|Yes|yes) FLAGF=1;;
+	*)		 FLAGF=0;;
+esac
+echo $FLAGF > $ENVDIR/FORWARDONLY
+cp $ENVDIR/DNS$FLAGF /etc/dnscache/root/servers/@
+#
+if [ $MULTI -eq 0 ]; then
+	read IP < $ENVDIR/IP
+	read IPSEND < $ENVDIR/IPSEND
+	read DATALIMIT < $ENVDIR/DATALIMIT
+	read CACHESIZE < $ENVDIR/CACHESIZE
+	read FORWARDONLY < $ENVDIR/FORWARDONLY
+	export ROOT UID GID IP IPSEND DATALIMIT CACHESIZE FORWARDONLY
+else
+	read LOG < $ENVDIR/QUERYLOG
+	case $LOG in 
+		Y|y|YES|Yes|yes) chmod 3755 /etc/dnscache;;
+		*)		 chmod 2755 /etc/dnscache;;
+	esac
+	if [ -r $LOGDNS ]; then
+		[ -r $LOGDNS/current ] && rm $LOGDNS/*
+	else
+		mkdir $LOGDNS
+		chown dnslog $LOGDNS
+		chgrp users $LOGDNS
+		chmod 2755 $LOGDNS
+	fi
+fi
+
+case "$1" in
+start)
+	[ -r /var/run/dnscache.pid ] && error "already running"
+	while read IPQ
+	do
+		touch $ROOT/ip/$IPQ
+		echo "dnscache queries allowed from "$IPQ
+	done < $ENVDIR/IPQUERY
+	if [ $MULTI -eq 0 ]; then
+		echo "Starting dnscache without daemontools ..."
+		$DAEMON < $ROOT/../seed 2>/dev/null 1>/dev/null &
+	else
+		echo "Starting dnscache with daemontools ..."
+		ln -s /etc/dnscache /service
+	fi
+	echo $! > /var/run/dnscache.pid
+	;;
+stop)
+	[ -r /var/run/dnscache.pid ] || error "already stopped"
+	if [ -r /var/run/svscan.pid  ]; then
+		svok /service/dnscache || continue
+		echo "Shutting down dnscache with daemontools ..."
+		cd /service/dnscache
+		rm /service/dnscache
+		svok /etc/dnscache && svc -dx .
+		svok /etc/dnscache/log && svc -dx log
+	else
+		echo "Shutting down dnscache without daemontools..."
+		kill `cat /var/run/dnscache.pid`
+	fi
+	rm /var/run/dnscache.pid
+	rm $ROOT/ip/*
+	;;
+restart)
+	$0 stop
+	sleep $SLEEP 
+	$0 start
+	;;     
+*)             
+	echo "Usage: /etc/init.d/dnscache {start|stop|restart}"
+	exit 1  
+	;;      
+esac
+exit 0
