@@ -1,0 +1,42 @@
+#! /bin/sh
+#
+
+RCDLINKS="0,K45 1,K45 2,S45 3,S45 4,S45 5,S45 6,K45"
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/bpalogin
+CONFIG=/etc/bpalogin.conf
+
+not_found () {
+  echo "Can't find $1"
+  exit 1
+}
+
+test -f $DAEMON || not_found $DAEMON
+test -f $CONFIG || not_found $CONFIG
+
+# set override options here
+
+OPTIONS=""
+
+case "$1" in
+  start)
+    echo "Starting $DAEMON..."
+    $DAEMON -c $CONFIG
+    ;;
+  stop)
+    start-stop-daemon --stop --verbose --exec $DAEMON
+    ;;
+  restart|force-reload)
+    start-stop-daemon --stop --verbose --exec $DAEMON
+    sleep 1
+    echo "Starting $DAEMON..."
+    $DAEMON -c $CONFIG
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0
