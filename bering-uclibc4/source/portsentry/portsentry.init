@@ -1,0 +1,96 @@
+#! /bin/sh
+# start and stop portsentry
+#
+# $Id: portsentry.init,v 1.1 2004/12/19 21:04:49 espakman Exp $
+
+RCDLINKS="2,S99 3,S99 4,S99 5,S99 0,K99 1,K99 6,K99"
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/portsentry
+CONFIG=/etc/default/portsentry
+
+test -f $DAEMON || exit 0
+test -f $CONFIG || exit 0
+
+# source the config file
+. $CONFIG
+
+startup () {
+
+if [ \( ! "$TCP_MODE" \) -a \( ! "$UDP_MODE" \) ]; then
+echo "Not starting anti portscan daemon (no modes in $CONFIG)."
+	exit 0
+fi
+
+echo -n "Starting anti portscan daemon: "
+
+case "$TCP_MODE" in
+	"tcp"|"stcp"|"atcp")
+# Make sure we're not already listening for tcp scans
+		if ! ps awx | grep -q "$DAEMON -[as]*tcp" 
+		then
+			$DAEMON -$TCP_MODE
+			echo -n "portsentry in $TCP_MODE"
+		else
+			TCP_MODE=""
+		fi
+	;;
+# do nothing if TCP_MODE is not set
+	"")	
+	;;
+	*)
+	echo "$TCP_MODE is not a valid mode."
+        exit 1;
+	;;
+esac
+
+case "$UDP_MODE" in
+	"udp"|"sudp"|"audp")
+		if ! ps awx | grep -q "$DAEMON -[as]*udp" 
+		then
+			$DAEMON -$UDP_MODE
+			if [ "$TCP_MODE" ]; then
+				echo -n " &"
+			else
+				echo -n "portsentry in"
+			fi
+			echo -n " $UDP_MODE"
+		else
+			UDP_MODE=""
+		fi
+	;;
+# do nothing if UDP_MODE is not set
+	"")
+	;;
+	*)
+	echo "$UDP_MODE is not a valid mode."
+	exit 1;
+	;;
+esac
+if [ "$TCP_MODE" -o "$UDP_MODE" ]; then
+	echo " mode."
+fi
+}
+
+case "$1" in
+  start)
+    startup
+    ;;
+  stop)
+    echo -n "Stopping anti portscan daemon: portsentry"
+    start-stop-daemon --stop --quiet --oknodo --exec $DAEMON
+    echo "."
+    ;;
+  restart|force-reload)
+    echo -n "Stopping anti portscan daemon: portsentry"
+    start-stop-daemon --stop --quiet --oknodo --exec $DAEMON
+    echo "."
+    startup 
+    ;;
+  *)
+    echo "Usage: /etc/init.d/portsentry {start|stop|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0
