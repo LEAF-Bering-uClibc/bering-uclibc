@@ -1,0 +1,51 @@
+#!/bin/sh -e
+
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K20 1,K20 6,K20"
+
+test -f /usr/bin/snort || exit 0
+test -f /etc/snort/snort.conf || exit 0
+
+DAEMON=/usr/bin/snort
+
+
+# Read our control file
+. /etc/default/snort
+
+SNORTOPTS="-m 027 -D -c /etc/snort/snort.conf -l /var/log/snort -d -i $INTERFACE"
+
+# to find the lib files
+cd /etc/snort
+
+# create log directory
+if [ ! -d /var/log/snort ]; then
+	mkdir /var/log/snort
+fi
+
+case "$1" in
+  start)
+  	if [ "$SNORTRUN" = "yes" ]; then
+	    echo -n "Starting Network Intrusion Detection System: snort"
+	    set +e
+	    start-stop-daemon --start --quiet --exec $DAEMON -- $SNORTOPTS
+	    case "$?" in
+	      0) echo "." ;;
+	      1) echo "...failed. (check /var/log/daemon.log!)" ;;
+	    esac
+	    set -e
+	fi
+	;;
+  stop)
+	echo -n "Stopping Network Intrusion Detection System: snort"
+	start-stop-daemon --stop --quiet --oknodo --exec $DAEMON >/dev/null
+       	echo "."
+	;;
+  restart|force-restart|reload|force-reload)
+ 	/etc/init.d/snort stop
+	/etc/init.d/snort start
+	;;
+  *)
+	echo "Usage: /etc/init.d/snort start|stop|restart"
+	exit 1
+       	;;
+esac
+exit 0

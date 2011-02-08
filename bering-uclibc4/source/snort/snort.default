@@ -1,0 +1,13 @@
+
+# This file controls the activity of snort
+
+# Which interface should snort listen on
+INTERFACE=eth0
+
+# Set to yes if you want to start snort at boot time via init
+# Set to no if you want to start snort manually or e.g. via 
+# an ip-up script
+SNORTRUN=yes
+
+
+
