@@ -1,0 +1,39 @@
+#! /bin/sh
+RCDLINKS="2,S85 3,S85 4,S85 5,S85 0,K15 1,K15 6,K16"
+
+DAEMON=/usr/sbin/mini_httpd
+pidfile=/var/run/mini_httpd.pid
+config=/etc/mini_httpd.conf
+
+test -x $DAEMON || exit 0
+
+[ -f $config ] && . $config
+
+case "$1" in
+  start)
+	echo -n "Starting mini httpd:"
+	start-stop-daemon --start --quiet --pidfile $pidfile --exec $DAEMON -- -C $config 2>/dev/null
+	echo "."
+	;;
+  stop)
+	echo -n "Stopping mini httpd:"
+	start-stop-daemon --stop --quiet --oknodo --pidfile $pidfile
+        echo "."
+	;;
+  reload)
+	echo -n "Reloading mini httpd:"
+	start-stop-daemon --stop --signal 1 --quiet --pidfile $pidfile
+	echo "."
+	;;
+  restart)
+	echo -n "Restarting mini httpd:"
+	$0 stop
+	$0 start
+	echo "."
+	;;
+  *)
+	echo "Usage: /etc/init.d/mini_httpd {start|stop|reload|restart}"
+	exit 1
+esac
+
+exit 0

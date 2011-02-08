@@ -1,0 +1,16 @@
+#!/bin/sh
+# Save daily LOGDEPTH versions of syslogfile
+LOGDEPTH=4
+# Config file
+config=/etc/mini_httpds.conf
+# syslogfile name
+logfile=/var/log/mini_httpds.log
+# User
+user=sh-httpd
+
+[ -f $config ] && . $config
+
+if [ -f $logfile ]; then
+    savelog -u $user -g wheel -m 640 -p -c $LOGDEPTH $logfile >/dev/null
+    /etc/init.d/mini_httpds reload >/dev/null
+fi
