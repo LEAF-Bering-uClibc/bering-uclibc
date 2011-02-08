@@ -1,0 +1,61 @@
+#
+# Setup and BASH utility functions for use in hotplug agents
+#
+# Most essential parameters are passed from the kernel using
+# environment variables.  For more information, see the docs
+# on-line at http://linux-hotplug.sourceforge.net or the
+# sources for each hotplug-aware kernel subsystem.
+#
+# $Id: hotplug.functions,v 1.1 2004/12/04 11:42:44 espakman Exp $
+#
+#
+
+# DEBUG=yes; export DEBUG
+PATH=/bin:/sbin:/usr/sbin:/usr/bin
+
+#KERNEL=`uname -r`
+#MODULE_DIR=/lib/modules/$KERNEL
+
+HOTPLUG_DIR=/etc/hotplug
+
+if [ -f /etc/default/hotplug ]; then
+    . /etc/default/hotplug
+fi
+
+if [ -x /usr/bin/logger ]; then
+    LOGGER=/usr/bin/logger
+elif [ -x /bin/logger ]; then
+    LOGGER=/bin/logger
+else
+    unset LOGGER
+fi
+#
+# for diagnostics
+#
+if [ -t 1 -a -z "$LOGGER" ]; then
+    mesg () {
+	echo "$@"
+    }
+elif [ -t 1 ]; then
+   mesg () {
+	echo "$@"
+	$LOGGER -t $(basename $0)"[$$]" "$@"
+   }
+else
+    mesg () {
+	$LOGGER -t $(basename $0)"[$$]" "$@"
+    }
+fi
+
+debug_mesg () {
+    test "$DEBUG" = "" -o "$DEBUG" = no && return
+    mesg "$@"
+}
+
+# provide env-like output when the real thing is not available
+if [ ! -x /usr/bin/env ]; then
+    env () {
+	# bash prepends "declare -x " at the beginning of each line
+	export -p | sed -e 's/^declare -x //'
+    }
+fi
