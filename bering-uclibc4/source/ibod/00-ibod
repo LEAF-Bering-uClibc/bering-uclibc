@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# 00ibod-up by Paul Martin 21 Feb 2001. You may treat this program as if
+# it were in the public domain.
+
+# 00ibod-up starts ibod when ippp0 comes up.
+
+test -f /usr/bin/ibod || exit 0
+
+if [ "$PPP_IFACE" = "ippp0" ]
+then
+    start-stop-daemon --start --quiet --exec /usr/bin/ibod &
+fi
