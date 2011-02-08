@@ -1,0 +1,43 @@
+#! /bin/sh
+#
+# freenet6	Script to configure the IPv6 tunnel to freenet6
+#
+#		Written by Martin Waitz <tali@debian.org>
+RCDLINKS="2,S41 0,K35 6,K35"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+TSPC=/usr/sbin/tspc
+
+test -f $TSPC || exit 0
+
+
+# read tsp client config, to get the interface used
+. /etc/freenet6/tspc.conf
+IF=$if_tunnel
+
+case "$1" in
+  start)
+	echo -n "Setting up freenet6 IPv6 tunnel ($IF): "
+	$TSPC &&
+	ip -6 addr show dev $IF | grep "global" | sed -e "s/^.*inet6 //" -e "s/ scope.*\$//"
+
+	;;
+  stop)
+	echo -n "Shutting down freenet IPv6 tunnel ($IF): "
+	ip tunnel del $IF &&
+	echo "done."
+	;;
+  restart|force-reload)
+	echo -n "Resetting freenet IPv6 tunnel ($IF): "
+	ip tunnel del $IF 2>/dev/null
+	$TSPC &&
+	ip -6 addr show dev $IF | grep "global" | sed -e "s/^.*inet6 //" -e "s/ scope.*\$//"
+
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

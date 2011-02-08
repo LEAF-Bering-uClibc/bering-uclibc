@@ -1,0 +1,4 @@
+#!/bin/sh
+# if this script gets called, we assume that the machine has lost
+# IPv4 connectivity to freenet6.net -> shut down IPv6, too
+/etc/init.d/freenet6 stop
