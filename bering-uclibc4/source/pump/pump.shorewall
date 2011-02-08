@@ -1,0 +1,14 @@
+#!/bin/sh
+logger "The /etc/shorewall/pump script is called with arg $1 $2 $3"
+case $1 in
+up)
+	;;
+renewal)
+	if [ -r /var/run/shorewall ]; then
+		logger "Shorewall refreshed by pump.shorewall"
+		shorewall  refresh
+	fi
+	;;
+down)
+	;;
+esac
