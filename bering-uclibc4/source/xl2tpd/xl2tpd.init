@@ -1,0 +1,47 @@
+#!/bin/sh
+#/etc/init.d/xl2tpd: start L2TP daemon.
+
+RCDLINKS="0,K41 1,K41 2,S43 3,S43 4,S43 5,S43 6,K41"
+
+NAME=xl2tpd
+DAEMON=/usr/sbin/xl2tpd
+SAFEDAEMON=/usr/sbin/safe_xl2tpd
+PIDFILE=/var/run/xl2tpd/xl2tpd.pid
+
+# Uncomment to enable core dumps
+#dumpdir=/mnt/l2tpd
+
+test -x $DAEMON || exit 0
+test -x $SAFEDAEMON || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting L2TP daemon... "
+    test -n "$dumpdir" && test -d $dumpdir && cd $dumpdir && ulimit -c unlimited
+    if start-stop-daemon --start --background --quiet --pid $PIDFILE --exec $SAFEDAEMON
+    then
+      echo done.
+    else
+      echo failed.
+    fi
+    ;;
+
+  stop)
+    echo -n "Stopping L2TP daemon..."
+    if start-stop-daemon --stop --quiet --oknodo --exec $DAEMON
+    then
+      echo done.
+    else
+      echo failed.
+    fi
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/$NAME {start|stop}"
+    exit 1
+    ;;
+
+esac
+
+exit 0
+

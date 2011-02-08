@@ -1,0 +1,20 @@
+#!/bin/sh
+
+NAME=xl2tpd
+DAEMON=/usr/sbin/xl2tpd
+PID=/var/run/xl2tpd/xl2tpd.pid
+CONF=/etc/xl2tpd/xl2tpd.conf
+ARGS="-D -c $CONF -p $PID"
+
+if test -e $PID
+then
+  echo "$NAME already running."
+  exit 1
+fi
+
+touch $PID
+while test -e $PID
+do
+  rm -f $PID
+  $DAEMON $ARGS 2>&1 | logger -p daemon.info
+done
