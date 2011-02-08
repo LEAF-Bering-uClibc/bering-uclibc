@@ -1,0 +1,86 @@
+#!/bin/sh
+# squid		This shell script takes care of starting and stopping
+#		Squid Internet Object Cache
+
+# pidfile: /var/run/squid.pid
+# config: /etc/squid/squid.conf
+
+RCDLINKS="2,S62 3,S62 6,K62"
+
+#[ "$SQUID" = "0" ] && exit 0
+
+SQ=/usr/sbin/squid
+[ -f /etc/squid/squid.conf ] || exit 0
+[ -f $SQ ] || exit 0
+
+SP=/var/cache
+LG=/var/log
+
+# determine which one is the cache_swap directory
+#CACHE_SWAP=`sed -e 's/#.*//g' /etc/squid/squid.conf | \
+#	grep cache_dir | sed -e 's/cache_dir//' | \
+#	tr -d '\n'`
+[ -z "$CACHE_SWAP" ] && CACHE_SWAP=$SP
+
+# default squid options
+# -D disables initial dns checks. If you most likely will not to have an
+#    internet connection when you start squid, uncomment this
+#SQ_OPTS="-D"
+
+case "$1" in
+start)
+	echo -n "Starting $SQ: "
+	
+	# route add -host 127.0.0.1 dev lo
+	
+	if [ ! -d $SP ]; then
+		mkdir $SP
+		mount $SP
+		chown squid $SP
+		chmod 775 $SP
+   		chgrp nogroup $SP
+	fi
+
+	if [ ! -d $LG ]; then 
+		mkdir $LG
+		mount $LG
+		chown squid $LG
+		chmod 775 $LG
+		chgrp nogroup $LG
+	fi
+
+	[ ! -d $CACHE_SWAP/00 ] && \
+		echo -n "initializing cache directories: $CACHE_SWAP... " && \
+		$SQ -z -F 2>/dev/null
+
+	$SQ $SQ_OPTS &
+	echo "done"
+	;;
+
+stop)
+	echo -n "Stopping $SQ: "
+	$SQ -k shutdown &
+	echo "done"
+	;;
+
+restart)
+	$SQ $SQ_OPTS -k reconfigure 
+	exit $?
+	;;
+
+status)
+	status $SQ
+	$SQ -k check
+	exit $?
+	;;
+
+probe)
+	exit 0;
+	;;
+
+*)
+	echo "Usage: $0 {start|stop|status|restart}"
+	exit 1
+esac
+
+exit 0

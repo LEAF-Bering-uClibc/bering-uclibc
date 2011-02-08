@@ -1,0 +1,44 @@
+# The domains listed in this file are matched
+# against the web site being gone to; if the
+# site name is not listed here it will not
+# be permitted.
+
+# Hewlett-Packard (computer manufacturer)
+.hp.com
+.hp-ww.com
+globalhp.globalsight.com
+
+# Red Hat (operating system company)
+.redhat.com
+
+# Linux-Mandrake SA (operating system company)
+.linux-mandrake.org
+.linux-mandrake.com
+
+# Linux Documentation Project
+.linuxdoc.org
+
+# RPM Archive (software archive)
+.rpmfind.net
+
+# HP-UX Software Archive
+hpux.cae.wisc.edu
+
+# Freshmeat Software Archive
+.freshmeat.net
+.freshmeat.com
+
+# SourceForge - Open Source Software Projects
+.sourceforge.net
+.sourceforge.com
+
+# CUNA Corporate Sites
+cuna.com
+cuna.org
+
+# Linux Router Project Sites
+steinkuehler.net
+c0wz.com
+linuxrouter.net
+linuxrouter.com
+
