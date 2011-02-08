@@ -1,0 +1,34 @@
+#!/bin/sh
+# Start daemontool svscan daemon
+# J. Nilo, Junel 2001
+
+RCDLINKS="2,S43 3,S43 6,K43"
+
+error () {
+	echo "svscan: $1"
+	exit 1
+}
+
+case "$1" in
+start)
+	[ -r /var/run/svscan.pid ] && error "already running"
+	echo "Starting svscan ..."
+	svscan /service > /dev/null &
+	echo $! > /var/run/svscan.pid
+	;;
+stop)
+	[ -r /var/run/svscan.pid ] || error "already stopped"
+	echo "Shutting down svscan ..."
+	kill `cat /var/run/svscan.pid`
+	rm /var/run/svscan.pid
+	;;
+restart)
+	$0 stop
+	sleep 1
+	$0 start
+	;;
+*)
+	echo "Usage: /etc/init.d/svscan {start|stop|restart}"
+	exit 1
+esac
+exit 0
