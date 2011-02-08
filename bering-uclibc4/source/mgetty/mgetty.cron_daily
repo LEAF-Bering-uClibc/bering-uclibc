@@ -1,0 +1,9 @@
+#!/bin/sh
+# Save daily LOGDEPTH versions of syslogfile
+LOGDEPTH=4
+# syslogfile name
+LOGFILE=/var/log/mgetty
+
+if [ -f $LOGFILE ]; then
+	savelog -g wheel -m 640 -u root -c $LOGDEPTH $LOGFILE >/dev/null
+fi
