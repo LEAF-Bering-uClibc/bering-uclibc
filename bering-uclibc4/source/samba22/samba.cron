@@ -1,0 +1,16 @@
+#!/bin/sh
+# Save weekly LOGDEPTH versions of syslogfile
+LOGDEPTH=4
+# syslogfile name
+LOGFILE1=/var/log/log.smbd
+LOGFILE2=/var/log/log.nmbd
+
+if [ -f $LOGFILE1 ]; then
+	savelog -g wheel -m 644 -c $LOGDEPTH $LOGFILE1 >/dev/null
+	killall -q -HUP smbd || true
+fi
+
+if [ -f $LOGFILE2 ]; then
+	savelog -g wheel -m 644 -c $LOGDEPTH $LOGFILE2 >/dev/null
+	killall -q -HUP nmbd || true
+fi
