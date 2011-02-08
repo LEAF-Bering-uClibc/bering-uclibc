@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# start accounting daemon.
+
+RCDLINKS="0,K50 1,K50 2,S50 3,S50 4,S50 5,S50 6,K50"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/pmacctd
+NAME=pmacctd
+DESC="pmacctd accounting daemon"
+CONFFILE=/etc/pmacct/pmacctd.conf
+test -x $DAEMON || exit 0
+
+case "$1" in
+    start)
+	echo "Starting $DESC: "
+	$DAEMON -f $CONFFILE
+	echo "$NAME."
+	;;
+    stop)
+	echo "Stopping $DESC: "
+	killall $NAME
+	echo "$NAME."
+	;;
+    restart|force-reload)
+	$0 stop
+	sleep 1
+	$0 start
+	;;
+    *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload}"
+	exit 1
+	;;
+esac
+
+exit 0
