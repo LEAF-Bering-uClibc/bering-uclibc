@@ -1,0 +1,54 @@
+#! /bin/sh
+
+RCDLINKS="0,K20 1,K20 2,S20 3,S20 4,S20 5,S20 6,K20"
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/sbin/knockd
+DEFAULT=/etc/default/knockd
+NAME=knockd
+DESC="Port-knock daemon"
+OPTIONS=" -d"
+
+test -f $DAEMON || exit 0
+
+set -e
+
+if [ -f $DEFAULT ]; then
+    . $DEFAULT
+fi
+
+[ "$KNOCKD_OPTS" ] && OPTIONS="$OPTIONS $KNOCKD_OPTS"
+
+case "$1" in
+  start)
+	if [ $START_KNOCKD -ne 1 ]; then
+		echo "Not starting knockd. To enable it edit $DEFAULT"
+		exit 0
+	fi
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --oknodo --quiet --exec $DAEMON -- $OPTIONS
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --stop --oknodo --quiet --exec $DAEMON
+	echo "$NAME."
+	;;
+  restart|reload|force-reload)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --stop --oknodo --quiet --exec $DAEMON
+	if [ $START_KNOCKD -ne 1 ]; then
+		echo "Not starting knockd. To enable it edit $DEFAULT"
+		exit 0
+	fi
+	sleep 1
+	start-stop-daemon --start --oknodo --quiet --exec $DAEMON -- $OPTIONS
+	echo "$NAME."
+	;;
+  *)
+        echo "Usage: $0 {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
