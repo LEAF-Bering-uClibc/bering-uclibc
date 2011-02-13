@@ -1,0 +1,12 @@
+diff -urN shorewall6-4.4.15.3.orig/lib.cli shorewall6-4.4.15.3/lib.cli
+--- shorewall6-4.4.15.3.orig/lib.cli	2010-12-27 21:43:00.000000000 +0100
++++ shorewall6-4.4.15.3/lib.cli	2011-02-13 12:17:15.799152220 +0100
+@@ -1098,7 +1098,7 @@
+ 			    option=
+ 			    ;;
+ 			t*)
+-			    today=$(date +'^%b %_d.*')
++			    today=$(date +'^%b %d.*')
+ 			    option=${option#t}
+ 			    ;;
+ 			*)
