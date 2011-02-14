@@ -1,0 +1,53 @@
+#############################################################
+#
+# Hostap daemon 
+#
+#############################################################
+
+include $(MASTERMAKEFILE)
+
+
+HOSTAPD_DIR:=hostapd-0.7.3/
+HOSTAPD_TARGET_DIR:=$(BT_BUILD_DIR)/hostapd
+
+
+$(HOSTAPD_DIR)/.source:
+	zcat $(HOSTAPD_SOURCE) | tar -xvf -
+#	cat $(HOSTAPD_PATCH1) | patch -d $(HOSTAPD_DIR)/hostapd -p1
+	cat $(HOSTAPD_PATCH2) | patch -d $(HOSTAPD_DIR) -p1
+#	cat $(HOSTAPD_PATCH3) | patch -d $(HOSTAPD_DIR) -p1
+	touch $(HOSTAPD_DIR)/.source
+
+$(HOSTAPD_DIR)/.build: $(HOSTAPD_DIR)/.source
+	-mkdir -p $(HOSTAPD_TARGET_DIR)/usr/bin
+	-mkdir -p $(HOSTAPD_TARGET_DIR)/usr/sbin
+	-mkdir -p $(HOSTAPD_TARGET_DIR)/etc/hostapd
+	-mkdir -p $(HOSTAPD_TARGET_DIR)/etc/default
+	-mkdir -p $(HOSTAPD_TARGET_DIR)/etc/init.d
+	cp -a .config $(HOSTAPD_DIR)/hostapd
+	( cd $(HOSTAPD_DIR)/hostapd ; export CFLAGS="$(BT_COPT_FLAGS) -MMD -Wall -g -I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include " ; \
+	export LIBS=-L$(BT_STAGING_DIR)/usr/lib ; make CC=$(TARGET_CC) ) ;
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(HOSTAPD_DIR)/hostapd/hostapd
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(HOSTAPD_DIR)/hostapd/hostapd_cli
+	cp $(HOSTAPD_DIR)/hostapd/hostapd $(HOSTAPD_TARGET_DIR)/usr/sbin/
+	cp $(HOSTAPD_DIR)/hostapd/hostapd_cli $(HOSTAPD_TARGET_DIR)/usr/bin/
+	cp $(HOSTAPD_DIR)/hostapd/hostapd.deny $(HOSTAPD_TARGET_DIR)/etc/hostapd/deny
+	cp $(HOSTAPD_DIR)/hostapd/hostapd.accept $(HOSTAPD_TARGET_DIR)/etc/hostapd/accept
+	cp $(HOSTAPD_DIR)/hostapd/hostapd.conf $(HOSTAPD_TARGET_DIR)/etc/hostapd/
+	cp -aL hostapd.default $(HOSTAPD_TARGET_DIR)/etc/default/hostapd
+	cp -aL hostapd.init $(HOSTAPD_TARGET_DIR)/etc/init.d/hostapd
+	cp -a $(HOSTAPD_TARGET_DIR)/* $(BT_STAGING_DIR)
+	touch $(HOSTAPD_DIR)/.build
+
+ 
+source: $(HOSTAPD_DIR)/.source
+
+build: $(HOSTAPD_DIR)/.build 
+	
+clean:
+	make -C $(HOSTAPD_DIR)/hostapd clean
+	rm $(HOSTAPD_DIR)/.build
+	rm -rf $(HOSTAPD_TARGET_DIR)
+
+srcclean:
+	rm -rf $(HOSTAPD_DIR)
