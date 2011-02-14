@@ -1,0 +1,109 @@
+#!/bin/sh
+
+OLD="-"
+NEW="+"
+OIFS="$IFS"
+
+usage() {
+	echo "Usage: $0 OLD NEW"
+	exit 1
+}
+
+[ $# -eq 2 ] || usage
+[ -f $1 ] || usage
+[ -f $2 ] || usage
+
+old_file=$1
+new_file=$2
+
+eof_old=
+eof_new=
+eof_diff=
+
+line_old=
+line_new=
+line_diff=
+
+pos_old=1
+pos_new=1
+
+
+read_old() {
+	IFS=
+	if read line_old <&3; then
+		pos_old=$(($pos_old+1))
+	else
+		eof_old=y
+	fi
+	IFS="$OIFS"
+}
+
+read_new() {
+	IFS=
+	if read line_new <&4; then
+		pos_new=$(($pos_new+1))
+	else
+		eof_new=y
+	fi
+	IFS="$OIFS"
+}
+
+read_diff() {
+	IFS=
+	read line_diff || eof_diff=y
+	IFS="$OIFS"
+}
+
+read_diff_header() {
+	IFS=' ,+-'
+	read junk pos_diff_old len_diff_old pos_diff_new len_diff_new junk || eof_diff=y
+	IFS="$OIFS"
+}
+
+diff -u $old_file $new_file | (
+
+# Ignore first two lines
+read junk
+read junk
+
+read_diff_header
+while [ -z "$eof_diff" ]; do
+
+	while [ "$pos_old" -lt "$pos_diff_old" ]; do
+		read_old
+		read_new
+		echo "$line_old"
+	done
+	
+	while [ "$len_diff_old" -gt 0 -o "$len_diff_new" -gt 0 ]; do
+		read_diff
+		case "$line_diff" in
+		-*)
+			read_old
+			echo "${OLD}$line_old"
+			len_diff_old=$(($len_diff_old-1))
+			;;
+		+*)
+			read_new
+			echo "${NEW}$line_new"
+			len_diff_new=$(($len_diff_new-1))
+			;;
+		*)
+			read_old
+			read_new
+			echo "$line_old"
+			len_diff_old=$(($len_diff_old-1))
+			len_diff_new=$(($len_diff_new-1))
+			;;
+		esac
+	done
+
+	read_diff_header
+done
+
+while [ -z "$eof_old" ]; do
+	read_old
+	echo "$line_old"
+done
+
+) 3<$old_file 4<$new_file
