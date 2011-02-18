@@ -1,0 +1,69 @@
+# /etc/network/interfaces -- configuration file for LEAF network
+#
+# Loopback interface.
+auto lo
+iface lo inet loopback
+
+# Step 1: configure external interface
+#         uncomment/adjust one of the following 4 options
+# Option 1.1 (default): eth0 / dynamic IP from dhcpcd
+auto eth0
+iface eth0 inet dhcp
+#
+# Option 1.2: eth0 / Fixed IP (assumed to be 1.2.3.4 on a /24 network). 
+# 		(broadcast/gateway optional)
+#auto eth0
+#iface eth0 inet static  
+#	address 1.2.3.4
+#	netmask 255.255.255.0
+#	broadcast 1.2.3.255
+#	gateway 1.2.3.1
+# 
+# Option 1.3: PPP/PPPOE (modem connected to eth0) 
+#auto ppp0 
+#iface ppp0 inet ppp
+#	pre-up ip link set eth0 up
+#	provider dsl-provider eth0
+# 
+# Option 1.4: PPP modem
+#auto ppp0
+#iface ppp0 inet ppp
+#	provider provider
+	
+# Step 2: configure  internal interface
+# Default: eth1 / fixed IP = 192.168.1.254 on a /24 network
+auto eth1
+iface eth1 inet static
+	address 192.168.1.254
+	netmask 255.255.255.0
+	broadcast 192.168.1.255
+
+# Step 3 (optional): configure DMZ
+# Default: eth2 / fixed IP = 192.168.1.100
+#auto eth2
+#iface eth2 inet static
+#	address 192.168.1.100
+#	netmask 255.255.255.0
+#	broadcast 192.168.1.255
+
+# Step 4 (optional): configure a bridge
+#auto br0
+#iface br0 inet static
+#	address 192.168.1.254
+#	netmask 255.255.255.0
+#	broadcast 192.168.1.255
+#	bridge_ports all
+
+# Step 5 (optional): configure ipv6
+#iface eth1 inet6 static
+#	address fec0:2::1
+#	netmask 64
+
+# Step 6 (optional): configure v4tunnel
+#auto tun6to4
+#iface tun6to4 inet6 v4tunnel
+#	address 3ffe:8280:0:2001::2
+#	netmask 64
+#	gateway 3ffe:8280:0:2001::1
+#	endpoint 202.143.23.6
+#	ttl 254
