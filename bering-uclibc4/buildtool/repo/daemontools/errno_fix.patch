@@ -1,0 +1,13 @@
+diff -aur admin/daemontools-0.76/src/error.h admin-new/daemontools-0.76/src/error.h
+--- admin/daemontools-0.76/src/error.h	2001-07-12 19:49:49.000000000 +0300
++++ admin-new/daemontools-0.76/src/error.h	2011-03-06 16:35:10.000000000 +0200
+@@ -3,7 +3,8 @@
+ #ifndef ERROR_H
+ #define ERROR_H
+ 
+-extern int errno;
++#include <errno.h>
++//extern int errno;
+ 
+ extern int error_intr;
+ extern int error_nomem;
