@@ -1,0 +1,59 @@
+*** yate/conf.d/yate.conf.sample.orig	2010-03-31 10:37:06.000000000 +0100
+--- yate/conf.d/yate.conf.sample	2011-03-19 14:18:46.000000000 +0000
+***************
+*** 4,9 ****
+--- 4,13 ----
+  ; modload: boolean: Should a module be loaded by default if there is no
+  ;  reference to it in the [modules] section
+  ;modload=enable
++ ;
++ ; LEAF Bering-uClibc
++ ; Selectively load modules to reduce resource requirements
++ modload=disable
+  
+  ; modpath: string: Overrides the runtime module directory path which is
+  ;  compiled in or specified with the -m command line option. Note that this
+***************
+*** 54,59 ****
+--- 58,78 ----
+  ;   modulename.yate=boolean
+  ; Note that modules can be located only in the module directory so no path
+  ;  information should be specified
++ ;
++ ; LEAF Bering-uClibc
++ ; Only load the following modules
++ accfile.yate=yes
++ cdrbuild.yate=yes
++ cdrfile.yate=yes
++ pbxassist.yate=yes
++ regexroute.yate=yes
++ regfile.yate=yes
++ rmanager.yate=yes
++ tonegen.yate=yes
++ wavefile.yate=yes
++ yiaxchan.yate=yes
++ yrtpchan.yate=yes
++ ysipchan.yate=yes
+  
+  
+  [localsym]
+***************
+*** 65,71 ****
+  
+  ; pwlib does not clean up properly on Linux so we must disable global symbols
+  ;  unfortunately preventing all pwlib plugins from loading
+! h323chan.yate=yes
+  
+  
+  [nounload]
+--- 84,93 ----
+  
+  ; pwlib does not clean up properly on Linux so we must disable global symbols
+  ;  unfortunately preventing all pwlib plugins from loading
+! ;
+! ; LEAF Bering-uClibc
+! ; No h323 module on LEAF Bering-uClibc
+! ;h323chan.yate=yes
+  
+  
+  [nounload]

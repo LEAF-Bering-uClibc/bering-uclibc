@@ -1,0 +1,36 @@
+*** yate/configure.in.orig	2011-03-09 15:03:41.000000000 +0000
+--- yate/configure.in	2011-03-14 20:05:21.000000000 +0000
+***************
+*** 338,368 ****
+  # Checks for optional libraries.
+  
+  HAVE_RESOLV=no
+  RESOLV_LIB=""
+  AC_MSG_CHECKING([for resolver library])
+- AC_LANG_SAVE
+- AC_LANG_C
+- SAVE_CFLAGS="$CFLAGS"
+- CFLAGS="$CFLAGS -Wall -Werror $GCC_UNRESOLVED_SYMBOLS"
+- SAVE_LIBS="$LIBS"
+- AC_TRY_LINK([#include <netinet/in.h>
+- #include <arpa/nameser.h>
+- #include <resolv.h>],[res_init();],[HAVE_RESOLV=yes])
+- if [[ "x$HAVE_RESOLV" = "xno" ]]; then
+- LIBS="$LIBS -lresolv"
+- AC_TRY_LINK([#include <netinet/in.h>
+- #include <arpa/nameser.h>
+- #include <resolv.h>],[res_init();],
+- [HAVE_RESOLV=yes RESOLV_LIB=-lresolv])
+- fi
+- LIBS="$SAVE_LIBS"
+- if [[ "x$HAVE_RESOLV" != "xno" -a "x$RESOLV_LIB" = "x" ]]; then
+- AC_TRY_LINK([#include <netinet/in.h>
+- #include <arpa/nameser.h>
+- #include <resolv.h>],[unsigned char x[2]; res_query("",0,0,x,0);],[],[RESOLV_LIB=-lresolv])
+- fi
+- CFLAGS="$SAVE_CFLAGS"
+- AC_LANG_RESTORE
+  AC_MSG_RESULT([$HAVE_RESOLV $RESOLV_LIB])
+  AC_SUBST(HAVE_RESOLV)
+  AC_SUBST(RESOLV_LIB)
+--- 338,345 ----
