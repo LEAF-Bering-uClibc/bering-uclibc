@@ -1,0 +1,34 @@
+*** dhcpcd-5.2.11/dhcpcd-hooks/20-resolv.conf.orig	2011-02-04 14:56:03.000000000 +0000
+--- dhcpcd-5.2.11/dhcpcd-hooks/20-resolv.conf	2011-03-20 17:44:32.000000000 +0000
+***************
+*** 7,12 ****
+--- 7,13 ----
+  # or dnsmasq. This is important as the libc resolver isn't that powerful.
+  
+  resolv_conf_dir="$state_dir/resolv.conf"
++ upstream_resolv_conf_dir="/etc/dhcpc"
+  
+  build_resolv_conf()
+  {
+***************
+*** 61,68 ****
+  	else
+  		echo "# /etc/resolv.conf.tail can replace this line" >> "$cf"
+  	fi
+! 	cat "$cf" > /etc/resolv.conf
+! 	chmod 644 /etc/resolv.conf
+  	rm -f "$cf"
+  }
+  
+--- 62,72 ----
+  	else
+  		echo "# /etc/resolv.conf.tail can replace this line" >> "$cf"
+  	fi
+! 	if [ ! -d ${upstream_resolv_conf_dir} ]; then
+! 		mkdir ${upstream_resolv_conf_dir}
+! 	fi
+! 	cat "$cf" > ${upstream_resolv_conf_dir}/resolv.conf
+! 	chmod 644 ${upstream_resolv_conf_dir}/resolv.conf
+  	rm -f "$cf"
+  }
+  
