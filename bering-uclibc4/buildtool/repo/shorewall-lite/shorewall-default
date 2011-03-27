@@ -1,0 +1,22 @@
+#
+# Shoreline Firewall startup options
+#
+# Any flags that appear in this file will be passed to shorewall
+# by init.d on startup.
+#
+# -f = fast
+# -q = quiet
+#
+OPTIONS="-q"
+
+# if your Shorewall configuration requires detection of the ip address of a ppp
+# interface, you must list such interfaces in "wait_interface" to get Shorewall
+# wait until the interface is configured. Otherwise the script will fail because
+# it won't be able to detect the IP address.
+#
+# Example:
+#    wait_interface="ppp0"
+# or
+#    wait_interface="ppp0 ppp1"
+#
+#wait_interface="ppp0"
