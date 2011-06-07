@@ -1,0 +1,117 @@
+#!/bin/sh
+#
+#	BIND init script
+#	Partially based on Gentoo BIND init script
+#	(C) 2011 Andrew Denisenko
+#
+
+RCDLINKS="2,S80 3,S80 4,S80 5,S80 0,K20 1,K20 6,K20"
+
+test -x /usr/sbin/named || exit 0
+
+NAMED_CONF="/etc/named/named.conf"
+
+# Reads config file (will override defaults above)
+[ -r /etc/default/named ] && . /etc/default/named
+
+#check chroot dir
+check_chroot() {
+	if [ -n "${CHROOT}" ]; then
+		[ ! -d "${CHROOT}" ] && return 1
+		[ ! -d "${CHROOT}/dev" ] || [ ! -d "${CHROOT}/etc" ] || [ ! -d "${CHROOT}/var" ] && return 1
+		[ ! -d "${CHROOT}/var/run/named" ] || [ ! -d "${CHROOT}/var/log/named" ] && return 1
+		[ ! -d "${CHROOT}/etc/named" ] || [ ! -d "${CHROOT}/var/named" ] && return 1
+		[ ! -d "${CHROOT}/var/log/named" ] && return 1
+		[ ! -e "${CHROOT}/etc/localtime" ] && cp -a /etc/TZ "${CHROOT}/etc/localtime"
+		[ ! -c "${CHROOT}/dev/null" ] && cp -a /dev/null "${CHROOT}/dev/null"
+		[ ! -c "${CHROOT}/dev/zero" ] && cp -a /dev/zero "${CHROOT}/dev/zero"
+		[ ! -c "${CHROOT}/dev/random" ] && cp -a /dev/random "${CHROOT}/dev/random"
+		[ ! -c "${CHROOT}/dev/urandom" ] && cp -a /dev/urandom "${CHROOT}/dev/urandom"
+	fi
+	return 0
+}
+
+# Check configs if named-checkconf is present in system
+check_config() {
+	[ ! -e "${CHROOT}/etc/named/rndc-local.key" ] && {
+		rndc-confgen -a -r /dev/urandom -c "${CHROOT}/etc/named/rndc-local.key"
+		chown root:named "${CHROOT}/etc/named/rndc-local.key"
+		chmod g+r "${CHROOT}/etc/named/rndc-local.key"
+	}
+	if [ -x /usr/sbin/named-checkconf ]; then
+		/usr/sbin/named-checkconf -z ${CHROOT:+-t} ${CHROOT} ${NAMED_CONF} || return 1;
+	fi
+	return 0
+}
+
+PIDFILE="${CHROOT}/var/run/named/named.pid"
+
+case "$1" in
+	start)
+		echo -n "Starting BIND server: "
+		if [ -n "${CHROOT}" ]; then
+			check_chroot || {
+				echo "Error in chroot dir!"
+				exit 1
+			}
+			mount /etc/named ${CHROOT}/etc/named -o bind
+			mount /var/named ${CHROOT}/var/named -o bind
+			mount /var/log/named ${CHROOT}/var/log/named -o bind
+			mount /var/run/named ${CHROOT}/var/run/named -o bind
+		fi
+		check_config || {
+			echo "Error in config!"
+			if [ -n "${CHROOT}" ]; then
+				umount ${CHROOT}/etc/named
+				umount ${CHROOT}/var/named
+				umount ${CHROOT}/var/log/named
+				umount ${CHROOT}/var/run/named
+			fi
+			exit 1
+		}
+		[ -n "${CPU}" ] && [ "${CPU}" -gt 0 ] && CPU="-n ${CPU}"
+		start-stop-daemon --start --pidfile "$PIDFILE" \
+			--exec /usr/sbin/named -- -c ${NAMED_CONF} \
+			-u named ${CPU} ${OPTIONS} ${CHROOT:+-t} ${CHROOT}
+		if [ $? -eq 0 ]; then
+			echo "named."
+		else
+			echo "failed!"
+			if [ -n "${CHROOT}" ]; then
+				umount ${CHROOT}/etc/named
+				umount ${CHROOT}/var/named
+				umount ${CHROOT}/var/log/named
+				umount ${CHROOT}/var/run/named
+			fi
+		fi
+		;;
+	stop)
+		echo -n "Stopping BIND server: "
+		start-stop-daemon --stop --quiet --pidfile "$PIDFILE" \
+			--retry 10 --exec /usr/sbin/named
+		sleep 1
+		if [ -n "${CHROOT}" ]; then
+			umount ${CHROOT}/etc/named
+			umount ${CHROOT}/var/named
+			umount ${CHROOT}/var/log/named
+			umount ${CHROOT}/var/run/named
+		fi
+		echo "named."
+		;;
+	reload)
+		echo -n "Reloading BIND server: "
+		start-stop-daemon --stop --oknodo --pidfile "$PIDFILE" \
+			--signal HUP --exec /usr/sbin/named
+		echo "named."
+		;;
+	restart | force-reload)
+		$0 stop
+		sleep 2
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+		exit 1 
+esac
+
+exit 0

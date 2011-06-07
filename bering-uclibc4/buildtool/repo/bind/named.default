@@ -1,0 +1,5 @@
+# chroot directory
+CHROOT=/var/named/chroot
+
+# Force CPU count
+#CPU=1

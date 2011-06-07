@@ -1,0 +1,414 @@
+#!/bin/busybox sh
+#
+# /linuxrc (rc.-1)  Prepares root for normal inittab and boot.
+# Allows main root to be a multiple parts
+#
+# Copyright Dave Cinege - LRP  GPL2
+# Multiple disk handling portions written by JamesSturdevant 1999
+# Fix corruption of linuxrc.err by LarrySettle Jan 2000
+# Fix corruption of /var/lib/lrpkg/backdisk by LarrySettle Jan 2000
+# Modified to load modules before looking for packages by
+# Charles Steinkuehler 2001
+# J. Nilo Nov 2001: Get rid of grep & cut statements for non-patched distro
+# and pivot_root to tmpfs
+#
+# Modified Eric Wolzak april 2002 for cdrom, module loading 
+# Major changes by Charles Steinkuehler, Mar. 2004
+# Major changes due migration to 2.6 kernel by Andrew Denisenko, Mar.-Oct. 2010
+# Switch back to root in tmpfs by Andrew Denisenko, Jan. 2011
+#
+
+# Uncomment for more verbose execution.
+#VERBOSE=1
+
+#Uncomment for debug mode (don't suppress STDOUT and STDERR)
+#DEBUG=1
+
+#  **** Adjust if needed ****
+DEF_syst_size=40M	#  Size of root partition
+DEF_log_size=3M		#  Size of /var/log partition
+usb_wait=1		#  Wait time in sec. for USB drive
+DEF_CONFIGDB=configdb
+DEF_MODDB=moddb
+
+
+if [ $DEBUG ] ; then
+	qt () { "$@" ; }
+else
+	qt () { "$@" >>/linuxrc.err 2>&1 ; }
+fi
+
+Lecho () { echo "LINUXRC: $@"; }
+
+PFX=/var/lib/lrpkg
+BPFX=/boot
+BB=/bin/busybox
+
+IFS=' 	
+'
+OIFS="$IFS"
+
+$BB mkdir /proc 
+$BB mount -nt proc /proc /proc
+$BB mkdir /sys 
+$BB mount -nt sysfs sysfs /sys
+
+/bin/busybox --install -s
+/bin/chmod +rx /
+
+VERSION="`cat $PFX/initrd.version`"
+
+Lecho "Bering - Initrd - $VERSION"
+
+# Process kernel command line and assign values to variables
+[ "$VERBOSE" ] && Lecho "Parsing kernel command line..."
+for i in `cat /proc/cmdline` ; do
+	case $i in
+		*.*=*)	;;	#ignore parameters like foo.bar=123
+		*=*)	eval KCMD_$i ;;
+		*.*)	;;	#ignore parameters like foo.bar
+		*)	eval KCMD_$i=$i ;;
+	esac
+done
+
+# Load any modules required to boot
+ln -s /lib/modules /lib/modules/`uname -r`
+/sbin/depmod
+[ "$VERBOSE" ] && cp /lib/modules/modules.dep /linuxrc.depmod
+
+#---------mdev------------
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+/sbin/mdev -s
+
+if [ -r $BPFX/etc/modules ] ; then
+	# Loop over every line in modules
+	[ "$VERBOSE" ] && Lecho "Loading modules..."
+
+	# make sure there is a LF at the end
+	(cat $BPFX/etc/modules; echo) |
+	while read module args; do
+		case "$module" in
+			\#*|"") continue;;
+		esac
+		/sbin/modprobe "$module" $args
+	done
+fi
+
+for i in `echo $KCMD_KMODULES|sed 's/,/ /g'`; do
+	/sbin/modprobe $i 2>/dev/null 
+done
+
+#define module probing as function
+probe() {
+	MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
+	TMODALIAS=""
+	while [ `echo "$MODALIAS"|wc -l` -gt `echo "$TMODALIAS"|wc -l` ]; do
+		[ "$VERBOSE" ] && qt echo Next iteration: `date`
+		MODCOUNT=0
+		for i in $MODALIAS; do
+			[ "$VERBOSE" ] && qt echo -n Probing $i ...
+			if [ -z "`/sbin/modprobe $i 2>&1|grep \"not found\"`" ]; then
+				MODCOUNT=$(($MODCOUNT+1))
+				[ "$VERBOSE" ] && qt echo " found."
+			else
+				[ "$VERBOSE" ] && qt echo " not found."
+			fi
+		done
+		[ "$VERBOSE" ] && qt echo Successfully probed $MODCOUNT modules for `echo "$MODALIAS"|wc -l` modaliases, currently loaded:
+		[ "$VERBOSE" ] && qt lsmod
+		sleep $usb_wait
+		TMODALIAS="$MODALIAS"
+		MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
+	done
+}
+
+probe
+
+# wait for USB drive
+#sleep $usb_wait
+
+if [ -z "$KCMD_NOLEGACY" ]; then
+	ata_cnt=`lsmod|grep '\w*ata_' | wc -l`
+	if [ "$ata_cnt" -eq 0 ]; then
+		modprobe pata_legacy
+		sleep $usb_wait
+		probe
+	fi
+fi
+
+[ "$VERBOSE2" ] && (echo "Modules loaded:"; lsmod)
+
+# Skip remaining LRP stuff if we're not booting into a ramdisk
+[ "$VERBOSE" ] && Lecho "Root: $KCMD_root"
+case "${KCMD_root#/dev/}" in
+	ram*)	;;
+	*)	qt umount /proc
+		[ ! $VERBOSE ] && rm /linuxrc.err
+		exit 0	;;
+esac
+
+MNT="$PFX/mnt"
+qt mkdir $MNT
+
+# Read supported filesystem types
+while read FS ; do
+	case $FS in
+		nodev*)	continue ;;
+	esac
+	FILESYSTEMS="$FILESYSTEMS $FS"
+done << EOF
+$(cat /proc/filesystems)
+EOF
+
+# Try to mount configuration device and read any leaf.cfg file
+# $KCMD_LEAFCFG could look like any of the following:
+#     /dev/fd0:vfat,/dev/sr0:iso9660
+#     /dev/sda1:vfat
+#     /dev/sr0
+[ "$VERBOSE" ] && Lecho "Looking for leaf.cfg..."
+IFS=','
+for dev in ${KCMD_LEAFCFG}; do
+	IFS=':'
+	set -- ${dev}
+	IFS="$OIFS"
+	if [ -b "$1" ] ; then
+		for FS in $2 $FILESYSTEMS; do
+			[ "$VERBOSE" ] && Lecho "Mounting $1 on $MNT as $FS"
+			if qt mount -nrt $FS $1 $MNT ; then 
+				if [ -r $MNT/leaf.cfg ] ; then
+					[ "$VERBOSE" ] && Lecho "Sourcing leaf.cfg from $1"
+					source $MNT/leaf.cfg
+					qt umount $MNT
+					break 2
+				fi
+				qt umount $MNT
+				break
+			fi
+		done
+	fi
+done
+
+# Set config variables, falling back to defaults
+for i in LRP PKGPATH CONFIGDB MODDB tmp_size syst_size log_size ; do
+	eval $i=\"\${$i:-\${KCMD_$i:-\$DEF_$i}}\"
+done
+
+# Added by J. Nilo: Create a dynamic TMPFS
+# Initialize tmpfs_size with default
+#qt mkdir /tmpfs
+#Lecho "Mounting a $syst_size TMPFS filesystem..."
+#qt mount -t tmpfs root /tmpfs -o size=$syst_size
+#qt umount /proc
+#qt umount /sys
+#for ii in /*
+#do
+#	case $ii in
+#		/tmpfs)	;;
+#		*)	qt cp -dpR $ii /tmpfs ;;
+#	esac
+#done
+#cd /tmpfs
+#mkdir initrd
+
+#pivot: unneeded
+#[ "$VERBOSE" ] && Lecho "Pivoting..."
+#pivot_root . initrd
+
+#mount -t proc procfs /proc
+#mount -t sysfs sysfs /sys
+#cd /tmpfs
+
+[ "$VERBOSE" ] && Lecho "Generating default dirs..."
+
+qt mkdir /dev/inet 
+qt mkdir /dev/net
+qt mkdir /etc
+qt mkdir /tmp
+qt mkdir /mnt
+qt mkdir /nfs
+qt mkdir /var/lock
+qt mkdir /var/run
+
+qt ln -s /tmp /var/tmp
+qt ln -s /tmp /usr/tmp
+
+[ "$VERBOSE" ] && Lecho "Generating /tmp & /var/log partitions ..."
+qt mount -t tmpfs tmpfs /tmp -o defaults${tmp_size:+,size=$tmp_size}
+qt mount -t tmpfs tmpfs /var/log -o size=$log_size
+
+#---------mdev------------
+#[ "$VERBOSE" ] && Lecho "Populating /dev..."
+#source $PFX/root.dev.mk
+
+#Set some permissions
+chmod 1777 /var/lock
+chmod 1777 /tmp
+
+# Query /proc/cmdline to see if we want to ask for a second disk
+# to be inserted for use as a rescue set
+case $KCMD_diskwait in
+	Y*|y*|1)
+Lecho
+Lecho "***   Insert 2nd disk.  Press <enter> to continue.   ***"
+Lecho
+		read KEYCHAR
+		unset KEYCHAR
+		;;
+esac
+if [ -n "$PKGPATH" ];  then
+	: >$PFX/pkgpath.disks
+	[ "$VERBOSE" ] && Lecho "PKGPATH: $PKGPATH"
+	devcount=1
+	IFS="$IFS,"
+	for dev in ${PKGPATH}; do
+		IFS=':'
+		set -- ${dev}
+		dev=$1
+		qt mkdir /mnt$devcount
+		IFS="$OIFS"
+		for t in $2 ${FILESYSTEMS}; do
+			[ "$VERBOSE" ] && Lecho "Mounting $dev on /mnt$devcount as $t"
+			if qt mount -rt $t $dev /mnt$devcount ; then
+				[ "$VERBOSE" ] && Lecho "Mounted $dev as $t"
+				echo "$dev $t" >>$PFX/pkgpath.disks
+				devlist="$dev:+/mnt$devcount:-$t,$devlist"
+				rdevlist="$rdevlist,$dev:+/mnt$devcount:-$t"
+				if [ $devcount -eq 1 ] ; then 
+					echo "${KCMD_initrd%.lrp}">$PFX/packages
+				fi
+				break
+			fi
+		done
+		devcount=$(expr $devcount + 1)
+	done
+	IFS="$OIFS"
+else
+	Lecho "PKGPATH is empty or unset. Can not install packages."
+fi
+
+devlist=${devlist%,}
+rdevlist=${rdevlist#,}
+
+if [ ! "$LRP" = "" ]; then
+
+	echo -n "LINUXRC: Installing -"
+	
+	echo configdb=$CONFIGDB >$PFX/backup
+	echo moddb=$MODDB >>$PFX/backup
+	
+	IFS="$IFS,"
+	for f in ${LRP} $CONFIGDB $MODDB; do
+		IFS=':'
+		set -- $f
+		f=$1
+		usedevlist=$rdevlist
+		fnd=`cat $PFX/packages 2>/dev/null | grep -e "^$f\$" | wc -l`
+		echo -n "  $f:"
+		IFS=","
+		for devtype in ${usedevlist}; do
+			dev="${devtype%:+*}"
+			mnt="${devtype%:-*}"
+			mnt="${mnt#*:+}"
+			t="${devtype#*:-}"
+			[ "$VERBOSE" ] && echo -n " dev: $dev mnt: $mnt t: $t f: $mnt/$f.lrp"
+			[ "$VERBOSE2" ] && ls -l $dev
+			if [ $fnd -eq 0 ]; then
+				if [ -f $mnt/$f.lrp ]; then
+					echo -n " $dev"
+					gunzip -c $mnt/$f.lrp > /dev/null
+					if [ $? -eq 0 ]; then
+						tar -zxvpf $mnt/$f.lrp > $PFX/$f.list
+						#Update installed packages file
+						echo "$f">>$PFX/packages
+						#Calculate sha1sum
+						if [ -f $PFX/$f.local ] ; then
+						    cat $PFX/$f.local | while read x ; do
+							[ -e "$x" ] && find "$x" -type f | xargs sha1sum >> $PFX/$f.sha1
+						    done
+						fi
+						fnd=1
+					else
+						echo -n "(cpt!)"
+						[ $fnd -eq 0 ] && fnd=2
+					fi
+				fi
+			else
+				echo -n " $f(dup!)"
+			fi
+		done
+		if [ $fnd -eq 0 ]; then
+			echo -n " $f(nf!)"
+		fi
+	done
+	IFS="$OIFS"
+	echo " - Finished."
+else
+	Lecho "LRP= is empty or unset.  Can not install packages."
+fi
+
+# We need to set permissons after etc is installed, so it sets owner and
+# group correctly. (No /etc/passwd and /etc/group on the first run : P )
+[ "$VERBOSE" ] && Lecho "chown and chmod /dev..."
+/sbin/mdev -s
+
+#Can't hurt
+sync
+sleep 1
+
+IFS=","
+for devtype in ${devlist}; do
+	mnt="${devtype%:-*}"
+	mnt="${mnt#*:+}"
+	[ "$VERBOSE" ] && Lecho "Unmounting $mnt"
+	qt umount $mnt
+	[ "$VERBOSE" ] && Lecho "Removing $mnt"
+	qt rmdir $mnt
+done
+IFS="$OIFS"
+
+# qt umount /proc
+
+Lecho "Loaded Packages"
+
+#exec /usr/sbin/chroot . sh -c 'umount /initrd; freeramdisk /dev/ram0; exec /sbin/init' <dev/console >dev/console 2>&1
+
+if [ "$syst_size" = 0 ]; then
+	[ "$VERBOSE" ] && Lecho "Moving root to tmpfs disabled! Booting from initramfs..."
+	exec /sbin/init
+	exit 0
+fi
+
+[ "$VERBOSE" ] && Lecho "Creating new rootfs..."
+mkdir /newroot
+qt mount -t tmpfs root /newroot -o size=$syst_size
+mkdir /newroot/tmp
+mkdir -p /newroot/var/log
+qt mount -t tmpfs tmpfs /newroot/tmp -o defaults${tmp_size:+,size=$tmp_size}
+qt mount -t tmpfs tmpfs /newroot/var/log -o size=$log_size
+
+copy_err=0
+
+for i in `ls /`; do
+	case $i in
+		proc) ;;
+		sys) ;;
+		newroot) ;;
+		*) qt cp -a $i /newroot || copy_err=1 ;;
+	esac
+done
+if [ "$copy_err" -eq 0 ]; then
+	qt umount /tmp
+	qt umount /var/log
+
+	[ "$VERBOSE" ] && Lecho "Switch_root into new rootfs..."
+
+	[ ! $VERBOSE ] && rm /linuxrc.err
+
+	umount /sys /proc
+	exec switch_root -c /dev/console /newroot /var/lib/lrpkg/root.helper
+else
+	Lecho "Copying files into new_root failed! new rootfs is full?"
+	Lecho "Failsafe boot directly from initramfs..."
+	exec /sbin/init
+fi
+exit 0
