@@ -1,0 +1,19 @@
+#! /bin/sh
+#
+# radiusd	Cron script to rotate radiusd log files daily.
+#		Debian/Linux: place this in /etc/cron.daily.
+#
+
+umask 027
+
+# Take care of the standard logfiles.
+cd /var/log/radius/
+if [ -f radius.log ]
+then
+	savelog -g wheel -m 640 -u root -c 7 radius.log > /dev/null
+fi
+
+# Delete any radacct "detail" files more than 7 days old
+cd /var/log/radius/radacct/
+find . -mtime +7 -exec /bin/rm -f '{}' \;
+

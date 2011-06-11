@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# /etc/init.d/radiusd	start / stop the RADIUS daemon.
+#
+# This is a hint for webconf: --exec /usr/sbin/radiusd
+RCDLINKS="0,K50 1,K50 2,S50 3,S50 4,S50 5,S50 6,K50"
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+PROG=radiusd
+PROGRAM=/usr/sbin/${PROG}
+PIDFILE="/var/run/${PROG}/${PROG}.pid"
+DESC="FreeRADIUS daemon"
+
+test -f $PROGRAM || exit 0
+
+ret=0
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --quiet \
+		--pidfile $PIDFILE --exec $PROGRAM || ret=$?
+	echo "$PROG".
+	exit $ret
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --stop --quiet \
+		--pidfile $PIDFILE || ret=$?
+	echo "$PROG".
+	exit $ret
+	;;
+  reload|force-reload)
+	echo "Reloading $DESC configuration files."
+	start-stop-daemon --stop --quiet \
+		--signal 1 --pidfile $PIDFILE || ret=$?
+	exit $ret
+	;;
+  restart)
+	start-stop-daemon --stop --quiet \
+		--pidfile $PIDFILE || ret=$?
+	sleep 2
+	start-stop-daemon --start --quiet \
+		--pidfile $PIDFILE --exec $PROGRAM || ret=$?
+	exit $ret
+	;;
+  *)
+        echo "Usage: /etc/init.d/$PROG {start|stop|reload|restart}"
+        exit 1
+esac
+
+exit 0
