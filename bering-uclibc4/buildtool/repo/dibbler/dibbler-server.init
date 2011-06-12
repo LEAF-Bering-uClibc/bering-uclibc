@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# /etc/init.d/dibbler-server: start and stop dibbler DHCPv6 server
+#
+RCDLINKS="0,K60 2,S40"
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Check for existence of daemon executables
+[ -x /usr/sbin/dibbler-server ] || exit 2
+
+RETVAL=0
+
+# See how we were called
+case "$1" in
+  start)
+	echo -n "Starting dibbler-server: "
+	/usr/sbin/dibbler-server start > /dev/null
+	RETVAL=$?
+	if [ $RETVAL == "0" ]; then
+	    echo "succeeded."
+	else
+	    echo "failed."
+	fi
+        ;;
+  stop)
+	echo -n "Shutting down dibbler-server: "
+	/usr/sbin/dibbler-server stop > /dev/null
+	RETVAL=$?
+	if [ $RETVAL == "0" ]; then
+	    echo "succeeded."
+	else
+	    echo "failed."
+	fi
+        ;;
+  restart)
+        $0 stop
+	sleep 1
+	$0 start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0
