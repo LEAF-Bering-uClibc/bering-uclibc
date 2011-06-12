@@ -1,0 +1,182 @@
+#!/bin/sh
+# multicron-*	Multifacet cron script. 
+#		This script is responsible for many core LRP functions.
+#		Log rotation, remote time sync, host ping check, etc.
+#		It depends on the settings in /etc/lrp.conf.
+
+periodic () {
+	checkfreespace
+	pingcheck
+}
+
+daily () {
+	updatetime
+	rotatelogs
+}
+
+weekly () {
+	rotatelogs
+}
+
+
+monthly () {
+	rotatelogs
+}
+
+##############################################################################
+# Processing Core   It is recommended you don't add functions directly
+# to his file. Keep them external and source them.
+##############################################################################
+
+main () {
+
+prog=`basename $0`
+
+	case $prog in
+		*-p )	periodic;;
+		*-d )	daily	;;
+		*-w )	weekly	;;
+		*-m )	monthly	;;
+		* ) echo "Usage: Call (prog) as (prog)-p, -d, -w, or -m"; exit 1  ;;
+	esac
+}
+
+rotatelogs () {
+
+	case $prog in
+		*-d ) LOGFILES=$lrp_LOGS_DAILY  ;;
+		*-w ) LOGFILES=$lrp_LOGS_WEEKLY  ;;
+		*-m ) LOGFILES=$lrp_LOGS_MONTHLY ;;
+		* )   return 1 ;;
+	esac
+
+	cd /var/log
+	for LOG in $LOGFILES; do
+		if [ -f $LOG ]; then
+			savelog -g wheel -m 640 -u root -c ${lrp_LOGS_DEPTH:-4} $LOG >/dev/null
+		fi
+	done
+
+	svi syslog-ng reload
+}
+
+checkfreespace () {
+
+	mailspacelow () {
+	
+     		{	echo "level: $cklevel   freeKB: $bfree   free%: $pfree"
+			echo "date: $(date)"
+			echo "src : $HOSTNAME"
+		} | mailadmin "Freespace Low!"
+	}
+	
+	updatefree () {
+		mntdir=$1
+		IFS="$SP$TAB%"
+		set -- $(df $mntdir  | sed -n 2p)
+		IFS=$OIFS	
+		bfree=$4
+		pfree=$((100 - $5))
+	}
+	
+	ckfree () {
+     	eval MINKB="$1"
+     	MINKB=${MINKB:-$lrp_SC_MINKB }
+     	MINKB=${MINKB:--1}
+	
+	eval MINPER="$2"
+	MINPER=${MINPER:-$lrp_SC_MINPER }
+	MINPER=${MINPER:--101}
+	
+		[ $bfree -le $MINKB ] && return 1
+		[ $pfree -le $MINPER ] && return 1
+		return 0
+	}
+	
+	cleanlevel () {
+		eval F="\$lrp_SC_DEL_$1$cklevel"
+		for f in $F; do
+			[ ! -f "$f" ] && continue	#Bug in expansion?
+			: > $f
+	done 
+	}
+
+
+	[ "x$lrp_SPACECHECK" != "xYES" ] && return 0
+        for part in ` echo $lrp_SC_MOUNT ` 	
+	do
+        eval mntpt="\$lrp_SC_MNT_$part"
+         cklevel=0
+   	while [ $cklevel -lt 5 ]; do
+		updatefree  $mntpt
+		ckfree \$lrp_SC_MINKB_$part \$lrp_SC_MINPER_$part && break
+		cklevel=$(($cklevel + 1))
+		cleanlevel $part
+	done
+	
+	[ $cklevel -ge ${lrp_SC_MAIL_LEVEL:-1} ] && mailspacelow
+	done
+}
+
+
+pingcheck () {
+
+[ "$lrp_PING_HOSTS" = "" ] && return 0
+
+MIN=3
+SLEEP=10
+MAX=$(( $MIN * 60 / $SLEEP ))
+
+	for h in $lrp_PING_HOSTS; do
+	rc=1
+	x=0
+		while [ $rc -ne 0 ]; do
+			qt ping -c 1 "$h"
+			rc=$?
+			x=$(($x + 1))
+			if [ $x -ge $MAX ] && [ $rc -ne 0 ]; then
+				{	echo "host: $h"
+					echo "date: $(date)"
+					echo "src : $HOSTNAME"
+				} | mailadmin "Ping Failure!"
+				break
+			fi
+			[ $rc -ne 0 ] && sleep $SLEEP
+	        done
+	done    
+
+}
+
+updatetime () {
+	OK=""
+	[ -f /etc/default/rcS ] && . /etc/default/rcS
+	[ "$GMT" = "-u" ] && GMT="--utc"
+        [ -n "`ps axc | grep [n]tpd`" ]  && hwclock --systohc $GMT && OK=ntpd
+	if [ "$OK" = "" ]; then
+		logger "Warning ! System time was not updated"
+	else
+		logger "CMOS clock updated by hwclock through $OK time server"
+	fi
+}
+
+mailadmin () {
+	if [ "$lrp_MAIL_ADMIN" = "" ]; then
+		cat >/dev/null
+	else
+                MAIL=$(mktemp /tmp/mail.XXXXXXXX)
+                echo "Subject: "$HOSTNAME "alert: "$1   >> $MAIL
+		sendmail -S $MAIL_SERVER -au$MAIL_USER -ap$MAIL_PASSWORD -f $USER"@"$DOMAIN "$lrp_MAIL_ADMIN" < $MAIL 
+	fi
+}
+
+
+qt () { "$@" >/dev/null 2>&1 ; }
+
+OIFS="$IFS"
+TAB='	'
+SP=' '
+
+[ ! -f /etc/lrp.conf ] && exit 1
+. /etc/lrp.conf
+
+main
