@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+#	BIND init script
+#	Partially based on Gentoo BIND init script
+#	(C) 2011 Andrew Denisenko
+#
+
+RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K80 1,K80 6,K80"
+
+test -x /usr/sbin/bird6 || exit 0
+
+check_config() {
+	/usr/sbin/bird6 -p || return 1
+	return 0
+}
+
+case "$1" in
+	start)
+		echo -n "Starting BIRD daemon: "
+		check_config || {
+			echo "Error in config!"
+			exit 1
+		}
+		start-stop-daemon --start --exec /usr/sbin/bird6
+		if [ $? -eq 0 ]; then
+			echo "bird6."
+		else
+			echo "failed!"
+		fi
+		;;
+	stop)
+		echo -n "Stopping BIRD server: "
+		start-stop-daemon --stop --quiet \
+			--retry 10 --exec /usr/sbin/bird6
+		echo "bird6."
+		;;
+	restart | force-reload)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|force-reload}"
+		exit 1 
+esac
+
+exit 0
