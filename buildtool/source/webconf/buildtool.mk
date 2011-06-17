@@ -1,1 +1,1 @@
-/data2/leaf/bering-uclibc/devel/src/leaf/bering-uclibc4/buildtool/repo/webconf/buildtool.mk
+/var/testpoint/LEAF1/buildtool/repo/webconf/buildtool.mk

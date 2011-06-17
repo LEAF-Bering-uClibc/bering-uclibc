@@ -1,0 +1,7 @@
+build/
+log/
+package/
+source/
+staging/
+conf/installed
+l_*
