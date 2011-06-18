@@ -16,7 +16,7 @@ PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 $(SNMP_DIR)/.source:
 	zcat $(SNMP_SOURCE) | tar -xvf -
-#	cat $(SNMP_PATCH1) | patch -d $(SNMP_DIR) -p0
+	cat $(SNMP_PATCH1) | patch -d $(SNMP_DIR) -p0
 	cat $(SNMP_PATCH2) | patch -d $(SNMP_DIR) -p0
 	cat $(SNMP_PATCH3) | patch -d $(SNMP_DIR) -p1
 	cat $(SNMP_PATCH4) | patch -d $(SNMP_DIR) -p1
