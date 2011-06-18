@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# dibbler-server        Cron script to rotate dibbler-server log files daily.
+#                       Debian/Linux: place this in /etc/cron.daily.
+#
+
+umask 027
+
+cd /var/log/dibbler/
+if [ -f dibbler-server.log ]
+then
+	savelog -m 640 -u root -g root -c 7 dibbler-server.log > /dev/null
+fi
+

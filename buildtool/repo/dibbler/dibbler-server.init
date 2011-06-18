@@ -11,6 +11,9 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 RETVAL=0
 
+# So that logfile gets mode 640
+umask 027
+
 # See how we were called
 case "$1" in
   start)
