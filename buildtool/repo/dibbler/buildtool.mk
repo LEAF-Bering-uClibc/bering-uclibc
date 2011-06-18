@@ -40,6 +40,7 @@ $(DIBBLER_DIR)/.build: $(DIBBLER_DIR)/.source
 	cp -a $(DIBBLER_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin/
 	cp -a $(DIBBLER_TARGET_DIR)/etc/dibbler/server.conf $(BT_STAGING_DIR)/etc/dibbler/
 	cp dibbler-server.init $(BT_STAGING_DIR)/etc/init.d/dibbler-server
+	cp dibbler-server.daily $(BT_STAGING_DIR)/etc/cron.daily/dibbler-server
 	touch $(DIBBLER_DIR)/.build
 
 build: $(DIBBLER_DIR)/.build
