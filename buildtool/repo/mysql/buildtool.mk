@@ -40,6 +40,7 @@ $(MYSQL_DIR)/.build: $(MYSQL_DIR)/.configured
 	$(BT_STRIP) $(BT_STRIP_LIB) $(MYSQL_TARGET_DIR)/usr/lib/mysql/libmysqlclient.so.15.0.0
 	$(BT_STRIP) $(BT_STRIP_LIB) $(MYSQL_TARGET_DIR)/usr/lib/mysql/libmysqlclient_r.so.15.0.0
 	-$(BT_STRIP) $(BT_STRIP_BIN) $(MYSQL_TARGET_DIR)/usr/bin/*
+	perl -i -p -e 's,/usr/lib/mysql,$(BT_STAGING_DIR)/usr/lib/,g' $(MYSQL_TARGET_DIR)/usr/lib/mysql/*.la
 	cp -a -f $(MYSQL_TARGET_DIR)/usr/lib/mysql/* $(BT_STAGING_DIR)/usr/lib/
 	cp -a -f $(MYSQL_TARGET_DIR)/usr/bin/* $(BT_STAGING_DIR)/usr/bin/
 	cp -a -f $(MYSQL_TARGET_DIR)/usr/include/mysql/* $(BT_STAGING_DIR)/usr/include/mysql

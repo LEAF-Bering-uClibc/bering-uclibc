@@ -38,7 +38,10 @@ CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--without-rlm_eap_tnc --without-rlm-krb5 --without-rlm-eap_ikev2 \
 	--without-rlm-perl --without-rlm-pam \
 	--without-rlm_sql_iodbc --without-rlm_python \
-	--without-rlm_sql_oracle --without-rlm_sql_postgresql
+	--without-rlm_sql_oracle --without-rlm_sql_postgresql \
+	--with-dhcp \
+	--with-mysql-dir="$(BT_STAGING_DIR)"/usr 
+#	--with-mysql-lib-dir="$(BT_STAGING_DIR)"/usr/lib
 
 $(RADIUS_DIR)/.source:
 	bzcat $(RADIUS_SOURCE) | tar -xvf -
@@ -48,7 +51,9 @@ $(RADIUS_DIR)/.source:
 source: $(RADIUS_DIR)/.source
 
 $(RADIUS_DIR)/.configure: $(RADIUS_DIR)/.source
-	( cd $(RADIUS_DIR) ; ./configure $(CONFOPTS) )
+	( cd $(RADIUS_DIR) ; CFLAGS="$(BT_COPT_FLAGS)" \
+	LDFLAGS='-L"$(BT_STAGING_DIR)"/lib -L"$(BT_STAGING_DIR)"/usr/lib' \
+	./configure $(CONFOPTS) )
 	# Fix for "unable to infer tagged configuration" errors
 	( cd $(RADIUS_DIR) ; \
 	  for file in src/lib/Makefile \
@@ -67,7 +72,7 @@ $(RADIUS_DIR)/.configure: $(RADIUS_DIR)/.source
 	touch $(RADIUS_DIR)/.configure
 
 build: $(RADIUS_DIR)/.configure
-	mkdir -p $(RADIUS_TARGET_DIR)
+	mkdir -p "$(RADIUS_TARGET_DIR)"
 	mkdir -p $(BT_STAGING_DIR)/etc
 	mkdir -p $(BT_STAGING_DIR)/var
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
@@ -80,34 +85,34 @@ build: $(RADIUS_DIR)/.configure
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d
 #
 	$(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) -C $(RADIUS_DIR)
-	$(MAKE) -C $(RADIUS_DIR) R=$(RADIUS_TARGET_DIR) install
+	$(MAKE) -C $(RADIUS_DIR) R="$(RADIUS_TARGET_DIR)" install
 #
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_TARGET_DIR)/usr/sbin/radiusd
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_TARGET_DIR)/usr/sbin/radmin
-	cp -f $(RADIUS_TARGET_DIR)/usr/sbin/radiusd $(BT_STAGING_DIR)/usr/sbin/
-	cp -f $(RADIUS_TARGET_DIR)/usr/sbin/radmin $(BT_STAGING_DIR)/usr/sbin/
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_TARGET_DIR)/usr/bin/radclient
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_TARGET_DIR)/usr/bin/radeapclient
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_TARGET_DIR)/usr/bin/radsniff
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_TARGET_DIR)/usr/bin/radwho
-	cp -f $(RADIUS_TARGET_DIR)/usr/bin/radclient $(BT_STAGING_DIR)/usr/bin/
-	cp -f $(RADIUS_TARGET_DIR)/usr/bin/radeapclient $(BT_STAGING_DIR)/usr/bin/
-	cp -f $(RADIUS_TARGET_DIR)/usr/bin/radlast $(BT_STAGING_DIR)/usr/bin/
-	cp -f $(RADIUS_TARGET_DIR)/usr/bin/radsniff $(BT_STAGING_DIR)/usr/bin/
-	cp -f $(RADIUS_TARGET_DIR)/usr/bin/radtest $(BT_STAGING_DIR)/usr/bin/
-	cp -f $(RADIUS_TARGET_DIR)/usr/bin/radwho $(BT_STAGING_DIR)/usr/bin/
-	cp -f $(RADIUS_TARGET_DIR)/usr/bin/radzap $(BT_STAGING_DIR)/usr/bin/
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(RADIUS_TARGET_DIR)/usr/lib/*.so
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(RADIUS_TARGET_DIR)/usr/lib/libltdl.so.3.1.4
-	cp -f $(RADIUS_TARGET_DIR)/usr/lib/*.so $(BT_STAGING_DIR)/usr/lib/
-	cp -f $(RADIUS_TARGET_DIR)/usr/lib/libltdl.so.3.1.4 $(BT_STAGING_DIR)/usr/lib/
-	cp -a $(RADIUS_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include/
-	cp -a $(RADIUS_TARGET_DIR)/usr/share/freeradius/* $(BT_STAGING_DIR)/usr/share/freeradius/
-	cp -a $(RADIUS_TARGET_DIR)/etc/* $(BT_STAGING_DIR)/etc/
-	cp -a $(RADIUS_TARGET_DIR)/var/* $(BT_STAGING_DIR)/var/
-	cp -aL radiusd.daily $(BT_STAGING_DIR)/etc/cron.daily/radiusd
-	cp -aL radiusd.weekly $(BT_STAGING_DIR)/etc/cron.weekly/radiusd
-	cp -aL radiusd.init $(BT_STAGING_DIR)/etc/init.d/radiusd
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/sbin/radiusd
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/sbin/radmin
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/sbin/radiusd "$(BT_STAGING_DIR)"/usr/sbin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/sbin/radmin "$(BT_STAGING_DIR)"/usr/sbin/
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radclient
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radeapclient
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radsniff
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radwho
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radclient "$(BT_STAGING_DIR)"/usr/bin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radeapclient "$(BT_STAGING_DIR)"/usr/bin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radlast "$(BT_STAGING_DIR)"/usr/bin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radsniff "$(BT_STAGING_DIR)"/usr/bin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radtest "$(BT_STAGING_DIR)"/usr/bin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radwho "$(BT_STAGING_DIR)"/usr/bin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radzap "$(BT_STAGING_DIR)"/usr/bin/
+	$(BT_STRIP) $(BT_STRIP_LIBOPTS) "$(RADIUS_TARGET_DIR)"/usr/lib/*.so
+	$(BT_STRIP) $(BT_STRIP_LIBOPTS) "$(RADIUS_TARGET_DIR)"/usr/lib/libltdl.so.3.1.4
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/*.so "$(BT_STAGING_DIR)"/usr/lib/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/libltdl.so.3.1.4 "$(BT_STAGING_DIR)"/usr/lib/
+	cp -a "$(RADIUS_TARGET_DIR)"/usr/include/* "$(BT_STAGING_DIR)"/usr/include/
+	cp -a "$(RADIUS_TARGET_DIR)"/usr/share/freeradius/* "$(BT_STAGING_DIR)"/usr/share/freeradius/
+	cp -a "$(RADIUS_TARGET_DIR)"/etc/* "$(BT_STAGING_DIR)"/etc/
+	cp -a "$(RADIUS_TARGET_DIR)"/var/* "$(BT_STAGING_DIR)"/var/
+	cp -aL radiusd.daily "$(BT_STAGING_DIR)"/etc/cron.daily/radiusd
+	cp -aL radiusd.weekly "$(BT_STAGING_DIR)"/etc/cron.weekly/radiusd
+	cp -aL radiusd.init "$(BT_STAGING_DIR)"/etc/init.d/radiusd
 
 clean:
 	rm -rf $(RADIUS_TARGET_DIR)

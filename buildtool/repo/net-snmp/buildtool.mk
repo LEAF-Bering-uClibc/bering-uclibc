@@ -21,17 +21,17 @@ $(SNMP_DIR)/.source:
 	cat $(SNMP_PATCH3) | patch -d $(SNMP_DIR) -p1
 	cat $(SNMP_PATCH4) | patch -d $(SNMP_DIR) -p1
 	cat $(SNMP_PATCH5) | patch -d $(SNMP_DIR) -p1
-	cp "$(BT_STAGING_DIR)"/share/libtool/config/ltmain.sh $(SNMP_DIR)
-	([ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
-	cd $(SNMP_DIR); autoreconf -f)
-	sed '/\(rpath\|finish\)/s/\$$(libdir)/\$$(BT_STAGING_DIR)\$$(libdir)/' $(SNMP_DIR)/Makefile.top >$(SNMP_DIR)/Makefile.tmp \
-		&& mv $(SNMP_DIR)/Makefile.tmp $(SNMP_DIR)/Makefile.top
 	touch $(SNMP_DIR)/.source
 
 source: $(SNMP_DIR)/.source
 
 $(SNMP_DIR)/.configured: $(SNMP_DIR)/.source
 #echo timestamp >stamp-h.in
+	cp "$(BT_STAGING_DIR)"/share/libtool/config/ltmain.sh $(SNMP_DIR)
+	([ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
+	cd $(SNMP_DIR); autoreconf -f)
+	sed '/\(rpath\|finish\)/s/\$$(libdir)/\$$(BT_STAGING_DIR)\$$(libdir)/' $(SNMP_DIR)/Makefile.top >$(SNMP_DIR)/Makefile.tmp \
+		&& mv $(SNMP_DIR)/Makefile.tmp $(SNMP_DIR)/Makefile.top
 	(cd $(SNMP_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	./configure --prefix=/usr --sysconfdir=/etc \
 		--enable-fast-install \

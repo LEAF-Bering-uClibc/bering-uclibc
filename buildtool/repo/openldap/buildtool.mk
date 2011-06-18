@@ -16,8 +16,8 @@ OPENLDAP_TARGET_DIR:=$(BT_BUILD_DIR)/openldap
 #  Move files out from under /usr/local/
 #  Do not build the Standalone LDAP Daemon, just the libraries
 #  Explicitly disable Cyrus SASL support
-CONFOPTS:= --build=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) \
-	--prefix=/usr --disable-slapd --without-cyrus-sasl
+CONFOPTS:= --build=$(GNU_HOST_NAME) --host=$(GNU_TARGET_NAME) \
+	--prefix=/usr --disable-slapd --without-cyrus-sasl --with-tls=openssl
 
 $(OPENLDAP_DIR)/.source:
 	zcat $(OPENLDAP_SOURCE) | tar -xvf -
@@ -27,7 +27,8 @@ $(OPENLDAP_DIR)/.source:
 source: $(OPENLDAP_DIR)/.source
 
 $(OPENLDAP_DIR)/.configure: $(OPENLDAP_DIR)/.source
-	( cd $(OPENLDAP_DIR) ; ./configure $(CONFOPTS) )
+	( cd $(OPENLDAP_DIR) ; LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib" \
+	./configure $(CONFOPTS) )
 	touch $(OPENLDAP_DIR)/.configure
 
 build: $(OPENLDAP_DIR)/.configure
