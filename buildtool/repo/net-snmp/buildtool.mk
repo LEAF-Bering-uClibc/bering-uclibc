@@ -16,7 +16,6 @@ PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 $(SNMP_DIR)/.source:
 	zcat $(SNMP_SOURCE) | tar -xvf -
-	cat $(SNMP_PATCH1) | patch -d $(SNMP_DIR) -p0
 	cat $(SNMP_PATCH2) | patch -d $(SNMP_DIR) -p0
 	cat $(SNMP_PATCH3) | patch -d $(SNMP_DIR) -p1
 	cat $(SNMP_PATCH4) | patch -d $(SNMP_DIR) -p1
@@ -28,6 +27,7 @@ source: $(SNMP_DIR)/.source
 $(SNMP_DIR)/.configured: $(SNMP_DIR)/.source
 #echo timestamp >stamp-h.in
 	cp "$(BT_STAGING_DIR)"/share/libtool/config/ltmain.sh $(SNMP_DIR)
+	cat $(SNMP_PATCH1) | patch -d $(SNMP_DIR) -p0
 	([ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	cd $(SNMP_DIR); autoreconf -f)
 	sed '/\(rpath\|finish\)/s/\$$(libdir)/\$$(BT_STAGING_DIR)\$$(libdir)/' $(SNMP_DIR)/Makefile.top >$(SNMP_DIR)/Makefile.tmp \
