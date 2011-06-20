@@ -26,5 +26,4 @@ clean:
 	rm -f $(LICENSE_DIR)/.build
                                                                                                                  
 srcclean: clean
-	rm -rf $(LICENSE_DIR) 
 	rm -f $(LICENSE_DIR)/.source
