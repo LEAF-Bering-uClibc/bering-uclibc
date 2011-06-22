@@ -67,7 +67,7 @@ eval {
 	open TFILE, ">", $path or die "Can't create file \"$path\"!";
 	close TFILE;
 	%sourcesConfig = Config::General::ParseConfig("-ConfigFile" => strip_slashes(make_absolute_path($globConf{globalconffile})), "-LowerCaseNames" => 1);
-	print "Created missing file \"$path\"...\n"
+	print STDERR "Created missing file \"$path\"...\n"
 };
 
 sub usage {
