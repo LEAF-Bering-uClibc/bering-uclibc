@@ -439,6 +439,10 @@ $(UCLIBC_DIR)/.unpacked:
 	cat $(UC_PATCH2) | patch -d $(UCLIBC_DIR) -p1 
 	# This next patch is temporary - see comments in buildtool.cfg
 	cat $(UC_PATCH3) | patch -d $(UCLIBC_DIR) -p1
+	# Patch for host buildtool-2.21+
+	find $(UCLIBC_DIR) -name crtn.S | \
+	xargs perl -i -p -e 's/^\s*\.size\s+_+init,\s*\.\s*-\s*_+init$//;\
+		s/^\s*\.size\s+_+fini,\s*\.\s*-\s*_+fini$//'
 	touch $(UCLIBC_DIR)/.unpacked
 
 $(UCLIBC_DIR)/.configured: $(UCLIBC_DIR)/.unpacked
