@@ -13,9 +13,8 @@ $(LICENSE_DIR)/.source:
 source: $(LICENSE_DIR)/.source
                         
 $(LICENSE_DIR)/.build: $(LICENSE_DIR)/.source
-	mkdir -p $(LICENSE_TARGET_DIR)
-	mkdir -p $(LICENSE_TARGET_DIR)/license
-	cp -aL * $(LICENSE_TARGET_DIR)/license/
+	mkdir -p $(LICENSE_TARGET_DIR)/licenses
+	cp -aL [A-Z]* $(LICENSE_TARGET_DIR)/licenses/
 	cp -a $(LICENSE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LICENSE_DIR)/.build
 
