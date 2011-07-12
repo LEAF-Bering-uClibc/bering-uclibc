@@ -48,22 +48,21 @@ while [ `echo "$MODALIAS"|wc -l` -gt `echo "$TMODALIAS"|wc -l` ]; do
 done
 echo -e "Done.\n$MODCOUNT devices have modules."
 
-echo "Copying new modules to /lib/modules..."
-MODLIST="`lsmod | sed 's/ .*//g;s/_/?/g'`"
+echo "Checking entries in /etc/modules..."
+MODLIST="`grep -v ^# /etc/modules | sed 's/ .*//g;s/_/?/g'`"
+MODCOUNT=0
 for i in $MODLIST; do
 	MODPATH=`find -name $i.ko`
 	if [ ! -z "$MODPATH" ]; then
-		MODFILE=`basename $MODPATH`
-		if [ ! -f /lib/modules/$MODFILE ]; then
-			echo "Adding $MODFILE"
-			cp -a $MODPATH /lib/modules
+		if [ -z "`modprobe $i 2>&1 | grep \"not found\"`" ]; then
+			MODCOUNT=$(($MODCOUNT+1))
 		fi
 	fi
 done
-echo Done.
+echo "Done.\n$MODCOUNT modules was probed."
 
-echo "Checking entries in /etc/modules..."
-MODLIST="`grep -v ^# /etc/modules | sed 's/ .*//g;s/_/?/g'`"
+echo "Copying new modules to /lib/modules..."
+MODLIST="`lsmod | sed 's/ .*//g;s/_/?/g'`"
 for i in $MODLIST; do
 	MODPATH=`find -name $i.ko`
 	if [ ! -z "$MODPATH" ]; then
