@@ -1,0 +1,71 @@
+#!/bin/sh
+
+RCDLINKS="0,K41 1,K41 2,S43 3,S43 4,S43 5,S43 6,K41"
+
+DAEMON=/usr/bin/mbusd
+test -x $DAEMON || exit 0
+
+[ -f /etc/default/mbusd ] && . /etc/default/mbusd
+
+ARGS=""
+
+check_arg () {
+	[ -n "$(eval echo \$$2)" ] && ARGS="$ARGS -$1 $(eval echo \$$2)"
+}
+
+toggle_arg () {
+	[ -n "$(eval echo \$$2)" ] && ARGS="$ARGS -$1"
+}
+
+check_arg v LOGLEVEL
+check_arg L LOGNAME
+check_arg C CONNCOUNT
+check_arg N RETRYCOUNT
+check_arg R RETRYDELAY
+check_arg W WAITTIMEOUT
+check_arg T CONNTIMEOUT
+toggle_arg t RTSCTL
+
+case "$1" in
+  start)
+    echo -n "Starting mbus daemon... "
+    if start-stop-daemon --start --quiet --test --exec $DAEMON; then
+        if [ -n "$PORTS" ]; then
+	    for i in $POTRS; do
+		#Format: TCP port,/dev node,speed
+		PORTARG=`echo $i|sed 's/,/ /g'|awk '{print " -P " $1 " -p /dev/" $2 " -s " $3}'`
+		echo -n `echo "$PORTARG" | awk '{print $4}'`
+		if $DAEMON $ARGS $PORTARG; then
+		    echo -n " ok... "
+		else
+		    echo -n " failed! "
+		fi
+	    done
+	    echo "finished."
+	else
+	    echo "Not configured!"
+	fi
+    else
+	echo "failed (already running?)."
+    fi
+    ;;
+  stop)
+    echo -n "Stopping mbus daemon... "
+    if start-stop-daemon --stop --quiet --oknodo --exec $DAEMON
+    then
+      echo done.
+    else
+      echo failed.
+    fi
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

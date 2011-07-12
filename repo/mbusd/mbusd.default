@@ -1,0 +1,26 @@
+#Ports which will be listened
+PORTS="502,ttyS0,9600"
+
+#Logging level (0 - only errors, 9 - all, default 0)
+#LOGLEVEL=0
+
+#Log file name (default - /var/log/mbusd.log)
+#LOGNAME=
+
+#Number of max simultaneous connections
+CONNCOUNT=128
+
+#Number of retries if error
+RETRYCOUNT=5
+
+#Pause between retries, msec
+RETRYDELAY=100
+
+#Timeout for receiving package, msec
+WAITTIMEOUT=100
+
+#Connection timeout in seconds
+CONNTIMEOUT=20
+
+#Use RTS TX switch
+RTSCTL=1

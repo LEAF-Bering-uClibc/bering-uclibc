@@ -1,0 +1,40 @@
+--- tty.c.old	2003-09-27 16:22:52.000000000 +0300
++++ tty.c	2011-07-12 22:06:02.754740156 +0300
+@@ -123,31 +123,26 @@
+ tty_set_attr(ttydata_t *mod)
+ {
+   int flag;
++  speed_t tspeed = tty_transpeed(mod->speed);
+ 
+   if (tcgetattr(mod->fd, &mod->savedtios))
+     return RC_ERR;
+   memcpy(&mod->tios, &mod->savedtios, sizeof(mod->tios));
+-  mod->tios.c_cflag &= ~(CSTOPB | PARENB | PARODD | CRTSCTS);
++  mod->tios.c_cflag &= ~(CSTOPB | PARENB | PARODD | CRTSCTS | CSIZE);
+   mod->tios.c_cflag |= CS8 | CREAD | CLOCAL;
+   mod->tios.c_iflag = FALSE;
+   mod->tios.c_oflag = FALSE;
+   mod->tios.c_lflag = FALSE;
+   mod->tios.c_cc[VTIME] = 0;
+-  mod->tios.c_cc[VMIN] = 1;
++  mod->tios.c_cc[VMIN] = 2;
+ #ifdef HAVE_CFSETSPEED
+-  cfsetspeed(&mod->tios, tty_transpeed(mod->speed));
++  cfsetspeed(&mod->tios, tspeed);
+ #else
+-  cfsetispeed(&mod->tios, tty_transpeed(mod->speed));
+-  cfsetospeed(&mod->tios, tty_transpeed(mod->speed));
++  cfsetispeed(&mod->tios, tspeed);
++  cfsetospeed(&mod->tios, tspeed);
+ #endif
+   if (tcsetattr(mod->fd, TCSANOW, &mod->tios))
+     return RC_ERR;
+-#if defined(TIOCSETA)
+-  ioctl(mod->fd, TIOCSETA, &mod->tios);
+-#else
+-  /* if TIOCSETA is not defined, try to fallback to TCSETA */
+-  ioctl(mod->fd, TCSETA, &mod->tios);
+-#endif
+   tcflush(mod->fd, TCIOFLUSH);
+ #ifdef  TRXCTL
+   tty_clr_rts(mod->fd);

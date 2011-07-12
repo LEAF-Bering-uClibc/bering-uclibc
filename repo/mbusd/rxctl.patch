@@ -1,0 +1,39 @@
+diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.2/src/conn.c
+--- mbus-0.1.2.orig/src/conn.c	2010-12-02 20:55:23.000000000 +0200
++++ mbus-0.1.2/src/conn.c	2010-12-05 15:07:26.577793215 +0200
+@@ -215,10 +215,19 @@
+ conn_write(int d, void *buf, size_t nbytes)
+ {
+   int rc;
++#ifdef TRXCTL
++  if (cfg.trxcntl == TRX_RTS)
++    tty_set_rts(d);
++#endif
+   do
+   { /* trying write to descriptor while breaked by signals */ 
+     rc = write(d, buf, nbytes);
+   } while (rc == -1 && errno == EINTR);
++#ifdef TRXCTL
++  tcdrain(d);
++  if (cfg.trxcntl == TRX_RTS)
++    tty_clr_rts(d);
++#endif
+   return (rc < 0) ? RC_ERR : rc;
+ }
+ 
+diff -aur mbus-0.1.2.orig/src/tty.h mbus-0.1.2/src/tty.h
+--- mbus-0.1.2.orig/src/tty.h	2003-09-27 16:22:52.000000000 +0300
++++ mbus-0.1.2/src/tty.h	2010-12-05 15:03:47.633688606 +0200
+@@ -64,9 +64,9 @@
+ /* 
+  * TRX control types
+  */
+-#ifdef  TRX_CTL
+-#  define TRX_ADDC 0
+-#  define TRX_RTS  !TRX_ADDC
++#ifdef  TRXCTL
++#define TRX_ADDC 0
++#define TRX_RTS  1
+ #endif
+ 
+ /*
