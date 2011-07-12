@@ -16,7 +16,7 @@ RETRYCOUNT=5
 #Pause between retries, msec
 RETRYDELAY=100
 
-#Timeout for receiving package, msec
+#Timeout for receiving packet, msec
 WAITTIMEOUT=100
 
 #Connection timeout in seconds
