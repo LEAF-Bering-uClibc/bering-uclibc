@@ -59,6 +59,9 @@ export LANG=en_US
 # default optimization settings for compiling code 
 export BT_COPT_FLAGS=-Os -march=$(GNU_ARCH) -mtune=$(GNU_TUNE)
 
+# default ld flags
+export BT_LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib
+
 # check for linux version
 
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
