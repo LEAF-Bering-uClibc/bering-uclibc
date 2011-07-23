@@ -32,18 +32,18 @@ case "$1" in
     start)
         checkportmap
 	echo -n "Starting internet superserver:"
-	echo -n " inetd" ; start-stop-daemon --start --quiet --pidfile /var/run/inetd.pid --exec /usr/sbin/inetd
+	echo -n " inetd" ; start-stop-daemon --start --quiet --exec /usr/sbin/inetd
 	echo "."
 	;;
     stop)
 	echo -n "Stopping internet superserver:"
-	echo -n " inetd" ; start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/inetd.pid --exec /usr/sbin/inetd
+	echo -n " inetd" ; start-stop-daemon --stop --quiet --oknodo --exec /usr/sbin/inetd
 	echo "."
 	;;
     reload)
 	echo -n "Reloading internet superserver:"
 	echo -n " inetd"
-	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/inetd.pid --signal 1
+	start-stop-daemon --stop --quiet --oknodo --signal 1 --exec /usr/sbin/inetd
 	echo "."
 	;;
     force-reload)
@@ -52,9 +52,9 @@ case "$1" in
     restart)
 	echo -n "Restarting internet superserver:"
 	echo -n " inetd"
-	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/inetd.pid
+	start-stop-daemon --stop --quiet --oknodo --exec /usr/sbin/inetd
 	checkportmap
-	start-stop-daemon --start --quiet --pidfile /var/run/inetd.pid --exec /usr/sbin/inetd
+	start-stop-daemon --start --quiet --exec /usr/sbin/inetd
 	echo "."
 	;;
     *)
