@@ -12,8 +12,13 @@ include $(MASTERMAKEFILE)
 
 source: .source
 
-build:
-	# nothing to be done
+build: .source
+	mkdir -p var/webconf/www
+	mkdir -p etc/webconf
+	mkdir -p var/webconf/lib
+	mkdir -p var/webconf/templates
+	
+	cp dropbear.cgi var/webconf/www
 
 clean:
 	rm -rf var
