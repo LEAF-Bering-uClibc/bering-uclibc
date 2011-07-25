@@ -29,9 +29,9 @@ toggle_arg t RTSCTL
 case "$1" in
   start)
     echo -n "Starting mbus daemon... "
-    if start-stop-daemon --start --quiet --test --exec $DAEMON; then
+    if start-stop-daemon --start --quiet --test --exec $DAEMON -- -h >/dev/null; then
         if [ -n "$PORTS" ]; then
-	    for i in $POTRS; do
+	    for i in $PORTS; do
 		#Format: TCP port,/dev node,speed
 		PORTARG=`echo $i|sed 's/,/ /g'|awk '{print " -P " $1 " -p /dev/" $2 " -s " $3}'`
 		echo -n `echo "$PORTARG" | awk '{print $4}'`
