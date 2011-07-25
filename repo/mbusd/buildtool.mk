@@ -33,8 +33,8 @@ $(DIR)/.build: $(DIR)/.configured
 	mkdir -p $(TARGET_DIR)/etc/default
 	AM_CFLAGS="$(BT_COPT_FLAGS) -DTRXCTL" make -C $(DIR)
 	cp -a $(DIR)/src/mbusd $(TARGET_DIR)/usr/bin
-	cp -a mbusd.init $(TARGET_DIR)/etc/init.d/mbusd
-	cp -a mbusd.default $(TARGET_DIR)/etc/default/mbusd
+	cp -aL mbusd.init $(TARGET_DIR)/etc/init.d/mbusd
+	cp -aL mbusd.default $(TARGET_DIR)/etc/default/mbusd
 	-$(BT_STRIP) -s $(BT_STRIP_BINOPTS) $(DIR)/usr/bin/*
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build
