@@ -1,0 +1,10 @@
+<h1>General Information</h1>
+<p>The links to the left represent different software packages that can be 
+configured using the web interface.  You should consult the appropriate 
+documentation for more information before reconfiguring any component 
+on this router.</p>
+
+<p><font color=#ff2200>Please note that all configurations modified via this
+interface are stored in RAM only.  When the router loses power or is restarted, all of 
+your changes are lost if they have not been saved to diskette or other media.</font></p>
+
