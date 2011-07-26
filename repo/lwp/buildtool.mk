@@ -20,6 +20,7 @@ build: .source
 	
 	cp dropbear.cgi var/webconf/www
 	cp config.cgi var/webconf/www
+	cp pppoe.cgi var/webconf/www
 
 clean:
 	rm -rf var
