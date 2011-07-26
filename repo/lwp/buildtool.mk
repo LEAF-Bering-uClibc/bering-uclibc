@@ -19,6 +19,7 @@ build: .source
 	mkdir -p var/webconf/templates
 	
 	cp dropbear.cgi var/webconf/www
+	cp config.cgi var/webconf/www
 
 clean:
 	rm -rf var
