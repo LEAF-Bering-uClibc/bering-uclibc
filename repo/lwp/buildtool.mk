@@ -22,6 +22,7 @@ build: .source
 	cp webipv6.cgi var/webconf/www
 	cp keyboard.cgi var/webconf/www
 	cp lrcfg.cgi var/webconf/www
+	cp dnsmasq.cgi var/webconf/www
 	cp blurb.expert var/webconf/www
 
 	cp config.webconf etc/webconf
@@ -31,7 +32,6 @@ build: .source
 	cp pppoe.webconf etc/webconf
 	cp webconf-expert.webconf etc/webconf
 	cp webipv6.webconf etc/webconf
-
 
 clean:
 	rm -rf var
