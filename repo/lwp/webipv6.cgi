@@ -1,8 +1,8 @@
 #!/usr/bin/haserl
-<? title="View ipv6 Network"  /var/webconf/lib/preamble.sh  ?>
+<% title="View ipv6 Network"  /var/webconf/lib/preamble.sh  %>
 <!-- $Id -->
 
-<? #  block copied from the viewipv6 cgi
+<% #  block copied from the viewipv6 cgi
 
 t_head () {
         echo "<H1>$1</H1>"
@@ -74,7 +74,7 @@ $showrte
 /ROUTECONTENT
 t_foot 
 
-?>
+%>
 
-<? /var/webconf/lib/footer.sh ?>
+<% /var/webconf/lib/footer.sh %>
          

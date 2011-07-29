@@ -1,5 +1,5 @@
 #!/usr/bin/haserl
-<? title="$( basename $FORM_cfg .conf)"  /var/webconf/lib/preamble.sh  ?>
+<% title="$( basename $FORM_cfg .conf)"  /var/webconf/lib/preamble.sh  %>
 <!-- $Id -->
 
 <h1>Configuration</H1>
@@ -8,7 +8,7 @@ Bering-uClibc Installation and User's Guides to configure your LEAF router.  The
 each "LEAF configuration menu" mentioned are are shown in the list below.  Click on the 
 approriate link to edit the file mentioned in documentation.</p>
  
-<? # This gets the current settings 
+<% # This gets the current settings 
 
 # To guess the init script, check for init.d scripts in
 # the package list, and then try "real hard" to figure out what
@@ -79,13 +79,14 @@ if [ "$FORM_cmd" = "Cancel" ]; then
 		echo "file=\"\"" >>/tmp/$SESSIONID.vars
 		FORM_file="";
 		fi
-?>
+%>
 
 
-<?if  . /tmp/$SESSIONID.vars;  [ -n "${service}" ] ?>
+<% if  . /tmp/$SESSIONID.vars;  [ -n "${service}" ]; then %>
 
 <h1>Daemon Status</h1>
-<?	# Build a form for each entry in service
+<%	
+# Build a form for each entry in service
        . /tmp/$SESSIONID.vars; 
 
 	count=0
@@ -129,21 +130,22 @@ if [ "$FORM_cmd" = "Cancel" ]; then
 		unset statcheck
 		unset a
 		done;
-		?>
+		%>
 		<p><b>Note:</b> Restarting services that affect network connectivity (e.g. networking,
 		web server or firewall rules) may cause the refresh to fail when restarting the
 		service.  If this happens, you must refresh the page manually by using the
 		refresh button from your browser.</p>
-<?fi?>
+<% fi %>
 
 
-<form action="<? echo -n $SCRIPT_NAME ?>" method=post>
-<?if . /tmp/$SESSIONID.vars; [ -z "$FORM_file" ]  ?>
+<form action="<% echo -n $SCRIPT_NAME %>" method=post>
+
+<% if . /tmp/$SESSIONID.vars; [ -z "$FORM_file" ]; then %>
 	<h1>Configuration Settings</h1>
 	<p>The following files can be edited to change configuration settings</p>
 
 	<table>
-	<? cat /var/lib/lrpkg/${FORM_cfg} | \
+	<% cat /var/lib/lrpkg/${FORM_cfg} | \
 		while read a b; do
 		cat <<-EOF
 		<tr><td>
@@ -152,25 +154,25 @@ if [ "$FORM_cmd" = "Cancel" ]; then
 		${b}</td></tr>
 		EOF
 		done
-	?>
+	%>
 	</table>
 	<br>
-	<?el?>
-	<h1>Edit <? echo -n $FORM_file ?></h1>
-	<?if grep -q "^${FORM_file}[ |	]"  /var/lib/lrpkg/${FORM_cfg} ?>
-		<textarea cols=80 rows=20 name=content><? cat $FORM_file ?></textarea>
+	<% else %>
+	<h1>Edit <% echo -n $FORM_file %></h1>
+	<% if grep -q "^${FORM_file}[ |	]"  /var/lib/lrpkg/${FORM_cfg}; then %>
+		<textarea cols=80 rows=20 name=content><% cat $FORM_file %></textarea>
 		<table><tr><td><input type=submit name="cmd" value="Save"></td>
 		<td><input type=submit name="cmd" value="Cancel"></td></tr>
 		</table>
-		<?el?>
+		<% else %>
 		<p><b><font color=#cc0000>That is not a file listed in the 
 		configuration file list.</font></b>  You may only edit 
 		configuration files from the web interface.</p>
-		<?fi?>
-	<?fi?>
+		<% fi %>
+	<% fi %>
 
-<input type=hidden name=UI value="<? echo -n $FORM_UI ?>">
-<input type=hidden name=cfg value="<? echo -n $FORM_cfg ?>">
-<input type=hidden name=file value="<? . /tmp/$SESSIONID.vars; echo -n $FORM_file ?>">
+<input type=hidden name=UI value="<% echo -n $FORM_UI %>">
+<input type=hidden name=cfg value="<% echo -n $FORM_cfg %>">
+<input type=hidden name=file value="<% . /tmp/$SESSIONID.vars; echo -n $FORM_file %>">
 </form>
-<? rm /tmp/$SESSIONID.*;  /var/webconf/lib/footer.sh ?>	
+<% rm /tmp/$SESSIONID.*;  /var/webconf/lib/footer.sh %>	
