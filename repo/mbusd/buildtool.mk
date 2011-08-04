@@ -11,9 +11,9 @@ export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER)
 
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -
-	zcat $(PATCH1) | patch -p1 -d $(DIR)
-	cat $(PATCH2) | patch -p1 -d $(DIR)
-	cat $(PATCH3) | patch -p0 -d $(DIR)/src
+	cat $(PATCH1) | patch -p1 -d $(DIR)
+#	cat $(PATCH2) | patch -p1 -d $(DIR)
+#	cat $(PATCH3) | patch -p0 -d $(DIR)/src
 	touch $(DIR)/.source
 
 source: $(DIR)/.source
