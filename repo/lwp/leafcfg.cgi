@@ -1,5 +1,5 @@
 #!/usr/bin/haserl
-<? title="Edit leaf.cfg File"  /var/webconf/lib/preamble.sh  ?>
+<% title="Edit leaf.cfg File"  /var/webconf/lib/preamble.sh  %>
 <!-- $Id -->
 
 <h1>Boot Configuration</H1>
@@ -8,7 +8,8 @@ This file is stored on your boot device.  You should be familiar with the
 the Bering-uClibc User's Guide before proceeding.  <b>Modifying this
 file incorrectly can prevent your LEAF router from booting.</b></p>
 
-<? # Get / Save the leaf.cfg file
+<% 
+# Get / Save the leaf.cfg file
 
 MNT="/var/lib/lrpkg/mnt"
 
@@ -22,7 +23,7 @@ get_leafcfg () {
 	}
 
 mount_boot () {
-	mount -t $type $dev $MNT 2>/dev/null 1>/dev/null
+	mount  $dev $MNT 2>/dev/null 1>/dev/null
 	}
 	
 	
@@ -31,7 +32,7 @@ umount_boot () {
 	}
 		
 get_leafcfg
-type=$(echo $LEAFCFG | cut -f2 -d':')
+#type=$(echo $LEAFCFG | cut -f2 -d':')
 dev=$( echo $LEAFCFG | cut -f1 -d':')
 
 if [ -n "$LEAFCFG" ]; then
@@ -51,26 +52,26 @@ if [ -n "$LEAFCFG" ]; then
 	fi
 	
  . /tmp/$SESSIONID.vars
-?>	
-<form action="<? echo -n $SCRIPT_NAME ?>" method=post>
+%>	
+<form action="<% echo -n $SCRIPT_NAME %>" method=post>
 
-<?if [ -n "$LEAFCFG" ] ?>
+<% if [ -n "$LEAFCFG" ]; then %>
 <h2>LEAF.CFG</h2>
-<?  echo "<p>This is the leaf.cfg file from the <b>$bootdev</b> device." ?>
+<%  echo "<p>This is the leaf.cfg file from the <b>$bootdev</b> device." %>
 The web interface only allows you to change the leaf.cfg from the boot device.
 If you need to create a new file on another device, you must do so through 
 a ssh session or from the console.</p>
 
-<textarea rows=20 cols=80 name=bootconfig><? cat /tmp/$SESSIONID.leaf.cfg ?></textarea>
+<textarea rows=20 cols=80 name=bootconfig><% cat /tmp/$SESSIONID.leaf.cfg %></textarea>
 <table><tr><td><input type=submit name="cmd" value="Save"></td>
 <td><input type=submit name="cmd" value="Cancel"></td></tr>
 </table>
 
-<?el?>
+<% else %>
 <p><span class="HeavyRed"<b><u>Error</u></b></span>.  The LEAFCFG environment
 variable was not found, and so we cannot find the LEAF.CFG file.</p>
 
-<?fi?>
+<% fi %>
 </form>
 
-<? rm /tmp/$SESSIONID.*;  /var/webconf/lib/footer.sh ?>	
+<% rm /tmp/$SESSIONID.*;  /var/webconf/lib/footer.sh %>	
