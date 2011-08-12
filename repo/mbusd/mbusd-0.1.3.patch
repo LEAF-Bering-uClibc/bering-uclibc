@@ -1,6 +1,6 @@
 diff -aur mbus-0.1.2.orig/configure.in mbus-0.1.3/configure.in
 --- mbus-0.1.2.orig/configure.in	2003-09-27 15:57:37.000000000 +0300
-+++ mbus-0.1.3/configure.in	2011-08-05 00:43:07.000000000 +0300
++++ mbus-0.1.3/configure.in	2011-08-09 20:14:31.000000000 +0300
 @@ -1,7 +1,7 @@
  dnl Process this file with autoconf to produce a configure script.
  
@@ -12,7 +12,7 @@ diff -aur mbus-0.1.2.orig/configure.in mbus-0.1.3/configure.in
  AC_ISC_POSIX
 diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 --- mbus-0.1.2.orig/src/conn.c	2003-09-13 23:38:33.000000000 +0300
-+++ mbus-0.1.3/src/conn.c	2011-08-05 01:00:19.181380596 +0300
++++ mbus-0.1.3/src/conn.c	2011-08-09 20:14:31.000000000 +0300
 @@ -46,7 +46,7 @@
  
  void conn_tty_start(ttydata_t *tty, conn_t *conn);
@@ -468,8 +468,16 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                curconn = conn_close(curconn);
 diff -aur mbus-0.1.2.orig/src/log.c mbus-0.1.3/src/log.c
 --- mbus-0.1.2.orig/src/log.c	2003-10-26 21:26:08.000000000 +0200
-+++ mbus-0.1.3/src/log.c	2011-08-04 15:55:19.000000000 +0300
-@@ -88,7 +88,7 @@
++++ mbus-0.1.3/src/log.c	2011-08-12 22:35:51.000000000 +0300
+@@ -54,6 +54,7 @@
+     {
+       /* logfile isn't needed */
+       *logfullname = '\0';
++      openlog("mbusd", LOG_ODELAY | LOG_PID, LOG_DAEMON);
+       return RC_OK;
+     }
+     /* append default log path */
+@@ -88,7 +89,7 @@
  
  /* Put message with format FMT with errorlevel LEVEL to log file */
  void 
@@ -478,7 +486,7 @@ diff -aur mbus-0.1.2.orig/src/log.c mbus-0.1.3/src/log.c
  {
  #ifdef HRDATE
    time_t tt;
-@@ -115,7 +115,9 @@
+@@ -115,7 +116,9 @@
    va_end(args);
    strcpy(str + strsize++, "\n");
    if (!isdaemon) printf("%s", str);
@@ -492,7 +500,7 @@ diff -aur mbus-0.1.2.orig/src/log.c mbus-0.1.3/src/log.c
  #endif
 diff -aur mbus-0.1.2.orig/src/log.h mbus-0.1.3/src/log.h
 --- mbus-0.1.2.orig/src/log.h	2003-10-02 23:03:55.000000000 +0300
-+++ mbus-0.1.3/src/log.h	2011-08-04 15:55:19.000000000 +0300
++++ mbus-0.1.3/src/log.h	2011-08-09 20:14:31.000000000 +0300
 @@ -35,6 +35,7 @@
  #define _LOG_H
  
@@ -512,7 +520,7 @@ diff -aur mbus-0.1.2.orig/src/log.h mbus-0.1.3/src/log.h
  #endif /* _LOG_H */
 diff -aur mbus-0.1.2.orig/src/main.c mbus-0.1.3/src/main.c
 --- mbus-0.1.2.orig/src/main.c	2003-10-26 21:22:18.000000000 +0200
-+++ mbus-0.1.3/src/main.c	2011-08-05 00:44:51.000000000 +0300
++++ mbus-0.1.3/src/main.c	2011-08-12 22:31:26.000000000 +0300
 @@ -99,7 +99,8 @@
  void
  usage(char *exename)
@@ -523,6 +531,21 @@ diff -aur mbus-0.1.2.orig/src/main.c mbus-0.1.3/src/main.c
  	 "Usage: %s [-h] [-d] [-v level] [-L name] [-p name] [-s value] [-P number]\n"
     "             [-C number] [-N number] [-R value] [-W value] [-T value]\n\n"
  	 "  -h             this help\n"
+@@ -198,12 +199,12 @@
+         {
+           if (*optarg == '-')
+           {
+-            if (isdaemon)
++/*            if (isdaemon)
+             {
+                printf("%s: -L: '-' value is valid only if "
+                       "-d switch was given\n", exename);
+                exit(-1);
+-            }
++            }*/
+             /* logfile isn't needed, doing all output to STDOUT */
+             *cfg.logname = '\0';
+           }
 @@ -292,14 +293,14 @@
             strerror(errno));
      exit(-1);
@@ -560,7 +583,7 @@ diff -aur mbus-0.1.2.orig/src/main.c mbus-0.1.3/src/main.c
  }
 diff -aur mbus-0.1.2.orig/src/modbus.h mbus-0.1.3/src/modbus.h
 --- mbus-0.1.2.orig/src/modbus.h	2003-09-13 23:38:45.000000000 +0300
-+++ mbus-0.1.3/src/modbus.h	2011-08-04 17:11:56.000000000 +0300
++++ mbus-0.1.3/src/modbus.h	2011-08-09 20:14:31.000000000 +0300
 @@ -83,8 +83,8 @@
  /*
   * Exception codes
@@ -574,7 +597,7 @@ diff -aur mbus-0.1.2.orig/src/modbus.h mbus-0.1.3/src/modbus.h
  int modbus_crc_correct(unsigned char *frame, unsigned int len);
 diff -aur mbus-0.1.2.orig/src/queue.c mbus-0.1.3/src/queue.c
 --- mbus-0.1.2.orig/src/queue.c	2003-09-13 23:38:39.000000000 +0300
-+++ mbus-0.1.3/src/queue.c	2011-08-04 15:55:19.000000000 +0300
++++ mbus-0.1.3/src/queue.c	2011-08-09 20:14:31.000000000 +0300
 @@ -54,7 +54,7 @@
    if (!newconn)
    { /* Aborting program execution */
@@ -613,7 +636,7 @@ diff -aur mbus-0.1.2.orig/src/queue.c mbus-0.1.3/src/queue.c
  }
 diff -aur mbus-0.1.2.orig/src/sig.c mbus-0.1.3/src/sig.c
 --- mbus-0.1.2.orig/src/sig.c	2003-09-13 23:38:33.000000000 +0300
-+++ mbus-0.1.3/src/sig.c	2011-08-04 15:55:19.000000000 +0300
++++ mbus-0.1.3/src/sig.c	2011-08-09 20:14:31.000000000 +0300
 @@ -146,7 +146,7 @@
    static char *signames[] = { 
      "", "HUP", "INT", "QUIT", "ILL", "TRAP", "IOT", "BUS", "FPE",
@@ -625,7 +648,7 @@ diff -aur mbus-0.1.2.orig/src/sig.c mbus-0.1.3/src/sig.c
    exit(1);
 diff -aur mbus-0.1.2.orig/src/sock.c mbus-0.1.3/src/sock.c
 --- mbus-0.1.2.orig/src/sock.c	2003-09-13 23:38:45.000000000 +0300
-+++ mbus-0.1.3/src/sock.c	2011-08-04 15:55:19.000000000 +0300
++++ mbus-0.1.3/src/sock.c	2011-08-09 20:14:31.000000000 +0300
 @@ -66,7 +66,7 @@
           socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
    {
@@ -718,7 +741,7 @@ diff -aur mbus-0.1.2.orig/src/sock.c mbus-0.1.3/src/sock.c
  #endif
 diff -aur mbus-0.1.2.orig/src/state.c mbus-0.1.3/src/state.c
 --- mbus-0.1.2.orig/src/state.c	2003-09-13 23:38:33.000000000 +0300
-+++ mbus-0.1.3/src/state.c	2011-08-04 21:15:58.000000000 +0300
++++ mbus-0.1.3/src/state.c	2011-08-09 20:14:31.000000000 +0300
 @@ -75,31 +75,31 @@
      case CONN_HEADER:
        conn->ctr = 0;
@@ -810,8 +833,8 @@ diff -aur mbus-0.1.2.orig/src/state.c mbus-0.1.3/src/state.c
    }
 diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
 --- mbus-0.1.2.orig/src/tty.c	2003-09-27 16:22:52.000000000 +0300
-+++ mbus-0.1.3/src/tty.c	2011-08-05 00:31:26.000000000 +0300
-@@ -103,7 +103,7 @@
++++ mbus-0.1.3/src/tty.c	2011-08-12 18:49:15.000000000 +0300
+@@ -103,14 +103,14 @@
    {
      buferr = errno;
  #ifdef LOG
@@ -820,6 +843,14 @@ diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
          ttyname, uu_lockerr(uuerr));
  #endif  
      errno = buferr;
+     return RC_ERR;
+   }
+ #endif
+-  mod->fd = open(mod->port, O_RDWR | O_NONBLOCK);
++  mod->fd = open(mod->port, O_RDWR | O_NONBLOCK | O_NOCTTY);
+   if (mod->fd < 0)
+     return RC_ERR;          /* attempt failed */
+   return tty_set_attr(mod);
 @@ -123,31 +123,26 @@
  tty_set_attr(ttydata_t *mod)
  {
@@ -869,7 +900,7 @@ diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
      errno = buferr;
 diff -aur mbus-0.1.2.orig/src/tty.h mbus-0.1.3/src/tty.h
 --- mbus-0.1.2.orig/src/tty.h	2003-09-27 16:22:52.000000000 +0300
-+++ mbus-0.1.3/src/tty.h	2011-08-04 18:54:45.000000000 +0300
++++ mbus-0.1.3/src/tty.h	2011-08-09 20:14:31.000000000 +0300
 @@ -64,9 +64,9 @@
  /* 
   * TRX control types
