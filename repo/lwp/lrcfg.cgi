@@ -33,7 +33,7 @@ case "$pkg" in
 	"root.net" )	service="networking"
 			;;
 	"etc.sys" | \
-	"root.sys" )	service="sysklogd inetd"
+	"root.sys" )	service="syslog-ng inetd"
 			;;
 	* )		initscript="$( grep etc/init.d/. /var/lib/lrpkg/${pkg}.list 2>/dev/null )"
 			for x in $initscript; do
