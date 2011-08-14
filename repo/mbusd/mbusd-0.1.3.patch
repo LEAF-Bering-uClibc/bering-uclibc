@@ -12,7 +12,7 @@ diff -aur mbus-0.1.2.orig/configure.in mbus-0.1.3/configure.in
  AC_ISC_POSIX
 diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 --- mbus-0.1.2.orig/src/conn.c	2003-09-13 23:38:33.000000000 +0300
-+++ mbus-0.1.3/src/conn.c	2011-08-09 20:14:31.000000000 +0300
++++ mbus-0.1.3/src/conn.c	2011-08-14 17:29:48.800089288 +0300
 @@ -46,7 +46,7 @@
  
  void conn_tty_start(ttydata_t *tty, conn_t *conn);
@@ -81,7 +81,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
           inet_ntoa(conn->sockaddr.sin_addr));
  #endif
    /* close socket */
-@@ -212,13 +212,27 @@
+@@ -212,13 +212,40 @@
   *         RC_ERR in case of error.
   */
  ssize_t
@@ -89,6 +89,8 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +conn_write(int d, void *buf, size_t nbytes, int istty)
  {
    int rc;
++  struct timeval ts, tts;
++  long delay;
 +#ifdef TRXCTL
 +  if (istty) {
 +    if (cfg.trxcntl == TRX_RTS)
@@ -98,19 +100,30 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +#endif
    do
    { /* trying write to descriptor while breaked by signals */ 
++    gettimeofday(&ts, NULL);
      rc = write(d, buf, nbytes);
    } while (rc == -1 && errno == EINTR);
++  gettimeofday(&ts, NULL);
++
 +#ifdef TRXCTL
 +  if (istty) {
-+    tcdrain(d);
-+    if (cfg.trxcntl == TRX_RTS)
++    gettimeofday(&tts, NULL);
++    delay = DV(nbytes, cfg.ttyspeed) - 
++      ((tts.tv_sec * 1000000l + tts.tv_usec) - (ts.tv_sec * 1000000l + ts.tv_usec));
++    if (delay > 0) 
++      usleep(delay);
++      logw(7, "usleep finished");
++/*    tcdrain(d); - hangs sometimes, so make calculated delay */
++    if (cfg.trxcntl == TRX_RTS) {
 +      tty_clr_rts(d);
++      logw(7, "RTS cleared");
++    }
 +  }
 +#endif
    return (rc < 0) ? RC_ERR : rc;
  }
  
-@@ -250,10 +264,12 @@
+@@ -250,10 +277,12 @@
  conn_loop(void)
  {
    int rc, max_sd, len, min_timeout;
@@ -123,7 +136,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
  
    while (TRUE)
    {
-@@ -307,20 +323,18 @@
+@@ -307,20 +336,21 @@
      (void)gettimeofday(&ts, NULL); /* make timestamp */
   
  #ifdef DEBUG
@@ -134,6 +147,9 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 -
      rc = select(max_sd + 1, &sdsetrd, &sdsetwr, NULL, &t_out);
 -
++#ifdef DEBUG
++    logw(7, "conn_loop(): select() returns %d ", rc);
++#endif
      if (rc < 0)
      { /* some error caused while select() */
        if (errno == EINTR) continue; /* process signals */
@@ -147,7 +163,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      }
  
      /* calculating elapsed time */    
-@@ -344,20 +358,22 @@
+@@ -344,20 +374,22 @@
                state_tty_set(&tty, TTY_READY);
              break;
            case TTY_RESP:
@@ -172,7 +188,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                         cfg.maxtry - tty.trynum + 1, cfg.maxtry);
  #endif
                  state_tty_set(&tty, TTY_RQST);
-@@ -367,30 +383,35 @@
+@@ -367,30 +399,35 @@
              else 
              { /* some data received */
  #ifdef DEBUG
@@ -215,9 +231,15 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                           cfg.maxtry - tty.trynum + 1, cfg.maxtry);
  #endif
                    state_tty_set(&tty, TTY_RQST);
-@@ -404,9 +425,10 @@
+@@ -403,10 +440,16 @@
+             /* make inter-request pause */
              state_tty_set(&tty, TTY_PAUSE);
              break;
++          case TTY_RQST:
++#ifdef DEBUG
++            logw(5, "tty: TTY_RQST timeout");
++#endif
++	    break;
          }
 -      else tty.timer -= tval;
 +      else
@@ -228,7 +250,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      if (cfg.conntimeout)
      { /* expire staled connections */
        tout += tval;
-@@ -423,14 +445,14 @@
+@@ -423,14 +466,15 @@
              if (curconn->state == CONN_TTY)
              { /* deadlock in CONN_TTY state, exiting */
  #ifdef LOG
@@ -236,7 +258,9 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +              logw(0, "conn[%s]: state CONN_TTY deadlock, exiting!",
                       inet_ntoa(curconn->sockaddr.sin_addr));
  #endif
-               exit (-1);
+-              exit (-1);
++              tcflush(tty.fd, TCIOFLUSH);
++/*              exit (-1);*/
              }
              /* purge connection */
  #ifdef LOG
@@ -245,7 +269,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                     inet_ntoa(curconn->sockaddr.sin_addr));
  #endif
              curconn = conn_close(curconn);
-@@ -442,9 +464,6 @@
+@@ -442,9 +486,6 @@
        }
      }
      
@@ -255,7 +279,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      /* checking for pending connections */
      if (FD_ISSET(server_sd, &sdsetrd)) conn_open();
  
-@@ -452,72 +471,174 @@
+@@ -452,72 +493,174 @@
      if (tty.state == TTY_RQST)
        if (FD_ISSET(tty.fd, &sdsetwr))
        {
@@ -457,7 +481,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      /* processing data on the sockets */
      len = queue.len;
      curconn = queue.beg;
-@@ -565,7 +686,7 @@
+@@ -565,7 +708,7 @@
              rc = conn_write(curconn->sd,
                              curconn->buf + curconn->ctr,
                              MB_HDR(curconn->buf, MB_LENGTH_L) + 
@@ -833,7 +857,7 @@ diff -aur mbus-0.1.2.orig/src/state.c mbus-0.1.3/src/state.c
    }
 diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
 --- mbus-0.1.2.orig/src/tty.c	2003-09-27 16:22:52.000000000 +0300
-+++ mbus-0.1.3/src/tty.c	2011-08-12 18:49:15.000000000 +0300
++++ mbus-0.1.3/src/tty.c	2011-08-14 16:27:34.000000000 +0300
 @@ -103,14 +103,14 @@
    {
      buferr = errno;
