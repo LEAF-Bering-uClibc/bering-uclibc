@@ -12,8 +12,8 @@ diff -aur mbus-0.1.2.orig/configure.in mbus-0.1.3/configure.in
  AC_ISC_POSIX
 diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 --- mbus-0.1.2.orig/src/conn.c	2003-09-13 23:38:33.000000000 +0300
-+++ mbus-0.1.3/src/conn.c	2011-08-14 17:29:48.800089288 +0300
-@@ -46,7 +46,7 @@
++++ mbus-0.1.3/src/conn.c	2011-08-15 17:27:29.242112422 +0300
+@@ -46,13 +46,36 @@
  
  void conn_tty_start(ttydata_t *tty, conn_t *conn);
  ssize_t conn_read(int d, void *buf, size_t nbytes);
@@ -22,7 +22,36 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
  int conn_select(int nfds, 
                  fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
                  struct timeval *timeout);
-@@ -70,7 +70,7 @@
+ 
+ #define FD_MSET(d, s) do { FD_SET(d, s); max_sd = MAX(d, max_sd); } while (0);
+ 
++int tty_reinit()
++{
++  logw(3,"closing tty on error...");
++  tty_close(&tty);
++  logw(3, "tty closed, re-opening...");
++#ifdef  TRXCTL
++  tty_init(&tty, cfg.ttyport, cfg.ttyspeed, cfg.trxcntl);
++#else
++  tty_init(&tty, cfg.ttyport, cfg.ttyspeed);
++#endif
++  if (tty_open(&tty) != RC_OK)
++  {
++#ifdef LOG
++    logw(0, "conn_init():"
++           " can't open tty device %s (%s)",
++           cfg.ttyport, strerror(errno));
++#endif
++    return RC_ERR;
++  }
++  state_tty_set(&tty, TTY_PAUSE);
++  logw(3, "re-init ok...");
++  return RC_OK;
++}
+ /*
+  * Connections startup initialization
+  * Parameters: none
+@@ -70,20 +93,20 @@
    if (tty_open(&tty) != RC_OK)
    {
  #ifdef LOG
@@ -31,7 +60,13 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
             " can't open tty device %s (%s)",
             cfg.ttyport, strerror(errno));
  #endif
-@@ -83,7 +83,7 @@
+     return RC_ERR;
+   }
+-  state_tty_set(&tty, TTY_READY);
++  state_tty_set(&tty, TTY_PAUSE);
+   
+   /* create server socket */
+   if ((server_sd =
           sock_create_server("", cfg.serverport, TRUE)) < 0)
    {
  #ifdef LOG
@@ -40,7 +75,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
             " can't create listen() socket (%s)",
             strerror(errno));
  #endif
-@@ -111,19 +111,19 @@
+@@ -111,19 +134,19 @@
    if ((sd = sock_accept(server_sd, &rmt_addr, TRUE)) == RC_ERR)
    { /* error in conn_accept() */
  #ifdef LOG
@@ -63,7 +98,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
             " connection from %s will be dropped",
             inet_ntoa(rmt_addr.sin_addr));
  #endif
-@@ -134,7 +134,7 @@
+@@ -134,7 +157,7 @@
    if (queue.len == cfg.maxconn)
    {
  #ifdef LOG
@@ -72,7 +107,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
             " connection from %s will be dropped",
             inet_ntoa(rmt_addr.sin_addr));
  #endif
-@@ -159,7 +159,7 @@
+@@ -159,7 +182,7 @@
  {
    conn_t *nextconn;
  #ifdef LOG
@@ -81,7 +116,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
           inet_ntoa(conn->sockaddr.sin_addr));
  #endif
    /* close socket */
-@@ -212,13 +212,40 @@
+@@ -212,13 +235,49 @@
   *         RC_ERR in case of error.
   */
  ssize_t
@@ -89,6 +124,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +conn_write(int d, void *buf, size_t nbytes, int istty)
  {
    int rc;
++  fd_set fs;
 +  struct timeval ts, tts;
 +  long delay;
 +#ifdef TRXCTL
@@ -98,32 +134,40 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +    usleep(35000000l/cfg.ttyspeed);
 +  }
 +#endif
++  FD_ZERO(&fs);
++  FD_SET(d, &fs);
    do
    { /* trying write to descriptor while breaked by signals */ 
 +    gettimeofday(&ts, NULL);
      rc = write(d, buf, nbytes);
    } while (rc == -1 && errno == EINTR);
 +  gettimeofday(&ts, NULL);
++  
 +
 +#ifdef TRXCTL
 +  if (istty) {
++#if 1
++    do {
++      gettimeofday(&tts, NULL);
++      delay = DV(nbytes, cfg.ttyspeed) - 
++        ((tts.tv_sec * 1000000l + tts.tv_usec) - (ts.tv_sec * 1000000l + ts.tv_usec));
++    } while (delay > 0);
++#else
 +    gettimeofday(&tts, NULL);
 +    delay = DV(nbytes, cfg.ttyspeed) - 
 +      ((tts.tv_sec * 1000000l + tts.tv_usec) - (ts.tv_sec * 1000000l + ts.tv_usec));
-+    if (delay > 0) 
-+      usleep(delay);
-+      logw(7, "usleep finished");
++    usleep(delay);
++#endif
 +/*    tcdrain(d); - hangs sometimes, so make calculated delay */
 +    if (cfg.trxcntl == TRX_RTS) {
 +      tty_clr_rts(d);
-+      logw(7, "RTS cleared");
 +    }
 +  }
 +#endif
    return (rc < 0) ? RC_ERR : rc;
  }
  
-@@ -250,10 +277,12 @@
+@@ -250,10 +309,12 @@
  conn_loop(void)
  {
    int rc, max_sd, len, min_timeout;
@@ -136,7 +180,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
  
    while (TRUE)
    {
-@@ -307,20 +336,21 @@
+@@ -307,20 +368,21 @@
      (void)gettimeofday(&ts, NULL); /* make timestamp */
   
  #ifdef DEBUG
@@ -163,7 +207,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      }
  
      /* calculating elapsed time */    
-@@ -344,20 +374,22 @@
+@@ -344,56 +406,65 @@
                state_tty_set(&tty, TTY_READY);
              break;
            case TTY_RESP:
@@ -188,7 +232,10 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                         cfg.maxtry - tty.trynum + 1, cfg.maxtry);
  #endif
                  state_tty_set(&tty, TTY_RQST);
-@@ -367,30 +399,35 @@
++                FD_SET(tty.fd, &sdsetwr);
+                 break;
+               }
+             }
              else 
              { /* some data received */
  #ifdef DEBUG
@@ -231,7 +278,11 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                           cfg.maxtry - tty.trynum + 1, cfg.maxtry);
  #endif
                    state_tty_set(&tty, TTY_RQST);
-@@ -403,10 +440,16 @@
++                  FD_SET(tty.fd, &sdsetwr);
+                   break;
+                 }
+               }
+@@ -403,10 +474,16 @@
              /* make inter-request pause */
              state_tty_set(&tty, TTY_PAUSE);
              break;
@@ -250,7 +301,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      if (cfg.conntimeout)
      { /* expire staled connections */
        tout += tval;
-@@ -423,14 +466,15 @@
+@@ -423,14 +500,15 @@
              if (curconn->state == CONN_TTY)
              { /* deadlock in CONN_TTY state, exiting */
  #ifdef LOG
@@ -259,7 +310,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                       inet_ntoa(curconn->sockaddr.sin_addr));
  #endif
 -              exit (-1);
-+              tcflush(tty.fd, TCIOFLUSH);
++              tty_reinit();
 +/*              exit (-1);*/
              }
              /* purge connection */
@@ -269,7 +320,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                     inet_ntoa(curconn->sockaddr.sin_addr));
  #endif
              curconn = conn_close(curconn);
-@@ -442,9 +486,6 @@
+@@ -442,9 +520,6 @@
        }
      }
      
@@ -279,11 +330,11 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      /* checking for pending connections */
      if (FD_ISSET(server_sd, &sdsetrd)) conn_open();
  
-@@ -452,72 +493,174 @@
+@@ -452,72 +527,183 @@
      if (tty.state == TTY_RQST)
        if (FD_ISSET(tty.fd, &sdsetwr))
        {
-+        tcflush(tty.fd, TCIFLUSH);
++        tcflush(tty.fd, TCIOFLUSH);
          rc = conn_write(tty.fd, tty.txbuf + tty.ptrbuf,
 -                        tty.txlen - tty.ptrbuf);
 +                        tty.txlen - tty.ptrbuf, 1);
@@ -295,7 +346,8 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
  #endif
 -          break; /* exiting... */
 +/*          break; / * exiting... */
-+          state_tty_set(&tty, TTY_PAUSE);
++	  tty_reinit;
++/*          state_tty_set(&tty, TTY_PAUSE); */
          }
  #ifdef DEBUG
 -        log(7, "tty: written %d bytes", rc);
@@ -347,6 +399,11 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      {
        if (tty.state == TTY_RESP)
        {
++        if (tty.rxlen - tty.ptrbuf + tty.rxoffset <= 0) {
++          tcflush(tty.fd, TCIFLUSH);
++          state_tty_set(&tty, TTY_PAUSE);
++          continue;
++        }
          rc = conn_read(tty.fd, tty.rxbuf + tty.ptrbuf,
 -                       tty.rxlen - tty.ptrbuf);
 -        if (rc <= 0)
@@ -358,6 +415,8 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +          logw(0, "tty: error in read() (%s)", strerror(errno));
  #endif
 -          break; /* exiting... */
++          tty_reinit();
++/*          state_tty_set(&tty, TTY_PAUSE); */
 +/*          break; / * exiting... */
          }
  #ifdef DEBUG
@@ -416,13 +475,15 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 -      else
 +      else if (tty.state != TTY_PROC)
        { /* drop unexpected tty data */
-         if ((rc = conn_read(tty.fd, tty.rxbuf, BUFSIZE)) <= 0)
+-        if ((rc = conn_read(tty.fd, tty.rxbuf, BUFSIZE)) <= 0)
++        if ((rc = conn_read(tty.fd, tty.rxbuf, BUFSIZE)) < 0)
          { /* error - we can't continue... */
  #ifdef LOG
 -          log(0, "tty: error in read() (%s)", strerror(errno));
 +          logw(0, "tty: error in read() (%s)", strerror(errno));
  #endif
 -          break; /* exiting... */
++          tty_reinit();
 +/*          break; / * exiting... */
          }
  #ifdef DEBUG
@@ -481,7 +542,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      /* processing data on the sockets */
      len = queue.len;
      curconn = queue.beg;
-@@ -565,7 +708,7 @@
+@@ -565,7 +751,7 @@
              rc = conn_write(curconn->sd,
                              curconn->buf + curconn->ctr,
                              MB_HDR(curconn->buf, MB_LENGTH_L) + 
@@ -492,7 +553,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                curconn = conn_close(curconn);
 diff -aur mbus-0.1.2.orig/src/log.c mbus-0.1.3/src/log.c
 --- mbus-0.1.2.orig/src/log.c	2003-10-26 21:26:08.000000000 +0200
-+++ mbus-0.1.3/src/log.c	2011-08-12 22:35:51.000000000 +0300
++++ mbus-0.1.3/src/log.c	2011-08-15 17:24:04.000000000 +0300
 @@ -54,6 +54,7 @@
      {
        /* logfile isn't needed */
@@ -517,7 +578,7 @@ diff -aur mbus-0.1.2.orig/src/log.c mbus-0.1.3/src/log.c
 -  if (*logfullname == '\0') return;
 -  log_app(logfullname, str);
 +  if (*logfullname == '\0')
-+    syslog(level + LOG_ERR < LOG_DEBUG ? level + LOG_ERR : LOG_ERR, "%s", str);
++    syslog(level + LOG_ERR < LOG_DEBUG ? level + LOG_ERR : LOG_DEBUG, "%s", str);
 +  else
 +    log_app(logfullname, str);
  }
@@ -857,7 +918,7 @@ diff -aur mbus-0.1.2.orig/src/state.c mbus-0.1.3/src/state.c
    }
 diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
 --- mbus-0.1.2.orig/src/tty.c	2003-09-27 16:22:52.000000000 +0300
-+++ mbus-0.1.3/src/tty.c	2011-08-14 16:27:34.000000000 +0300
++++ mbus-0.1.3/src/tty.c	2011-08-15 14:35:15.000000000 +0300
 @@ -103,14 +103,14 @@
    {
      buferr = errno;
@@ -890,9 +951,9 @@ diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
    mod->tios.c_iflag = FALSE;
    mod->tios.c_oflag = FALSE;
    mod->tios.c_lflag = FALSE;
-   mod->tios.c_cc[VTIME] = 0;
--  mod->tios.c_cc[VMIN] = 1;
-+  mod->tios.c_cc[VMIN] = 0;
+-  mod->tios.c_cc[VTIME] = 0;
++  mod->tios.c_cc[VTIME] = 10;
+   mod->tios.c_cc[VMIN] = 1;
  #ifdef HAVE_CFSETSPEED
 -  cfsetspeed(&mod->tios, tty_transpeed(mod->speed));
 +  cfsetspeed(&mod->tios, tspeed);
