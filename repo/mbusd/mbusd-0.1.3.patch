@@ -918,7 +918,7 @@ diff -aur mbus-0.1.2.orig/src/state.c mbus-0.1.3/src/state.c
    }
 diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
 --- mbus-0.1.2.orig/src/tty.c	2003-09-27 16:22:52.000000000 +0300
-+++ mbus-0.1.3/src/tty.c	2011-08-15 14:35:15.000000000 +0300
++++ mbus-0.1.3/src/tty.c	2011-08-15 22:53:54.000000000 +0300
 @@ -103,14 +103,14 @@
    {
      buferr = errno;
@@ -936,7 +936,7 @@ diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
    if (mod->fd < 0)
      return RC_ERR;          /* attempt failed */
    return tty_set_attr(mod);
-@@ -123,31 +123,26 @@
+@@ -123,31 +123,38 @@
  tty_set_attr(ttydata_t *mod)
  {
    int flag;
@@ -954,6 +954,18 @@ diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
 -  mod->tios.c_cc[VTIME] = 0;
 +  mod->tios.c_cc[VTIME] = 10;
    mod->tios.c_cc[VMIN] = 1;
++  mod->tios.c_cc[VSTART] = 0;
++  mod->tios.c_cc[VSTOP] = 0;
++  mod->tios.c_cc[VINTR] = 0;
++  mod->tios.c_cc[VEOF] = 0;
++  mod->tios.c_cc[VSUSP] = 0;
++  mod->tios.c_cc[VQUIT] = 0;
++  mod->tios.c_cc[VREPRINT] = 0;
++  mod->tios.c_cc[VDISCARD] = 0;
++  mod->tios.c_cc[VKILL] = 0;
++  mod->tios.c_cc[VERASE] = 0;
++  mod->tios.c_cc[VWERASE] = 0;
++  mod->tios.c_cc[VLNEXT] = 0;
  #ifdef HAVE_CFSETSPEED
 -  cfsetspeed(&mod->tios, tty_transpeed(mod->speed));
 +  cfsetspeed(&mod->tios, tspeed);
@@ -974,7 +986,7 @@ diff -aur mbus-0.1.2.orig/src/tty.c mbus-0.1.3/src/tty.c
    tcflush(mod->fd, TCIOFLUSH);
  #ifdef  TRXCTL
    tty_clr_rts(mod->fd);
-@@ -320,7 +315,7 @@
+@@ -320,7 +327,7 @@
    {
      buferr = errno;
  #ifdef LOG
