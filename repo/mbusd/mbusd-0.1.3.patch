@@ -12,7 +12,7 @@ diff -aur mbus-0.1.2.orig/configure.in mbus-0.1.3/configure.in
  AC_ISC_POSIX
 diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 --- mbus-0.1.2.orig/src/conn.c	2003-09-13 23:38:33.000000000 +0300
-+++ mbus-0.1.3/src/conn.c	2011-08-15 17:27:29.242112422 +0300
++++ mbus-0.1.3/src/conn.c	2011-08-17 14:54:53.045736343 +0300
 @@ -46,13 +46,36 @@
  
  void conn_tty_start(ttydata_t *tty, conn_t *conn);
@@ -207,7 +207,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      }
  
      /* calculating elapsed time */    
-@@ -344,56 +406,65 @@
+@@ -344,56 +406,67 @@
                state_tty_set(&tty, TTY_READY);
              break;
            case TTY_RESP:
@@ -268,9 +268,13 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +                }
 +                logw(5, "tty: response is incorrect (%s)", t);
  #endif
-                 if (!tty.trynum)
+-                if (!tty.trynum)
++                if (!tty.trynum) {
                    modbus_ex_write(actconn->buf, MB_EX_CRC);
-                 else
+-                else
++                  logw(3, "tty: response is incorrect (%d of %d bytes, offset %d), return error", tty.ptrbuf, 
++                    tty.rxoffset + tty.rxlen, tty.rxoffset);
++                } else
                  { /* retry request */
  #ifdef DEBUG
 -                  log(5, "tty: attempt to retry request (%u of %u)",
@@ -282,7 +286,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                    break;
                  }
                }
-@@ -403,10 +474,16 @@
+@@ -403,10 +476,16 @@
              /* make inter-request pause */
              state_tty_set(&tty, TTY_PAUSE);
              break;
@@ -301,7 +305,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      if (cfg.conntimeout)
      { /* expire staled connections */
        tout += tval;
-@@ -423,14 +500,15 @@
+@@ -423,14 +502,15 @@
              if (curconn->state == CONN_TTY)
              { /* deadlock in CONN_TTY state, exiting */
  #ifdef LOG
@@ -320,7 +324,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
                     inet_ntoa(curconn->sockaddr.sin_addr));
  #endif
              curconn = conn_close(curconn);
-@@ -442,9 +520,6 @@
+@@ -442,9 +522,6 @@
        }
      }
      
@@ -330,7 +334,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      /* checking for pending connections */
      if (FD_ISSET(server_sd, &sdsetrd)) conn_open();
  
-@@ -452,72 +527,183 @@
+@@ -452,72 +529,185 @@
      if (tty.state == TTY_RQST)
        if (FD_ISSET(tty.fd, &sdsetwr))
        {
@@ -521,6 +525,8 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
 +        logw(5, "tty: response is incorrect (%s)", t);
 +#endif
 +        if (!tty.trynum) {
++          logw(3, "tty: response is incorrect (%d of %d bytes, offset %d), return error", tty.ptrbuf, 
++            tty.rxoffset + tty.rxlen, tty.rxoffset);
 +          modbus_ex_write(actconn->buf, MB_EX_CRC);
 +          /* switch connection to response state */
 +          state_conn_set(actconn, CONN_RESP);
@@ -542,7 +548,7 @@ diff -aur mbus-0.1.2.orig/src/conn.c mbus-0.1.3/src/conn.c
      /* processing data on the sockets */
      len = queue.len;
      curconn = queue.beg;
-@@ -565,7 +751,7 @@
+@@ -565,7 +755,7 @@
              rc = conn_write(curconn->sd,
                              curconn->buf + curconn->ctr,
                              MB_HDR(curconn->buf, MB_LENGTH_L) + 
