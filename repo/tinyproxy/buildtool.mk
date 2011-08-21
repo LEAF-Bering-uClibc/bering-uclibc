@@ -1,7 +1,7 @@
 # makefile for tinyproxy
 include $(MASTERMAKEFILE)
 
-TINYPROXY_DIR:=tinyproxy-1.8.2
+TINYPROXY_DIR:=tinyproxy-1.8.3
 TINYPROXY_TARGET_DIR:=$(BT_BUILD_DIR)/tinyproxy
 PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
@@ -38,7 +38,7 @@ $(TINYPROXY_DIR)/.build: $(TINYPROXY_DIR)/.configured
 build: $(TINYPROXY_DIR)/.build
                                                                                          
 clean:
-	make -C $(TINYPROXY_DIR) clean
+#	make -C $(TINYPROXY_DIR) clean
 	rm -rf $(TINYPROXY_TARGET_DIR)
 	rm -rf $(TINYPROXY_DIR)/.build
 	rm -rf $(TINYPROXY_DIR)/.configured
