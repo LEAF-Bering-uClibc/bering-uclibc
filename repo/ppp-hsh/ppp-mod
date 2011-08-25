@@ -71,8 +71,13 @@ then
   else
      DOWNSPEED=102400
   fi
+  $TCQR dev $OUTPUT handle ffff: ingress
   /usr/sbin/hsh.sh set $IP $DOWNSPEED
-  [ -n "$IXSPEED" -a -n "$IXDEV" ] && /usr/sbin/hsh.sh set $IP $IXSPEED $IXDEV
+  if [ -z "$IXSPEED" ]; then
+    $TCFR dev $OUTPUT parent ffff: protocol ip u32 match u32 0 0 action mirred egress redirect dev $IDEV
+  else
+    [ -n "$IXDEV" ] && /usr/sbin/hsh.sh set $IP $IXSPEED $IXDEV
+  fi
 
 fi
 
