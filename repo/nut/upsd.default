@@ -3,4 +3,4 @@
 # upsd/upsmon control (yes means start daemon).
 UPSDRUN=yes
 
-NUTUSER=root
+NUTUSER=nut

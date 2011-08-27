@@ -13,6 +13,7 @@ NUT_TARGET_DIR:=$(BT_BUILD_DIR)/nut
 .source: 
 	zcat $(SOURCE) |  tar -xvf -
 	cat $(PATCH1) | patch -d $(NUT_DIR) -p1
+	cat $(PATCH2) | patch -d $(NUT_DIR) -p1
 	touch .source
 #	cp $(MKFILE) $(NUT_DIR)/Makefile
 

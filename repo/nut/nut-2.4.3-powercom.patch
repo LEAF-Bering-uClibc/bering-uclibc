@@ -1,0 +1,58 @@
+--- nut-2.4.3/drivers/powercom.c.orig	2011-02-11 22:06:13.000000000 +0200
++++ nut-2.4.3/drivers/powercom.c	2011-02-11 22:07:07.000000000 +0200
+@@ -81,7 +81,8 @@
+ 
+ /* variables used by module */
+ static unsigned char raw_data[MAX_NUM_OF_BYTES_FROM_UPS]; /* raw data reveived from UPS */
+-static unsigned int linevoltage = 230U; /* line voltage, can be defined via command line option */
++#define DEFLINEVOLTAGE 230U
++static unsigned int linevoltage = 0U; /* line voltage, can be defined via command line option */
+ static const char *manufacturer = "PowerCom";
+ static const char *modelname    = "Unknown";
+ static const char *serialnumber = "Unknown";
+@@ -852,24 +853,33 @@
+ 	
+ 	/* setup flow control */
+ 	types[type].flowControl.setup_flow_control();
+-	if (!strncmp(types[type].name, "BNT",3) || !strcmp(types[type].name, "KIN") || !strcmp(types[type].name, "IMP")){
++	if (getval("type") == NULL){
+ 		if (!ups_getinfo()) return;
+ 		if (raw_data[UPSVERSION]==0xFF){
+ 			types[type].name="IMP";
+-			model=IMPmodels[raw_data[MODELNUMBER]/16];
+ 		}
+ 		if (raw_data[MODELNAME]==0x42){
+ 			if (!strcmp(types[type].name, "BNT-other"))
+ 				types[type].name="BNT-other";
+ 			else
+ 				types[type].name="BNT";
+-			model=BNTmodels[raw_data[MODELNUMBER]/16];
+ 		}
+ 		if (raw_data[MODELNAME]==0x4B){
+ 			types[type].name="KIN";
++		}
++	}
++	if (!strncmp(types[type].name, "BNT",3) || !strcmp(types[type].name, "KIN") || !strcmp(types[type].name, "IMP")){
++		if (!ups_getinfo()) return;
++		if (!strcmp(types[type].name, "IMP")){
++			model=IMPmodels[raw_data[MODELNUMBER]/16];
++		}
++		if (!strcmp(types[type].name, "BNT")){
++			model=BNTmodels[raw_data[MODELNUMBER]/16];
++		}
++		if (!strcmp(types[type].name, "KIN")){
+ 			model=KINmodels[raw_data[MODELNUMBER]/16];
+ 		}
+-		linevoltage=voltages[raw_data[MODELNUMBER]%16];
++		if (!linevoltage) linevoltage=voltages[raw_data[MODELNUMBER]%16];
+ 		snprintf(buf,sizeof(buf),"%s-%dAP",types[type].name,model);
+ 		modelname=buf;
+ 		upsdebugx(1,"Detected: %s , %dV",modelname,linevoltage);
+@@ -879,6 +889,7 @@
+ 			return;
+ 		}
+ 	}
++	if (!linevoltage) linevoltage=DEFLINEVOLTAGE;
+ 	
+ 	upsdebugx(1, "Values of arguments:");
+ 	upsdebugx(1, " manufacturer            : '%s'", manufacturer);

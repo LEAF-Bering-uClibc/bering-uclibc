@@ -19,13 +19,13 @@ case "$1" in
   start)
     if [ "$UPSDRUN" = "yes" -a -f /etc/nut/upsd.conf ]; then
         echo -n "NUT Starting UPS model drivers:"
-	start-stop-daemon --user $NUTUSER --quiet --start --exec /usr/bin/upsdrvctl start
+	start-stop-daemon --user $NUTUSER --quiet --start --exec /usr/bin/upsdrvctl -- -u $NUTUSER start
 	echo -n " upsdrvctl"
         if [ $? -eq 0 ]; then
             echo "."
 	    echo -n "NUT Starting UPS daemon: "
 	    # starting ase nut user
-	    start-stop-daemon --user $NUTUSER --quiet --start --exec /usr/sbin/upsd
+	    start-stop-daemon --user $NUTUSER --quiet --start --exec /usr/sbin/upsd -- -u $NUTUSER
 	fi
         echo "."
     fi

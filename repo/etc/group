@@ -9,7 +9,7 @@ lp:x:7:lp
 mail:x:8:
 wheel:x:10:root
 kmem:x:15:
-dialout:x:20:
+dialout:x:20:nut
 squid:x:23:
 cdrom:x:24:
 floppy:x:25:
@@ -19,6 +19,7 @@ named:x:40:
 shadow:x:42:
 ftp:x:50:
 qmail:x:70:
+nut:x:84:
 users:x:100:
 oprofile:x:200:
 lrpqmail:x:500:
