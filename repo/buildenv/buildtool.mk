@@ -38,7 +38,7 @@ GMP_VERSION:=4.3.2
 MPFR_VERSION:=2.3.2
 MPC_VERSION:=0.8.2
 UCLIBC_VERSION:=0.9.30.3
-BINUTILS_VERSION:=2.21
+BINUTILS_VERSION:=2.21.1
 
 ###########################################################
 # override path (FIXME: just delete the staging_dir path)
