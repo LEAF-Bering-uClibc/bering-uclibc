@@ -29,6 +29,8 @@ then
    DOWNSPEED=`$AWK  '/PPPD-Downstream-Speed-Limit/ {print $2}'  /var/run/radattr.$OUTPUT`
    UPSPEED=`$AWK  '/PPPD-Upstream-Speed-Limit/ {print $2}'  /var/run/radattr.$OUTPUT`
    FILTERS=`$AWK  '/Filter-Id/ {print $2}'  /var/run/radattr.$OUTPUT`
+   [ -z "$UPSPEED" ] && UPSPEED=0
+   [ -z "$DOWNSPEED" ] && DOWNSPEED=0
 
    if [ w${debug} = w1 ] ; then
      echo "Debug mode" >>/tmp/pptpd
@@ -43,8 +45,9 @@ then
   if [ w$FILTERS != w ] ;
   then
     FILTARR=`echo $FILTERS|sed 's/;/\n/g'`
-    IXSPEED=`echo "$FILTARR"|awk '/IXSPEED/ {split($1, a, ":"); print a[2]}'`
+    IXSPEED=`echo "$FILTARR"|awk '/IXSPEED/ {split($1, a, ":"); print a[2] + 0}'`
     NEGDEP=`echo "$FILTARR"|awk '/NEGDEP/ {split($1, a, ":"); print a[2]}'`
+
   fi
 
 
@@ -67,6 +70,7 @@ then
    $TCQR dev $OUTPUT parent 1:20 handle 20: sfq perturb 10 quantum 1514
    $TCFR dev $OUTPUT parent 1:0 protocol ip prio 1 handle 1 fw flowid 1:10
    if [ -n "$IXSPEED" ]; then
+     [ "$UPSPEED" -gt "$IXSPEED" ] && IS=$UPSPEED || IS=$IXSPEED
      $TCCR dev $OUTPUT parent 1: classid 1:2 htb rate ${IXSPEED}kbit $UBURST prio 2 quantum 1514
      $TCQR dev $OUTPUT parent 1:2 handle 2: sfq perturb 10 quantum 1514
      $TCFR dev $OUTPUT parent 1:0 protocol ip prio 0 handle 2 fw flowid 1:2
@@ -87,7 +91,8 @@ then
    if [ -z "$IXSPEED" ]; then
      $TCFR dev $OUTPUT parent ffff: protocol ip u32 match u32 0 0 action mirred egress redirect dev $IDEV
    else
-     [ -n "$IXDEV" ] && /usr/sbin/hsh.sh set $IP $IXSPEED $IXDEV
+     [ "$DOWNSPEED" -gt "$IXSPEED" ] && IS=$DOWNSPEED || IS=$IXSPEED
+     [ -n "$IXDEV" ] && /usr/sbin/hsh.sh set $IP $IS $IXDEV
    fi
 
 fi
