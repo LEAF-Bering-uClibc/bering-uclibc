@@ -61,9 +61,12 @@ then
   $TCCR dev $OUTPUT parent 1: classid 1:1 htb rate ${UPSPEED}kbit $UBURST quantum 1514
   $TCCR dev $OUTPUT parent 1:1 classid 1:10 htb rate ${URATE}kbit ceil ${UPSPEED}kbit $UBURST prio 1 quantum 1514
   $TCCR dev $OUTPUT parent 1:1 classid 1:20 htb rate ${URATE}kbit ceil ${UPSPEED}kbit $UBURST prio 2 quantum 1514
-  if [ -n "$IXSPEED" ]; then
+  $TCCD dev $OUTPUT parent 1: classid 1:2
+  if [ -n "$IXSPEED" ] && [ -n "$IXDEV" ]; then
     [ "$UPSPEED" -gt "$IXSPEED" ] && IS=$UPSPEED || IS=$IXSPEED
     $TCCR dev $OUTPUT parent 1: classid 1:2 htb rate ${IS}kbit $UBURST prio 2 quantum 1514
+    $TCQR dev $OUTPUT parent 1:2 handle 2: sfq perturb 10 quantum 1514
+    $TCFR dev $OUTPUT parent 1:0 protocol ip prio 0 handle 2 fw flowid 1:2
   fi
 
 ##### speed client->server
@@ -79,11 +82,11 @@ then
   $TCQD dev $OUTPUT handle ffff: ingress
   $TCQR dev $OUTPUT handle ffff: ingress
   /usr/sbin/hsh.sh set $IP $DOWNSPEED
-  if [ -z "$IXSPEED" ]; then
-    $TCFR dev $OUTPUT parent ffff: protocol ip u32 match u32 0 0 action mirred egress redirect dev $IDEV
-  else
+  if [ -z "$IXSPEED" ] && [ -n "$IXDEV" ]; then
     [ "$DOWNSPEED" -gt "$IXSPEED" ] && IS=$DOWNSPEED || IS=$IXSPEED
-    [ -n "$IXDEV" ] && /usr/sbin/hsh.sh set $IP $IXSPEED $IXDEV
+    /usr/sbin/hsh.sh set $IP $IXSPEED $IXDEV
+  else
+    $TCFR dev $OUTPUT parent ffff: protocol ip u32 match u32 0 0 action mirred egress redirect dev $IDEV
   fi
 
 fi
