@@ -168,7 +168,7 @@ case "$1" in
 		cl1=$(($POOLWIDTH*($tctr+1)+$(ip2int $2)-$(ip2int $i)))
 		if [ -z "$3" ]; then
 		    for iface in $UPDEVS; do
-			echo "Interface $iface"
+			echo "===== Interface $iface ====="
 			$tc -s c s dev $iface|grep -A 4 " 1:$cl1 "
 		    done;
 		else
