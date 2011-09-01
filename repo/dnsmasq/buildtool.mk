@@ -1,7 +1,7 @@
 # makefile for dnsmasq
 include $(MASTERMAKEFILE)
 
-DNSMASQ_DIR:=dnsmasq-2.57
+DNSMASQ_DIR:=dnsmasq-2.58
 DNSMASQ_TARGET_DIR:=$(BT_BUILD_DIR)/dnsmasq
 
 $(DNSMASQ_DIR)/.source:
@@ -36,9 +36,8 @@ build: $(DNSMASQ_DIR)/.build
 clean:
 	make -C $(DNSMASQ_DIR) clean
 	rm -rf $(DNSMASQ_TARGET_DIR)
-	rm $(DNSMASQ_DIR)/.build
-	rm $(DNSMASQ_DIR)/.configured
+	rm -rf $(DNSMASQ_DIR)/.build
+	rm -rf $(DNSMASQ_DIR)/.configured
                                                                                                                  
 srcclean: clean
 	rm -rf $(DNSMASQ_DIR) 
-	rm $(DNSMASQ_DIR)/.source

@@ -37,29 +37,6 @@ gzip -9 ../../package/dropbear.lwp
 mv ../../package/dropbear.lwp.gz ../../package/dropbear.lwp 
 echo "dropbear.lwp"
 
-
-#
-# ifaces.lwp
-#
-tar --owner=0 --group=0 --mode=755 -cf ../../package/ifaces.lwp var/webconf/www/interfaces.cgi \
-			  var/webconf/www/interfaces.js \
-			  var/webconf/www/interfaces.blurb \
-			  var/webconf/lib/networking.func \
-			  etc/webconf/interfaces.webconf
-tar --owner=0 --group=0 --mode=644 -rf ../../package/ifaces.lwp var/webconf/templates 
-gzip -9 ../../package/ifaces.lwp 
-mv ../../package/ifaces.lwp.gz ../../package/ifaces.lwp 
-echo "ifaces.lwp"
-
-#
-# tools.lwp
-#
-tar --owner=0 --group=0 --mode=755 -zcf ../../package/tools.lwp var/webconf/www/ping.cgi \
-			 etc/webconf/tools.webconf \
-			 var/webconf/www/tracert.cgi 
-echo "tools.lwp"
-
-
 #
 # config.lwp
 #
@@ -75,7 +52,6 @@ tar --owner=0 --group=0 --mode=644 -rf ../../package/dnsmasq.lwp etc/webconf/dns
 gzip -9 ../../package/dnsmasq.lwp 
 mv ../../package/dnsmasq.lwp.gz ../../package/dnsmasq.lwp 
 echo "dnsmasq.lwp"
-
 
 #
 # pppoe.lwp
