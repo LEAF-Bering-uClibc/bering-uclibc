@@ -1,7 +1,7 @@
 #! /bin/sh
 # /etc/init.d/procps: Set kernel variables from /etc/sysctl.conf
 #
-RCDLINKS="S,S30"
+RCDLINKS="S,S30 2,S30"
 
 [ -x /sbin/sysctl ] || exit 0
 
