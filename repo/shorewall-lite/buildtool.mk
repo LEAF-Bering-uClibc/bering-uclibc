@@ -8,7 +8,7 @@ include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/shorewall-lite
 
-SHOREWALL_DIR:=shorewall-lite-4.4.23
+SHOREWALL_DIR:=shorewall-lite-4.4.23.3
 
 $(SHOREWALL_DIR)/.source:
 	zcat $(SHOREWALL_SOURCE) | tar -xvf -
