@@ -1,0 +1,8 @@
+################################################################
+# 
+# PPP/PPPOE (modem connected to INTERFACE) 
+#
+auto ppp0 
+iface ppp0 inet ppp
+	pre-up ip link set INTERFACE up
+	provider dsl-provider INTERFACE

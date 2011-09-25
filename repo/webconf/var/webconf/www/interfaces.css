@@ -1,0 +1,46 @@
+.think          {
+                background-color: #ffffe0;
+                }
+
+/* these definitions are for the interfaces.cgi script */
+
+.interfaces th {
+                font-size: 90%;
+}
+
+#interfaces 	{ 
+		margin: 0em 0em 0em 0em; 
+	      	background-color: #ffffe0; 
+		}
+
+#interfaces .address {
+		#background-color: #cfcfcf;
+		text-align:left; 
+		font-size: 90%;
+		}
+
+#warning	{ 
+		margin: 0pt 0pt 5pt 5pt; 
+		background-color: #ffffe0; 
+		font-size: 80%;
+		font-weight : bold;
+		color: #ff0000;
+		}
+
+#info		{ 
+		margin: 0pt 0pt 5pt 5pt; 
+		background-color: #ffffe0; 
+		font-size: 80%;
+		font-weight : bold;
+		}
+
+.info		{ 
+		margin: 0pt 0pt 5pt 5pt; 
+		background-color: #ffffe0; 
+		font-size: 90%;
+		font-weight : bold;
+		}
+
+.button		{
+		width: 100px ; 
+		}

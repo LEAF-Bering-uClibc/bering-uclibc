@@ -1,0 +1,9 @@
+################################################################
+#
+# INTERFACE / Fixed IP 
+#
+auto INTERFACE
+iface INTERFACE inet static  
+	address ADDRESS
+	netmask NETMASK
+	gateway GATEWAY

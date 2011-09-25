@@ -1,0 +1,6 @@
+################################################################
+# configure INTERFACE interface
+# INTERFACE / dynamic IP from pump/dhclient
+#
+auto INTERFACE
+iface INTERFACE inet dhcp

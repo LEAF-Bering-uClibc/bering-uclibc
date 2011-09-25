@@ -1,0 +1,5 @@
+displayname:70Tools
+all:80:Traceroute:/tracert.cgi
+all:80:Ping:/ping.cgi
+displayname:90Maintenance
+all:90:Reboot:/reboot.cgi

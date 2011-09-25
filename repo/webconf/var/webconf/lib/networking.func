@@ -1,0 +1,245 @@
+#!/bin/sh
+#
+# Copyleft 2008 Erich Titl (erich.titl@think.ch)
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2 of the License, or (at your
+# option) any later version.  See <http://www.fsf.org/copyleft/gpl.txt>.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# $Id$
+#
+
+
+CONTROL_FILE=/etc/network/interfaces
+IP=/sbin/ip
+GREP=/bin/grep
+SED=/bin/sed
+
+DEBUG=0
+
+get_interfaces() {
+	$IP link sh | 	$GREP "^[0-9]*:" |\
+			$SED -e 's/^\w*: \(\w*\):.*/\1/'
+}
+
+get_eth_interfaces() {
+	get_interfaces | $GREP eth[0-9][0-9]*
+}
+
+get_wlan_interfaces() {
+	get_interfaces | $GREP wlan[0-9][0-9]*
+}
+
+get_interface_address() {
+	$IP addr sh dev $1 | $GREP inet[^6] | head -n 1 | $SED -e 's/.*inet[^6] *\(\w*\.\w*\.\w*\.\w*\).*/\1/'
+}
+
+get_interface_mask() {
+	build_netmask `get_interface_mask_length $1`
+}
+
+get_interface_mask_length() {
+	len=`$IP addr sh dev $1 | $GREP inet[^6] | $SED -e 's/.*inet.*\/\(\w*\).*/\1/'`
+	[ "$len" = "" ] && echo 0 && return 
+	echo $len
+}
+
+get_interface_state() {
+	$IP link sh dev $1 | $GREP $1 | $GREP UP > /dev/null
+}
+
+#get_gateway(){
+#	default=`get_gateway_interface`
+#	has_via_address=`$IP route sh | grep default | grep via`
+#
+#	if [ "X$has_via_address" != "X" ]; then
+#		echo `$IP route sh | grep default | $SED  -e 's/.*via \([0-9\.]*\).*/\1/'`
+#	else
+#		echo `$IP addr sh $default | grep inet | $SED -e 's/.*peer \([0-9\.]*\).*/\1/'`
+#	fi
+#}
+
+get_gateway(){  # extract the default gateway from /proc/net/route
+                # iterate in steps of 2 through the hex string in reverse order
+                # and convert to decimal interspersed with dots
+        inv_gateway=`sed -n -e 's/^\([a-z0-9]*\)[^0-9a-zA-Z]*\(00000000\)[^0-9a-zA-Z]*\([0-9A-F]*\).*$/\3/p' < /proc/net/route`
+	[ "X$inv_gateway" = "X" ] && return 
+        for i in 7 5 3 1
+        do
+                hex2dec `echo $inv_gateway | cut -b $i-$(($i+1))'`
+                echo -n .
+        done | sed -e 's/\.$//g'
+}
+
+
+hex2dec(){
+	[ $# -lt 1 ] && echo 0 && return
+        leftchar=`echo $1 | cut -b 1'`
+        rightchar=`echo $1 | cut -b 2'`
+        echo -n $((`one_hex2dec $leftchar` * 16 + `one_hex2dec $rightchar`))
+}
+
+one_hex2dec(){
+	[ $# -lt 1 ] && echo 0 && return
+        case $1 in
+                a|A) echo -n 10
+                   ;;
+                b|B) echo -n 11
+                   ;;
+                c|C) echo -n 12
+                   ;;
+                d|D) echo -n 13
+                   ;;
+                e|E) echo -n 14
+                   ;;
+                f|F) echo -n 15
+                   ;;
+                *) echo -n $1
+        esac
+}
+
+get_interface_for_addr(){
+	[ $# -eq 1 ] && $IP route get $1 | $GREP dev | $SED -e 's/.*dev \([^ ]*\).*/\1/'
+}
+
+get_gateway_interface(){
+	$IP route | grep default | $SED -e 's/.*dev *\([^ ]*\).*$/\1/'
+}
+
+is_gateway_interface(){
+	[ $# -gt 1 ] &&  [ "`get_interface_for_addr $2`" = "$1" ]
+}
+
+uses_dhcp(){
+	[ -f /var/lib/dhcpc/dhcpcd-$1.info ]
+}
+
+is_used_for_ppp(){
+        [ $# -gt 0 -a -r /proc/net/pppoe ] && $GREP $1 /proc/net/pppoe > /dev/null
+}
+
+build_netmask() {
+	[ $1 -eq 0 ] &&  return         # for interfaces without a ipv4 address
+	octets=$(($1 / 8))
+	network_bits=$(( 8 - ($1 % 8) ))
+	total_octets=4
+	while [ $octets -gt 0 ] 
+	do
+		octets=$(( $octets - 1 ))
+		total_octets=$(($total_octets - 1))
+		echo -n 255
+		[ $total_octets -gt 0 ] && echo -n .
+	done
+	if [ $total_octets  -gt 0 ]; then
+		value=1
+		while [ $network_bits -gt 0 ]
+		do
+			value=$(( $value * 2 ))
+			network_bits=$(($network_bits - 1))
+		done
+		total_octets=$(($total_octets - 1))
+		
+		echo -n $(( 256 - $value ))
+		while [ $total_octets -gt 0 ]
+		do 
+			echo -n .0
+			total_octets=$(($total_octets - 1))
+		done
+	fi
+	echo
+}
+
+get_bits() {
+	bits=8
+	complement=$(( 255 - $1 ))
+	while [ $complement -gt 0 ]
+	do
+		complement=$(( $complement / 2 ))
+		bits=$(( $bits - 1 ))
+	done
+	echo $bits
+}
+
+build_mask_len(){
+	netmask=$1
+	masklen=0
+	while [ "$netmask" != "" ]
+	do
+		octet=`echo $netmask | $SED -e 's/^\(\w*\).*/\1/'`
+		netmask=`echo $netmask | $SED -e 's/^\(\w*\).\(\w*.*\)/\2/'`
+		masklen=$(( $masklen + `get_bits $octet` ))
+	done
+	echo $masklen
+}
+
+net_part(){
+	i=$1.$2
+	oifs=$IFS;
+	IFS=.
+	
+	set $i
+	IFS=$oifs
+	
+	for loop in 1 2 3 4
+	do
+		eval network_byte \$${loop} \$$(( ${loop} + 4 ))
+	done
+}
+
+broadcast_part(){
+	i=$1.$2
+	oifs=$IFS;
+	IFS=.
+	
+	set $i
+	IFS=$oifs
+	
+	for loop in 1 2 3 4
+	do
+		eval broadcast_byte \$${loop} \$$(( ${loop} + 4 ))
+	done
+}
+
+is_in_net(){
+	ip=$1.$2.$3
+	oifs=$IFS;
+	IFS=.
+	
+	set $ip
+	IFS=$oifs
+	
+	state=0
+	for loop in 1 2 3 4 
+	do
+		eval is_in \$${loop} \$$(( ${loop} + 4 )) \$$(( ${loop} + 8 )) 
+		state=$(( $state + $? ))
+		[ $DEBUG != 0 ] && echo is_in_net state = $state
+	done
+	return $state
+}
+
+network_byte(){
+	echo $(( $1 - ($1 % (255 - $2 + 1)) ))
+}
+
+broadcast_byte(){
+	echo $(( `network_byte $1 $2` + 255 - $2 ));
+}
+
+is_in(){
+	[ $# -lt 3 ] && return 1 
+	nb=`network_byte $2 $3`
+	bb=`broadcast_byte $2 $3`
+	[ $DEBUG != 0 ] && echo network_byte = $nb
+	[ $DEBUG != 0 ] && echo broadcast_byte = $bb
+	[ $DEBUG != 0 ] && echo '$1' = $1
+	[ $1 = $bb -a $1 = $nb ] && return 0 
+	[ $1 -lt $bb -a $1 -ge $nb ] && return 0
+	return 1
+}

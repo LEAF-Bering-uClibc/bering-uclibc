@@ -1,0 +1,48 @@
+Let us say that Bering uses log files with elementary names
+according to this list:
+
+	auth.log	messages
+	cron.log	mini_httpd.log
+	daemon.log	shorewall.log
+	debug		syslog
+	mail.log	ulogd.log
+			user.log
+
+They get extensions 	0  1.gz  2.gz  and so on.
+
+
+The webconf-script logfiles.cgi in this test package
+contructs a new subdirectory
+
+	/var/webconf/lib/filter/
+
+which collects executables that take stdin as input and
+transforms it in someway to produce output at stdout.
+In oder to be accepted by any file in this directory
+must be executable and carry a name according to the 
+principle
+
+	"elementary name of log file" . "arbitrary extension"
+
+and three examples are in this package:
+
+	daemon.log.show.request-ack
+
+	debug.only.REQUEST
+
+	messages.non-MARK
+
+There will be entries under "specialized viewing" when the new
+webconf page logfiles.cgi is summond to reflect filters like those
+just described, but not with such clumsy names. Instead there will
+be entries
+
+	show.request-ack	for	daemon.log  daemon.log.0 ...
+
+	only.REQUEST		for	debug  debug.0  debug.1.gz ...
+
+	non-MARK		for	messages  messages.0 ...
+
+that work like the old entry "view" did, but now the text is
+preprocessed with a filter according to your desires before
+being sent back to your workstation for viewing in the browser.

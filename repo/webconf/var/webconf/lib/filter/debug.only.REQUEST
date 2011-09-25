@@ -1,0 +1,3 @@
+#!/bin/sh
+# Print only DHCP_REQUEST records
+grep REQUEST

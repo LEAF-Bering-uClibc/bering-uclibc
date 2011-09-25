@@ -1,0 +1,249 @@
+/* Part of the web configuration system for LEAF routers
+   Copyright (C) 2004 Nathan Angelacos - Licensed under terms of the GPL
+  $Id: webconf.css,v 1.5 2008/04/11 17:39:03 mats Exp mats $
+*/
+
+TD {
+font-style : normal; 
+font-variant : normal; 
+font-weight : normal; 
+font-size : 10pt; 
+font-family : Arial, Helvetica, sans-serif; 
+color : #000000; 
+}
+
+.whitetext {
+font-style : normal;
+font-variant : normal;
+font-weight : bold;
+font-size : 10pt;
+font-family : Arial, Helvetica, sans-serif;
+color : #ffffff;
+background-color : transparent;
+}
+
+.blueback {
+	padding-right: 1ex;
+	background-color: #036;
+	color: #ddbb00;
+	font-weight :bold;
+	font-size : 14pt;
+	}
+
+.normaltext {
+font-style : normal; 
+font-variant : normal; 
+font-weight : normal; 
+font-size : 10pt; 
+font-family : Arial, Helvetica, sans-serif; 
+color : #000000; 
+background-color : transparent; 
+}
+
+.boldtext {
+font-style : normal; 
+font-variant : normal; 
+font-weight : bold; 
+font-size : 12pt; 
+font-family : Arial, Helvetica, sans-serif; 
+color : #000000; 
+background-color : transparent; 
+}
+
+em     {       
+        font-style:     italic;
+        font-weight:    normal;
+        }       
+                
+strong  {       
+        font-style:     normal;
+        font-weight:    bold;
+                }       
+                
+em strong, strong em    {       
+        text-transform: uppercase;
+        font-style:     normal;
+        font-weight:    bolder;
+             }       
+                
+b       {
+        font-weight:    bold;
+        }
+        
+i       {
+        font-style:     italic;
+        }
+
+
+/* This style is roughly:			
+ *   
+ *   [ menu ][ content ][ status ]
+ */
+
+.MenuHead {
+	padding: 0px 0px 0px 3px;
+	color: #000;
+	background-color: #ddd;
+	margin-left: 0.5em;
+	/* font-weight:bold; */
+	}
+.MenuItem {
+	margin: 3px 0px 6px 14px;
+	}
+		
+.MenuRed {
+	color:#fff;
+	background-color:#069;
+	margin-left: 0.5em;
+	font-weight: bold;
+	}
+
+/* ----------------------------------------------------------------------
+ * Content definitions
+ * ----------------------------------------------------------------------
+ */
+#Content { margin: 0em 1em 1em 1em; 
+	  background-color: transparent; }
+
+#Content h1 {
+	margin: 0em 0em 10px 0em;
+	padding: 2px 0px 2px 7px;
+	
+	font-size:120%;
+	line-height:120%;
+	font-weight:bolder;
+	color: #036;
+	background-color:#c7c7c7;	/* was 99a */
+	}
+
+#Content h2 {
+	margin: 0px 20px 6px 6px; 
+	
+	font-size:120%;
+	line-height:100%;
+	font-weight:bolder;
+	color: #036;
+	border-bottom: thin dotted #00c;
+	}
+
+#Content pre {
+	margin-left: 10px;
+}
+
+div#Content p {
+	margin: 0px 10px 1em 6px;
+	}
+
+div#Content table {
+	margin: 0px 0px 9px 3px;
+	}
+	
+div#Content table p {
+	margin-top: 3px;
+	}
+	
+div#Content table textarea,select {
+	margin-left: 6px;
+	margin-bottom: 3px;
+	}
+	
+div#Content input {
+	margin: 0ex 1ex 0ex 1ex;
+}
+
+a:link { 
+	color: #06c;
+	background-color: transparent;
+	text-decoration: none;
+	}
+a:visited { 
+	color: #06c;
+	background-color:transparent;
+	text-decoration: none;
+	}
+a:hover {
+	color: #fff;
+	/* font-weight: bold; */
+	background-color: #06c;
+	text-decoration: none;
+	}	
+	
+/*#Content p {margin:0px 0px 10px 6px; }
+/* #Content p+p {text-indent:30px;} */
+
+#Content a:link { color: #06c;
+		  text-decoration: underline; 
+		  }
+#Content a:visited { color: #06c;
+		     text-decoration: underline; }
+#Content a:hover { color: #c00;
+		   background-color: #fff; 
+		   font-weight: normal;
+		   }
+/* Exceptions to Content */
+
+td.svb input {
+	width: 8ex;
+	}
+
+td.svbtxt {
+	width: 78ex;
+	}
+
+td.fhead {
+	padding: 0ex 1ex 0ex 1ex;
+	width: 15ex;
+	font-variant : normal;
+	font-weight : bold;
+	font-size : 10pt;
+	}
+
+td.ftail {
+	padding: 1ex 0ex 0ex 0ex;
+	width: 75ex;
+	}
+
+p#stat {
+	padding-left: 1ex;
+	}
+
+p#stat input {
+	margin: 0ex 0ex 0ex 1ex;
+	}
+
+div.push {
+	padding-left: 2ex;
+	}
+
+.fsmu,.syschr {
+	border-width: 0pt;
+	}
+
+table.fsmu td {
+	text-align: right;
+	}
+
+table.fsmu th {
+	font-size: 10pt;
+	font-weight: bold;
+	width: 8ex;
+	text-align: right;
+	}
+
+table.syschr td {
+	text-align: left;
+	padding-right: 1ex;
+	}
+
+table.syschr th {
+	font-size: 10pt;
+	font-weight: bold;
+	text-align: left;
+	}
+
+.hilite{color:#036; background-color:#ffff66; }
+
+
+.HeavyRed { color:#c30; background-color:transparent: font-weight:bold; font-size:120% }
+.HeavyGreen { color:#292; background-color:transparent: font-weight: bold; font-size:120% }
+.HeavyBlue { color:#036; background-color:transparent: font-weight: bold; font-size:120% }

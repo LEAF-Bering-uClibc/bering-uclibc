@@ -1,0 +1,3 @@
+#!/bin/sh
+# Only emoves all lines with 'MARK'
+grep -v MARK

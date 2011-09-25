@@ -1,0 +1,8 @@
+displayname:70General
+all:50Log Files:/logfiles.cgi
+all:72General Health:/general-info.cgi
+all:75:Active Connections:/connection-info.cgi
+all:Webconf Password:/wc-passwd.cgi
+#
+displayname:80Save To Disk
+all:10Backup Packages:/lrcfg.back.cgi

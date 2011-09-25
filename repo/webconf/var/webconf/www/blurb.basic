@@ -1,0 +1,29 @@
+<h1>General Information</h1>
+<p>The links to the left represent different software packages that can be 
+configured or monitored using the basic web interface.</p>
+
+<p><font color=#ff2200>If your configuration includes modules that can
+<i>change</i> configuration settings, please note that all configurations
+modified via this interface are stored in RAM only. When the router loses
+power or is restarted, all of your changes are lost if they have
+not been saved to diskette or some other kind of storage media.</font></p>
+
+<h2>Services and Configurations</h2>
+<p>In general, there are two types of configuration pages: some for
+<i>services</i> and others for <i>configurations</i>.</p>
+
+<p>For a <i>service</i> page, the "Save" button at the bottom of the page
+will save the configuration to the appropriate files, but the changes are
+not implemented until you restart the service. Buttons for stopping,
+starting and restarting the service are at the very bottom of the page.
+The general flow is to make the change, then press the "Save" button,
+and finally to press the "Restart" button for the service, once the page
+has refreshed its contents.</p>
+
+<p>At a <i>configuration</i> page, the "Apply" button will immediately apply
+any configuration changes. For instance, when you change the password,
+the change will take place immediately.</p>
+
+<p>Please remember that in either case, the "Save" and "Apply" buttons only
+affect files in volatile RAM.</p>
+
