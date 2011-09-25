@@ -1,0 +1,132 @@
+#!/bin/sh
+# Script to load webconf "plugin" modules.
+# $Id: webconf,v 1.5 2005/04/10 21:06:49 nangel Exp $
+
+# Links are the same as mini_httpd
+#   Except there is nothing to kill
+RCDLINKS="2,S85 3,S85 4,S85 5,S85"
+
+test -f /var/webconf/www/index.cgi || exit 0
+
+#
+# Build the LRP variable for the webonf.conf script
+#
+LRP="$( cat /var/lib/lrpkg/packages | tr "\n" " " )"
+
+
+
+# Helper Script library.  Much of this logic is from linuxrc
+# 
+
+get_LWP () { 
+	[ -f /etc/webconf/webconf.conf ] && . /etc/webconf/webconf.conf 2>/dev/null
+	if [ -z "$( set | grep "^LWP=" )" ]; then
+		echo "LWP is undefined - using LRP package list;"
+		export LWP="$LRP"
+		fi
+	}
+
+mount_pkgpath () {
+	DEVCOUNT=0	
+	while read dev fs; do
+	 	DEVCOUNT=$(( $DEVCOUNT + 1 ))
+	 	mkdir /mnt/webconf${DEVCOUNT}
+	 	# If the user already has the device mounted r/w, then the ro mout fails 
+	 	# So on failure, we try to remount with defaults
+	 	mount -t $fs $dev /mnt/webconf${DEVCOUNT} -o ro  2>/dev/null 1>/dev/null
+	 	[ "$?" -ne "0" ] && mount -t $fs $dev /mnt/webconf${DEVCOUNT}  2>/dev/null 1>/dev/null
+	 	done
+	 	
+	 echo $DEVCOUNT 
+	}
+	
+	
+umount_pkgpath () {
+	DEVCOUNT=$1
+	while [ "$DEVCOUNT" !=  "0" ]; do
+		umount /mnt/webconf${DEVCOUNT} 2>/dev/null 1>/dev/null
+		rm -rf /mnt/webconf${DEVCOUNT} 2>/dev/null 1>/dev/null
+		DEVCOUNT=$(( $DEVCOUNT - 1 ))
+		done	
+	}
+
+# This is more-or-less ripped out of linuxrc
+load_LWP () {
+	count=1;
+	while [ "$count" -le "$1" ]; do
+		devlist="$devlist $count"
+		rdevlist="$count $rdevlist"
+		count=$(( $count + 1 ))
+		done
+
+	OIFS="$IFS"
+	IFS="$IFS,"
+	count=0
+	for f in ${LWP}; do
+		count=$(( $count + 1 ))
+		IFS=":"
+		set -- $f
+		f=$1
+		multi=1; revrs=0
+		case $2 in 
+			f) multi=1 ; revrs=0 ;;
+			F) multi=0 ; revrs=0 ;;
+			r) multi=1 ; revrs=1 ;;
+			R) multi=0 ; revrs=1 ;;
+		esac
+	
+	if [ "$revrs" = 1 ]; then
+		usedevlist="$rdevlist"
+		else
+		usedevlist="$devlist"
+		fi
+		
+	fnd=0
+	echo -n "  $f"
+	IFS=" "
+	for dev in ${usedevlist}; do
+		if [ $multi -eq 1 -o $fnd -ne 1 ]; then
+			if [ -f /mnt/webconf${dev}/$f.lwp ]; then
+				gunzip -c /mnt/webconf${dev}/$f.lwp | tar -x -C /
+				fnd=1
+				fi
+			fi
+		done
+		[ "$fnd" = "0" ] && echo -n "(nf)";
+	[ "$(( $count % 5 ))" = "0" ] && echo
+	done	
+	IFS="$OIFS"
+	echo " - finished."
+	}
+
+
+
+#--------------------------------------------------------------------
+# Execution Starts Here
+#--------------------------------------------------------------------
+
+
+case "$1" in
+  start | restart)
+    echo "Loading Webconf Plugins:"
+	get_LWP
+	if [ -z "$LWP" ]; then
+		echo "No packages to load! exiting."
+		exit 1
+		fi
+	DEVCOUNT=$(cat /var/lib/lrpkg/pkgpath.disks | mount_pkgpath)
+	# mount
+	load_LWP $DEVCOUNT
+	umount_pkgpath $DEVCOUNT
+	;;
+  stop)
+    echo "Stopping webconf would mean removing the webconf directory."
+    echo "You should do that by hand if you really want to stop webconf."
+	;;
+
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0
