@@ -1,0 +1,14 @@
+#
+# Runtime defaults for ISC DHCP server
+#
+
+# Change "no" to "yes" to start DHCPv4 daemon
+ISCDHCP_SERVER_V4_RUN=no
+# Change "no" to "yes" to start DHCPv6 daemon
+ISCDHCP_SERVER_V6_RUN=no
+
+# Specify interfaces for DHCPv4 daemon
+ISCDHCP_SERVER_V4_INTERFACES="eth1"
+# Specify interfaces for DHCPv6 daemon
+ISCDHCP_SERVER_V6_INTERFACES="eth1"
+

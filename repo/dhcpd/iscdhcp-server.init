@@ -1,0 +1,101 @@
+#!/bin/sh
+#
+#  /etc/init.d/iscdhcp-server: start and stop ISC DHCP server
+#
+RCDLINKS="0,K60 2,S40"
+
+DAEMON=/sbin/dhcpd
+
+test -x $DAEMON || exit 0
+
+# Set default config options
+ISCDHCP_SERVER_V4_RUN=no
+ISCDHCP_SERVER_V6_RUN=no
+ISCDHCP_SERVER_V4_PIDFILE=/var/run/dhcpd.pid
+ISCDHCP_SERVER_V6_PIDFILE=/var/run/dhcpd6.pid
+ISCDHCP_SERVER_V4_CONFFILE=/etc/dhcpd.conf
+ISCDHCP_SERVER_V6_CONFFILE=/etc/dhcpd6.conf
+ISCDHCP_SERVER_V4_OPTIONS="-q -4"
+ISCDHCP_SERVER_V6_OPTIONS="-q -6"
+ISCDHCP_SERVER_V4_INTERFACES="eth1"
+ISCDHCP_SERVER_V6_INTERFACES="eth1"
+
+# Load any custom config overrides
+#  Will not start ANY daemons unless "_RUN" is specified as "yes" in this file
+. /etc/default/iscdhcp-server
+
+if [ -n "$ISCDHCP_SERVER_V4_PIDFILE" ]; then
+        ISCDHCP_SERVER_V4_OPTIONS="$ISCDHCP_SERVER_V4_OPTIONS -pf $ISCDHCP_SERVER_V4_PIDFILE"
+fi
+if [ -n "$ISCDHCP_SERVER_V4_CONFFILE" ]; then
+        ISCDHCP_SERVER_V4_OPTIONS="$ISCDHCP_SERVER_V4_OPTIONS -cf $ISCDHCP_SERVER_V4_CONFFILE"
+fi
+
+if [ -n "$ISCDHCP_SERVER_V6_PIDFILE" ]; then
+        ISCDHCP_SERVER_V6_OPTIONS="$ISCDHCP_SERVER_V6_OPTIONS -pf $ISCDHCP_SERVER_V6_PIDFILE"
+fi
+if [ -n "$ISCDHCP_SERVER_V6_CONFFILE" ]; then
+        ISCDHCP_SERVER_V6_OPTIONS="$ISCDHCP_SERVER_V6_OPTIONS -cf $ISCDHCP_SERVER_V6_CONFFILE"
+fi
+
+if [ -n "$ISCDHCP_SERVER_V6_INTERFACES" ]; then
+        ISCDHCP_SERVER_V6_OPTIONS="$ISCDHCP_SERVER_V6_OPTIONS $ISCDHCP_SERVER_V6_INTERFACES"
+fi
+if [ -n "$ISCDHCP_SERVER_V6_INTERFACES" ]; then
+        ISCDHCP_SERVER_V6_OPTIONS="$ISCDHCP_SERVER_V6_OPTIONS $ISCDHCP_SERVER_V6_INTERFACES"
+fi
+
+#
+
+case "$1" in
+  start)
+        if [ "$ISCDHCP_SERVER_V4_RUN" != "no" ]; then
+            echo -n "Starting ISC DHCPv4 server: dhcpcd4"
+            touch /var/db/dhcpd.leases
+            start-stop-daemon --start --quiet --pidfile $ISCDHCP_SERVER_V4_PIDFILE --exec $DAEMON -- $ISCDHCP_SERVER_V4_OPTIONS
+            echo "."
+        fi
+        if [ "$ISCDHCP_SERVER_V6_RUN" != "no" ]; then
+            echo -n "Starting ISC DHCPv6 server: dhcpcd6"
+            touch /var/db/dhcpd6.leases
+            start-stop-daemon --start --quiet --pidfile $ISCDHCP_SERVER_V6_PIDFILE --exec $DAEMON -- $ISCDHCP_SERVER_V6_OPTIONS
+            echo "."
+        fi
+        ;;
+
+  stop)
+        if [ "$ISCDHCP_SERVER_V4_RUN" != "no" ]; then
+            echo -n "Stopping ISC DHCPv4 server: dhcpcd4"
+            start-stop-daemon --stop --quiet --oknodo --pidfile $ISCDHCP_SERVER_V4_PIDFILE
+            echo "."
+        fi
+        if [ "$ISCDHCP_SERVER_V6_RUN" != "no" ]; then
+            echo -n "Stopping ISC DHCPv6 server: dhcpcd6"
+            start-stop-daemon --stop --quiet --oknodo --pidfile $ISCDHCP_SERVER_V6_PIDFILE
+            echo "."
+        fi
+        ;;
+
+  restart)
+        if [ "$ISCDHCP_SERVER_V4_RUN" != "no" ]; then
+            echo -n "Restarting ISC DHCPv4 server: dhcpcd4"
+            start-stop-daemon --stop --quiet --oknodo --pidfile $ISCDHCP_SERVER_V4_PIDFILE
+	    sleep 1
+            start-stop-daemon --start --quiet --pidfile $ISCDHCP_SERVER_V4_PIDFILE --exec $DAEMON -- $ISCDHCP_SERVER_V4_OPTIONS
+            echo "."
+        fi
+        if [ "$ISCDHCP_SERVER_V6_RUN" != "no" ]; then
+            echo -n "Restarting ISC DHCPv6 server: dhcpcd6"
+            start-stop-daemon --stop --quiet --oknodo --pidfile $ISCDHCP_SERVER_V6_PIDFILE
+	    sleep 1
+            start-stop-daemon --start --quiet --pidfile $ISCDHCP_SERVER_V6_PIDFILE --exec $DAEMON -- $ISCDHCP_SERVER_V6_OPTIONS
+            echo "."
+        fi
+        ;;
+
+  *)
+        echo "Usage: /etc/init.d/iscdhcp-server {start|stop|restart}"
+        exit 1
+esac
+
+exit 0

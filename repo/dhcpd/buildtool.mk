@@ -1,52 +1,66 @@
-# makefile for dhcpd
+#############################################################
+#
+# buildtool makefile for dhcpd
+#
+#############################################################
+
 include $(MASTERMAKEFILE)
 
-DHCPD_DIR:=dhcp-2.0pl5
+DHCPD_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
+ifeq ($(DHCPD_DIR),)
+DHCPD_DIR:=$(shell cat DIRNAME)
+endif
 DHCPD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpd
 
-$(DHCPD_DIR)/.source:
-	zcat $(DHCPD_SOURCE) | tar -xvf -
-	zcat $(DHCPD_PATCH1) | patch -d $(DHCPD_DIR) -p1
-	touch $(DHCPD_DIR)/.source
+# Option settings for 'configure':
+#   Move default install from /usr/local to /
+CONFOPTS:= --build=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) --prefix=/
 
+.source:
+	zcat $(SOURCE) | tar -xvf -
+	echo $(DHCPD_DIR) > DIRNAME
+	touch .source
 
-unpatch:
-	if [ -f $(DHCPD_DIR)/.patched ]; then ( cd $(DHCPD_DIR) && /bin/sh debian/scripts/unpatch-source ); fi
-	rm -f $(DHCPD_DIR)/.patched
+source: .source
 
-$(DHCPD_DIR)/.patched: $(DHCPD_DIR)/.source
-	( cd $(DHCPD_DIR) && /bin/sh debian/scripts/patch-source );
-	touch $(DHCPD_DIR)/.patched
- 
-source: $(DHCPD_DIR)/.source
-                        
-$(DHCPD_DIR)/.configured: $(DHCPD_DIR)/.patched
-	(cd $(DHCPD_DIR) ; LD=$(TARGET_LD) ./configure )
-	touch $(DHCPD_DIR)/.configured
-                                                                 
-$(DHCPD_DIR)/.build: $(DHCPD_DIR)/.configured
+.configure: .source
+	( cd $(DHCPD_DIR); ./configure $(CONFOPTS) );
+	touch .configure
+
+.build: .configure
 	mkdir -p $(DHCPD_TARGET_DIR)
-	mkdir -p $(DHCPD_TARGET_DIR)/usr/sbin
-	mkdir -p $(DHCPD_TARGET_DIR)/etc/init.d
-	mkdir -p $(DHCPD_TARGET_DIR)/etc/default
-	make -C $(DHCPD_DIR) CC=$(TARGET_CC) PREDEFINES='-D_PATH_DHCPD_DB=\"/var/lib/dhcp/dhcpd.leases\" \
-	-D_PATH_DHCLIENT_DB=\"/var/lib/dhcp/dhclient.leases\"' VARDB=/var/lib/dhcp
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DHCPD_DIR)/server/dhcpd
-	cp -a $(DHCPD_DIR)/server/dhcpd $(DHCPD_TARGET_DIR)/usr/sbin
-	cp -aL dhcpd.conf $(DHCPD_TARGET_DIR)/etc	
-	cp -aL dhcp $(DHCPD_TARGET_DIR)/etc/default	
-	cp -aL dhcp.init $(DHCPD_TARGET_DIR)/etc/init.d/dhcp			
-	cp -a $(DHCPD_TARGET_DIR)/* $(BT_STAGING_DIR)
-	touch $(DHCPD_DIR)/.build
+	mkdir -p $(BT_STAGING_DIR)/bin/
+	mkdir -p $(BT_STAGING_DIR)/sbin/
+	mkdir -p $(BT_STAGING_DIR)/lib/
+	mkdir -p $(BT_STAGING_DIR)/include/
+	mkdir -p $(BT_STAGING_DIR)/etc/init.d/
+	mkdir -p $(BT_STAGING_DIR)/etc/default/
+#
+	make CC=$(TARGET_CC) LD=$(TARGET_LD) -C $(DHCPD_DIR)
+	make DESTDIR=$(DHCPD_TARGET_DIR) -C $(DHCPD_DIR) install
+#
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPD_TARGET_DIR)/bin/*
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPD_TARGET_DIR)/sbin/*
+	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(DHCPD_TARGET_DIR)/lib/*
+	cp -a $(DHCPD_TARGET_DIR)/bin/* $(BT_STAGING_DIR)/bin/
+	cp -a $(DHCPD_TARGET_DIR)/sbin/* $(BT_STAGING_DIR)/sbin/
+	cp -a $(DHCPD_TARGET_DIR)/lib/* $(BT_STAGING_DIR)/lib/
+	cp -a $(DHCPD_TARGET_DIR)/include/* $(BT_STAGING_DIR)/include/
+	cp -L dhcpd.conf $(BT_STAGING_DIR)/etc/
+	cp -L dhcpd6.conf $(BT_STAGING_DIR)/etc/
+	cp -L iscdhcp-server.init $(BT_STAGING_DIR)/etc/init.d/iscdhcp-server
+	cp -L iscdhcp-server.default $(BT_STAGING_DIR)/etc/default/iscdhcp-server
+	touch .build
 
-build: $(DHCPD_DIR)/.build
-                                                                                         
-clean: unpatch
-	make -C $(DHCPD_DIR) distclean
+build: .build
+
+clean:
+	make -C $(DHCPD_DIR) clean
 	rm -rf $(DHCPD_TARGET_DIR)
-	rm $(DHCPD_DIR)/.build
-	rm $(DHCPD_DIR)/.configured
-                                                                                                                 
+	-rm .build .configure
+
 srcclean: clean
 	rm -rf $(DHCPD_DIR) 
-	rm $(DHCPD_DIR)/.source
+	rm DIRNAME
+	rm .source
+
