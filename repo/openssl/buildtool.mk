@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-OPENSSL_DIR:=openssl-0.9.8r
+OPENSSL_DIR:=openssl-1.0.0e
 OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
 PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5) 
@@ -21,7 +21,7 @@ $(OPENSSL_DIR)/.source:
 
 $(OPENSSL_DIR)/.configured: $(OPENSSL_DIR)/.source
 	
-	(cd $(OPENSSL_DIR); \
+	([ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); cd $(OPENSSL_DIR); \
 	./Configure linux-elf  \
 		--prefix=/usr \
 		--openssldir=/usr/ssl \
@@ -48,8 +48,8 @@ $(OPENSSL_DIR)/.build: $(OPENSSL_DIR)/.configured
 	export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	make CC=$(TARGET_CC) -C $(OPENSSL_DIR) depend
 	make CC=$(TARGET_CC) -C $(OPENSSL_DIR) 
-	$(BT_STRIP) --strip-unneeded $(OPENSSL_DIR)/libcrypto.so.0.9.8
-	$(BT_STRIP) --strip-unneeded $(OPENSSL_DIR)/libssl.so.0.9.8		
+	$(BT_STRIP) --strip-unneeded $(OPENSSL_DIR)/libcrypto.so.1.0.0
+	$(BT_STRIP) --strip-unneeded $(OPENSSL_DIR)/libssl.so.1.0.0		
 	make CC=$(TARGET_CC) -C $(OPENSSL_DIR) INSTALL_PREFIX=$(OPENSSL_TARGET_DIR) install
 	$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(OPENSSL_TARGET_DIR)/usr/bin/openssl
 	cp -af $(OPENSSL_TARGET_DIR)/usr/bin/openssl  $(BT_STAGING_DIR)/usr/bin/
