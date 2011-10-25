@@ -16,11 +16,11 @@ $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
 	(cd $(SQUID_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	./configure --with-ldflags=-s \
 	--sysconfdir=/etc/squid --prefix= \
-	--disable-internal-dns \
+	--enable-internal-dns \
 	--exec-prefix=/usr --libexecdir=/usr/bin \
 	--enable-snmp --target=i386-pc-linux-gnu \
 	--datadir=/etc/squid \
-	--disable-dependency-tracking --disable-wccp \
+	--disable-dependency-tracking --disable-wccp --disable-wccpv2 \
 	--enable-poll --enable-delay-pools \
 	--enable-default-err-language=English \
 	--enable-err-languages="English" \
@@ -66,7 +66,7 @@ $(SQUID_DIR)/.build: $(SQUID_DIR)/.configured
 	chmod 644 $(SQUID_DIR)/icons/silk/*	
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/src/squid	
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/tools/squidclient
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/src/dnsserver
+#	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/src/dnsserver
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/src/unlinkd		
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/tools/cachemgr.cgi			
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/helpers/log_daemon/file/log_file_daemon			
@@ -82,7 +82,7 @@ $(SQUID_DIR)/.build: $(SQUID_DIR)/.configured
 	cp -a $(SQUID_DIR)/icons/SN.png $(SQUID_TARGET_DIR)/etc/squid/icons
 	cp -a $(SQUID_DIR)/src/squid $(SQUID_TARGET_DIR)/usr/sbin
 	cp -a $(SQUID_DIR)/tools/squidclient $(SQUID_TARGET_DIR)/usr/bin
-	cp -a $(SQUID_DIR)/src/dnsserver $(SQUID_TARGET_DIR)/usr/bin	
+#	cp -a $(SQUID_DIR)/src/dnsserver $(SQUID_TARGET_DIR)/usr/bin	
 	cp -a $(SQUID_DIR)/src/unlinkd $(SQUID_TARGET_DIR)/usr/bin
 	cp -a $(SQUID_DIR)/helpers/log_daemon/file/log_file_daemon $(SQUID_TARGET_DIR)/usr/bin
 	cp -a $(SQUID_DIR)/tools/cachemgr.cgi $(SQUID_TARGET_DIR)/usr/lib/cgi-bin
