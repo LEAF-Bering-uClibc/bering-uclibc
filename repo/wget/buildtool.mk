@@ -1,7 +1,7 @@
 # makefile for wget
 include $(MASTERMAKEFILE)
 
-WGET_DIR:=wget-1.11.4
+WGET_DIR:=wget-1.13.4
 WGET_TARGET_DIR:=$(BT_BUILD_DIR)/wget
 #CFLAGS="$(BT_COPT_FLAGS) -g -Wall -Wno-implicit -DINET6"
 CFLAGS="$(BT_COPT_FLAGS) -g -Wall -Wno-implicit"
@@ -24,14 +24,21 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	     --prefix=/usr \
 	     --sysconfdir=/etc \
 	     --disable-nls \
+	     --disable-debug \
+	     --without-gpg-error \
+	     --without-gcrpyt \
 	     --without-ssl \
 	)
 
-	make CC=$(TARGET_CC) -C $(WGET_DIR) src
+	make CC=$(TARGET_CC) -C $(WGET_DIR)
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(WGET_DIR)/src/wget
 	cp -a $(WGET_DIR)/src/wget $(WGET_TARGET_DIR)/usr/bin
 
 	make -C $(WGET_DIR) distclean
+
+# hack cause distclean removes files like src/css.c
+	zcat $(WGET_SOURCE) | tar -xvf -
+
 
 	#Build a version with SSL support
 	(cd $(WGET_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
@@ -40,10 +47,13 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	     --prefix=/usr \
 	     --sysconfdir=/etc \
 	     --disable-nls \
-	     --with-ssl \
+	     --disable-debug \
+	     --without-gpg-error \
+	     --without-gcrpyt \
+	     --with-ssl=openssl \
 	     --with-libssl-prefix=$(BT_STAGING_DIR)/usr \
 	)
-	make CC=$(TARGET_CC) -C $(WGET_DIR) src
+	make CC=$(TARGET_CC) -C $(WGET_DIR) 
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(WGET_DIR)/src/wget
 	cp -a $(WGET_DIR)/src/wget $(WGET_TARGET_DIR)/usr/bin/wget-ssl
 
