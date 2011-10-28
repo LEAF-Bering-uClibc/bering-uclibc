@@ -1,0 +1,27 @@
+#!/bin/sh
+# 
+# usage: clamd { start | stop | restart }
+#
+
+RCDLINKS=" 2,S89 6,K09 "
+
+case "$1" in
+	start)
+		# Start 
+		/usr/sbin/clamd
+		echo "Clamd initiated"
+		;;
+	stop)
+		# Stop
+		killall clamd &>/dev/null
+		echo "Clamd terminated"
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo "Usage: clamd { start | stop | restart }"
+		exit 1
+esac
+exit 0

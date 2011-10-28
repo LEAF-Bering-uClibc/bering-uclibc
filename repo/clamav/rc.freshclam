@@ -1,0 +1,44 @@
+#!/bin/sh
+
+RCDLINKS="2,S84 0,K96" 
+
+case "$1" in
+start)
+	echo -n "Starting Freshclam: "
+	
+	#Como ocupa mucho espacio las firmas de virus, no se carga en memoria y
+	#por lo tanto hay que acceder a disco para leer y actualizar.
+	if [ ! -e /share ]; then
+	  mkdir /share
+	fi
+
+	mount /dev/hda1 /share
+
+	if [ ! -e /share/clamav ]; then
+	  mkdir /share/clamav
+	fi
+	
+
+	if [ ! -e /var/log/freshclam.log ]; then
+	  touch /var/log/freshclam.log
+	  #chown clamav:clamav /var/log/freshclam.log
+	fi
+	
+	/usr/bin/freshclam -d
+	echo "done"
+	;;
+
+stop)
+	echo -n "Stopping Freshclam: "
+	kill -9 $(cat /var/run/freshclam.pid)
+	umount /dev/hda1
+	echo "done"
+	;;
+	
+*)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit 0
+
