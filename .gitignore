@@ -1,7 +1,8 @@
-build/
-log/
-package/
-source/
-staging/
-conf/installed
-l_*
+/build/
+/log/
+/package/
+/source/
+/staging/
+/conf/installed
+/toolchain/
+/l_*

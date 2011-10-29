@@ -34,20 +34,22 @@ export GNU_ARCH:=i486
 export GNU_TUNE:=pentiumpro
 #
 export GNU_TARGET_NAME:=$(GNU_ARCH)-pc-linux-uclibc
-# host compiler
-export HOSTCC:=gcc
-# build host
-export GNU_HOST_NAME:=$(GNU_ARCH)-pc-linux-uclibc
 # target gcc
-export TARGET_CC:=$(BT_STAGING_DIR)/bin/gcc-m32
+export TARGET_CC:=$(GNU_TARGET_NAME)-gcc
 # target ld
-export TARGET_LD:=$(BT_STAGING_DIR)/usr/bin/ld
+export TARGET_LD:=$(GNU_TARGET_NAME)-ld
 # for dpatch (debian patch)
 export DEB_BUILD_ARCH=$(ARCH)
 # strip
-export BT_STRIP:=$(BT_STAGING_DIR)/usr/bin/strip
+export BT_STRIP:=$(GNU_TARGET_NAME)-strip
 export BT_STRIP_LIBOPTS:=--strip-unneeded 
 export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
+
+##########################################
+#Toolchain dir
+export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(ARCH)
+#Paths
+export PATH:=$(TOOLCHAIN_DIR)/sbin:$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/sbin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
 
 #make options
 CPUCOUNT=$(shell ls /sys/class/cpuid/ | wc -w)
@@ -57,7 +59,7 @@ export MAKEOPTS:=-j$(shell echo $$(($(CPUCOUNT)+1)))
 export LANG=en_US
 
 # default optimization settings for compiling code 
-export BT_COPT_FLAGS=-Os -march=$(GNU_ARCH) -mtune=$(GNU_TUNE)
+export BT_COPT_FLAGS=-O2 -march=$(GNU_ARCH) -mtune=$(GNU_TUNE)
 
 # default ld flags
 export BT_LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib

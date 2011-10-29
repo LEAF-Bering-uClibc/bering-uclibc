@@ -16,6 +16,7 @@ PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 	cat $(KERNEL_PATCH2) | patch -d linux-$(LINVER) -p1
 	zcat $(KERNEL_PATCH3) | patch -d linux-$(LINVER) -p1
 	cat $(KERNEL_PATCH4) | patch -d linux-$(LINVER) -p1
+	mkdir -p $(TOOLCHAIN_DIR)/usr
 	touch .source
 
 
@@ -27,7 +28,7 @@ PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 	ARCH=$(ARCH) $(MAKE) -C linux-$(LINVER) O=../linux-$$i oldconfig || \
 	exit 1; done ; \
 	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
-	cp -r linux-$$i/usr/include $(BT_STAGING_DIR)/)
+	cp -r linux-$$i/usr/include $(TOOLCHAIN_DIR)/usr)
 	touch .configured
 
 source: .source .configured

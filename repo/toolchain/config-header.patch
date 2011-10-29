@@ -1,0 +1,13 @@
+--- .config	2011-10-29 21:55:15.327334439 +0300
++++ .config_headers	2011-10-29 21:57:00.719333737 +0300
+@@ -225,8 +225,8 @@
+ #
+ # Library Installation Options
+ #
+-RUNTIME_PREFIX="/"
+-DEVEL_PREFIX="/"
++RUNTIME_PREFIX="$(TOOLCHAIN_DIR)"
++DEVEL_PREFIX="$(TOOLCHAIN_DIR)/usr"
+ MULTILIB_DIR="lib"
+ HARDWIRED_ABSPATH=y
+ 

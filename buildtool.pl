@@ -187,7 +187,7 @@ if ($ARGV[0] eq "describe") {
   # build packages/sources
   shift;
   # first do a make source:
-  check_lib_link();
+  #check_lib_link();
   
   my $source = buildtool::Make::Source->new(\%globConf, \%sourcesConfig);
   $source->make(@ARGV);
