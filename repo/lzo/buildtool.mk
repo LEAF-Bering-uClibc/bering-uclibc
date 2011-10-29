@@ -6,7 +6,7 @@
  
 include $(MASTERMAKEFILE)
 
-LZO_DIR:=lzo-2.04
+LZO_DIR:=lzo-2.06
 LZO_TARGET_DIR:=$(BT_BUILD_DIR)/lzo
 STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment 
 

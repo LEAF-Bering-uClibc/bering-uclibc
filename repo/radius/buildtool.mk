@@ -16,9 +16,11 @@ RADIUS_TARGET_DIR:=$(BT_BUILD_DIR)/radius
 #   Move default install from /usr/local/ to /usr/
 #   But put config in /etc/ rather than /usr/etc/
 #   And put logfiles in /var/log/ rather than /usr/var/log/
+#   Use the repo/libtool/ version of libtool and libltdl.so
 #   Explicitly enable the modules referenced in the Package
 #   Disable a whole raft of modules which require extra libraries
 CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--with-system-libtool --with-system-libltdl \
 	--with-rlm_acctlog --with-rlm_acct_unique --with-rlm_always \
 	--with-rlm_attr_filter --with-rlm_attr_rewrite --with-rlm_chap \
 	--with-rlm_checkval --with-rlm_copy_packet --with-rlm_detail \
@@ -41,37 +43,21 @@ CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--without-rlm_sql_oracle --without-rlm_sql_postgresql \
 	--with-dhcp \
 	--with-mysql-dir="$(BT_STAGING_DIR)"/usr 
-#	--with-mysql-lib-dir="$(BT_STAGING_DIR)"/usr/lib
 
-$(RADIUS_DIR)/.source:
+.source:
 	bzcat $(RADIUS_SOURCE) | tar -xvf -
 	echo $(RADIUS_DIR) > DIRNAME
-	touch $(RADIUS_DIR)/.source
+	touch .source
 
-source: $(RADIUS_DIR)/.source
+source: .source
 
-$(RADIUS_DIR)/.configure: $(RADIUS_DIR)/.source
+.configure: .source
 	( cd $(RADIUS_DIR) ; CFLAGS="$(BT_COPT_FLAGS)" \
 	LDFLAGS='-L"$(BT_STAGING_DIR)"/lib -L"$(BT_STAGING_DIR)"/usr/lib' \
 	./configure $(CONFOPTS) )
-	# Fix for "unable to infer tagged configuration" errors
-	( cd $(RADIUS_DIR) ; \
-	  for file in src/lib/Makefile \
-		      src/modules/rules.mak \
-		      src/modules/rlm_eap/Makefile \
-		      src/modules/rlm_eap/libeap/Makefile \
-		      src/modules/rlm_mschap/Makefile \
-		      src/modules/rlm_sql/drivers/rules.mak \
-		      src/main/Makefile ; \
-	  do \
-	    sed -i -e "s/--mode=compile/--tag=CC --mode=compile/" $$file ; \
-	    sed -i -e "s/--mode=link/--tag=CC --mode=link/" $$file ; \
-	  done )
-	# Fix for .lai install errors
-	( cd $(RADIUS_DIR) ; sed -i -e "/instname/d" libtool )
-	touch $(RADIUS_DIR)/.configure
+	touch .configure
 
-build: $(RADIUS_DIR)/.configure
+build: .configure
 	mkdir -p "$(RADIUS_TARGET_DIR)"
 	mkdir -p $(BT_STAGING_DIR)/etc
 	mkdir -p $(BT_STAGING_DIR)/var
@@ -103,9 +89,7 @@ build: $(RADIUS_DIR)/.configure
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radwho "$(BT_STAGING_DIR)"/usr/bin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radzap "$(BT_STAGING_DIR)"/usr/bin/
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) "$(RADIUS_TARGET_DIR)"/usr/lib/*.so
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) "$(RADIUS_TARGET_DIR)"/usr/lib/libltdl.so.3.1.4
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/*.so "$(BT_STAGING_DIR)"/usr/lib/
-	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/libltdl.so.3.1.4 "$(BT_STAGING_DIR)"/usr/lib/
 	cp -a "$(RADIUS_TARGET_DIR)"/usr/include/* "$(BT_STAGING_DIR)"/usr/include/
 	cp -a "$(RADIUS_TARGET_DIR)"/usr/share/freeradius/* "$(BT_STAGING_DIR)"/usr/share/freeradius/
 	cp -a "$(RADIUS_TARGET_DIR)"/etc/* "$(BT_STAGING_DIR)"/etc/
@@ -120,5 +104,6 @@ clean:
 
 srcclean: clean
 	rm -rf $(RADIUS_DIR) 
+	-rm .source
 	-rm DIRNAME
 

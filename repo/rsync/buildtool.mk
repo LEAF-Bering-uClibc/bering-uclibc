@@ -1,5 +1,5 @@
 include $(MASTERMAKEFILE)
-RSYNC_DIR:=rsync-3.0.7
+RSYNC_DIR:=rsync-3.0.9
 RSYNC_TARGET_DIR:=$(BT_BUILD_DIR)/rsync
 
 $(RSYNC_DIR)/.source:

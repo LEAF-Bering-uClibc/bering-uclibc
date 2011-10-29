@@ -1,6 +1,6 @@
 #############################################################
 #
-# libpcap
+# libdnet
 #
 #############################################################
 
@@ -11,7 +11,6 @@ export CC=$(TARGET_CC)
 
 source:
 	zcat $(LIBDNET_SOURCE) | tar -xvf - 	
-#	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1  
 
 $(LIBDNET_DIR)/Makefile: $(LIBDNET_DIR)/configure
 	(cd $(LIBDNET_DIR); ac_cv_linux_vers=2  \
@@ -22,9 +21,6 @@ $(LIBDNET_DIR)/Makefile: $(LIBDNET_DIR)/configure
 			--prefix=/usr \
 			--without-check );
 	
-#source: $(LIBPCAP_DIR)/.source
-
-
 build: $(LIBDNET_DIR)/Makefile
 	mkdir -p $(LIBDNET_TARGET_DIR)
 	$(MAKE) CCOPT="$(BT_COPT_FLAGS)" -C $(LIBDNET_DIR) 
@@ -33,8 +29,6 @@ build: $(LIBDNET_DIR)/Makefile
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LIBDNET_TARGET_DIR)/usr/sbin/dnet
 	rm -rf $(LIBDNET_TARGET_DIR)/usr/man
 	cp -a $(LIBDNET_TARGET_DIR)/* $(BT_STAGING_DIR)
-
-#build: $(LIBPCAP_DIR)/.build
 
 clean:
 	echo $(PATH)

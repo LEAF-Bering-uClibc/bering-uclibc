@@ -1,12 +1,11 @@
 # makefile for radvd
 include $(MASTERMAKEFILE)
 
-RADVD_DIR:=radvd-1.8
+RADVD_DIR:=radvd-1.8.2
 RADVD_TARGET_DIR:=$(BT_BUILD_DIR)/radvd
 
 $(RADVD_DIR)/.source:
 	zcat $(RADVD_SOURCE) | tar -xvf -
-#	zcat $(RADVD_PATCH1) | patch -d $(RADVD_DIR) -p1
 	touch $(RADVD_DIR)/.source
 
 source: $(RADVD_DIR)/.source

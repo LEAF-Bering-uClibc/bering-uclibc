@@ -7,7 +7,7 @@
 
 include $(MASTERMAKEFILE)
 
-BUSYBOX_DIR=busybox-1.19.0
+BUSYBOX_DIR=busybox-1.19.2
 BUSYBOX_BUILD_DIR=$(BT_BUILD_DIR)/busybox
 
 BUSYBOX_CFLAGS="-Os"
