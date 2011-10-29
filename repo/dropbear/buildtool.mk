@@ -11,8 +11,8 @@ $(DROPBEAR_DIR)/.source:
 source: $(DROPBEAR_DIR)/.source
                         
 $(DROPBEAR_DIR)/.configured: $(DROPBEAR_DIR)/.source
-	(cd $(DROPBEAR_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_CC) \
-	./configure --prefix=/usr --disable-zlib --disable-lastlog --enable-bundled-libtom)
+	(cd $(DROPBEAR_DIR) ; \
+	./configure --prefix=/usr --disable-zlib --disable-lastlog --enable-bundled-libtom --host=$(GNU_TARGET_NAME))
 	cp options.h $(DROPBEAR_DIR)
 	touch $(DROPBEAR_DIR)/.configured
                                                                  
