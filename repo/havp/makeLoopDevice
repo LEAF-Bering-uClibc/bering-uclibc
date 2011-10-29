@@ -1,0 +1,2 @@
+dd if=/dev/zero of=havp.img bs=10240 count=512
+mkfs.ext3 -F -q -m0 havp.img
