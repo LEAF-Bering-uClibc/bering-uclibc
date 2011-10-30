@@ -21,7 +21,7 @@ GCC_CONFOPTS=   --with-gnu-ld --with-gnu-as \
 
 $(UCLIBC_DIR)/.source:
 	bzcat $(UC_TARFILE) | tar xvf -
-	patch $(UC_CONFIG) $(UC_CONFIG_PATCH) -o $(UC_CONFIG)_headers
+	patch $(UC_CONFIG_$(ARCH)) $(UC_CONFIG_PATCH) -o $(UC_CONFIG_$(ARCH))_headers
 	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
 	touch $(UCLIBC_DIR)/.source
 
@@ -38,7 +38,7 @@ source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source
 ###############################
 
 $(UCLIBC_DIR)/.headers: $(UCLIBC_DIR)/.source
-	cp -aL $(UC_CONFIG)_headers $(UCLIBC_DIR)/.config
+	cp -aL $(UC_CONFIG_$(ARCH))_headers $(UCLIBC_DIR)/.config
 	make -C $(UCLIBC_DIR) install_headers KERNEL_HEADERS=$(TARGET_DIR)/usr/include
 	touch $(UCLIBC_DIR)/.headers
 
@@ -72,7 +72,7 @@ $(GCC_STAGE2_BUILD_DIR)/.build: $(GCC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.buil
 	touch $(GCC_STAGE2_BUILD_DIR)/.build
 
 $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
-	cp -aL $(UC_CONFIG) $(UCLIBC_DIR)/.config
+	cp -aL $(UC_CONFIG_$(ARCH)) $(UCLIBC_DIR)/.config
 	(cd $(UCLIBC_DIR) && make oldconfig && make $(MAKEOPTS) && \
 	 make install)
 	touch $(UCLIBC_DIR)/.build

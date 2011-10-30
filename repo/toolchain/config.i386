@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Version: 0.9.32
-# Sat Oct 29 21:55:01 2011
+# Sun Oct 30 10:27:24 2011
 #
 # TARGET_alpha is not set
 # TARGET_arm is not set
@@ -88,7 +88,7 @@ LDSO_PRELOAD_ENV_SUPPORT=y
 # LDSO_PRELOAD_FILE_SUPPORT is not set
 # UCLIBC_STATIC_LDCONFIG is not set
 LDSO_RUNPATH=y
-LDSO_SEARCH_INTERP_PATH=y
+# LDSO_SEARCH_INTERP_PATH is not set
 UCLIBC_CTOR_DTOR=y
 # LDSO_GNU_HASH_SUPPORT is not set
 # HAS_NO_THREADS is not set
@@ -226,7 +226,7 @@ UCLIBC_HAS_GNU_GLOB=y
 # Library Installation Options
 #
 RUNTIME_PREFIX="/"
-DEVEL_PREFIX="/"
+DEVEL_PREFIX="/usr"
 MULTILIB_DIR="lib"
 HARDWIRED_ABSPATH=y
 

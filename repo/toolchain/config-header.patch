@@ -5,7 +5,7 @@
  # Library Installation Options
  #
 -RUNTIME_PREFIX="/"
--DEVEL_PREFIX="/"
+-DEVEL_PREFIX="/usr"
 +RUNTIME_PREFIX="$(TOOLCHAIN_DIR)"
 +DEVEL_PREFIX="$(TOOLCHAIN_DIR)/usr"
  MULTILIB_DIR="lib"
