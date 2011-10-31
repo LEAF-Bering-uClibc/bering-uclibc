@@ -16,7 +16,7 @@ $(BBNTPD_DIR)/.build: $(BBNTPD_DIR)/.source
 	
 	cp -aL ntpd $(BBNTPD_BUILD_DIR)/etc/init.d/ntpd
 	cp -aL ntpd.default $(BBNTPD_BUILD_DIR)/etc/default/ntpd
-	cp -a $(BBNTPD_BUILD_DIR)/* $(BT_STAGING_DIR)/bin
+	cp -a $(BBNTPD_BUILD_DIR)/* $(BT_STAGING_DIR)
 	cp -a $(BBNTPD_BUILD_DIR)/etc/init.d/* $(BT_STAGING_DIR)/etc/init.d/
 	cp -a $(BBNTPD_BUILD_DIR)/etc/default/* $(BT_STAGING_DIR)/etc/default/
 	touch $(BBNTPD_DIR)/.build

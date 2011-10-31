@@ -6,24 +6,25 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-FLEX_DIR=flex-2.5.4
-FLEX_TARGET_DIR=$(BT_STAGING_DIR)/usr
+FLEX_DIR=$(shell echo $(FLEX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
+FLEX_TARGET_DIR=$(BT_BUILD_DIR)/flex
 
 $(FLEX_DIR)/.source: 
-	zcat $(FLEX_SOURCE) |  tar -xvf - 
+	bzcat $(FLEX_SOURCE) |  tar -xvf - 
 	touch $(FLEX_DIR)/.source
 
 $(FLEX_DIR)/.configured: $(FLEX_DIR)/.source
 	(cd $(FLEX_DIR); \
-		CFLAGS="-Os -Wall" CC=$(TARGET_CC) LDFLAGS="-s"  \
-		./configure --verbose --prefix=$(FLEX_TARGET_DIR) );
+		CFLAGS="$(BT_COPT_FLAGS)" \
+		./configure --verbose --prefix=/usr --host=$(GNU_TARGET_NAME));
 	touch $(FLEX_DIR)/.configured
 
 $(FLEX_DIR)/.build: $(FLEX_DIR)/.configured
-	-mkdir -p $(FLEX_TARGET_DIR)/man/man1
-	$(MAKE) -C $(FLEX_DIR) CFLAGS="-Os -Wall" CC=$(TARGET_CC) LDFLAGS="-s"
-	$(MAKE) -C $(FLEX_DIR) check
-	$(MAKE) -C $(FLEX_DIR) PREFIX="$(FLEX_TARGET_DIR)" install	
+	mkdir -p $(FLEX_TARGET_DIR)
+	$(MAKE) -C $(FLEX_DIR)
+	-$(MAKE) -C $(FLEX_DIR) check
+	$(MAKE) -C $(FLEX_DIR) DESTDIR=$(FLEX_TARGET_DIR) install
+	cp -a $(FLEX_TARGET_DIR)/usr/include $(FLEX_TARGET_DIR)/usr/lib $(TOOLCHAIN_DIR)/usr
 	touch $(FLEX_DIR)/.build
 
 source: $(FLEX_DIR)/.source 
@@ -32,12 +33,8 @@ build: $(FLEX_DIR)/.build
 
 clean:
 	-rm $(FLEX_DIR)/.build
-	$(MAKE) -C $(FLEX_DIR) clean
-	-rm $(FLEX_TARGET_DIR)/man/man1/flex.1
-	-rm $(FLEX_TARGET_DIR)/bin/flex
-	-rm $(FLEX_TARGET_DIR)/bin/flex++
-	-rm $(FLEX_TARGET_DIR)/lib/libfl.a
-	-rm $(FLEX_TARGET_DIR)/include/FlexLexer.h
+	-$(MAKE) -C $(FLEX_DIR) clean
+	-rm -rf $(FLEX_TARGET_DIR)
   
 srcclean:
-	rm -rf $(FLEX_DIR)
+	-rm -rf $(FLEX_DIR)

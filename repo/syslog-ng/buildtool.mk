@@ -17,20 +17,16 @@ $(DIR)/.source:
 	touch $(DIR)/.source
 
 $(DIR2)/Makefile: $(DIR2)
-	(cd $(DIR2) ;  CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure)
+	(cd $(DIR2) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
+	./configure --target=$(GNU_TARGET_NAME))
 
 $(DIR2)/.build: $(DIR2)/Makefile
-	$(MAKE) -C $(DIR2) \
-		CC=$(TARGET_CC) LD=$(TARGET_LD)  \
-		CFLAGS="$(BT_COPT_FLAGS) -Wall -DSYSV -fomit-frame-pointer \
-		-fno-strength-reduce -I$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/include" \
-		LDFLAGS="" 
+	$(MAKE) -C $(DIR2)
 	touch $(DIR2)/.build
 
 $(DIR)/Makefile: $(DIR)/.source $(DIR2)/.build
-	(cd $(DIR) ;  CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure --with-libol=../$(DIR2) --prefix=/ )
+	(cd $(DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
+	./configure --with-libol=../$(DIR2) --prefix=/ --target=$(GNU_TARGET_NAME))
 
 $(DIR)/.build: $(DIR)/Makefile
 	mkdir -p $(TARGET_DIR)/sbin

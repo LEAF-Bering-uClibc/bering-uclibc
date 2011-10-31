@@ -2,7 +2,6 @@
 #
 # tcp-wrappers
 #
-# $Id: buildtool.mk,v 1.2 2011/01/15 14:50:41 davidmbrooke Exp $
 #############################################################
 
 include $(MASTERMAKEFILE)
@@ -15,7 +14,7 @@ SOURCE_DIR=build-tree
 BUILD_DIR := $(TCP_WRAPPERS_DIR)/$(SOURCE_DIR)/$(TAR_DIR)
 REAL_DAEMON_DIR=/usr/sbin
 STYLE = -DPROCESS_OPTIONS
-MYLIB = -lnsl
+#MYLIB = -lnsl
 EXTRA_CFLAGS="-DSYS_ERRLIST_DEFINED -DHAVE_STRERROR -DHAVE_WEAKSYMS -D_REENTRANT -DINET6=1 -Dss_family=__ss_family -Dss_len=__ss_len"
 COPTS="$(BT_COPT_FLAGS) -g"
 
@@ -38,8 +37,8 @@ $(TCP_WRAPPERS_DIR)/.build: $(TCP_WRAPPERS_DIR)/.unpack
 	COPTS=$(COPTS) EXTRA_CFLAGS=$(EXTRA_CFLAGS) -C $(BUILD_DIR)
 
 	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/lib
-	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/usr/sbin 
-	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/include/	
+	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/usr/sbin
+	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/include/
 
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/tcpd $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/ 	
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/tcpdchk $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/ 	
@@ -48,10 +47,11 @@ $(TCP_WRAPPERS_DIR)/.build: $(TCP_WRAPPERS_DIR)/.unpack
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/safe_finger $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/ 	
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/*.a $(TCP_WRAPPERS_BUILDDIR)/lib/ 	
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/shared/*.so* $(TCP_WRAPPERS_BUILDDIR)/lib/
-	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/tcpd.h $(TCP_WRAPPERS_BUILDDIR)/include/ 
+	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/tcpd.h $(TOOLCHAIN_DIR)/usr/include/ 
 	$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/*
 	$(BT_STRIP) --strip-unneeded $(TCP_WRAPPERS_BUILDDIR)/lib/*.so.0
 	cp -a $(TCP_WRAPPERS_BUILDDIR)/* $(BT_STAGING_DIR)
+	cp -a $(TCP_WRAPPERS_BUILDDIR)/lib/*.a $(TOOLCHAIN_DIR)/lib
 	touch $(TCP_WRAPPERS_DIR)/.build
 
 
@@ -65,8 +65,9 @@ clean:
 	-rm $(TCP_WRAPPERS_DIR)/.unpack
 	$(MAKE) -C $(TCP_WRAPPERS_DIR) -f debian/sys-build.mk source.clean
 	rm -rf $(TCP_WRAPPERS_BUILDDIR)
-	-rm  $(BT_STAGING_DIR)/usr/lib/libwrap*	
-	-rm  $(BT_STAGING_DIR)/lib/libwrap*		
+	-rm  $(BT_STAGING_DIR)/usr/lib/libwrap*
+	-rm  $(BT_STAGING_DIR)/lib/libwrap*
+	-rm  $(TOOLCHAIN_DIR)/lib/libwrap*
 
 srcclean:
 	rm -rf $(TCP_WRAPPERS_DIR)
