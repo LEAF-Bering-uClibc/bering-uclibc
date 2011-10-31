@@ -20,7 +20,7 @@ LINVER=$(shell echo $(KERNEL_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//;s/^.*
 
 
 .configured: .source
-	for i in $(KARCHS); do \
+	(for i in $(KARCHS); do \
 	patch -i $(LINUX_CONFIG)-$$i.patch -o $(LINUX_CONFIG)-$$i $(LINUX_CONFIG) && \
 	mkdir -p linux-$$i && cp $(LINUX_CONFIG)-$$i linux-$$i/.config && \
 	ARCH=$(ARCH) $(MAKE) -C linux-$(LINVER) O=../linux-$$i oldconfig || \
