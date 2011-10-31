@@ -2,16 +2,14 @@
 #
 # busybox
 #
-# $Id: buildtool.mk,v 1.9 2011/01/02 22:50:57 nitr0man Exp $
 #############################################################
 
 include $(MASTERMAKEFILE)
 
-BUSYBOX_DIR=busybox-1.19.2
-BUSYBOX_BUILD_DIR=$(BT_BUILD_DIR)/busybox
+BUSYBOX_DIR=busybox-1.19.3
+#BUSYBOX_BUILD_DIR=$(BT_BUILD_DIR)/busybox
 
-BUSYBOX_CFLAGS="-Os"
-export prefix=$(BUSYBOX_BUILD_DIR)
+#export PREFIX=$(BUSYBOX_BUILD_DIR)
 
 $(BUSYBOX_DIR)/.source: 
 	bzcat $(BUSYBOX_SOURCE) | tar -xvf -
@@ -21,19 +19,15 @@ $(BUSYBOX_DIR)/.source:
 	touch $(BUSYBOX_DIR)/.source
 	
 $(BUSYBOX_DIR)/.build: $(BUSYBOX_DIR)/.source
-	mkdir -p $(BUSYBOX_BUILD_DIR)
-	mkdir -p $(BUSYBOX_BUILD_DIR)/etc/init.d
-	mkdir -p $(BUSYBOX_BUILD_DIR)/etc/default
-	-mkdir -p $(BT_STAGING_DIR)/etc/init.d
-	-mkdir -p $(BT_STAGING_DIR)/etc/default
-	
+#	mkdir -p $(BUSYBOX_BUILD_DIR)
+#	mkdir -p $(BUSYBOX_BUILD_DIR)/etc/init.d
+#	mkdir -p $(BUSYBOX_BUILD_DIR)/etc/default
+	mkdir -p $(BT_STAGING_DIR)/bin
 	cp .config $(BUSYBOX_DIR)/
-#	make CROSS_COMPILER_PREFIX="$(BT_STAGING_DIR)/bin/i386-linux-"  -C $(BUSYBOX_DIR) dep
-#	make CROSS_COMPILER_PREFIX="$(BT_STAGING_DIR)/bin/i386-linux-"  -C $(BUSYBOX_DIR) 
-	make CC="$(TARGET_CC)" -C $(BUSYBOX_DIR) 
+	make $(MAKEOPTS) CROSS_COMPILE="$(GNU_TARGET_NAME)-" -C $(BUSYBOX_DIR) busybox
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BUSYBOX_DIR)/busybox
-	cp -a $(BUSYBOX_DIR)/busybox $(BUSYBOX_BUILD_DIR)
-	cp -a $(BUSYBOX_BUILD_DIR)/* $(BT_STAGING_DIR)/bin
+	cp -a $(BUSYBOX_DIR)/busybox $(BT_STAGING_DIR)/bin/
+#	cp -a $(BUSYBOX_BUILD_DIR)/* $(BT_STAGING_DIR)/bin
 #	cp -a $(BUSYBOX_BUILD_DIR)/etc/init.d/* $(BT_STAGING_DIR)/etc/init.d/
 #	cp -a $(BUSYBOX_BUILD_DIR)/etc/default/* $(BT_STAGING_DIR)/etc/default/
 	touch $(BUSYBOX_DIR)/.build
@@ -44,7 +38,7 @@ build: $(BUSYBOX_DIR)/.build
 
 clean:  
 	-rm $(BUSYBOX_DIR)/.build
-	-rm -r $(BUSYBOX_BUILD_DIR)
+#	-rm -r $(BUSYBOX_BUILD_DIR)
 	-make -C $(BUSYBOX_DIR) clean
 
 srcclean:
