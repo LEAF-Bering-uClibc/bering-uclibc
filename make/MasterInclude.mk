@@ -48,8 +48,10 @@ export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
 ##########################################
 #Toolchain dir
 export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(ARCH)
+
 #Paths
-export PATH:=$(TOOLCHAIN_DIR)/sbin:$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/sbin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
+export PATH:=$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
+
 #Cross-compile target
 export CROSS_COMPILE=$(GNU_TARGET_NAME)-
 
