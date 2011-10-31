@@ -52,6 +52,8 @@ sub createDirUnlessItExists( $ );
 sub copyFilesToTempDir( $$ );
 sub copyFilesWithSearchAndReplace( $$@ );
 
+#TODO: move it somewhere in config
+my $arch='i386';
 
 # Process command line arguments
 GetOptions( "verbose!" => \$verbose,
@@ -104,7 +106,8 @@ my $sourceDir = File::Spec->canonpath(
 my $stagingDir = File::Spec->canonpath(
     File::Spec->catdir(
         $baseDir,
-	$btConfig->value('staging_dir') ) );
+	$btConfig->value('staging_dir'),
+	$arch ) );
 
 # Generate date label
 $configHash{ '{DATE}' } = time2str( "%Y-%m-%d", time );
