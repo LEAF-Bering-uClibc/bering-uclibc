@@ -21,9 +21,10 @@ $(FLEX_DIR)/.configured: $(FLEX_DIR)/.source
 
 $(FLEX_DIR)/.build: $(FLEX_DIR)/.configured
 	mkdir -p $(FLEX_TARGET_DIR)
-	$(MAKE) -C $(FLEX_DIR)
-	-$(MAKE) -C $(FLEX_DIR) check
-	$(MAKE) -C $(FLEX_DIR) DESTDIR=$(FLEX_TARGET_DIR) install
+	$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR)
+	#don't fail on errors - we haven't uClibc so c++ tests failed
+	-$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) check
+	$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) DESTDIR=$(FLEX_TARGET_DIR) install
 	cp -a $(FLEX_TARGET_DIR)/usr/include $(FLEX_TARGET_DIR)/usr/lib $(TOOLCHAIN_DIR)/usr
 	touch $(FLEX_DIR)/.build
 

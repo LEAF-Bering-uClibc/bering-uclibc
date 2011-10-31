@@ -19,10 +19,9 @@ $(LIBPCAP_DIR)/.source:
 	touch $(LIBPCAP_DIR)/.source
 
 $(LIBPCAP_DIR)/.configured: $(LIBPCAP_DIR)/.source
-	(cd $(LIBPCAP_DIR); ac_cv_linux_vers=2  \
+	(cd $(LIBPCAP_DIR); CFLAGS="$(BT_COPT_FLAGS)"  \
 		./configure \
-			--build=i386-pc-linux-gnu \
-			--target=i386-pc-linux-gnu \
+			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr \
 			--enable-ipv6 \
 			--with-pcap=linux \
@@ -35,30 +34,30 @@ source: $(LIBPCAP_DIR)/.source
 
 $(LIBPCAP_DIR)/.build: $(LIBPCAP_DIR)/.configured
 	mkdir -p $(LIBPCAP_TARGET_DIR)
-	$(MAKE) CCOPT="$(BT_COPT_FLAGS)" -C $(LIBPCAP_DIR) shared
-	$(MAKE) DESTDIR=$(LIBPCAP_TARGET_DIR) -C $(LIBPCAP_DIR) install
-	$(MAKE) DESTDIR=$(LIBPCAP_TARGET_DIR) -C $(LIBPCAP_DIR) install-shared
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBPCAP_TARGET_DIR)/usr/lib/*
-	ln -sf libpcap.so.1.1.1 $(LIBPCAP_TARGET_DIR)/usr/lib/libpcap.so
+	mkdir -p $(BT_STAGING_DIR)/usr/lib
+	$(MAKE) $(MAKEOPTS) -C $(LIBPCAP_DIR) shared
+	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBPCAP_TARGET_DIR) -C $(LIBPCAP_DIR) install install-shared
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBPCAP_TARGET_DIR)/usr/lib/*
 	# Fix up generated pcap-config (Trac ticket #25)
-	perl -i -p -e "s,/usr,$(BT_STAGING_DIR)/usr,g" $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config
-	cp -a $(LIBPCAP_TARGET_DIR)/* $(BT_STAGING_DIR)
+	perl -i -p -e "s,/usr,$(TOOLCHAIN_DIR)/usr,g" $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config
+	-rm -rf $(LIBPCAP_TARGET_DIR)/usr/share
+	cp -a $(LIBPCAP_TARGET_DIR)/* $(TOOLCHAIN_DIR)/
+	cp -a $(LIBPCAP_TARGET_DIR)/usr/lib/*.so $(LIBPCAP_TARGET_DIR)/usr/lib/*.so.* $(BT_STAGING_DIR)/usr/lib/
 	touch $(LIBPCAP_DIR)/.build
 
 build: $(LIBPCAP_DIR)/.build
 
 clean:
-	echo $(PATH)
 	-rm $(LIBPCAP_DIR)/.build
-	rm -rf $(LIBPCAP_TARGET_DIR)
-	$(MAKE) -C $(LIBPCAP_DIR) clean
-	rm -f $(BT_STAGING_DIR)/usr/lib/libpcap.a
-	rm -f $(BT_STAGING_DIR)/usr/lib/libpcap.so*
-	rm -f $(BT_STAGING_DIR)/usr/include/pcap.h
-	rm -f $(BT_STAGING_DIR)/usr/include/pcap-namedb.h
-	rm -f $(BT_STAGING_DIR)/usr/include/pcap-bpf.h
+	-rm -rf $(LIBPCAP_TARGET_DIR)
+	-$(MAKE) -C $(LIBPCAP_DIR) clean
+	-rm -f $(BT_STAGING_DIR)/usr/lib/libpcap.*
+	-rm -f $(TOOLCHAIN_DIR)/usr/lib/libpcap.*
+	-rm -f $(BT_STAGING_DIR)/usr/include/pcap.h
+	-rm -f $(BT_STAGING_DIR)/usr/include/pcap-namedb.h
+	-rm -f $(BT_STAGING_DIR)/usr/include/pcap-bpf.h
 	
 srcclean:
-	rm -rf $(LIBPCAP_DIR)
+	-rm -rf $(LIBPCAP_DIR)
 	-rm DIRNAME
 

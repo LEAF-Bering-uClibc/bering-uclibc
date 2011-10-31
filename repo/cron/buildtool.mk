@@ -18,7 +18,7 @@ $(CRON_DIR)/.source:
 $(CRON_DIR)/.build: $(CRON_DIR)/.source
 	mkdir -p $(CRON_TARGET_DIR)
 	-mkdir -p $(BT_STAGING_DIR)/usr/sbin
-	$(MAKE) -C $(CRON_DIR) 	\
+	$(MAKE) $(MAKEOPTS) -C $(CRON_DIR) 	\
 				CC=$(TARGET_CC)  \
 				OPTIM="$(BT_COPT_FLAGS) -Wall -Wno-comment" \
 				DEBUG_DEFS="-DDEBUGGING=0"

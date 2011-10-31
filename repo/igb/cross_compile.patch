@@ -1,0 +1,59 @@
+Only in igb-3.0.22: .build
+Only in igb-3.0.22/src: igb.mod.c
+diff -aur igb-3.0.22.orig/src/Makefile igb-3.0.22/src/Makefile
+--- igb-3.0.22.orig/src/Makefile	2011-05-04 23:19:20.000000000 +0300
++++ igb-3.0.22/src/Makefile	2011-11-01 00:19:37.691251101 +0200
+@@ -110,22 +110,9 @@
+   $(error Linux kernel source not configured - missing autoconf.h)
+ endif
+ 
+-# pick a compiler
+-ifneq (,$(findstring egcs-2.91.66, $(shell cat /proc/version)))
+-  CC := kgcc gcc cc
+-else
+-  CC := gcc cc
+-endif
+-test_cc = $(shell $(cc) --version > /dev/null 2>&1 && echo $(cc))
+-CC := $(foreach cc, $(CC), $(test_cc))
+-CC := $(firstword $(CC))
+-ifeq (,$(CC))
+-  $(error Compiler not found)
+-endif
+-
+ # we need to know what platform the driver is being built on
+ # some additional features are only built on Intel platforms
+-ARCH := $(shell uname -m | sed 's/i.86/i386/')
++ARCH ?= $(shell uname -m | sed 's/i.86/i386/')
+ ifeq ($(ARCH),alpha)
+   EXTRA_CFLAGS += -ffixed-8 -mno-fp-regs
+ endif
+@@ -208,20 +195,6 @@
+   SMP := 0
+ endif
+ 
+-ifneq ($(SMP),$(shell uname -a | grep SMP > /dev/null 2>&1 && echo 1 || echo 0))
+-  $(warning ***)
+-  ifeq ($(SMP),1)
+-    $(warning *** Warning: kernel source configuration (SMP))
+-    $(warning *** does not match running kernel (UP))
+-  else
+-    $(warning *** Warning: kernel source configuration (UP))
+-    $(warning *** does not match running kernel (SMP))
+-  endif
+-  $(warning *** Continuing with build,)
+-  $(warning *** resulting driver may not be what you want)
+-  $(warning ***)
+-endif
+-
+ ifeq ($(SMP),1)
+   EXTRA_CFLAGS += -D__SMP__
+ endif
+@@ -229,7 +202,7 @@
+ ###########################################################################
+ # 2.4.x & 2.6.x Specific rules
+ 
+-K_VERSION:=$(shell uname -r | cut -c1-3 | sed 's/2\.[56]/2\.6/')
++K_VERSION:=2.6
+ 
+ ifeq ($(K_VERSION), 2.6)
+ 

@@ -13,13 +13,10 @@ source:
 	zcat $(LIBNET_CONFIG_SUB) > $(LIBNET_DIR)/config.sub
 #	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1  
 
-#	 ac_cv_linux_vers=2  \
-
 $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
-	(cd $(LIBNET_DIR); CC=$(TARGET_CC) \
-		CFLAGS="$(BT_COPT_FLAGS)" \
+	(cd $(LIBNET_DIR); CFLAGS="$(BT_COPT_FLAGS)" \
 		./configure \
-			--target=$(GNU_TARGET_NAME) \
+			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr );
 	
 #source: $(LIBPCAP_DIR)/.source
@@ -27,8 +24,8 @@ $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
 
 build: $(LIBNET_DIR)/Makefile
 	mkdir -p $(LIBNET_TARGET_DIR)
-	$(MAKE) -C $(LIBNET_DIR) 
-	$(MAKE) DESTDIR=$(LIBNET_TARGET_DIR) -C $(LIBNET_DIR) install
+	$(MAKE) $(MAKEOPTS) -C $(LIBNET_DIR)
+	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBNET_TARGET_DIR) -C $(LIBNET_DIR) install
 	cp -a $(LIBNET_TARGET_DIR)/* $(TOOLCHAIN_DIR)
 
 #build: $(LIBPCAP_DIR)/.build

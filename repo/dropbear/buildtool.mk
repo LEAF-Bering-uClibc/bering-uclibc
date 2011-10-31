@@ -22,7 +22,7 @@ $(DROPBEAR_DIR)/.build: $(DROPBEAR_DIR)/.configured
 	mkdir -p $(DROPBEAR_TARGET_DIR)/etc/default	
 	mkdir -p $(DROPBEAR_TARGET_DIR)/usr/bin	
 	mkdir -p $(DROPBEAR_TARGET_DIR)/usr/sbin	
-	$(MAKE) PROGRAMS="dropbear dropbearkey scp" MULTI=1 STATIC=0 SCPPROGRESS=0 -C $(DROPBEAR_DIR)
+	$(MAKE) $(MAKEOPTS) PROGRAMS="dropbear dropbearkey scp" MULTI=1 STATIC=0 SCPPROGRESS=0 -C $(DROPBEAR_DIR)
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DROPBEAR_DIR)/dropbearmulti
 	cp -a $(DROPBEAR_DIR)/dropbearmulti $(DROPBEAR_TARGET_DIR)/usr/sbin
 	cp -aL dropbear.init $(DROPBEAR_TARGET_DIR)/etc/init.d/dropbear

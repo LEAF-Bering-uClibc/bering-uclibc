@@ -32,8 +32,8 @@ $(TCP_WRAPPERS_DIR)/.unpack: $(TCP_WRAPPERS_DIR)/.source
 	touch $(TCP_WRAPPERS_DIR)/.unpack
 
 $(TCP_WRAPPERS_DIR)/.build: $(TCP_WRAPPERS_DIR)/.unpack
-	$(MAKE) CC=$(TARGET_CC) REAL_DAEMON_DIR=$(REAL_DAEMON_DIR) STYLE=$(STYLE) LIBS=$(MYLIB) \
-	RANLIB=ranlib ARFLAGS=rv AUX_OBJ=weak_symbols.o NETGROUP= TLI= VSYSLOG= BUGS= all \
+	$(MAKE) $(MAKEOPTS) CC=$(TARGET_CC) REAL_DAEMON_DIR=$(REAL_DAEMON_DIR) STYLE=$(STYLE) LIBS=$(MYLIB) \
+	RANLIB=$(BT_RANLIB) ARFLAGS=rv AUX_OBJ=weak_symbols.o NETGROUP= TLI= VSYSLOG= BUGS= all \
 	COPTS=$(COPTS) EXTRA_CFLAGS=$(EXTRA_CFLAGS) -C $(BUILD_DIR)
 
 	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/lib
@@ -48,8 +48,8 @@ $(TCP_WRAPPERS_DIR)/.build: $(TCP_WRAPPERS_DIR)/.unpack
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/*.a $(TCP_WRAPPERS_BUILDDIR)/lib/ 	
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/shared/*.so* $(TCP_WRAPPERS_BUILDDIR)/lib/
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/tcpd.h $(TOOLCHAIN_DIR)/usr/include/ 
-	$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/*
-	$(BT_STRIP) --strip-unneeded $(TCP_WRAPPERS_BUILDDIR)/lib/*.so.0
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/*
+	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TCP_WRAPPERS_BUILDDIR)/lib/*.so.0
 	cp -a $(TCP_WRAPPERS_BUILDDIR)/* $(BT_STAGING_DIR)
 	cp -a $(TCP_WRAPPERS_BUILDDIR)/lib/*.a $(TOOLCHAIN_DIR)/lib
 	touch $(TCP_WRAPPERS_DIR)/.build

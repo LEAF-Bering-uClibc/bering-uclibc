@@ -39,7 +39,7 @@ source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source
 
 $(UCLIBC_DIR)/.headers: $(UCLIBC_DIR)/.source
 	cp -aL $(UC_CONFIG_$(ARCH))_headers $(UCLIBC_DIR)/.config
-	make -C $(UCLIBC_DIR) install_headers KERNEL_HEADERS=$(TARGET_DIR)/usr/include
+	make $(MAKEOPTS) -C $(UCLIBC_DIR) install_headers KERNEL_HEADERS=$(TARGET_DIR)/usr/include
 	touch $(UCLIBC_DIR)/.headers
 
 $(BINUTILS_BUILD_DIR)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.headers
@@ -73,8 +73,8 @@ $(GCC_STAGE2_BUILD_DIR)/.build: $(GCC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.buil
 
 $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
 	cp -aL $(UC_CONFIG_$(ARCH)) $(UCLIBC_DIR)/.config
-	(cd $(UCLIBC_DIR) && make oldconfig && make $(MAKEOPTS) && \
-	 make install)
+	(cd $(UCLIBC_DIR) && make $(MAKEOPTS) oldconfig && make $(MAKEOPTS) && \
+	 make $(MAKEOPTS) install)
 	touch $(UCLIBC_DIR)/.build
 
 build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build

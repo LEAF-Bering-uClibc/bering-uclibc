@@ -4,7 +4,6 @@
 # set arch here - temporary
 export ARCH:=i386
 
-
 # where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
 # where the buildstuff goes into
@@ -44,6 +43,9 @@ export DEB_BUILD_ARCH=$(ARCH)
 export BT_STRIP:=$(GNU_TARGET_NAME)-strip
 export BT_STRIP_LIBOPTS:=--strip-unneeded 
 export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
+
+#ranlib
+export BT_RANLIB:=$(GNU_TARGET_NAME)-ranlib
 
 ##########################################
 #Toolchain dir
