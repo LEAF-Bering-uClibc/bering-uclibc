@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Version: 0.9.32
-# Sun Oct 30 10:27:24 2011
+# Mon Oct 31 18:56:48 2011
 #
 # TARGET_alpha is not set
 # TARGET_arm is not set
@@ -217,6 +217,7 @@ UCLIBC_HAS_FNMATCH=y
 UCLIBC_HAS_FNMATCH_OLD=y
 # UCLIBC_HAS_WORDEXP is not set
 # UCLIBC_HAS_NFTW is not set
+# UCLIBC_HAS_FTW is not set
 # UCLIBC_HAS_FTS is not set
 UCLIBC_HAS_GLOB=y
 UCLIBC_HAS_GNU_GLOB=y
