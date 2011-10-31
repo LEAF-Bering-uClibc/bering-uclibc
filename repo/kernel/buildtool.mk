@@ -12,7 +12,6 @@ ifneq ($(strip $(MASTERMAKEFILE)),)
 endif
 
 LINUX_BUILDDIR=$(BT_BUILD_DIR)/kernel
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 # set some vars
 KVERSION:=$(BT_KERNEL_RELEASE)
@@ -27,18 +26,17 @@ $(LINUX_BUILDDIR):
 
 
 .build: $(LINUX_BUILDDIR) chklinuxdir	
-	perl -i -p -e 's,^CROSS_COMPILE\s*=.*,CROSS_COMPILE =$(BT_STAGING_DIR)/usr/bin/,g' $(BT_LINUX_DIR)/Makefile
-	perl -i -p -e 's/CFLAGS\s*\:=\s*.*$$/CFLAGS \:= \$$\(CPPFLAGS\) -Wall -Wstrict-prototypes -Wno-trigraphs -Os \\/g' $(BT_LINUX_DIR)/Makefile	
+#	perl -i -p -e 's,^CROSS_COMPILE\s*=.*,CROSS_COMPILE =$(BT_STAGING_DIR)/usr/bin/,g' $(BT_LINUX_DIR)/Makefile
+#	perl -i -p -e 's/CFLAGS\s*\:=\s*.*$$/CFLAGS \:= \$$\(CPPFLAGS\) -Wall -Wstrict-prototypes -Wno-trigraphs -Os \\/g' $(BT_LINUX_DIR)/Makefile	
 	mkdir -p $(BT_STAGING_DIR)/boot
 	(for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
-	[ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	cd $(BT_LINUX_DIR)-$$i && \
 	make $(MAKEOPTS) bzImage && make $(MAKEOPTS) modules && \
 	cp $(BT_LINUX_DIR)-$$i/arch/x86/boot/bzImage $(LINUX_BUILDDIR)/$(KIMAGE)-$$i && \
 	cp $(LINUX_BUILDDIR)/$(KIMAGE)-$$i $(BT_STAGING_DIR)/boot/linux-$$i &&\
 	cp $(BT_LINUX_DIR)-$$i/System.map $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i && \
 	make  ARCH=$(ARCH) INSTALL_MOD_PATH=$(LINUX_BUILDDIR) GENKSYMS="$(BT_STAGING_DIR)/sbin/genksyms" DEPMOD="$(BT_DEPMOD)" modules_install ; \
-	done) 
+	done)
 	(cp -R $(LINUX_BUILDDIR)/lib $(BT_STAGING_DIR))
 
 $(BT_TOOLS_DIR)/.upxunpack:

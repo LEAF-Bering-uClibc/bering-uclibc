@@ -6,8 +6,7 @@
 
 include $(MASTERMAKEFILE)
 
-LINVER=2.6.35.14
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
+LINVER=$(shell echo $(KERNEL_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//;s/^.*\-//')
 
 .source:
 	bzcat $(KERNEL_SOURCE) | tar -xvf -
@@ -21,7 +20,6 @@ PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 
 .configured: .source
-	([ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	for i in $(KARCHS); do \
 	patch -i $(LINUX_CONFIG)-$$i.patch -o $(LINUX_CONFIG)-$$i $(LINUX_CONFIG) && \
 	mkdir -p linux-$$i && cp $(LINUX_CONFIG)-$$i linux-$$i/.config && \

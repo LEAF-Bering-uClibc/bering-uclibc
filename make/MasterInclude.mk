@@ -33,11 +33,11 @@ export GNU_ARCH:=i486
 # set target optimization here
 export GNU_TUNE:=pentiumpro
 #
-export GNU_TARGET_NAME:=$(GNU_ARCH)-pc-linux-uclibc
+export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
 # target gcc
-export TARGET_CC:=$(GNU_TARGET_NAME)-gcc
+export TARGET_CC=$(GNU_TARGET_NAME)-gcc
 # target ld
-export TARGET_LD:=$(GNU_TARGET_NAME)-ld
+export TARGET_LD=$(GNU_TARGET_NAME)-ld
 # for dpatch (debian patch)
 export DEB_BUILD_ARCH=$(ARCH)
 # strip
@@ -50,6 +50,8 @@ export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
 export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(ARCH)
 #Paths
 export PATH:=$(TOOLCHAIN_DIR)/sbin:$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/sbin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
+#Cross-compile target
+export CROSS_COMPILE=$(GNU_TARGET_NAME)-
 
 #make options
 CPUCOUNT=$(shell ls /sys/class/cpuid/ | wc -w)
