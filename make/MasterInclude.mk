@@ -1,7 +1,9 @@
-# $Id: MasterInclude.mk,v 1.11 2010/12/11 19:09:44 nitr0man Exp $
-
 # this is the Master make file that should be included by all the makefiles
 # used for buildroot...
+
+# set arch here - temporary
+export ARCH:=i386
+
 
 # where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
@@ -9,7 +11,7 @@ export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
 export BT_BUILD_DIR=$(BT_BUILDROOT)/build
 export BT_BUILDDIR=$(BT_BUILDROOT)/build
 # we assume that we have the global root dir for buildtool as environment var
-export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging
+export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging/$(ARCH)
 # where are the linux sources
 export BT_LINUX_DIR:=$(BT_SOURCE_DIR)/linux/linux
 # where to put finished packages
@@ -24,8 +26,6 @@ export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
 
 ########################################
-# set arch here
-export ARCH:=i386
 # available kernel archs
 export KARCHS:=i686 i486 geode
 # set target subarch here
