@@ -35,7 +35,7 @@ $(LINUX_BUILDDIR):
 	cp $(BT_LINUX_DIR)-$$i/arch/x86/boot/bzImage $(LINUX_BUILDDIR)/$(KIMAGE)-$$i && \
 	cp $(LINUX_BUILDDIR)/$(KIMAGE)-$$i $(BT_STAGING_DIR)/boot/linux-$$i &&\
 	cp $(BT_LINUX_DIR)-$$i/System.map $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i && \
-	make  ARCH=$(ARCH) INSTALL_MOD_PATH=$(LINUX_BUILDDIR) GENKSYMS="$(BT_STAGING_DIR)/sbin/genksyms" DEPMOD="$(BT_DEPMOD)" modules_install ; \
+	make  ARCH=$(ARCH) INSTALL_MOD_PATH=$(LINUX_BUILDDIR) GENKSYMS="$(BT_STAGING_DIR)/sbin/genksyms" modules_install ; \
 	done)
 	(cp -R $(LINUX_BUILDDIR)/lib $(BT_STAGING_DIR))
 

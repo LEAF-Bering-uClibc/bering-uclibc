@@ -5,15 +5,9 @@ INITRD_DIR=.
 INITRD_TARGET_DIR:=$(BT_BUILD_DIR)/config
 ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 
-$(INITRD_DIR)/.source:
-	touch $(INITRD_DIR)/.source
+source:
 
-source: $(INITRD_DIR)/.source
-                        
-$(INITRD_DIR)/.configured: $(INITRD_DIR)/.source
-	touch $(INITRD_DIR)/.configured
-                                                                 
-$(INITRD_DIR)/.build: $(INITRD_DIR)/.configured
+$(INITRD_DIR)/.build:
 	mkdir -p $(INITRD_TARGET_DIR)
 	mkdir -p $(INITRD_TARGET_DIR)/var/lib/lrpkg
 	mkdir -p $(INITRD_TARGET_DIR)/boot/etc

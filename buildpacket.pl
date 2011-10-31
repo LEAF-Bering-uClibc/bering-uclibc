@@ -65,6 +65,8 @@ qq{$0: --package=packagename --packager=name [--all|--target=packagefile] [--lrp
            is not specified
 };
 
+# TODO: add command line key
+$options->{'arch'} = 'i386';
 
 # DEFINITION OF FUNCTIONS
 
@@ -1042,13 +1044,15 @@ $sourceDir	= File::Spec->canonpath(
 $stagingDir	= File::Spec->canonpath(
 					File::Spec->catdir(
 							$baseDir,
-							'staging'),
+							'staging',
+							$options->{'arch'}),
 			);
 
 $packageDir	= File::Spec->canonpath(
 					File::Spec->catdir(
 							$baseDir,
-							'package'),
+							'package',
+							$options->{'arch'}),
 			);
 
 my $installedFile = File::Spec->canonpath(

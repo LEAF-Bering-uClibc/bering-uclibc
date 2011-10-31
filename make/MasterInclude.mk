@@ -74,5 +74,5 @@ export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
 BT_KERNEL_RELEASE1=$(shell cat $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH)/.config | awk '/version:/ {print $$5}')
 export BT_KERNEL_RELEASE=$(shell echo ${BT_KERNEL_RELEASE1})
 
-BT_DEPMOD=$(BT_STAGING_DIR)/sbin/depmod
+#BT_DEPMOD=$(BT_STAGING_DIR)/sbin/depmod
 
