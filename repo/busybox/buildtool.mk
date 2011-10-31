@@ -6,7 +6,7 @@
 
 include $(MASTERMAKEFILE)
 
-BUSYBOX_DIR=busybox-1.19.3
+BUSYBOX_DIR=$(shell echo $(BUSYBOX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 #BUSYBOX_BUILD_DIR=$(BT_BUILD_DIR)/busybox
 
 #export PREFIX=$(BUSYBOX_BUILD_DIR)
@@ -24,7 +24,7 @@ $(BUSYBOX_DIR)/.build: $(BUSYBOX_DIR)/.source
 #	mkdir -p $(BUSYBOX_BUILD_DIR)/etc/default
 	mkdir -p $(BT_STAGING_DIR)/bin
 	cp .config $(BUSYBOX_DIR)/
-	make $(MAKEOPTS) CROSS_COMPILE="$(GNU_TARGET_NAME)-" -C $(BUSYBOX_DIR) busybox
+	make $(MAKEOPTS) -C $(BUSYBOX_DIR) busybox
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BUSYBOX_DIR)/busybox
 	cp -a $(BUSYBOX_DIR)/busybox $(BT_STAGING_DIR)/bin/
 #	cp -a $(BUSYBOX_BUILD_DIR)/* $(BT_STAGING_DIR)/bin

@@ -1,7 +1,7 @@
 # makefile for dropbear
 include $(MASTERMAKEFILE)
 
-DROPBEAR_DIR:=dropbear-0.53.1
+DROPBEAR_DIR=$(shell echo $(DROPBEAR_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 DROPBEAR_TARGET_DIR:=$(BT_BUILD_DIR)/dropbear
 
 $(DROPBEAR_DIR)/.source:

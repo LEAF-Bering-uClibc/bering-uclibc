@@ -2,8 +2,8 @@
 include $(MASTERMAKEFILE)
 
 CUR_DIR=$(shell pwd)
-GCC_DIR=$(CUR_DIR)/gcc-4.6.2
-UCLIBC_DIR=$(CUR_DIR)/uClibc-0.9.32
+GCC_DIR=$(CUR_DIR)/$(shell echo $(GCC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
+UCLIBC_DIR=$(CUR_DIR)/$(shell echo $(UCLIBC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 BINUTILS_DIR=$(CUR_DIR)/binutils-2.21.1
 
 BUILD_DIR=$(BT_BUILD_DIR)/toolchain
@@ -20,17 +20,17 @@ GCC_CONFOPTS=   --with-gnu-ld --with-gnu-as \
 
 
 $(UCLIBC_DIR)/.source:
-	bzcat $(UC_TARFILE) | tar xvf -
+	bzcat $(UCLIBC_SOURCE) | tar xvf -
 	patch $(UC_CONFIG_$(ARCH)) $(UC_CONFIG_PATCH) -o $(UC_CONFIG_$(ARCH))_headers
 	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
 	touch $(UCLIBC_DIR)/.source
 
 $(BINUTILS_DIR)/.source:
-	bzcat $(BINUTILS_TARFILE) | tar -xvf -
+	bzcat $(BINUTILS_SOURCE) | tar -xvf -
 	touch $(BINUTILS_DIR)/.source
 
 $(GCC_DIR)/.source:
-	bzcat $(GCCTAR) | tar -xvf -
+	bzcat $(GCC_SOURCE) | tar -xvf -
 	touch $(GCC_DIR)/.source
 
 source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source
