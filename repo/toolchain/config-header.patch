@@ -1,13 +1,11 @@
---- .config	2011-10-29 21:55:15.327334439 +0300
-+++ .config_headers	2011-10-29 21:57:00.719333737 +0300
-@@ -225,8 +225,8 @@
+--- config.i386	2011-10-30 10:28:04.527897923 +0200
++++ config.i386_headers	2011-10-31 13:58:29.043943212 +0200
+@@ -249,7 +249,7 @@
  #
- # Library Installation Options
+ # uClibc development/debugging options
  #
--RUNTIME_PREFIX="/"
--DEVEL_PREFIX="/usr"
-+RUNTIME_PREFIX="$(TOOLCHAIN_DIR)"
-+DEVEL_PREFIX="$(TOOLCHAIN_DIR)/usr"
- MULTILIB_DIR="lib"
- HARDWIRED_ABSPATH=y
- 
+-CROSS_COMPILER_PREFIX="i486-pc-linux-uclibc-"
++CROSS_COMPILER_PREFIX=""
+ UCLIBC_EXTRA_CFLAGS=""
+ # DODEBUG is not set
+ DOSTRIP=y
