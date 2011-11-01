@@ -16,6 +16,7 @@ $(PPP_DIR)/.source:
 	cat $(PPP_PATCH8) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH9) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH10) | patch -d $(PPP_DIR) -p1
+	perl -i -p -e 's/3.8p/3.10/' $(PPP_DIR)/pppd/plugins/rp-pppoe/Makefile.linux
 	touch $(PPP_DIR)/.source
 
 source: $(PPP_DIR)/.source

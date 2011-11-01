@@ -9,8 +9,8 @@ source: $(PPPOESRV_DIR)/.source
 
 $(PPPOESRV_DIR)/.configured: $(PPPOESRV_DIR)/.source
 	(cd $(PPPOESRV_DIR)/src ; \
-		CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) PPPD=/usr/sbin/pppd \
-		./configure --disable-plugin --disable-debugging)
+		CFLAGS="$(BT_COPT_FLAGS)" PPPD=/usr/sbin/pppd \
+		./configure --disable-plugin --disable-debugging --host=$(GNU_TARGET_NAME))
 	touch $(PPPOESRV_DIR)/.configured
 
 $(PPPOESRV_DIR)/.build: $(PPPOESRV_DIR)/.configured
