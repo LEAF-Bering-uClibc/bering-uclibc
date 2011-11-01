@@ -35,7 +35,8 @@ $(PPP_DIR)/.build: $(PPP_DIR)/.configured
 	mkdir -p $(PPP_TARGET_DIR)/usr/sbin
 	mkdir -p $(PPP_TARGET_DIR)/usr/lib/pppd
 	$(MAKE) -C $(PPP_DIR) clean
-	make CC=$(TARGET_CC) -C $(PPP_DIR) COPTS="$(BT_COPT_FLAGS)" INCLUDEDIR=$(TOOLCHAIN_DIR)/usr/include FILTER= HAVE_INET6=y CBCP=
+	make CC=$(TARGET_CC) $(MAKEOPTS) -C $(PPP_DIR) COPTS="$(BT_COPT_FLAGS)" \
+		INCLUDEDIR=$(TOOLCHAIN_DIR)/usr/include FILTER= HAVE_INET6=y CBCP=
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppd/pppd
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppstats/pppstats
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/chat/chat

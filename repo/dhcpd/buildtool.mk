@@ -14,7 +14,8 @@ DHCPD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpd
 
 # Option settings for 'configure':
 #   Move default install from /usr/local to /
-CONFOPTS:= --build=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) --prefix=/
+#   Disable included BIND (we really need it? If yes - add it into deps)
+CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --without-libbind
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
@@ -24,7 +25,7 @@ CONFOPTS:= --build=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) --prefix=/
 source: .source
 
 .configure: .source
-	( cd $(DHCPD_DIR); ./configure $(CONFOPTS) );
+	( cd $(DHCPD_DIR); CFLAGS="$(BT_COPT_FLAGS)" ./configure $(CONFOPTS) );
 	touch .configure
 
 .build: .configure
@@ -36,7 +37,9 @@ source: .source
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d/
 	mkdir -p $(BT_STAGING_DIR)/etc/default/
 #
-	make CC=$(TARGET_CC) LD=$(TARGET_LD) -C $(DHCPD_DIR)
+	make $(MAKEOPTS) -C $(DHCPD_DIR)/server
+	make $(MAKEOPTS) -C $(DHCPD_DIR)/omapip
+	exit
 	make DESTDIR=$(DHCPD_TARGET_DIR) -C $(DHCPD_DIR) install
 #
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPD_TARGET_DIR)/bin/*
