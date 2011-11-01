@@ -19,21 +19,20 @@ source: $(TCPDUMP_DIR)/.source
 
 
 $(TCPDUMP_DIR)/.configured: $(TCPDUMP_DIR)/.source
-	(cd $(TCPDUMP_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
-	./configure --prefix=/usr \
+	(cd $(TCPDUMP_DIR) ; \
+	./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
 	--without-crypto \
 	--enable-ipv6 \
 	--disable-smb )
-	perl -i -p -e "s,-I/usr,-I/$(BT_STAGING_DIR)/usr,g;" $(TCPDUMP_DIR)/Makefile
-	perl -i -p -e "s,-L/usr,-L/$(BT_STAGING_DIR)/usr,g;" $(TCPDUMP_DIR)/Makefile
 	touch $(TCPDUMP_DIR)/.configured
 
 
 $(TCPDUMP_DIR)/.build: $(TCPDUMP_DIR)/.configured
 	mkdir -p $(TCPDUMP_TARGET_DIR)
-	make -C $(TCPDUMP_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CCOPT="$(BT_COPT_FLAGS)"
+	make -C $(TCPDUMP_DIR)
 	make -C $(TCPDUMP_DIR) DESTDIR=$(TCPDUMP_TARGET_DIR) install
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TCPDUMP_TARGET_DIR)/usr/sbin/*
+	-rm -rf $(TCPDUMP_TARGET_DIR)/usr/share
 	cp -a $(TCPDUMP_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(TCPDUMP_DIR)/.build
 
