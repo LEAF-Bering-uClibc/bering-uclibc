@@ -14,11 +14,8 @@ IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
 EXTRA_VARS := BINDIR=/sbin \
 	DO_IPV6=1 \
 	PREFIX= \
-	CC=$(TARGET_CC) \
 	KERNEL_DIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) \
-	CC=$(TARGET_CC) \
-	LD=$(TARGET_LD) \
-	COPT_FLAGS="$(BT_COPT_FLAGS)" \
+	COPT_FLAGS="$(CFLAGS)" \
 	LIBDIR=/lib \
 	MANDIR=/usr/share/man \
 	INCDIR=/usr/include \
@@ -36,7 +33,8 @@ $(IPT_NF_DIR)/.source:
 	touch $(IPT_NF_DIR)/.source
 
 $(IPTABLES_DIR)/Makefile: $(IPTABLES_DIR)/.source
-	(cd $(IPTABLES_DIR); $(EXTRA_VARS) ./configure --prefix=/ --libexecdir=/lib \
+	(cd $(IPTABLES_DIR); ./configure --prefix=/ --host=$(GNU_TARGET_NAME) \
+	--libexecdir=/lib --includedir=/usr/include \
 	--with-kernel=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) --enable-devel )
 
 
@@ -45,13 +43,13 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/default
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/init.d
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/iptables
-	mkdir -p $(IPTABLES_TARGET_DIR)/include/iptables
-	mkdir -p $(IPTABLES_TARGET_DIR)/include/net/netfilter
-	$(MAKE) -C $(IPTABLES_DIR) $(EXTRA_VARS) $(BUILD_TARGETS)
-	$(MAKE) -C $(IPTABLES_DIR) $(EXTRA_VARS) install
-	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/include
-	cp -a $(IPTABLES_DIR)/include/iptables/*.h $(IPTABLES_TARGET_DIR)/include/iptables
-	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/include/net/netfilter
+	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/iptables
+	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
+	$(MAKE) -C $(IPTABLES_DIR) $(BUILD_TARGETS)
+	$(MAKE) -C $(IPTABLES_DIR) DESTDIR=$(IPTABLES_TARGET_DIR) install
+	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/usr/include
+	cp -a $(IPTABLES_DIR)/include/iptables/*.h $(IPTABLES_TARGET_DIR)/usr/include/iptables
+	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTABLES_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
