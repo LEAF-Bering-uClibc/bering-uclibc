@@ -15,7 +15,6 @@ $(FLEX_DIR)/.source:
 
 $(FLEX_DIR)/.configured: $(FLEX_DIR)/.source
 	(cd $(FLEX_DIR); \
-		CFLAGS="$(BT_COPT_FLAGS)" \
 		./configure --verbose --prefix=/usr --host=$(GNU_TARGET_NAME));
 	touch $(FLEX_DIR)/.configured
 
@@ -25,7 +24,7 @@ $(FLEX_DIR)/.build: $(FLEX_DIR)/.configured
 	#don't fail on errors - we haven't uClibc so c++ tests failed
 	-$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) check
 	$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) DESTDIR=$(FLEX_TARGET_DIR) install
-	cp -a $(FLEX_TARGET_DIR)/usr/include $(FLEX_TARGET_DIR)/usr/lib $(TOOLCHAIN_DIR)/usr
+	cp -a $(FLEX_TARGET_DIR)/usr/include $(FLEX_TARGET_DIR)/usr/lib $(BT_STAGING_DIR)/usr
 	touch $(FLEX_DIR)/.build
 
 source: $(FLEX_DIR)/.source 

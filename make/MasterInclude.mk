@@ -65,10 +65,10 @@ export MAKEOPTS:=-j$(shell echo $$(($(CPUCOUNT)+1)))
 export LANG=en_US
 
 # default optimization settings for compiling code 
-export BT_COPT_FLAGS=-O2 -march=$(GNU_ARCH) -mtune=$(GNU_TUNE)
+export CFLAGS=-O2 -march=$(GNU_ARCH) -mtune=$(GNU_TUNE) -I$(BT_STAGING_DIR)/usr/include
 
 # default ld flags
-export BT_LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib
+export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib
 
 # check for linux version
 

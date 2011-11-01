@@ -12,7 +12,7 @@ IPROUTE_TARGET_DIR:=$(BT_BUILD_DIR)/iproute2
 
 # Dirty hacks for iproute2-2.6.35
 export LDLIBS = -L../lib -lnetlink -lutil
-export CFLAGS = -D_GNU_SOURCE $(BT_COPT_FLAGS) -I../include -DRESOLVE_HOSTNAMES
+export CFLAGS += -D_GNU_SOURCE -I../include -DRESOLVE_HOSTNAMES
 export CC = $(TARGET_CC)
 export ADDLIB = dnet_ntop.o dnet_pton.o ipx_ntop.o ipx_pton.o
 export YACCFLAGS = -d -t -v

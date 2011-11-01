@@ -25,7 +25,7 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --without-libbind
 source: .source
 
 .configure: .source
-	( cd $(DHCPD_DIR); CFLAGS="$(BT_COPT_FLAGS)" ./configure $(CONFOPTS) );
+	( cd $(DHCPD_DIR); ./configure $(CONFOPTS) );
 	touch .configure
 
 .build: .configure

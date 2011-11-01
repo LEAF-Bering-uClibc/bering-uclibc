@@ -14,7 +14,7 @@ source:
 #	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1  
 
 $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
-	(cd $(LIBNET_DIR); CFLAGS="$(BT_COPT_FLAGS)" \
+	(cd $(LIBNET_DIR); \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr );
@@ -26,7 +26,7 @@ build: $(LIBNET_DIR)/Makefile
 	mkdir -p $(LIBNET_TARGET_DIR)
 	$(MAKE) $(MAKEOPTS) -C $(LIBNET_DIR)
 	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBNET_TARGET_DIR) -C $(LIBNET_DIR) install
-	cp -a $(LIBNET_TARGET_DIR)/* $(TOOLCHAIN_DIR)
+	cp -a $(LIBNET_TARGET_DIR)/* $(BT_STAGING_DIR)/
 
 #build: $(LIBPCAP_DIR)/.build
 

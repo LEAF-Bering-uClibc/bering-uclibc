@@ -19,9 +19,8 @@ $(CRON_DIR)/.build: $(CRON_DIR)/.source
 	mkdir -p $(CRON_TARGET_DIR)
 	-mkdir -p $(BT_STAGING_DIR)/usr/sbin
 	$(MAKE) $(MAKEOPTS) -C $(CRON_DIR) 	\
-				CC=$(TARGET_CC)  \
-				OPTIM="$(BT_COPT_FLAGS) -Wall -Wno-comment" \
-				DEBUG_DEFS="-DDEBUGGING=0"
+		CC=$(TARGET_CC) OPTIM="$(CFLAGS) -Wall -Wno-comment" \
+		DEBUG_DEFS="-DDEBUGGING=0"
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(CRON_DIR)/cron
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(CRON_DIR)/crontab
 	cp -a  $(CRON_DIR)/cron  $(CRON_TARGET_DIR)/

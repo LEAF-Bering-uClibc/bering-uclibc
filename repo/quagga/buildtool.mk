@@ -11,7 +11,7 @@ $(QUAGGA_DIR)/.source:
 source: $(QUAGGA_DIR)/.source
 
 $(QUAGGA_DIR)/.configured: $(QUAGGA_DIR)/.source
-	(cd $(QUAGGA_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -g -Wall" ./configure --prefix=/usr \
+	(cd $(QUAGGA_DIR) ; ./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
 	--sysconfdir=/etc/zebra \
 	--disable-doc \
@@ -35,7 +35,6 @@ $(QUAGGA_DIR)/.build: $(QUAGGA_DIR)/.configured
 	make $(MAKEOPTS) DESTDIR=$(QUAGGA_TARGET_DIR) -C $(QUAGGA_DIR) install
 	-$(BT_STRIP) $(B_STRIP_BINOPTS) $(QUAGGA_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(B_STRIP_LIBOPTS) $(QUAGGA_TARGET_DIR)/usr/lib/*
-	-rm -rf $(QUAGGA_TARGET_DIR)/usr/lib/*.a $(QUAGGA_TARGET_DIR)/usr/lib/*.la $(QUAGGA_TARGET_DIR)/usr/include
 	cp -aL bgpd.init $(QUAGGA_TARGET_DIR)/etc/init.d/bgpd
 	cp -aL bgpd.conf $(QUAGGA_TARGET_DIR)/etc/zebra
 	cp -aL isisd.init $(QUAGGA_TARGET_DIR)/etc/init.d/isisd

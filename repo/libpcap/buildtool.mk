@@ -19,7 +19,7 @@ $(LIBPCAP_DIR)/.source:
 	touch $(LIBPCAP_DIR)/.source
 
 $(LIBPCAP_DIR)/.configured: $(LIBPCAP_DIR)/.source
-	(cd $(LIBPCAP_DIR); CFLAGS="$(BT_COPT_FLAGS)"  \
+	(cd $(LIBPCAP_DIR); \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr \
@@ -39,10 +39,10 @@ $(LIBPCAP_DIR)/.build: $(LIBPCAP_DIR)/.configured
 	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBPCAP_TARGET_DIR) -C $(LIBPCAP_DIR) install install-shared
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBPCAP_TARGET_DIR)/usr/lib/*
 	# Fix up generated pcap-config (Trac ticket #25)
-	perl -i -p -e "s,/usr,$(TOOLCHAIN_DIR)/usr,g" $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config
+	perl -i -p -e "s,/usr,$(BT_STAGING_DIR)/usr,g" $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config
 	-rm -rf $(LIBPCAP_TARGET_DIR)/usr/share
-	cp -a $(LIBPCAP_TARGET_DIR)/* $(TOOLCHAIN_DIR)/
-	cp -a $(LIBPCAP_TARGET_DIR)/usr/lib/*.so $(LIBPCAP_TARGET_DIR)/usr/lib/*.so.* $(BT_STAGING_DIR)/usr/lib/
+	cp -a $(LIBPCAP_TARGET_DIR)/* $(BT_STAGING_DIR)/
+	cp -a $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config $(TOOLCHAIN_DIR)/usr/bin/pcap-config
 	touch $(LIBPCAP_DIR)/.build
 
 build: $(LIBPCAP_DIR)/.build
@@ -52,7 +52,6 @@ clean:
 	-rm -rf $(LIBPCAP_TARGET_DIR)
 	-$(MAKE) -C $(LIBPCAP_DIR) clean
 	-rm -f $(BT_STAGING_DIR)/usr/lib/libpcap.*
-	-rm -f $(TOOLCHAIN_DIR)/usr/lib/libpcap.*
 	-rm -f $(BT_STAGING_DIR)/usr/include/pcap.h
 	-rm -f $(BT_STAGING_DIR)/usr/include/pcap-namedb.h
 	-rm -f $(BT_STAGING_DIR)/usr/include/pcap-bpf.h

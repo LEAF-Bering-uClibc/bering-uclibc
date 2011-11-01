@@ -17,27 +17,21 @@ $(DIR)/.source:
 	touch $(DIR)/.source
 
 $(DIR2)/Makefile: $(DIR2)
-	(cd $(DIR2) ; CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure --host=$(GNU_TARGET_NAME))
+	(cd $(DIR2) ; ./configure --host=$(GNU_TARGET_NAME))
 
 $(DIR2)/.build: $(DIR2)/Makefile
 	$(MAKE) -C $(DIR2)
 	touch $(DIR2)/.build
-#CC=$(TARGET_CC) LD=$(TARGET_LD) 
 
 $(DIR)/Makefile: $(DIR)/.source $(DIR2)/.build
-	(cd $(DIR) ; CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure --with-libol=../$(DIR2) --prefix=/ --host=$(GNU_TARGET_NAME))
+	(cd $(DIR) ; ./configure --with-libol=../$(DIR2) --prefix=/ --host=$(GNU_TARGET_NAME))
 
 $(DIR)/.build: $(DIR)/Makefile
 	mkdir -p $(TARGET_DIR)/sbin
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	cp $(DIR2)/src/*.h $(DIR)/src/
 	cp $(DIR2)/src/*.h.x $(DIR)/src/
-	$(MAKE) $(MAKEOPTS) -C $(DIR) \
-		CC=$(TARGET_CC) LD=$(TARGET_LD)  \
-		CFLAGS="$(BT_COPT_FLAGS) -Wall -DSYSV -fomit-frame-pointer -fno-strength-reduce \
-		-I$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/include" LDFLAGS="" 
+	$(MAKE) $(MAKEOPTS) -C $(DIR)
 	cp -a  $(DIR)/src/syslog-ng  $(TARGET_DIR)/sbin
 	cp -a  $(DIR)/debian/syslog-ng.conf  $(TARGET_DIR)/etc
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DIR)/src/syslog-ng 
