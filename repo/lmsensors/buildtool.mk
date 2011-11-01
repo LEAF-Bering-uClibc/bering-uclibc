@@ -37,7 +37,7 @@ $(LMSENSORS_DIR)/.build: source
 	cp -a $(LMSENSORS_TARGET_DIR)/usr/sbin/sensors-detect $(BT_STAGING_DIR)/usr/sbin 
 	cp -a $(LMSENSORS_TARGET_DIR)/usr/lib/libsensors.* $(BT_STAGING_DIR)/usr/lib
 	cp -a $(LMSENSORS_TARGET_DIR)/etc/sensors3.conf $(BT_STAGING_DIR)/etc
-	cp -a $(LMSENSORS_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/include
+	cp -a $(LMSENSORS_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include
 	touch $(LMSENSORS_DIR)/.build
 
 build: $(LMSENSORS_DIR)/.build
