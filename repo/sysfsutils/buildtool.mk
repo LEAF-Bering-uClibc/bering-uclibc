@@ -23,7 +23,6 @@ $(DIR)/.build: $(DIR)/.source
 #	cat defs.patch|patch -p1 -d $(DIR)
 	make $(MAKEOPTS) -C $(DIR)
 	make $(MAKEOPTS) DESTDIR=$(TARGET_DIR) -C $(DIR) install
-	exit 1
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*
 	-rm -rf $(TARGET_DIR)/usr/share
