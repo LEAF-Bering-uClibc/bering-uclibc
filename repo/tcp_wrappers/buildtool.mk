@@ -51,7 +51,6 @@ $(TCP_WRAPPERS_DIR)/.build: $(TCP_WRAPPERS_DIR)/.unpack
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/*
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TCP_WRAPPERS_BUILDDIR)/lib/*.so.0
 	cp -a $(TCP_WRAPPERS_BUILDDIR)/* $(BT_STAGING_DIR)
-	cp -a $(TCP_WRAPPERS_BUILDDIR)/lib/*.a $(TOOLCHAIN_DIR)/lib
 	touch $(TCP_WRAPPERS_DIR)/.build
 
 
@@ -67,7 +66,6 @@ clean:
 	rm -rf $(TCP_WRAPPERS_BUILDDIR)
 	-rm  $(BT_STAGING_DIR)/usr/lib/libwrap*
 	-rm  $(BT_STAGING_DIR)/lib/libwrap*
-	-rm  $(TOOLCHAIN_DIR)/lib/libwrap*
 
 srcclean:
 	rm -rf $(TCP_WRAPPERS_DIR)

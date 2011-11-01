@@ -36,7 +36,7 @@ $(PPP_DIR)/.build: $(PPP_DIR)/.configured
 	mkdir -p $(PPP_TARGET_DIR)/usr/lib/pppd
 	$(MAKE) -C $(PPP_DIR) clean
 	make CC=$(TARGET_CC) $(MAKEOPTS) -C $(PPP_DIR) COPTS="$(CFLAGS)" \
-		INCLUDEDIR=$(TOOLCHAIN_DIR)/usr/include FILTER= HAVE_INET6=y CBCP=
+		FILTER= HAVE_INET6=y CBCP=
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppd/pppd
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppstats/pppstats
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/chat/chat
@@ -76,8 +76,7 @@ $(PPP_DIR)/.build: $(PPP_DIR)/.configured
 	cp -a $(PPP_DIR)/pppd/plugins/radius/etc/port-id-map $(PPP_TARGET_DIR)/etc/radiusclient
 
 	$(MAKE) -C $(PPP_DIR) clean
-#	make CC=$(TARGET_CC) -C $(PPP_DIR) COPTS="$(BT_COPT_FLAGS)" -I$(TOOLCHAIN_DIR)/usr/include" FILTER=y HAVE_INET6=y CBCP=
-	make CC=$(TARGET_CC) -C $(PPP_DIR) COPTS="$(CFLAGS)" INCLUDEDIR=$(TOOLCHAIN_DIR)/usr/include FILTER=y HAVE_INET6=y CBCP=
+	make CC=$(TARGET_CC) -C $(PPP_DIR) COPTS="$(CFLAGS)" FILTER=y HAVE_INET6=y CBCP=
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppd/pppd
 	cp -a $(PPP_DIR)/pppd/pppd $(PPP_TARGET_DIR)/usr/sbin/pppd-filter
 	cp -a $(PPP_TARGET_DIR)/* $(BT_STAGING_DIR)

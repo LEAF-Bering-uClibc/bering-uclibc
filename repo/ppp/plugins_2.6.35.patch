@@ -5,7 +5,7 @@ diff -aur ppp-2.4.5.orig/pppd/plugins/pppol2tp/Makefile.linux ppp-2.4.5/pppd/plu
  #CC	= gcc
  COPTS	= -O2 -g
 -CFLAGS	= $(COPTS) -I. -I../.. -I../../../include -fPIC
-+CFLAGS	= $(COPTS)  -I. -I../.. -I$(INCLUDEDIR) -fPIC
++CFLAGS	= $(COPTS) -I. -I../.. -fPIC
  LDFLAGS	= -shared
  INSTALL	= install
  
@@ -29,7 +29,7 @@ diff -aur ppp-2.4.5.orig/pppd/plugins/rp-pppoe/Makefile.linux ppp-2.4.5/pppd/plu
  
  COPTS=-O2 -g
 -CFLAGS=$(COPTS) -I../../../include '-DRP_VERSION="$(RP_VERSION)"'
-+CFLAGS=$(COPTS) -I$(INCLUDEDIR) '-DRP_VERSION="$(RP_VERSION)"'
++CFLAGS=$(COPTS) '-DRP_VERSION="$(RP_VERSION)"'
  all: rp-pppoe.so pppoe-discovery
  
  pppoe-discovery: pppoe-discovery.o debug.o

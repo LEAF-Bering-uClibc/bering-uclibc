@@ -35,9 +35,9 @@ clean:
 	-rm $(LIBNET_DIR)/.build
 	rm -rf $(LIBNET_TARGET_DIR)
 	$(MAKE) -C $(LIBNET_DIR) clean
-	rm -f $(TOOLCHAIN_DIR)/usr/lib/libnet.a
-	rm -f $(TOOLCHAIN_DIR)/usr/include/libnet.h
-	rm -rf $(TOOLCHAIN_DIR)/usr/include/libnet/*
+	rm -f $(BT_STAGING_DIR)/usr/lib/libnet.a
+	rm -f $(BT_STAGING_DIR)/usr/include/libnet.h
+	rm -rf $(BT_STAGING_DIR)/usr/include/libnet/*
 	
 srcclean:
 	rm -rf $(LIBNET_DIR)
