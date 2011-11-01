@@ -1,5 +1,6 @@
 include $(MASTERMAKEFILE)
 PPPOESRV_DIR:=rp-pppoe-3.10
+PPPOESRV_BUILD_DIR:=$(BT_BUILD_DIR)/pppoesrv
 
 $(PPPOESRV_DIR)/.source:
 	zcat $(PPPOESRV_SOURCE) |  tar -xvf -
@@ -14,21 +15,21 @@ $(PPPOESRV_DIR)/.configured: $(PPPOESRV_DIR)/.source
 	touch $(PPPOESRV_DIR)/.configured
 
 $(PPPOESRV_DIR)/.build: $(PPPOESRV_DIR)/.configured
-	mkdir -p $(BT_STAGING_DIR)/usr/sbin
-	mkdir -p $(BT_STAGING_DIR)/etc/ppp
-	mkdir -p $(BT_STAGING_DIR)/etc/default
-	mkdir -p $(BT_STAGING_DIR)/etc/init.d
-	$(MAKE) -C $(PPPOESRV_DIR)/src PLUGIN_DIR=/usr/lib/pppd \
+	mkdir -p $(PPPOESRV_BUILD_DIR)/usr/sbin
+	mkdir -p $(PPPOESRV_BUILD_DIR)/etc/ppp
+	mkdir -p $(PPPOESRV_BUILD_DIR)/etc/default
+	mkdir -p $(PPPOESRV_BUILD_DIR)/etc/init.d
+	$(MAKE) $(MAKEOPTS) -C $(PPPOESRV_DIR)/src PLUGIN_DIR=/usr/lib/pppd \
 		DEFINES="-DHAVE_LINUX_KERNEL_PPPOE" pppoe-server pppoe-relay
-	cp $(PPPOESRV_DIR)/src/pppoe-server $(BT_STAGING_DIR)/usr/sbin/
-	cp $(PPPOESRV_DIR)/src/pppoe-relay $(BT_STAGING_DIR)/usr/sbin/
-	cp -aL $(PPPOESRV_OPTIONS) $(BT_STAGING_DIR)/etc/ppp/
-	cp -aL $(PPPOESRV_DEFAULT) $(BT_STAGING_DIR)/etc/default/pppoe-server
-	cp -aL $(PPPOESRV_INITD) $(BT_STAGING_DIR)/etc/init.d/pppoe-server
-	cp -aL $(PPPOERLY_DEFAULT) $(BT_STAGING_DIR)/etc/default/pppoe-relay
-	cp -aL $(PPPOERLY_INITD) $(BT_STAGING_DIR)/etc/init.d/pppoe-relay
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BT_STAGING_DIR)/usr/sbin/pppoe-server
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BT_STAGING_DIR)/usr/sbin/pppoe-relay
+	cp $(PPPOESRV_DIR)/src/pppoe-server $(PPPOESRV_BUILD_DIR)/usr/sbin/
+	cp $(PPPOESRV_DIR)/src/pppoe-relay $(PPPOESRV_BUILD_DIR)/usr/sbin/
+	cp -aL $(PPPOESRV_OPTIONS) $(PPPOESRV_BUILD_DIR)/etc/ppp/
+	cp -aL $(PPPOESRV_DEFAULT) $(PPPOESRV_BUILD_DIR)/etc/default/pppoe-server
+	cp -aL $(PPPOESRV_INITD)   $(PPPOESRV_BUILD_DIR)/etc/init.d/pppoe-server
+	cp -aL $(PPPOERLY_DEFAULT) $(PPPOESRV_BUILD_DIR)/etc/default/pppoe-relay
+	cp -aL $(PPPOERLY_INITD)   $(PPPOESRV_BUILD_DIR)/etc/init.d/pppoe-relay
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPPOESRV_BUILD_DIR)/usr/sbin/*
+	cp -a $(PPPOESRV_BUILD_DIR)/* $(BT_STAGING_DIR)
 	touch $(PPPOESRV_DIR)/.build
 
 build: $(PPPOESRV_DIR)/.build
