@@ -30,6 +30,7 @@ $(IPTABLES_DIR)/.source:
 
 $(IPT_NF_DIR)/.source: 
 	zcat $(IPT_NF_SOURCE) |  tar -xvf - 
+	perl -i -p -e 's/gcc/\$$(CC)/' $(IPT_NF_DIR)/Makefile.in
 	touch $(IPT_NF_DIR)/.source
 
 $(IPTABLES_DIR)/Makefile: $(IPTABLES_DIR)/.source
@@ -45,8 +46,8 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
-	$(MAKE) -C $(IPTABLES_DIR) $(BUILD_TARGETS)
-	$(MAKE) -C $(IPTABLES_DIR) DESTDIR=$(IPTABLES_TARGET_DIR) install
+	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) $(BUILD_TARGETS)
+	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) DESTDIR=$(IPTABLES_TARGET_DIR) install
 	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/usr/include
 	cp -a $(IPTABLES_DIR)/include/iptables/*.h $(IPTABLES_TARGET_DIR)/usr/include/iptables
 	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
@@ -70,13 +71,13 @@ $(IPT_NF_DIR)/.build: $(IPT_NF_DIR)/configure $(IPTABLES_DIR)/.build
 	--ipt-ver=$(IPTABLES_VER) \
 	--ipt-bin=$(IPTABLES_TARGET_DIR)/sbin/iptables \
 	--ipt-lib=$(IPTABLES_TARGET_DIR)/lib/xtables \
-	--ipt-inc=$(IPTABLES_TARGET_DIR)/include &&\
+	--ipt-inc=$(IPTABLES_TARGET_DIR)/usr/include &&\
 	$(MAKE) clean && \
 	$(MAKE) ipt_NETFLOW.ko && \
 	mkdir -p $(IPTABLES_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipv4/netfilter && \
 	cp -a ipt_NETFLOW.ko $(IPTABLES_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipv4/netfilter || \
 	exit 1 ; done; \
-	$(MAKE) linstall)
+	CC=$(TARGET_CC) $(MAKE) install)
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
 	touch $(IPT_NF_DIR)/.build
 

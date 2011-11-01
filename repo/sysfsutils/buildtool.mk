@@ -18,13 +18,10 @@ $(DIR)/.build: $(DIR)/.source
 	mkdir -p $(BT_BUILD_DIR)/module-init-tools
 	(cd $(DIR); \
 		rm -rf config.cache; \
-		CFLAGS="$(BT_COPT_FLAGS)" \
-		CC=$(TARGET_CC) \
-		LD=$(TARGET_LD) \
-		./configure --prefix=/);
+		./configure --prefix=/ --host=$(GNU_TARGET_NAME) );
 #	cat defs.patch|patch -p1 -d $(DIR)
-	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) HOSTCC=$(TARGET_CC) HOSTCFLAGS="$(BT_COPT_FLAGS)" LD=$(TARGET_LD) -C $(DIR)
-	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) HOSTCC=$(TARGET_CC) HOSTCFLAGS="$(BT_COPT_FLAGS)" LD=$(TARGET_LD) DESTDIR=$(TARGET_DIR) -C $(DIR) install
+	make $(MAKEOPTS) -C $(DIR)
+	make $(MAKEOPTS) DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/lib/*
 	-rm -rf $(TARGET_DIR)/share
