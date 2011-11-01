@@ -18,6 +18,8 @@ GCC_CONFOPTS=   --with-gnu-ld --with-gnu-as \
 		--disable-libmudflap --disable-libssp \
 		--disable-libquadmath --disable-libgomp
 
+unexport CFLAGS
+unexport LDFLAGS
 
 $(UCLIBC_DIR)/.source:
 	bzcat $(UCLIBC_SOURCE) | tar xvf -
@@ -48,7 +50,7 @@ $(BINUTILS_BUILD_DIR)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.headers
 	 $(BINUTILS_DIR)/configure --target=$(GNU_TARGET_NAME) --prefix=$(TOOLCHAIN_DIR) \
 	  --includedir=$(TOOLCHAIN_DIR)/usr/include  --with-sysroot=$(TOOLCHAIN_DIR) \
 	  --with-build-sysroot=$(TOOLCHAIN_DIR) && \
-	 make $(MAKEOPTS) KERNEL_HEADERS=$TARGET_DIR/include &&  make install) || exit 1
+	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include &&  make install) || exit 1
 	touch $(BINUTILS_BUILD_DIR)/.build
 
 $(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source

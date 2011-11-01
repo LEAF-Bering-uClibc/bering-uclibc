@@ -7,7 +7,6 @@
 include $(MASTERMAKEFILE)
 SYSLINUX_DIR:=syslinux-4.03
 SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5) 
 
 
 $(SYSLINUX_DIR)/.source: 
@@ -18,7 +17,6 @@ $(SYSLINUX_DIR)/.source:
 $(SYSLINUX_DIR)/.build: $(SYSLINUX_DIR)/.source
 	mkdir -p $(SYSLINUX_TARGET_DIR)/usr/bin
 	mkdir -p $(SYSLINUX_TARGET_DIR)/usr/share/syslinux
-	export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	$(MAKE) $(MAKEOPTS) CC=$(TARGET_CC) -C $(SYSLINUX_DIR) installer
 	cp -a $(SYSLINUX_DIR)/core/pxelinux.0 $(SYSLINUX_TARGET_DIR)/usr/share/syslinux/
 	cp -a $(SYSLINUX_DIR)/core/isolinux.bin $(SYSLINUX_TARGET_DIR)/usr/share/syslinux/
