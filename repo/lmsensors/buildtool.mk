@@ -12,6 +12,8 @@ LMSENSORS_DIR:=$(shell cat DIRNAME)
 endif
 LMSENSORS_TARGET_DIR:=$(BT_BUILD_DIR)/lmsensors
 
+EXT_OPT := CC=$(TARGET_CC) DESTDIR=$(LMSENSORS_TARGET_DIR) PREFIX=/usr MACHINE=i686
+
 $(LMSENSORS_DIR)/.source:
 	bzcat $(LMSENSORS_SOURCE) | tar -xvf -	
 	echo $(LMSENSORS_DIR) > DIRNAME
@@ -24,9 +26,10 @@ $(LMSENSORS_DIR)/.build: source
 	-mkdir -p $(BT_STAGING_DIR)/usr/bin
 	-mkdir -p $(BT_STAGING_DIR)/usr/sbin
 	-mkdir -p $(BT_STAGING_DIR)/usr/lib
+	-mkdir -p $(BT_STAGING_DIR)/usr/include
 	-mkdir -p $(BT_STAGING_DIR)/etc/init.d
-	$(MAKE) CC=$(TARGET_CC) DESTDIR=$(LMSENSORS_TARGET_DIR) PREFIX=/usr MACHINE=i686 -C $(LMSENSORS_DIR) user
-	$(MAKE) CC=$(TARGET_CC) DESTDIR=$(LMSENSORS_TARGET_DIR) PREFIX=/usr MACHINE=i686 -C $(LMSENSORS_DIR) user_install 	
+	$(MAKE) $(MAKEOPTS) $(EXT_OPT) -C $(LMSENSORS_DIR) user
+	$(MAKE) $(MAKEOPTS) $(EXT_OPT) -C $(LMSENSORS_DIR) user_install 	
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LMSENSORS_TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LMSENSORS_TARGET_DIR)/usr/lib/*
 	cp -aL lm-sensors.init $(BT_STAGING_DIR)/etc/init.d/lm-sensors
