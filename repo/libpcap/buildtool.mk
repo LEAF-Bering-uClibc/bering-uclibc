@@ -35,6 +35,7 @@ source: $(LIBPCAP_DIR)/.source
 $(LIBPCAP_DIR)/.build: $(LIBPCAP_DIR)/.configured
 	mkdir -p $(LIBPCAP_TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
+	mkdir -p $(TOOLCHAIN_DIR)/usr/bin
 	$(MAKE) $(MAKEOPTS) -C $(LIBPCAP_DIR) shared
 	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBPCAP_TARGET_DIR) -C $(LIBPCAP_DIR) install install-shared
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBPCAP_TARGET_DIR)/usr/lib/*

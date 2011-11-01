@@ -24,7 +24,8 @@ $(FLEX_DIR)/.build: $(FLEX_DIR)/.configured
 	#don't fail on errors - we haven't uClibc so c++ tests failed
 	-$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) check
 	$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) DESTDIR=$(FLEX_TARGET_DIR) install
-	cp -a $(FLEX_TARGET_DIR)/usr/include $(FLEX_TARGET_DIR)/usr/lib $(BT_STAGING_DIR)/usr
+	rm -rf $(FLEX_TARGET_DIR)/usr/info $(FLEX_TARGET_DIR)/usr/man $(FLEX_TARGET_DIR)/usr/bin
+	cp -a $(FLEX_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(FLEX_DIR)/.build
 
 source: $(FLEX_DIR)/.source 
