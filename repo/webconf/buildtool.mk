@@ -21,14 +21,10 @@ source: .source
 
 .source: $(LINKS)
 	touch .source
-                        
+
 .build: .source
-	mkdir -p $(TARGET_DIR)/etc/init.d
-	mkdir -p $(TARGET_DIR)/etc/webconf
-	mkdir -p $(TARGET_DIR)/var/webconf
-	cp -a etc/init.d/webconf $(TARGET_DIR)/etc/init.d
-	cp -a etc/webconf/* $(TARGET_DIR)/etc/webconf
-	cp -a var/webconf/* $(TARGET_DIR)/var/webconf
+	mkdir -p $(TARGET_DIR)
+	cp -aL etc var $(TARGET_DIR)
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch .build
 
