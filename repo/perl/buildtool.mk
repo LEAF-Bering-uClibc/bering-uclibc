@@ -35,7 +35,8 @@ $(PERL_DIR)/.build: $(PERL_DIR)/.configured
 	cp -a $(PERL_DIR)/perl $(PERL_TARGET_DIR)/usr/bin
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PERL_TARGET_DIR)/usr/bin/perl
 	cp -a $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
-	cp -aL $(PERL_DIR)/../Socket6.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
+	cp -aL Socket6.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
+	cp -aL Temp.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/File
 	cp -a $(PERL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(PERL_DIR)/.build
 
