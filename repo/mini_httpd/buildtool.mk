@@ -18,7 +18,8 @@ $(MINI_HTTPD_DIR)/.source:
 $(MINI_HTTPD_DIR)/.configured: $(MINI_HTTPD_DIR)/.source
 	#perl -i -p -e 's,#define\s*SERVER_SOFTWARE.*,#define SERVER_SOFTWARE "mini_httpd/1.17",' $(MINI_HTTPD_DIR)/version.h
 	perl -i -p -e 's,<BODY\s*BGCOLOR.*$$,<BODY>\\n\\,' $(MINI_HTTPD_DIR)/mini_httpd.c
-	perl -i -p -e 's/CFLAGS\s*=\s*-O\s*(.*)$$/CFLAGS=$(BT_COPT_FLAGS) $$1/' $(MINI_HTTPD_DIR)/Makefile
+	perl -i -p -e 's,CFLAGS\s*=\s*-O\s*(.*)$$,CFLAGS=$(CFLAGS) $$1,' $(MINI_HTTPD_DIR)/Makefile
+	perl -i -p -e 's/^CC\s*=.*$$/CC = $(TARGET_CC)/' $(MINI_HTTPD_DIR)/Makefile
 	echo "lrp	application/octet-stream" >> $(MINI_HTTPD_DIR)/mime_types.txt
 	touch $(MINI_HTTPD_DIR)/.configured
 
@@ -42,23 +43,23 @@ $(MINI_HTTPD_DIR)/.build: $(MINI_HTTPD_DIR)/.configured
 	perl -i -p -e 's,# define HAVE_SENDFILE,/* HAVE_SENDFILE is not set */,' $(MINI_HTTPD_DIR)/port.h
 	perl -i -p -e 's,# define HAVE_LINUX_SENDFILE,/* HAVE_LINUX_SENDFILE is not set */,' $(MINI_HTTPD_DIR)/port.h	
 	
-	$(MAKE) SSL_TREE=$(BT_STAGING_DIR)/usr CC=$(TARGET_CC) -C $(MINI_HTTPD_DIR) 
-	$(MAKE) CC=$(TARGET_CC) -C $(MINI_HTTPD_DIR) install
+	$(MAKE) $(MAKEOPTS) -C $(MINI_HTTPD_DIR) 
+	$(MAKE) -C $(MINI_HTTPD_DIR) install
 	mv $(MINI_HTTPD_TARGET_DIR)/usr/bin/mini_httpd $(MINI_HTTPD_TARGET_DIR)/usr/bin/mini_httpd.ssl
 
-	$(MAKE) CC=$(TARGET_CC) -C $(MINI_HTTPD_DIR) clean
+	$(MAKE) -C $(MINI_HTTPD_DIR) clean
 	perl -i -p -e 's,^\s*SSL_TREE,#SSL_TREE,' $(MINI_HTTPD_DIR)/Makefile
 	perl -i -p -e 's,^\s*SSL_DEFS,#SSL_DEFS,' $(MINI_HTTPD_DIR)/Makefile
 	perl -i -p -e 's,^\s*SSL_INC,#SSL_INC,' $(MINI_HTTPD_DIR)/Makefile
-	perl -i -p -e 's,^\s*SSL_LIBS,#SSL_LIBS,' $(MINI_HTTPD_DIR)/Makefile	
-	$(MAKE) CC=$(TARGET_CC) -C $(MINI_HTTPD_DIR) 
-	$(MAKE) CC=$(TARGET_CC) -C $(MINI_HTTPD_DIR) install
-	
+	perl -i -p -e 's,^\s*SSL_LIBS,#SSL_LIBS,' $(MINI_HTTPD_DIR)/Makefile
+	$(MAKE) $(MAKEOPTS) -C $(MINI_HTTPD_DIR) 
+	$(MAKE) -C $(MINI_HTTPD_DIR) install
+
 	cp -aL mini_httpd $(MINI_HTTPD_TARGET_DIR)/etc/init.d/
 	cp -aL mini_httpds $(MINI_HTTPD_TARGET_DIR)/etc/init.d/
 	cp -aL savelog-mini_httpd $(MINI_HTTPD_TARGET_DIR)/etc/cron.daily/
 	cp -aL savelog-mini_httpds $(MINI_HTTPD_TARGET_DIR)/etc/cron.daily/
-	
+
 	-cp -aL mini_httpds.conf $(BT_STAGING_DIR)/etc/
 	-cp -aL mini_httpd.conf $(BT_STAGING_DIR)/etc/
 	-$(BT_STRIP) $(STRIP_OPTIONS) $(MINI_HTTPD_TARGET_DIR)/usr/bin/mini_httpd.ssl
