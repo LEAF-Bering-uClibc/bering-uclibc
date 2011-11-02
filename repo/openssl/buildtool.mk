@@ -45,9 +45,10 @@ $(OPENSSL_DIR)/.build: $(OPENSSL_DIR)/.configured
 	-mkdir -p $(BT_STAGING_DIR)/etc/private
 	-mkdir -p $(BT_STAGING_DIR)/usr/ssl/misc
 
+#Use building in 1 thread due to buggy makefile
 	make -C $(OPENSSL_DIR) depend
 	make -C $(OPENSSL_DIR)
-	make CC=$(TARGET_CC) -C $(OPENSSL_DIR) INSTALL_PREFIX=$(OPENSSL_TARGET_DIR) install
+	make -C $(OPENSSL_DIR) INSTALL_PREFIX=$(OPENSSL_TARGET_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENSSL_TARGET_DIR)/usr/lib/* $(OPENSSL_TARGET_DIR)/usr/lib/engines/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSSL_TARGET_DIR)/usr/bin/*
 	$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(OPENSSL_TARGET_DIR)/usr/bin/openssl

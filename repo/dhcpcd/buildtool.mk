@@ -32,8 +32,8 @@ $(DHCPCD_DIR)/.build: $(DHCPCD_DIR)/.configure
 	mkdir -p $(BT_STAGING_DIR)/sbin
 	mkdir -p $(BT_STAGING_DIR)/etc/
 	mkdir -p $(BT_STAGING_DIR)/libexec/dhcpcd-hooks
-	make -C $(DHCPCD_DIR) CC=$(TARGET_CC)
-	make -C $(DHCPCD_DIR) CC=$(TARGET_CC) DESTDIR=$(DHCPCD_TARGET_DIR) BINMODE=0755 NONBINMODE=0644 install
+	make $(MAKEOPTS) -C $(DHCPCD_DIR)
+	make -C $(DHCPCD_DIR) DESTDIR=$(DHCPCD_TARGET_DIR) BINMODE=0755 NONBINMODE=0644 install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPCD_TARGET_DIR)/sbin/dhcpcd
 
 	rm -rf $(DHCPCD_TARGET_DIR)/share

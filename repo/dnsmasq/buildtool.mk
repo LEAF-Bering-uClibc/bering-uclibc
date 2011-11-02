@@ -10,17 +10,15 @@ $(DNSMASQ_DIR)/.source:
 
 source: $(DNSMASQ_DIR)/.source
 
-$(DNSMASQ_DIR)/.configured: $(DNSMASQ_DIR)/.source
-	touch $(DNSMASQ_DIR)/.configured
-
-$(DNSMASQ_DIR)/.build: $(DNSMASQ_DIR)/.configured
+$(DNSMASQ_DIR)/.build: $(DNSMASQ_DIR)/.source
 	mkdir -p $(DNSMASQ_TARGET_DIR)
 	mkdir -p $(DNSMASQ_TARGET_DIR)/usr/sbin
 	mkdir -p $(DNSMASQ_TARGET_DIR)/etc/init.d
-	# Disable the internal tftpd with -DNO_TFTP
-	make -C $(DNSMASQ_DIR) DESTDIR=$(DNSMASQ_TARGET_DIR) \
+
+# Disable the internal tftpd with -DNO_TFTP
+	make $(MAKEOPTS) -C $(DNSMASQ_DIR) DESTDIR=$(DNSMASQ_TARGET_DIR) \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(CFLAGS) -DNO_TFTP" all
-	# Adjust the dnsmasq.conf to LEAF standard
+# Adjust the dnsmasq.conf to LEAF standard
 	perl -i -p -e 's,\#dhcp-range=192.168.0.50\,192.168.0.150\,12h,\#dhcp-range=192.168.1.1\,192.168.1.199\,12h,g' $(DNSMASQ_DIR)/dnsmasq.conf.example
 	perl -i -p -e 's,\#domain=thekelleys.org.uk,domain=private.network,g' $(DNSMASQ_DIR)/dnsmasq.conf.example
 	perl -i -p -e 's,\#local=/localnet/,local=/private.network/,g' $(DNSMASQ_DIR)/dnsmasq.conf.example

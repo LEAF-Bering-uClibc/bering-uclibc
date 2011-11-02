@@ -4,7 +4,7 @@ include $(MASTERMAKEFILE)
 DIR:=igb-3.0.22
 TARGET_DIR:=$(BT_BUILD_DIR)/igb
 MODULE_PATH=kernel/drivers/net/igb
-EXTRA_VARS=V=1
+EXTRA_VARS=$(MAKEOPTS)
 
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -

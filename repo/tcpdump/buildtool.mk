@@ -29,7 +29,7 @@ $(TCPDUMP_DIR)/.configured: $(TCPDUMP_DIR)/.source
 
 $(TCPDUMP_DIR)/.build: $(TCPDUMP_DIR)/.configured
 	mkdir -p $(TCPDUMP_TARGET_DIR)
-	make -C $(TCPDUMP_DIR)
+	make $(MAKEOPTS) -C $(TCPDUMP_DIR)
 	make -C $(TCPDUMP_DIR) DESTDIR=$(TCPDUMP_TARGET_DIR) install
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TCPDUMP_TARGET_DIR)/usr/sbin/*
 	-rm -rf $(TCPDUMP_TARGET_DIR)/usr/share

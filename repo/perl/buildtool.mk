@@ -30,7 +30,8 @@ $(PERL_DIR)/.build: $(PERL_DIR)/.configured
 	mkdir -p $(PERL_TARGET_DIR)/usr/bin
 	mkdir -p $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
 
-	$(MAKE) CC=$(TARGET_CC) -C $(PERL_DIR)
+# Build in single thread - -jN failed
+	$(MAKE) -C $(PERL_DIR)
 	cp -a $(PERL_DIR)/perl $(PERL_TARGET_DIR)/usr/bin
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PERL_TARGET_DIR)/usr/bin/perl
 	cp -a $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
