@@ -16,7 +16,7 @@ ASTERISK_TARGET_DIR:=$(BT_BUILD_DIR)/asterisk
 #   Move files out from under /usr/local/
 #   Disable generation of XML documentation
 CONFOPTS:=--host=i486-pc-linux-gnu \
-	--prefix=/usr --disable-xmldoc
+	--prefix=/usr --disable-xmldoc --without-sdl
 # --enable-dev-mode
 
 .source:
