@@ -33,8 +33,8 @@ $(PPTP_DIR)/.build: $(PPTP_DIR)/.configured
 	mkdir -p $(PPTP_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/net ; \
 	$(MAKE) $(EXTRA_VARS) KDIR=$(BT_LINUX_DIR)-$$i CC=$(TARGET_CC) clean && \
 	$(MAKE) $(EXTRA_VARS) KDIR=$(BT_LINUX_DIR)-$$i CC=$(TARGET_CC) && \
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) pptp.ko && \
-	cp -a pptp.ko $(PPTP_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/net ||\
+	$(BT_STRIP) $(BT_STRIP_LIBOPTS) pptp.ko && gzip -9 -f pptp.ko && \
+	cp -a pptp.ko.gz $(PPTP_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/net ||\
 	exit 1 ; done)
 
 	$(MAKE) -C $(PPTP_DIR)/pptpd-1.3.3 $(EXTRA_VARS) KDIR=$(BT_LINUX_DIR)$(FIRSTKARCH) CC=$(TARGET_CC)

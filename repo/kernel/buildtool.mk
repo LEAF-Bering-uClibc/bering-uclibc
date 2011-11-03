@@ -25,7 +25,7 @@ $(LINUX_BUILDDIR):
 	mkdir -p $(LINUX_BUILDDIR)
 
 
-.build: $(LINUX_BUILDDIR) chklinuxdir	
+.build: $(LINUX_BUILDDIR) chklinuxdir
 #	perl -i -p -e 's,^CROSS_COMPILE\s*=.*,CROSS_COMPILE =$(BT_STAGING_DIR)/usr/bin/,g' $(BT_LINUX_DIR)/Makefile
 #	perl -i -p -e 's/CFLAGS\s*\:=\s*.*$$/CFLAGS \:= \$$\(CPPFLAGS\) -Wall -Wstrict-prototypes -Wno-trigraphs -Os \\/g' $(BT_LINUX_DIR)/Makefile	
 	mkdir -p $(BT_STAGING_DIR)/boot
@@ -35,15 +35,18 @@ $(LINUX_BUILDDIR):
 	cp $(BT_LINUX_DIR)-$$i/arch/x86/boot/bzImage $(LINUX_BUILDDIR)/$(KIMAGE)-$$i && \
 	cp $(LINUX_BUILDDIR)/$(KIMAGE)-$$i $(BT_STAGING_DIR)/boot/linux-$$i &&\
 	cp $(BT_LINUX_DIR)-$$i/System.map $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i && \
-	make  ARCH=$(ARCH) INSTALL_MOD_PATH=$(LINUX_BUILDDIR) GENKSYMS="$(BT_STAGING_DIR)/sbin/genksyms" modules_install ; \
+	make  ARCH=$(ARCH) INSTALL_MOD_PATH=$(LINUX_BUILDDIR) GENKSYMS="$(BT_STAGING_DIR)/sbin/genksyms" modules_install && \
+	find $(LINUX_BUILDDIR)/lib/modules/$(KVERSION)-$$i -name '*.ko' | xargs gzip -9 -f && \
+	depmod -ae -b $(LINUX_BUILDDIR) -F $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i $(KVERSION)-$$i || exit 1; \
 	done)
 	(cp -R $(LINUX_BUILDDIR)/lib $(BT_STAGING_DIR))
+	touch .build
 
 $(BT_TOOLS_DIR)/.upxunpack:
 	(cd $(BT_TOOLS_DIR); tar xvzf upx-3.04-i386_linux.tar.gz)
 	touch $(BT_TOOLS_DIR)/.upxunpack
 
-build: $(BT_TOOLS_DIR)/.upxunpack .build
+build: .build
 
 chklinuxdir:
 ifeq ($(strip $(BT_LINUX_DIR)),)

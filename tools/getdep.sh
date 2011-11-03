@@ -4,12 +4,12 @@ DEPFILE="$BT_STAGING_DIR/lib/modules/$BT_KERNEL_RELEASE/modules.dep"
 REQMOD=""
 
 for i in $@; do
-    ULIST=$(cat $DEPFILE|grep "$i.ko:"|sed 's/\.ko:.*$//g')
+    ULIST=$(grep "$i\.ko\(\.gz\)\?:" $DEPFILE | sed 's/\.ko\(\.gz\)\?:.*$//g')
     MLIST="$MLIST $ULIST"
 done
 
 for i in $MLIST; do
-    MODLIST=$(cat $DEPFILE|grep "$i.ko:"|sed 's/://')
+    MODLIST=$(grep "$i\.ko\(\.gz\)\?:" $DEPFILE | sed 's/://')
     DMODLIST=""
     for j in $MODLIST; do
 	if [ "$(echo $REQMOD|grep $j)" = "" ]; then

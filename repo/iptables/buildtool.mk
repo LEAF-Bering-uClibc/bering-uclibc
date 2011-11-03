@@ -73,9 +73,9 @@ $(IPT_NF_DIR)/.build: $(IPT_NF_DIR)/configure $(IPTABLES_DIR)/.build
 	--ipt-lib=$(IPTABLES_TARGET_DIR)/lib/xtables \
 	--ipt-inc=$(IPTABLES_TARGET_DIR)/usr/include &&\
 	$(MAKE) clean && \
-	$(MAKE) ipt_NETFLOW.ko && \
+	$(MAKE) ipt_NETFLOW.ko && gzip -9 -f ipt_NETFLOW.ko && \
 	mkdir -p $(IPTABLES_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipv4/netfilter && \
-	cp -a ipt_NETFLOW.ko $(IPTABLES_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipv4/netfilter || \
+	cp -a ipt_NETFLOW.ko.gz $(IPTABLES_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipv4/netfilter || \
 	exit 1 ; done; \
 	CC=$(TARGET_CC) $(MAKE) install)
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*

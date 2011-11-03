@@ -8,6 +8,7 @@
 include $(MASTERMAKEFILE)
 DIR:=ipset-4.4
 TARGET_DIR:=$(BT_BUILD_DIR)/ipset
+LINUX_BUILDDIR:=$(BT_BUILD_DIR)/kernel
 
 #IPhash settings
 #max sets
@@ -28,11 +29,13 @@ $(DIR)/.build: $(DIR)/Makefile
 	export KERNEL_DIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) ; \
 	export KBUILD_OUTPUT=$(BT_LINUX_DIR)-$$i ; \
 	export INSTALL_MOD_PATH=$(BT_STAGING_DIR) ; \
-	$(MAKE) clean && \
-	$(MAKE) modules && \
-	$(MAKE) GENKSYMS="$(BT_STAGING_DIR)/sbin/genksyms" DEPMOD="$(BT_DEPMOD)" modules_install || \
-	exit 1 ; done; \
-	$(MAKE) binaries; $(MAKE) PREFIX=$(TARGET_DIR) binaries_install)
+	find ./kernel -name '*.ko.gz' -delete ; $(MAKE) clean && \
+	$(MAKE) $(MAKEOPTS) modules && gzip -9 -f kernel/*.ko && \
+	mkdir -p $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/extra && \
+	cp kernel/*.ko.gz $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/extra && \
+	depmod -ae -b $(BT_STAGING_DIR) -F $(LINUX_BUILDDIR)/System.map-$(BT_KERNEL_RELEASE)-$$i \
+	$(BT_KERNEL_RELEASE)-$$i || exit 1 ; done; \
+	$(MAKE) $(MAKEOPTS) binaries && $(MAKE) PREFIX=$(TARGET_DIR) binaries_install)
 	cp -a $(DIR)/kernel/include $(TARGET_DIR)/
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/lib/ipset/*
