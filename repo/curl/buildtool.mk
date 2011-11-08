@@ -20,18 +20,18 @@ CURL_TARGET_DIR:=$(BT_BUILD_DIR)/curl
 CONFOPTS:= --build=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) \
 	--prefix=/usr --with-libssh2 --disable-manual --disable-ldap
 
-$(CURL_DIR)/.source:
+.source:
 	zcat $(CURL_SOURCE) | tar -xvf -
 	echo $(CURL_DIR) > DIRNAME
-	touch $(CURL_DIR)/.source
+	touch .source
 
-source: $(CURL_DIR)/.source
+source: .source
 
-$(CURL_DIR)/.configure: $(CURL_DIR)/.source
+.configure: .source
 	( cd $(CURL_DIR) ; ./configure $(CONFOPTS) )
-	touch $(CURL_DIR)/.configure
+	touch .configure
 
-build: $(CURL_DIR)/.configure
+build: .configure
 	mkdir -p $(CURL_TARGET_DIR)
 	$(MAKE) -C $(CURL_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD)
 	$(MAKE) -C $(CURL_DIR) DESTDIR=$(CURL_TARGET_DIR) install
@@ -48,9 +48,10 @@ build: $(CURL_DIR)/.configure
 clean:
 	rm -rf $(CURL_TARGET_DIR)
 	$(MAKE) -C $(CURL_DIR) clean
-	rm -f $(CURL_DIR)/.configure
+	rm -f .configure
 
 srcclean: clean
 	rm -rf $(CURL_DIR) 
+	rm -f .source
 	-rm DIRNAME
 

@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# /etc/init.d/sshblack: start and stop sshblack daemon
+#
+RCDLINKS="0,K75 2,S25"
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+PROG=sshblack.pl
+PROGRAM=/usr/sbin/${PROG}
+DESC="SSH BLACKlisting"
+
+RETVAL=0
+
+case "$1" in
+  start)
+        echo -n "Starting ${DESC}: "
+        start-stop-daemon --start --exec ${PROGRAM}
+        echo "${PROG}."
+        ;;
+  stop)   
+        echo -n "Shutting down ${DESC}: "
+        start-stop-daemon --stop --quiet --name ${PROG}
+        echo "${PROG}."
+        ;;
+  restart)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0
