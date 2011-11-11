@@ -1,7 +1,7 @@
 # makefile for dropbear
 include $(MASTERMAKEFILE)
 
-DROPBEAR_DIR:=dropbear-0.53.1
+DROPBEAR_DIR:=dropbear-2011.54
 DROPBEAR_TARGET_DIR:=$(BT_BUILD_DIR)/dropbear
 
 $(DROPBEAR_DIR)/.source:
@@ -41,9 +41,9 @@ build: $(DROPBEAR_DIR)/.build
 clean:
 	make -C $(DROPBEAR_DIR) clean
 	rm -rf $(DROPBEAR_TARGET_DIR)
-	rm $(DROPBEAR_DIR)/.build
-	rm $(DROPBEAR_DIR)/.configured
+	rm -rf $(DROPBEAR_DIR)/.build
+	rm -rf $(DROPBEAR_DIR)/.configured
                                                                                                                  
 srcclean: clean
 	rm -rf $(DROPBEAR_DIR) 
-	rm $(DROPBEAR_DIR)/.source
+	rm -rf $(DROPBEAR_DIR)/.source
