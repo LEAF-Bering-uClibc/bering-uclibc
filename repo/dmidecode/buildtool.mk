@@ -15,7 +15,7 @@ DMI_TARGET_DIR:=$(BT_BUILD_DIR)/dmidecode
 $(DMI_DIR)/.source:
 	zcat $(DMI_SOURCE) | tar -xvf -
 	echo $(DMI_DIR) > DIRNAME
-	cat $(DMI_PATCH1) | patch -p1 -d $(DMI_DIR)
+#	cat $(DMI_PATCH1) | patch -p1 -d $(DMI_DIR)
 	touch $(DMI_DIR)/.source
 
 source: $(DMI_DIR)/.source
