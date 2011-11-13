@@ -41,9 +41,8 @@ build: $(DROPBEAR_DIR)/.build
 clean:
 	make -C $(DROPBEAR_DIR) clean
 	rm -rf $(DROPBEAR_TARGET_DIR)
-	rm $(DROPBEAR_DIR)/.build
-	rm $(DROPBEAR_DIR)/.configured
-
+	rm -f $(DROPBEAR_DIR)/.build
+	rm -f $(DROPBEAR_DIR)/.configured
+                                                                                                                 
 srcclean: clean
 	rm -rf $(DROPBEAR_DIR) 
-	rm $(DROPBEAR_DIR)/.source
