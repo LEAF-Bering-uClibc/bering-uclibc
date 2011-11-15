@@ -12,8 +12,8 @@ $(NTP_DIR)/.source:
 source: $(NTP_DIR)/.source
                         
 $(NTP_DIR)/.configured: $(NTP_DIR)/.source
-	(cd $(NTP_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) LDFLAGS="-s" CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure --prefix=/usr \
+	(cd $(NTP_DIR) ; ./configure --prefix=/usr \
+	--host=$(GNU_TARGET_NAME) \
 	--without-openssl-libdir \
 	--without-openssl-incdir \
 	--without-crypto \
@@ -39,7 +39,7 @@ $(NTP_DIR)/.build: $(NTP_DIR)/.configured
 	mkdir -p $(NTP_TARGET_DIR)/etc/cron.weekly			
 	mkdir -p $(NTP_TARGET_DIR)/etc/network/if-up.d			
 	mkdir -p $(NTP_TARGET_DIR)/usr/sbin		
-	make -C $(NTP_DIR) all  
+	make $(MAKEOPTS) -C $(NTP_DIR) all
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NTP_DIR)/ntpd/ntpd
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NTP_DIR)/ntpq/ntpq
 	cp -a $(NTP_DIR)/ntpd/ntpd $(NTP_TARGET_DIR)/usr/sbin
