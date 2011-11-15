@@ -18,18 +18,19 @@ $(UTIL_LINUX_DIR)/.source:
 	touch $(UTIL_LINUX_DIR)/.source
 	
 $(UTIL_LINUX_DIR)/.configured: $(UTIL_LINUX_DIR)/.source
-	(cd $(UTIL_LINUX_DIR) ; CC=$(TARGET_CC) CFLAGS="" ./configure \
-		--disable-tls --disable-nls);
+	(cd $(UTIL_LINUX_DIR) ; ./configure \
+		--host=$(GNU_TARGET_NAME) \
+		--disable-nls --without-ncurses);
 #	perl -i -p -e 's,HAVE_SLANG=yes,HAVE_SLANG=no,' $(UTIL_LINUX_DIR)/MCONFIG
-	perl -i -p -e 's,LIBSLANG=-lslang,LIBSLANG=,' $(UTIL_LINUX_DIR)/MCONFIG
+#	perl -i -p -e 's,LIBSLANG=-lslang,LIBSLANG=,' $(UTIL_LINUX_DIR)/MCONFIG
 	touch $(UTIL_LINUX_DIR)/.configured
 	
 $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 	mkdir -p $(UTIL_LINUX_TARGET_DIR)/sbin
 	mkdir -p $(UTIL_LINUX_TARGET_DIR)/lib
 #	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/disk-utils mkswap
-	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/fdisk fdisk
-	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/mount losetup
+	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/fdisk fdisk
+	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/mount losetup
 	cp -a $(UTIL_LINUX_DIR)/fdisk/.libs/fdisk $(UTIL_LINUX_TARGET_DIR)/sbin/
 	cp -a $(UTIL_LINUX_DIR)/mount/losetup $(UTIL_LINUX_TARGET_DIR)/sbin/
 	cp -a $(UTIL_LINUX_DIR)/shlibs/blkid/src/.libs/libblkid.* $(UTIL_LINUX_TARGET_DIR)/lib/
