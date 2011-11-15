@@ -70,7 +70,8 @@ $(GCC_STAGE2_BUILD_DIR)/.build: $(GCC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.buil
 	  --includedir=$(TOOLCHAIN_DIR)/usr/include --prefix=$(TOOLCHAIN_DIR) \
 	  --enable-shared $(GCC_CONFOPTS) \
 	  --enable-languages=c++ && \
-	  make $(MAKEOPTS) all-host all-target-libgcc && make install-host install-target-libgcc) || exit 1
+	  make $(MAKEOPTS) all-host all-target-libgcc all-target-libstdc++-v3 && \
+	  make install-host install-target-libgcc install-target-libstdc++-v3) || exit 1
 	touch $(GCC_STAGE2_BUILD_DIR)/.build
 
 $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
@@ -83,7 +84,8 @@ build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)
 	mkdir -p $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so.* $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so $(BT_STAGING_DIR)/lib
-	cp -a $(TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/libgcc_s* $(BT_STAGING_DIR)/lib
+	cp -a $(TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so.* $(BT_STAGING_DIR)/lib
+	cp -a $(TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so $(BT_STAGING_DIR)/lib
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(BT_STAGING_DIR)/lib/*
 
 ###############################
