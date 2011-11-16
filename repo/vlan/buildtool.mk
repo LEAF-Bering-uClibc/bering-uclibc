@@ -10,7 +10,7 @@ VLAN_TARGET_DIR:=$(BT_BUILD_DIR)/vlan
 
 source: #$(VLAN_DIR)/.source
 
-$(VLAN_DIR)/.build:
+.build:
 	mkdir -p $(VLAN_TARGET_DIR)
 	mkdir -p $(VLAN_TARGET_DIR)/etc/network/if-pre-up.d
 	mkdir -p $(VLAN_TARGET_DIR)/etc/network/if-post-down.d
@@ -23,16 +23,16 @@ $(VLAN_DIR)/.build:
 	cp -aL vlan.post $(VLAN_TARGET_DIR)/etc/network/if-post-down.d/vlan
 #	cp -a $(VLAN_DIR)/vconfig $(VLAN_TARGET_DIR)/sbin
 	cp -a $(VLAN_TARGET_DIR)/* $(BT_STAGING_DIR)
-	touch $(VLAN_DIR)/.build
+	touch .build
 
-build: $(VLAN_DIR)/.build
+build: .build
 
 clean:
 #	-rm -f $(VLAN_DIR)/vconfig.h 
 #	-rm -f $(VLAN_DIR)/vconfig.o 
 #	-rm -f $(VLAN_DIR)/vconfig
 	rm -rf $(VLAN_TARGET_DIR)
-#	rm -f $(VLAN_DIR)/.build
+	rm -f .build
 #	rm -f $(VLAN_DIR)/.configured
 
 srcclean: clean
