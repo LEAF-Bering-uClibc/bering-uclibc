@@ -1,0 +1,60 @@
+diff -aur nut-2.6.2/drivers/powercom.c nut-2.6.2.new/drivers/powercom.c
+--- nut-2.6.2/drivers/powercom.c	2011-09-15 14:30:45.000000000 +0300
++++ nut-2.6.2.new/drivers/powercom.c	2011-11-15 21:53:14.302669361 +0200
+@@ -90,7 +90,8 @@
+ 
+ /* variables used by module */
+ static unsigned char raw_data[MAX_NUM_OF_BYTES_FROM_UPS]; /* raw data reveived from UPS */
+-static unsigned int linevoltage = 230U; /* line voltage, can be defined via command line option */
++#define DEFLINEVOLTAGE 230U
++static unsigned int linevoltage = 0U; /* line voltage, can be defined via command line option */
+ static const char *manufacturer = "PowerCom";
+ static const char *modelname    = "Unknown";
+ static const char *serialnumber = "Unknown";
+@@ -887,25 +888,34 @@
+ 	types[type].flowControl.setup_flow_control();
+ 
+ 	/* Setup Model and LineVoltage */
+-	if (!strncmp(types[type].name, "BNT",3) || !strcmp(types[type].name, "KIN") || !strcmp(types[type].name, "IMP")){
++	if (getval("type") == NULL){
+ 		if (!ups_getinfo()) return;
+ 		/* Give "BNT-other" a chance! */
+ 		if (raw_data[MODELNAME]==0x42 || raw_data[MODELNAME]==0x4B){
+-			model=BNTmodels[raw_data[MODELNUMBER]/16];
+ 			if (!strcmp(types[type].name, "BNT-other"))
+ 				types[type].name="BNT-other";
+ 			else if (raw_data[MODELNAME]==0x42)
+ 				types[type].name="BNT";
+ 			else if (raw_data[MODELNAME]==0x4B){
+ 				types[type].name="KIN";
+-				model=KINmodels[raw_data[MODELNUMBER]/16];
+ 			}
+ 		}
+ 		else if (raw_data[UPSVERSION]==0xFF){
+ 			types[type].name="IMP";
++		}
++	}
++	if (!strncmp(types[type].name, "BNT",3) || !strcmp(types[type].name, "KIN") || !strcmp(types[type].name, "IMP")){
++		if (!ups_getinfo()) return;
++		if (!strcmp(types[type].name, "IMP")){
+ 			model=IMPmodels[raw_data[MODELNUMBER]/16];
+ 		}
+-		linevoltage=voltages[raw_data[MODELNUMBER]%16];
++		if (!strcmp(types[type].name, "BNT")){
++			model=BNTmodels[raw_data[MODELNUMBER]/16];
++		}
++		if (!strcmp(types[type].name, "KIN")){
++			model=KINmodels[raw_data[MODELNUMBER]/16];
++		}
++		if (!linevoltage) linevoltage=voltages[raw_data[MODELNUMBER]%16];
+ 		snprintf(buf,sizeof(buf),"%s-%dAP",types[type].name,model);
+ 		if (!strcmp(modelname, "Unknown"))
+ 			modelname=buf;
+@@ -916,6 +926,7 @@
+ 			return;
+ 		}
+ 	}
++	if (!linevoltage) linevoltage=DEFLINEVOLTAGE;
+ 	
+ 	upsdebugx(1, "Values of arguments:");
+ 	upsdebugx(1, " manufacturer            : '%s'", manufacturer);

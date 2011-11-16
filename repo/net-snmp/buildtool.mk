@@ -56,6 +56,7 @@ $(SNMP_DIR)/.build: $(SNMP_DIR)/.configured
 	$(MAKE) -C $(SNMP_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(SNMP_TARGET_DIR)"/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) "$(SNMP_TARGET_DIR)"/usr/lib/*.so.*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," "$(SNMP_TARGET_DIR)"/usr/lib/*.la
 	cp -aL snmptrapd.init "$(SNMP_TARGET_DIR)"/etc/init.d/snmptrapd
 	cp -aL snmptrapd.default "$(SNMP_TARGET_DIR)"/etc/default/snmptrapd
 	cp -aL snmptrapd.conf "$(SNMP_TARGET_DIR)"/etc/snmp/snmptrapd.conf

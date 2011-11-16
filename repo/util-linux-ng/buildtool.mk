@@ -39,6 +39,7 @@ $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 	cp -a $(UTIL_LINUX_DIR)/shlibs/uuid/src/.libs/libuuid.* $(UTIL_LINUX_TARGET_DIR)/lib/
 	rm -f $(UTIL_LINUX_TARGET_DIR)/lib/libuuid.la
 	cp -a $(UTIL_LINUX_DIR)/shlibs/uuid/src/libuuid.la $(UTIL_LINUX_TARGET_DIR)/lib/
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/lib\'," $(UTIL_LINUX_TARGET_DIR)/lib/*.la
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(UTIL_LINUX_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(UTIL_LINUX_TARGET_DIR)/lib/*
 	cp -a $(UTIL_LINUX_TARGET_DIR)/* $(BT_STAGING_DIR)
