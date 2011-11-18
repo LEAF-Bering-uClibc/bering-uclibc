@@ -54,7 +54,7 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTABLES_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
-	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(IPTABLES_TARGET_DIR)/usr/lib/*.la
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/lib\'," $(IPTABLES_TARGET_DIR)/usr/lib/*.la
 	rm -rf $(IPTABLES_TARGET_DIR)/lib/pkgconfig $(IPTABLES_TARGET_DIR)/share
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/iptables
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/ip6tables

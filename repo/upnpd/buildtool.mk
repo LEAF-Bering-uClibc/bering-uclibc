@@ -13,30 +13,32 @@ LIBUPNP_DIR:=libupnp-1.4.1
 
 # ----------------------------------------------------------------------
 
-LIBUPNP_FLAGS= CC=$(TARGET_CC) LD=$(TARGET_LD) DESTDIR=$(TARGET_DIR)
+LIBUPNP_FLAGS= DESTDIR=$(TARGET_DIR)
 
 $(LIBUPNP_DIR)/.source:
 	zcat $(LIBUPNP_SOURCE) | tar -xvf -
 	touch $(LIBUPNP_DIR)/.source	
 
 $(LIBUPNP_DIR)/.configured: $(LIBUPNP_DIR)/.source
-	(cd $(LIBUPNP_DIR); CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) \
-	./configure --prefix=/usr --disable-shared );
+	(cd $(LIBUPNP_DIR); ./configure \
+	--prefix=/usr \
+	--host=$(GNU_TARGET_NAME) \
+	--disable-shared );
 	touch $(LIBUPNP_DIR)/.configured
 
 $(LIBUPNP_DIR)/.build: $(LIBUPNP_DIR)/.configured
 	mkdir -p $(TARGET_DIR)
-	make -C $(LIBUPNP_DIR) $(LIBUPNP_FLAGS)
-	make -C $(LIBUPNP_DIR) $(LIBUPNP_FLAGS) install
+	make $(MAKEOPTS) -C $(LIBUPNP_DIR)
+	make -C $(LIBUPNP_DIR) DESTDIR=$(TARGET_DIR) install
 	touch $(LIBUPNP_DIR)/.build
 
 # ----------------------------------------------------------------------
 
 UPNPD_FLAGS=$(DEBUG) HAVE_LIBIPTC=YES \
 	LIBUPNP_PREFIX=$(TARGET_DIR)/usr \
-	LIBIPTC_PREFIX=$(TARGET_DIR)/usr \
+	LIBIPTC_PREFIX=$(BT_STAGING_DIR) \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) \
-	CFLAGS="$(BT_COPT_FLAGS)" \
+	CFLAGS="$(CFLAGS) -Wl,-rpath -Wl,/var/testpoint/LEAF-new/staging/i386/lib" \
 	DESTDIR=$(TARGET_DIR)
 
 $(UPNPD_DIR)/.source:
@@ -49,7 +51,7 @@ $(UPNPD_DIR)/.source:
 	touch $(UPNPD_DIR)/.source
 
 $(UPNPD_DIR)/.build: $(UPNPD_DIR)/.source $(LIBUPNP_DIR)/.build
-	make -C $(UPNPD_DIR) $(UPNPD_FLAGS)
+	make $(MAKEOPTS) -C $(UPNPD_DIR) $(UPNPD_FLAGS)
 	make -C $(UPNPD_DIR) $(UPNPD_FLAGS) install
 	cp $(UPNPD_DIR)/etc/ligd.gif    $(TARGET_DIR)/etc/linuxigd
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/upnpd
