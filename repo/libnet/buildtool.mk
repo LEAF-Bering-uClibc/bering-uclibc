@@ -9,19 +9,15 @@ LIBNET_DIR:=libnet
 LIBNET_TARGET_DIR:=$(BT_BUILD_DIR)/libnet
 
 source:
-	zcat $(LIBNET_SOURCE) | tar -xvf - 	
-#	zcat $(LIBNET_CONFIG_SUB) > $(LIBNET_DIR)/config.sub
+	zcat $(LIBNET_SOURCE) | tar -xvf -
+	zcat $(BT_TOOLS_DIR)/config.sub.gz > $(LIBNET_DIR)/config.sub
 #	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1  
 
 $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
 	(cd $(LIBNET_DIR); \
-		libtoolize -if && \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr );
-	
-#source: $(LIBPCAP_DIR)/.source
-
 
 build: $(LIBNET_DIR)/Makefile
 	mkdir -p $(LIBNET_TARGET_DIR)
