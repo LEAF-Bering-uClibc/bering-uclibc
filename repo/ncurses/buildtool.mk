@@ -44,7 +44,6 @@ $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 $(NCURSES_DIR)/.build: $(NCURSES_DIR)/.configured
 	mkdir -p $(NCURSES_BUILD_DIR)
 	make $(MAKEOPTS) -C $(NCURSES_DIR)
-	exit 1
 	make -C $(NCURSES_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(NCURSES_BUILD_DIR)/usr/lib/*
 	cp -a $(NCURSES_BUILD_DIR)/* $(BT_STAGING_DIR)
