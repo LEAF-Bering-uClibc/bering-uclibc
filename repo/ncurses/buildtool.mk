@@ -20,13 +20,8 @@ $(NCURSES_DIR)/.source:
 $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 	(cd $(NCURSES_DIR); \
 		DESTDIR=$(NCURSES_BUILD_DIR) \
-		CC=$(TARGET_CC) \
-		AR=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ar \
-		LD=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ld \
-		RANLIB=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ranlib \
-		CFLAGS=$(NCURSES_CFLAGS)  \
 		./configure --prefix=/usr \
-		--target=i386-pc-linux-gnu \
+		--host=$(GNU_TARGET_NAME) \
 		--with-build-libs="$(BT_STAGING_DIR)/lib" \
 		--with-shared \
 		--mandir='$${datadir}/man' \
@@ -48,12 +43,10 @@ $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 
 $(NCURSES_DIR)/.build: $(NCURSES_DIR)/.configured
 	mkdir -p $(NCURSES_BUILD_DIR)
-	make -C $(NCURSES_DIR) CC=$(TARGET_CC)
+	make $(MAKEOPTS) -C $(NCURSES_DIR)
+	exit 1
 	make -C $(NCURSES_DIR) install
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libform.so.5.5
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libmenu.so.5.5
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libncurses.so.5.5
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libpanel.so.5.5
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(NCURSES_BUILD_DIR)/usr/lib/*
 	cp -a $(NCURSES_BUILD_DIR)/* $(BT_STAGING_DIR)
 	touch $(NCURSES_DIR)/.build
 
