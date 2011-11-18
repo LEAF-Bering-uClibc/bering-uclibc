@@ -6,7 +6,7 @@ LIBUSB_TARGET_DIR:=$(BT_BUILD_DIR)/libusb
 
 $(LIBUSB_DIR)/.source:
 	zcat $(LIBUSB_SOURCE) | tar -xvf -
-	zcat $(CONFIG_SUB) >$(LIBUSB_DIR)/config.sub
+	zcat $(BT_TOOLS_DIR)/config.sub.gz >$(LIBUSB_DIR)/config.sub
 	touch $(LIBUSB_DIR)/.source
 
 source: $(LIBUSB_DIR)/.source
