@@ -9,21 +9,22 @@ LIBDNET_DIR:=libdnet-1.11
 LIBDNET_TARGET_DIR:=$(BT_BUILD_DIR)/libdnet
 export CC=$(TARGET_CC)
 
-source:
-	zcat $(LIBDNET_SOURCE) | tar -xvf - 	
+source: $(LIBDNET_DIR)/configure
+
+$(LIBDNET_DIR)/configure:
+	zcat $(LIBDNET_SOURCE) | tar -xvf -
+	zcat $(BT_TOOLS_DIR)/config.sub.gz >$(LIBDNET_DIR)/config/config.sub
 
 $(LIBDNET_DIR)/Makefile: $(LIBDNET_DIR)/configure
-	(cd $(LIBDNET_DIR); ac_cv_linux_vers=2  \
-		CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS=$(CFLAGS) \
+	(cd $(LIBDNET_DIR); \
 		./configure \
-			--build=i686-pc-linux-gnu \
-			--target=i686-pc-linux-gnu \
+			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr \
 			--without-check );
 	
 build: $(LIBDNET_DIR)/Makefile
 	mkdir -p $(LIBDNET_TARGET_DIR)
-	$(MAKE) CCOPT="$(BT_COPT_FLAGS)" -C $(LIBDNET_DIR) 
+	$(MAKE) $(MAKEOPTS) -C $(LIBDNET_DIR)
 	$(MAKE) DESTDIR=$(LIBDNET_TARGET_DIR) -C $(LIBDNET_DIR) install
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBDNET_TARGET_DIR)/usr/lib/libdnet.1.0.1
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LIBDNET_TARGET_DIR)/usr/sbin/dnet
@@ -41,6 +42,6 @@ clean:
 	rm -rf $(BT_STAGING_DIR)/usr/include/dnet
 	rm -f $(BT_STAGING_DIR)/usr/bin/dnet-config
 	rm -f $(BT_STAGING_DIR)/usr/sbin/dnet
-	
+
 srcclean:
 	rm -rf $(LIBDNET_DIR)
