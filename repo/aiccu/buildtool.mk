@@ -18,7 +18,7 @@ $(AICCU_DIR)/.configured: $(AICCU_DIR)/.source
 	touch $(AICCU_DIR)/.configured
 
 $(AICCU_DIR)/.build: $(AICCU_DIR)/.configured
-	CC=$(TARGET_CC) CFLAGS="$(BT_COPT_FLAGS)" make -C $(AICCU_DIR) all
+	CC=$(TARGET_CC) make $(MAKEOPTS) -C $(AICCU_DIR) all
 	mkdir -p "$(AICCU_TARGET_DIR)"
 	cd "$(AICCU_TARGET_DIR)" && mkdir -p usr/sbin etc etc/init.d
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(AICCU_DIR)/unix-console/aiccu
