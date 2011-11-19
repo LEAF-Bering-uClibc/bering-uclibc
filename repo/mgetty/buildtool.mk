@@ -15,7 +15,7 @@ $(MGETTY_DIR)/.source:
 	touch $(MGETTY_DIR)/.source
 
 source: $(MGETTY_DIR)/.source
-                        
+
 $(MGETTY_DIR)/.build: $(MGETTY_DIR)/.source
 
 	cd $(MGETTY_DIR)/
@@ -26,40 +26,40 @@ $(MGETTY_DIR)/.build: $(MGETTY_DIR)/.source
 		touch $(patchdir)/$$file.stamp; \
 	fi; \
 	done
-	
+
 	-cp $(MGETTY_DIR)/debian/policy.h $(MGETTY_DIR)/debian/voice-defs.h $(MGETTY_DIR)
 
 	mkdir -p $(MGETTY_TARGET_DIR)
 	mkdir -p $(MGETTY_TARGET_DIR)/etc/
 	mkdir -p $(MGETTY_TARGET_DIR)/etc/mgetty
-	mkdir -p $(MGETTY_TARGET_DIR)/etc/cron.daily	
+	mkdir -p $(MGETTY_TARGET_DIR)/etc/cron.daily
 	mkdir -p $(MGETTY_TARGET_DIR)/sbin
 	mkdir -p $(MGETTY_TARGET_DIR)/usr/sbin
-	mkdir -p $(MGETTY_TARGET_DIR)/usr/bin		
-	make CC=$(TARGET_CC) CFLAGS="$(BT_COPT_FLAGS) -Wall -pipe -DAUTO_PPP -DFIFO" \
-	SHELL=/bin/sh -C $(MGETTY_DIR) 
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(MGETTY_DIR)/mgetty	
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(MGETTY_DIR)/newslock
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(MGETTY_DIR)/callback/callback	
+	mkdir -p $(MGETTY_TARGET_DIR)/usr/bin
+	make  $(MAKEOPTS) CC=$(TARGET_CC) CFLAGS="$(CFLAGS) -pipe -DAUTO_PPP -DFIFO" \
+	SHELL=/bin/sh -C $(MGETTY_DIR)
 	cp -aL issue.mgetty $(MGETTY_TARGET_DIR)/etc
 	cp -aL mgetty.cron_daily $(MGETTY_TARGET_DIR)/etc/cron.daily/mgetty
-	cp -aL login.config $(MGETTY_TARGET_DIR)/etc/mgetty	
-	cp -aL dialin.config $(MGETTY_TARGET_DIR)/etc/mgetty	
-	cp -aL mgetty.config $(MGETTY_TARGET_DIR)/etc/mgetty			
+	cp -aL login.config $(MGETTY_TARGET_DIR)/etc/mgetty
+	cp -aL dialin.config $(MGETTY_TARGET_DIR)/etc/mgetty
+	cp -aL mgetty.config $(MGETTY_TARGET_DIR)/etc/mgetty
 	cp -a $(MGETTY_DIR)/mgetty $(MGETTY_TARGET_DIR)/sbin
 	cp -a $(MGETTY_DIR)/newslock $(MGETTY_TARGET_DIR)/usr/bin
-	cp -a $(MGETTY_DIR)/callback/callback $(MGETTY_TARGET_DIR)/usr/sbin	
+	cp -a $(MGETTY_DIR)/callback/callback $(MGETTY_TARGET_DIR)/usr/sbin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MGETTY_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MGETTY_TARGET_DIR)/usr/sbin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MGETTY_TARGET_DIR)/sbin/*
 	cp -a $(MGETTY_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(MGETTY_DIR)/.build
 
 build: $(MGETTY_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(MGETTY_DIR) clean
 	rm -rf $(MGETTY_TARGET_DIR)
 	rm -rf $(MGETTY_DIR)/.build
 	rm -rf $(MGETTY_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
 	rm -rf $(MGETTY_DIR) 
 	rm -rf $(MGETTY_DIR)/.source
