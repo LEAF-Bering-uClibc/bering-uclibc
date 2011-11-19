@@ -12,24 +12,20 @@ LIBPOPT_DIR:=$(shell cat DIRNAME)
 endif
 LIBPOPT_TARGET_DIR:=$(BT_BUILD_DIR)/libpopt
 
-export CC=$(TARGET_CC)
-
 $(LIBPOPT_DIR)/.source:
-	zcat $(LIBPOPT_SOURCE) |  tar -xvf - 	
-	zcat $(LIBPOPT_PATCH1) |  patch -d $(LIBPOPT_DIR) -p1  
-	zcat $(LIBPOPT_PATCH2) |  patch -d $(LIBPOPT_DIR) -p1  
+	zcat $(LIBPOPT_SOURCE) |  tar -xvf -
 	echo $(LIBPOPT_DIR) > DIRNAME
 	touch $(LIBPOPT_DIR)/.source
 
 $(LIBPOPT_DIR)/.configured: $(LIBPOPT_DIR)/.source
-	(cd $(LIBPOPT_DIR); ac_cv_linux_vers=2  \
+	(cd $(LIBPOPT_DIR); \
 		./configure \
-			--build=i386-pc-linux-gnu \
-			--target=i386-pc-linux-gnu \
+			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr \
-			--disable-nls );
+			--disable-nls \
+			--disable-rpath );
 	touch $(LIBPOPT_DIR)/.configured
-	
+
 source: $(LIBPOPT_DIR)/.source
 
 
@@ -37,19 +33,19 @@ $(LIBPOPT_DIR)/.build: $(LIBPOPT_DIR)/.configured
 	mkdir -p $(LIBPOPT_TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
 	mkdir -p $(BT_STAGING_DIR)/usr/include
-	$(MAKE) CCOPT="$(BT_COPT_FLAGS)" -C $(LIBPOPT_DIR) 	
-	$(BT_STRIP)  --strip-unneeded $(LIBPOPT_DIR)/.libs/libpopt.so.0.0.0
+	$(MAKE) $(MAKEOPTS) -C $(LIBPOPT_DIR)
 	$(MAKE) DESTDIR=$(LIBPOPT_TARGET_DIR) -C $(LIBPOPT_DIR) install
-	cp -a -f $(LIBPOPT_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
-	cp -a -f $(LIBPOPT_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include/	
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBPOPT_TARGET_DIR)/usr/lib/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBPOPT_TARGET_DIR)/usr/lib/*.la
+	rm -rf $(LIBPOPT_TARGET_DIR)/usr/share
+	cp -a -f $(LIBPOPT_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(LIBPOPT_DIR)/.build
 
 build: $(LIBPOPT_DIR)/.build
 
 clean:
-	echo $(PATH)
-	-rm $(LIBPOPT_DIR)/.build
-#	rm -rf $(LIBPOPT_TARGET_DIR)
+	-rm $(LIBPOPT_DIR)/.build $(LIBPOPT_DIR)/.configured
+	-rm -rf $(LIBPOPT_TARGET_DIR)
 	$(MAKE) -C $(LIBPOPT_DIR) clean
 	
 srcclean:
