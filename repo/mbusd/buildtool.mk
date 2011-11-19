@@ -4,24 +4,17 @@ include $(MASTERMAKEFILE)
 DIR:=mbus-0.1.2
 TARGET_DIR:=$(BT_BUILD_DIR)/mbusd
 
-#LIBS = -liberty
-#TFTPD_LIBS = -lwrap -liberty
-
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -
 	cat $(PATCH1) | patch -p1 -d $(DIR)
-#	cat $(PATCH2) | patch -p1 -d $(DIR)
-#	cat $(PATCH3) | patch -p0 -d $(DIR)/src
 	touch $(DIR)/.source
 
 source: $(DIR)/.source
 
 $(DIR)/.configured: $(DIR)/.source
 	(cd $(DIR) ; rm -f aclocal.m4 Makefile.in ; libtoolize -if && \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(CFLAGS) -DTRXCTL" \
+	 CFLAGS="$(CFLAGS) -DTRXCTL" \
 	./autogen.sh --prefix=/usr --host=$(GNU_TARGET_NAME) )
-#	; \
-#	./configure --prefix=/usr)
 	touch $(DIR)/.configured
 
 $(DIR)/.build: $(DIR)/.configured
@@ -46,5 +39,4 @@ clean:
 	rm -rf $(DIR)/.configured
 
 srcclean: clean
-	rm -rf $(DIR) 
-	rm -rf $(DIR)/.source
+	rm -rf $(DIR)
