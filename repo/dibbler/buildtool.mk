@@ -31,8 +31,10 @@ $(DIBBLER_DIR)/.build: $(DIBBLER_DIR)/.source
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d/
 	mkdir -p $(BT_STAGING_DIR)/etc/dibbler/
 #
-	make CBUILD=$(GNU_TARGET_NAME) CHOST=$(GNU_HOST_NAME) \
-		CC=$(TARGET_CC) LD=$(TARGET_LD) -C $(DIBBLER_DIR) all
+	make CHOST=$(GNU_TARGET_NAME) -C $(DIBBLER_DIR) libposlib
+	make $(MAKEOPTS) CHOST=$(GNU_TARGET_NAME) \
+		CC=$(TARGET_CC) CXX=$(TARGET_CXX) \
+		LD=$(TARGET_LD) -C $(DIBBLER_DIR) all
 	touch $(DIBBLER_DIR)/doc/dibbler-devel.pdf
 	make DESTDIR=$(DIBBLER_TARGET_DIR) -C $(DIBBLER_DIR) install
 #

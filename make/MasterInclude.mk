@@ -35,6 +35,7 @@ export GNU_TUNE:=pentiumpro
 export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
 # target gcc
 export TARGET_CC=$(GNU_TARGET_NAME)-gcc
+export TARGET_CXX=$(GNU_TARGET_NAME)-g++
 # target ld
 export TARGET_LD=$(GNU_TARGET_NAME)-ld
 
