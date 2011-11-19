@@ -7,16 +7,14 @@ DJBDNS_TARGET_DIR:=$(BT_BUILD_DIR)/djbdns
 $(DJBDNS_DIR)/.source:
 	zcat $(DJBDNS_SOURCE) | tar -xvf -
 	bzcat $(DJBDNS_PATCH1) | patch -d $(DJBDNS_DIR) -p1 
-	perl -i -p -e 's,-O2,$(BT_COPT_FLAGS) -I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include,g' $(DJBDNS_DIR)/conf-cc 
+	perl -i -p -e 's,-O2,$(CFLAGS),g' $(DJBDNS_DIR)/conf-cc 
 	perl -i -p -e 's,gcc\s+,$(TARGET_CC) ,g' $(DJBDNS_DIR)/conf-cc 
-	perl -i -p -e 's,gcc\s*-s,$(TARGET_CC) -s -L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib,g' $(DJBDNS_DIR)/conf-ld
+	perl -i -p -e 's,gcc\s*-s,$(TARGET_CC) -s $(LDFLAGS),g' $(DJBDNS_DIR)/conf-ld
 	perl -i -p -e 's,/usr/local,/usr,g' $(DJBDNS_DIR)/conf-home
-	
 	touch $(DJBDNS_DIR)/.source
 
 source: $(DJBDNS_DIR)/.source
-                        
-                                                                 
+
 $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	cd $(DJBDNS_DIR)
 	mkdir -p $(DJBDNS_TARGET_DIR)/usr/bin
@@ -38,9 +36,9 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/tinydns-public/log
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/tinydns-public/root
 	
-	make -C $(DJBDNS_DIR)
+	make $(MAKEOPTS) -C $(DJBDNS_DIR)
 	
-	cp $(DJBDNS_DIR)/dnscache-conf $(DJBDNS_TARGET_DIR)/usr/bin/ 
+	cp $(DJBDNS_DIR)/dnscache-conf $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/tinydns-conf $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/walldns-conf $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/rbldns-conf $(DJBDNS_TARGET_DIR)/usr/bin/
@@ -109,23 +107,23 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	cp -aL tinydns $(DJBDNS_TARGET_DIR)/etc/init.d/tinydns
 	# don't keep empty files in CVS
 	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-public/env/IP
-	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/root/data	
+	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/root/data
 	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-public/log/status
-	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/log/status	
+	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/log/status
 	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-public/root/data
 	
 	cp -a $(DJBDNS_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(DJBDNS_DIR)/.build
 
 build: $(DJBDNS_DIR)/.build
-                                                                                         
+
 clean:
 	-make -C $(DJBDNS_DIR) clean
 	rm -rf $(DJBDNS_TARGET_DIR)
 	-rm $(DJBDNS_DIR)/.build
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(DJBDNS_DIR) 
+	rm -rf $(DJBDNS_DIR)
 	-rm $(DJBDNS_DIR)/.source
 
 
