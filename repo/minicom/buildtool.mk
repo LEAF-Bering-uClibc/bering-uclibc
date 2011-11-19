@@ -7,20 +7,29 @@ MINICOM_TARGET_DIR:=$(BT_BUILD_DIR)/minicom
 $(MINICOM_DIR)/.source:
 	zcat $(MINICOM_SOURCE) | tar -xvf -
 	cat $(MINICOM_PATCH) | patch -p1 -d $(MINICOM_DIR)
+	zcat $(BT_TOOLS_DIR)/config.sub.gz >$(MINICOM_DIR)/aux/config.sub
 	touch $(MINICOM_DIR)/.source
 
 source: $(MINICOM_DIR)/.source
 
 $(MINICOM_DIR)/.configured: $(MINICOM_DIR)/.source
-	(cd $(MINICOM_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure --disable-nls --prefix=/usr)
+	(cd $(MINICOM_DIR) ; \
+		./configure \
+		--host=$(GNU_TARGET_NAME) \
+		--prefix=/usr \
+		--disable-nls \
+		--disable-rpath \
+		--without-iconv-prefix \
+		--without-libintl-prefix \
+		)
 	touch $(MINICOM_DIR)/.configured
-                        
+
 $(MINICOM_DIR)/.build: $(MINICOM_DIR)/.configured
 	mkdir -p $(MINICOM_TARGET_DIR)
 	mkdir -p $(MINICOM_TARGET_DIR)/usr/bin
-	make CC=$(TARGET_CC) CFLAGS="$(BT_COPT_FLAGS)" -C $(MINICOM_DIR)
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(MINICOM_DIR)/minicom
+	make $(MAKEOPTS) -C $(MINICOM_DIR)
 	cp -a $(MINICOM_DIR)/src/minicom $(MINICOM_TARGET_DIR)/usr/bin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MINICOM_TARGET_DIR)/usr/bin/*
 	cp -a $(MINICOM_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(MINICOM_DIR)/.build
 
