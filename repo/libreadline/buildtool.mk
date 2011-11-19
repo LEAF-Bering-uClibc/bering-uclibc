@@ -15,12 +15,10 @@ $(DIR)/.source:
 
 
 $(DIR)/.configured: $(DIR)/.source
-	(cd $(DIR); CFLAGS="$(BT_COPT_FLAGS)" ./configure \
-	--build=$(GNU_HOST_MANE) \
+	(cd $(DIR); ./configure \
 	--host=$(GNU_TARGET_MANE) \
 	--prefix=/usr \
 	--with-curses \
-	--disable-largefile \
 	)
 	touch $(DIR)/.configured
 
@@ -29,7 +27,7 @@ source: $(DIR)/.source
 $(DIR)/.build: $(DIR)/.configured
 	-rm -rf $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)
-	$(MAKE) -C $(DIR)
+	$(MAKE) $(MAKEOPTS) -C $(DIR)
 	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*
 	rm -rf $(TARGET_DIR)/usr/share
