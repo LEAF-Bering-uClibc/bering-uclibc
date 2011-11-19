@@ -11,16 +11,18 @@ $(SQUID_DIR)/.source:
 	touch $(SQUID_DIR)/.source
 
 source: $(SQUID_DIR)/.source
-                        
+
 $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
-	(cd $(SQUID_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
-	./configure --with-ldflags=-s \
+	(cd $(SQUID_DIR) ; rm aclocal.m4 Makefile.in; \
+	libtoolize -i -f && autoreconf -i -f && \
+	./configure \
 	--sysconfdir=/etc/squid --prefix= \
+	--host=$(GNU_TARGET_NAME) \
 	--enable-internal-dns \
 	--exec-prefix=/usr --libexecdir=/usr/bin \
-	--enable-snmp --target=i386-pc-linux-gnu \
+	--enable-snmp \
 	--datadir=/etc/squid \
-	--disable-dependency-tracking --disable-wccp --disable-wccpv2 \
+	--disable-wccp --disable-wccpv2 \
 	--enable-poll --enable-delay-pools \
 	--enable-default-err-language=English \
 	--enable-err-languages="English" \
@@ -49,7 +51,7 @@ $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
 	--without-large-files )
 
 	touch $(SQUID_DIR)/.configured
-                                                                 
+
 $(SQUID_DIR)/.build: $(SQUID_DIR)/.configured
 	mkdir -p $(SQUID_TARGET_DIR)
 	mkdir -p $(SQUID_TARGET_DIR)/etc/init.d	
@@ -62,7 +64,7 @@ $(SQUID_DIR)/.build: $(SQUID_DIR)/.configured
 	mkdir -p $(SQUID_TARGET_DIR)/usr/lib/cgi-bin		
 #       breaks patch
 #	make CFLAGS="$(BT_COPT_FLAGS)" -C $(SQUID_DIR) all
-	make CFLAGS="-Wall" -C $(SQUID_DIR) all	
+	make $(MAKEOPTS) -C $(SQUID_DIR) all	
 	chmod 644 $(SQUID_DIR)/icons/silk/*	
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/src/squid	
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SQUID_DIR)/tools/squidclient

@@ -57,6 +57,7 @@ export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(ARCH)
 
 #Paths
 export PATH:=$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
+export PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 
 #Cross-compile target
 export CROSS_COMPILE=$(GNU_TARGET_NAME)-
