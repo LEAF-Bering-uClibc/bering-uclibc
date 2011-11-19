@@ -1,12 +1,12 @@
 # makefile for mdadm
 include $(MASTERMAKEFILE)
 
-MDADM_DIR:=mdadm-2.5.6
+MDADM_DIR:=mdadm-3.2.2
 MDADM_TARGET_DIR:=$(BT_BUILD_DIR)/mdadm
 
 $(MDADM_DIR)/.source:
 	zcat $(MDADM_SOURCE) | tar -xvf -
-	cat $(MDADM_PATCH1) | patch -d $(MDADM_DIR) -p1
+#	cat $(MDADM_PATCH1) | patch -d $(MDADM_DIR) -p1
 	touch $(MDADM_DIR)/.source
 
 source: $(MDADM_DIR)/.source
