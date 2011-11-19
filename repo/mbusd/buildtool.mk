@@ -3,8 +3,6 @@ include $(MASTERMAKEFILE)
 
 DIR:=mbus-0.1.2
 TARGET_DIR:=$(BT_BUILD_DIR)/mbusd
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
-export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER)
 
 #LIBS = -liberty
 #TFTPD_LIBS = -lwrap -liberty
@@ -17,11 +15,11 @@ $(DIR)/.source:
 	touch $(DIR)/.source
 
 source: $(DIR)/.source
-                        
+
 $(DIR)/.configured: $(DIR)/.source
-	(cd $(DIR) ; \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -DTRXCTL" \
-	./autogen.sh --prefix=/usr)
+	(cd $(DIR) ; rm -f aclocal.m4 Makefile.in ; libtoolize -if && \
+	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(CFLAGS) -DTRXCTL" \
+	./autogen.sh --prefix=/usr --host=$(GNU_TARGET_NAME) )
 #	; \
 #	./configure --prefix=/usr)
 	touch $(DIR)/.configured
@@ -31,7 +29,7 @@ $(DIR)/.build: $(DIR)/.configured
 	mkdir -p $(TARGET_DIR)/usr/bin
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	mkdir -p $(TARGET_DIR)/etc/default
-	AM_CFLAGS="$(BT_COPT_FLAGS) -DTRXCTL" make -C $(DIR)
+	make $(MAKEOPTS) -C $(DIR)
 	cp -a $(DIR)/src/mbusd $(TARGET_DIR)/usr/bin
 	cp -aL mbusd.init $(TARGET_DIR)/etc/init.d/mbusd
 	cp -aL mbusd.default $(TARGET_DIR)/etc/default/mbusd
