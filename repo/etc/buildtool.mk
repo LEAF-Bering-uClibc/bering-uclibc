@@ -8,11 +8,8 @@ $(ETC_DIR)/.source:
 	touch $(ETC_DIR)/.source
 
 source: $(ETC_DIR)/.source
-                        
-$(ETC_DIR)/.configured: $(ETC_DIR)/.source
-	touch $(ETC_DIR)/.configured
-                                                                 
-$(ETC_DIR)/.build: $(ETC_DIR)/.configured
+
+$(ETC_DIR)/.build: $(ETC_DIR)/.source
 	mkdir -p $(ETC_TARGET_DIR)
 	mkdir -p $(ETC_TARGET_DIR)/etc
 	mkdir -p $(ETC_TARGET_DIR)/etc/cron.d
@@ -20,7 +17,10 @@ $(ETC_DIR)/.build: $(ETC_DIR)/.configured
 	mkdir -p $(ETC_TARGET_DIR)/etc/default
 	mkdir -p $(ETC_TARGET_DIR)/etc/syslog-ng
 	mkdir -p $(ETC_TARGET_DIR)/etc/init.d
-	mkdir -p $(ETC_TARGET_DIR)/etc/network			
+	mkdir -p $(ETC_TARGET_DIR)/etc/network/if-up.d
+	mkdir -p $(ETC_TARGET_DIR)/etc/network/if-pre-up.d
+	mkdir -p $(ETC_TARGET_DIR)/etc/network/if-down.d
+	mkdir -p $(ETC_TARGET_DIR)/etc/network/if-post-down.d
 	cp -aL crontab $(ETC_TARGET_DIR)/etc
 	cp -aL fstab $(ETC_TARGET_DIR)/etc
 	cp -aL group $(ETC_TARGET_DIR)/etc
@@ -69,17 +69,20 @@ $(ETC_DIR)/.build: $(ETC_DIR)/.configured
 	cp -aL umountfs $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL urandom $(ETC_TARGET_DIR)/etc/init.d	
 	cp -aL watchdog $(ETC_TARGET_DIR)/etc/init.d
+	cp -aL ifenslave.up $(ETC_TARGET_DIR)/etc/network/if-up.d/ifenslave
+	cp -aL ip.up $(ETC_TARGET_DIR)/etc/network/if-up.d/ip
+	cp -aL ifenslave.down $(ETC_TARGET_DIR)/etc/network/if-down.d/ifenslave
+	cp -aL vlan.up $(ETC_TARGET_DIR)/etc/network/if-pre-up.d/vlan
+	cp -aL vlan.down $(ETC_TARGET_DIR)/etc/network/if-post-down.d/vlan
 	cp -aL mdev.conf $(ETC_TARGET_DIR)/etc/
 	cp -a $(ETC_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(ETC_DIR)/.build
 
 build: $(ETC_DIR)/.build
-                                                                                         
+
 clean:
 	rm -rf $(ETC_TARGET_DIR)
 	rm -f $(ETC_DIR)/.build
-	rm -f $(ETC_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(ETC_DIR) 
 	rm -f $(ETC_DIR)/.source
