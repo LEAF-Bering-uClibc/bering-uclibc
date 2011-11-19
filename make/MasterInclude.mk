@@ -69,6 +69,7 @@ export LANG=en_US
 
 # default optimization settings for compiling code 
 export CFLAGS=-O2 -march=$(GNU_ARCH) -mtune=$(GNU_TUNE) -I$(BT_STAGING_DIR)/usr/include
+export CPPFLAGS=$(CFLAGS)
 
 # default ld flags
 export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib
