@@ -74,6 +74,7 @@ sub download () {
   foreach my $file (keys %files) {
     $self->debug("file key: $file");
     my $dlserver = $files{$file}{'server'} ;
+    my $srcfile = $files{$file}{'srcfile'};
     confess "empty entry for server in file section for $file"
       if ($dlserver eq "");
 
@@ -112,7 +113,8 @@ sub download () {
 		   'dlroot' => $dlroot,
 		   'serverpath' => $spath,
 		   'filename' => $file,
-		   'dir' => $dir
+		   'dir' => $dir,
+		   'srcfile' => $srcfile
 		   );
 
 	my $dlpath;

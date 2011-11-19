@@ -71,10 +71,16 @@ sub _initialize($$) {
       $self->{'PATH'}         = $params{'serverpath'};
       $self->{'PATH'} .= "/" .$params{'dir'} if ($params{'dir'} and $params{'dir'} ne "") ;
       $self->{'FILENAME'}	= $params{'filename'};
+      if ($params{'srcfile'} and $params{'srcfile'} ne "") {
+	    $self->{'IFILENAME'} = $params{'srcfile'};
+      $self->debug("Ser IFILE from srcfile");
+      } else {
+	    $self->{'IFILENAME'} = $params{'filename'};
+      }
       $self->{'SOURCEFILE'}   = $self->stripSlashes(
 						    File::Spec->catfile(
 									$self->{'PATH'},
-									$self->{'FILENAME'}));
+									$self->{'IFILENAME'}));
 
       $self->{'FULLPATH'}     = $self->stripSlashes(
 						    File::Spec->catfile(	$params{'dlroot'},
