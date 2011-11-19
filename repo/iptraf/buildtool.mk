@@ -7,8 +7,8 @@ ENVVAR=WORKDIR=/var/lib/iptraf \
 	LOGDIR=/var/log/iptraf \
 	TARGET=/usr/sbin \
 	CC=$(TARGET_CC) \
-	AR=$(CROSS_COMPILE)ar \
-	RANLIB=$(CROSS_COMPILE)ranlib \
+	AR=$(TARGET_AR) \
+	RANLIB=$(TARGET_RANLIB) \
 	CFLAGS="$(CFLAGS)" LDOPTS="$(LDFLAGS)"
 
 

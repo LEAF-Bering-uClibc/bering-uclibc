@@ -33,7 +33,7 @@ $(TCP_WRAPPERS_DIR)/.unpack: $(TCP_WRAPPERS_DIR)/.source
 $(TCP_WRAPPERS_DIR)/.build: $(TCP_WRAPPERS_DIR)/.unpack
 # Needs single-thread building due to poor makefile
 	$(MAKE) CC=$(TARGET_CC) REAL_DAEMON_DIR=$(REAL_DAEMON_DIR) STYLE=$(STYLE) LIBS=$(MYLIB) \
-	RANLIB=$(BT_RANLIB) ARFLAGS=rv AUX_OBJ=weak_symbols.o NETGROUP= TLI= VSYSLOG= BUGS= -C $(BUILD_DIR) all
+	RANLIB=$(TARGET_RANLIB) ARFLAGS=rv AUX_OBJ=weak_symbols.o NETGROUP= TLI= VSYSLOG= BUGS= -C $(BUILD_DIR) all
 
 	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/lib
 	mkdir -p $(TCP_WRAPPERS_BUILDDIR)/usr/sbin

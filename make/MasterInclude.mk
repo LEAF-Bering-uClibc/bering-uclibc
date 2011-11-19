@@ -37,6 +37,9 @@ export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
 export TARGET_CC=$(GNU_TARGET_NAME)-gcc
 # target ld
 export TARGET_LD=$(GNU_TARGET_NAME)-ld
+
+export TARGET_AR=$(GNU_TARGET_NAME)-ar
+export TARGET_RANLIB=$(GNU_TARGET_NAME)-ranlib
 # for dpatch (debian patch)
 export DEB_BUILD_ARCH=$(ARCH)
 # strip
