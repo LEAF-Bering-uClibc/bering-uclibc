@@ -19,6 +19,7 @@ GCC_CONFOPTS=   --with-gnu-ld --with-gnu-as \
 		--disable-libquadmath --disable-libgomp
 
 unexport CFLAGS
+unexport CPPFLAGS
 unexport LDFLAGS
 
 $(UCLIBC_DIR)/.source:
