@@ -1,0 +1,24 @@
+/* This code was written and is copyrighted 1996,1997,1998 by
+ *       Elmar Bartel
+ *       Institut fuer Informatik
+ *       Technische Universitaet Muenchen
+ *       bartel@informatik.tu-muenchen.de
+ *
+ * Permission to use, copy, modify and distribute this software
+ * and its documentation for any purpose, except making money+, is
+ * herby granted, provided that the above copyright notice and
+ * this permission appears in all places, where this code is
+ * referenced or used literally.
+ *
+ * Pieces and ideas present in this code come from older
+ * versions of the program ttcp (Test-TCP), floating around
+ * on the internet.
+ * I cannot acknowledge the original author, simply because I found
+ * no reference. If someone knows more about the history, let me
+ * know.
+ *
+ * +To make it clear:
+ *  This statement does not prevent the packaging of this software
+ *  and takeing money for the packaging itself. It only means you
+ *  cannot make money from the program and its features.
+ */

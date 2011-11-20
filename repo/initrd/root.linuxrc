@@ -77,7 +77,7 @@ ln -s /lib/modules /lib/modules/`uname -r`
 [ "$VERBOSE" ] && cp /lib/modules/modules.dep /linuxrc.depmod
 
 #---------mdev------------
-echo /sbin/mdev > /proc/sys/kernel/hotplug
+echo /sbin/hotplug.sh > /proc/sys/kernel/hotplug
 /sbin/mdev -s
 
 if [ -r $BPFX/etc/modules ] ; then

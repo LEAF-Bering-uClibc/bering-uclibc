@@ -11,6 +11,7 @@ $(INITRD_DIR)/.build:
 	mkdir -p $(INITRD_TARGET_DIR)
 	mkdir -p $(INITRD_TARGET_DIR)/var/lib/lrpkg
 	mkdir -p $(INITRD_TARGET_DIR)/boot/etc
+	mkdir -p $(INITRD_TARGET_DIR)/sbin
 	
 	echo $(ESCKEY) "isofs\nvfat">$(INITRD_TARGET_DIR)/boot/etc/modules
 	(for a in $(KARCHS); do \
@@ -25,6 +26,7 @@ $(INITRD_DIR)/.build:
 	cp -aL README $(INITRD_TARGET_DIR)/boot/etc	
 	cp -aL root.linuxrc $(INITRD_TARGET_DIR)/var/lib/lrpkg
 	cp -aL root.helper $(INITRD_TARGET_DIR)/var/lib/lrpkg
+	cp -aL hotplug.sh $(INITRD_TARGET_DIR)/sbin
 	cp -a $(INITRD_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(INITRD_DIR)/.build
 
