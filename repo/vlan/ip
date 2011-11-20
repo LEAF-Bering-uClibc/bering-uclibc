@@ -3,16 +3,26 @@
 # But usually only those with lots of interfaces (vlans) need these
 if [ -d /proc/sys/net/ipv4/conf/$IFACE ]
 then
-	if [ -n "$IF_IP_PROXY_ARP" ] && [ "$IF_IP_PROXY_ARP" -eq "1" ]
+	if [ -n "$IF_IP_PROXY_ARP" ]
 	then
-		echo 1 > /proc/sys/net/ipv4/conf/$IFACE/proxy_arp
+		if [ "$IF_IP_PROXY_ARP" -eq "1" ]
+		then
+			echo 1 > /proc/sys/net/ipv4/conf/$IFACE/proxy_arp
+		else
+			echo 0 > /proc/sys/net/ipv4/conf/$IFACE/proxy_arp
+		fi
 	else
-		echo 0 > /proc/sys/net/ipv4/conf/$IFACE/proxy_arp
+		cat /proc/sys/net/ipv4/conf/default/proxy_arp > /proc/sys/net/ipv4/conf/$IFACE/proxy_arp
 	fi
-	if [ -n "$IF_IP_RP_FILTER" ] && [ "$IF_IP_RP_FILTER" -eq "0" ]
+	if [ -n "$IF_IP_RP_FILTER" ]
 	then
-		echo 0 > /proc/sys/net/ipv4/conf/$IFACE/rp_filter
+		if [ "$IF_IP_RP_FILTER" -eq "0" ]
+		then
+			echo 0 > /proc/sys/net/ipv4/conf/$IFACE/rp_filter
+		else
+			echo 1 > /proc/sys/net/ipv4/conf/$IFACE/rp_filter
+		fi
 	else
-		echo 1 > /proc/sys/net/ipv4/conf/$IFACE/rp_filter
+		cat /proc/sys/net/ipv4/conf/default/rp_filter > /proc/sys/net/ipv4/conf/$IFACE/rp_filter
 	fi
 fi
