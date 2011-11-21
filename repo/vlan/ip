@@ -11,8 +11,6 @@ then
 		else
 			echo 0 > /proc/sys/net/ipv4/conf/$IFACE/proxy_arp
 		fi
-	else
-		cat /proc/sys/net/ipv4/conf/default/proxy_arp > /proc/sys/net/ipv4/conf/$IFACE/proxy_arp
 	fi
 	if [ -n "$IF_IP_RP_FILTER" ]
 	then
@@ -22,7 +20,5 @@ then
 		else
 			echo 1 > /proc/sys/net/ipv4/conf/$IFACE/rp_filter
 		fi
-	else
-		cat /proc/sys/net/ipv4/conf/default/rp_filter > /proc/sys/net/ipv4/conf/$IFACE/rp_filter
 	fi
 fi
