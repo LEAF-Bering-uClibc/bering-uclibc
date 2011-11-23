@@ -48,6 +48,6 @@ clean:
 	rm -f $(OPENLDAP_DIR)/.configure
 
 srcclean: clean
-	rm -rf $(OPENLDAP_DIR) 
+	rm -rf $(OPENLDAP_DIR)
 	-rm DIRNAME
 

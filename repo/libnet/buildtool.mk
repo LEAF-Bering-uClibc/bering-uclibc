@@ -11,7 +11,7 @@ LIBNET_TARGET_DIR:=$(BT_BUILD_DIR)/libnet
 source:
 	zcat $(LIBNET_SOURCE) | tar -xvf -
 	zcat $(BT_TOOLS_DIR)/config.sub.gz > $(LIBNET_DIR)/config.sub
-#	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1  
+#	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1
 
 $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
 	(cd $(LIBNET_DIR); \
@@ -35,6 +35,6 @@ clean:
 	rm -f $(BT_STAGING_DIR)/usr/lib/libnet.a
 	rm -f $(BT_STAGING_DIR)/usr/include/libnet.h
 	rm -rf $(BT_STAGING_DIR)/usr/include/libnet/*
-	
+
 srcclean:
 	rm -rf $(LIBNET_DIR)

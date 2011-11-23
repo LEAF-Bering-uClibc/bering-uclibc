@@ -1,6 +1,6 @@
 #############################################################
 #
-# Hostap daemon 
+# Hostap daemon
 #
 #############################################################
 
@@ -40,7 +40,7 @@ $(HOSTAPD_DIR)/.build: $(HOSTAPD_DIR)/.source
 
 source: $(HOSTAPD_DIR)/.source
 
-build: $(HOSTAPD_DIR)/.build 
+build: $(HOSTAPD_DIR)/.build
 
 clean:
 	make -C $(HOSTAPD_DIR)/hostapd clean

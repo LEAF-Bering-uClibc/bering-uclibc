@@ -3,7 +3,7 @@
 # $Id: buildtool.mk,v 1.5 2010/12/27 09:57:56 etitl Exp $
 #
 #############################################################
- 
+
 include $(MASTERMAKEFILE)
 
 OPENSWAN_DIR:=$(OPENSWAN_SOURCE:.tar.gz=)
@@ -20,13 +20,13 @@ export USE_EXTRACRYPTO=true
 	echo $(OPENSWAN_DIR) > .source
 
 source: .source
-	
+
 .build: .source
 	mkdir -p $(OPENSWAN_TARGET_DIR)
 	mkdir -p $(OPENSWAN_TARGET_DIR)/etc/init.d
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d
-	mkdir -p $(BT_STAGING_DIR)/usr/sbin	
+	mkdir -p $(BT_STAGING_DIR)/usr/sbin
 
 	############################################################
 	## build the userland programs and install them
@@ -43,13 +43,13 @@ source: .source
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSWAN_TARGET_DIR)/usr/lib/ipsec/*
 
 	cp -fL ipsec.secrets $(OPENSWAN_TARGET_DIR)/etc
-	cp -fL ipsec.init $(OPENSWAN_TARGET_DIR)/etc/init.d/ipsec	
+	cp -fL ipsec.init $(OPENSWAN_TARGET_DIR)/etc/init.d/ipsec
 	cp -a $(OPENSWAN_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
 	cp -a $(OPENSWAN_TARGET_DIR)/etc/* $(BT_STAGING_DIR)/etc/
 	cp -a $(OPENSWAN_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin/
 
 	############################################################
-	## build a KLIPS module for all supported platforms 
+	## build a KLIPS module for all supported platforms
 	############################################################
 	for i in $(KARCHS); do \
 	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) module\
@@ -65,12 +65,12 @@ source: .source
 	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) modclean ;\
 	done;
 
-	cp -fL ipsec.secrets $(OPENSWAN_TARGET_DIR)/etc/	
-	cp -fL ipsec.init $(OPENSWAN_TARGET_DIR)/etc/init.d/ipsec	
+	cp -fL ipsec.secrets $(OPENSWAN_TARGET_DIR)/etc/
+	cp -fL ipsec.init $(OPENSWAN_TARGET_DIR)/etc/init.d/ipsec
 
 	touch .build
-	
-build: .build	
+
+build: .build
 
 clean:
 	-rm -f .build

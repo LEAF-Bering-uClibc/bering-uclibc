@@ -11,7 +11,7 @@ $(WGET_DIR)/.source:
 	touch $(WGET_DIR)/.source
 
 source: $(WGET_DIR)/.source
-                        
+
 $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	mkdir -p $(WGET_TARGET_DIR)
 	mkdir -p $(WGET_TARGET_DIR)/etc
@@ -61,12 +61,12 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	touch $(WGET_DIR)/.build
 
 build: $(WGET_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(WGET_DIR) clean
 	rm -rf $(WGET_TARGET_DIR)
 	rm -f $(WGET_DIR)/.build
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(WGET_DIR) 
+	rm -rf $(WGET_DIR)
 	rm -f $(WGET_DIR)/.source

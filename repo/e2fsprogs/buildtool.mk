@@ -12,8 +12,8 @@ E2FSPROGS_DIR:=$(shell cat DIRNAME)
 endif
 E2FSPROGS_TARGET_DIR:=$(BT_BUILD_DIR)/e2fsprogs
 
-$(E2FSPROGS_DIR)/.source: 
-	zcat $(E2FSPROGS_SOURCE) | tar -xvf - 
+$(E2FSPROGS_DIR)/.source:
+	zcat $(E2FSPROGS_SOURCE) | tar -xvf -
 	echo $(E2FSPROGS_DIR) > DIRNAME
 	touch $(E2FSPROGS_DIR)/.source
 

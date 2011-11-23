@@ -12,11 +12,11 @@ export $OPT
 
 LOOPAES_DIR:=loop-AES-v3.1d
 
-$(UTIL_LINUX_DIR)/.source: 
-	bzcat $(UTIL_LINUX_NG_SOURCE) |  tar -xvf - 
+$(UTIL_LINUX_DIR)/.source:
+	bzcat $(UTIL_LINUX_NG_SOURCE) |  tar -xvf -
 #	cat $(LOOPAES_DIR)/$(UTIL_LINUX_DIR).diff | patch -d $(UTIL_LINUX_DIR) -p1
 	touch $(UTIL_LINUX_DIR)/.source
-	
+
 $(UTIL_LINUX_DIR)/.configured: $(UTIL_LINUX_DIR)/.source
 	(cd $(UTIL_LINUX_DIR) ; ./configure \
 		--host=$(GNU_TARGET_NAME) \
@@ -24,7 +24,7 @@ $(UTIL_LINUX_DIR)/.configured: $(UTIL_LINUX_DIR)/.source
 #	perl -i -p -e 's,HAVE_SLANG=yes,HAVE_SLANG=no,' $(UTIL_LINUX_DIR)/MCONFIG
 #	perl -i -p -e 's,LIBSLANG=-lslang,LIBSLANG=,' $(UTIL_LINUX_DIR)/MCONFIG
 	touch $(UTIL_LINUX_DIR)/.configured
-	
+
 $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 	mkdir -p $(UTIL_LINUX_TARGET_DIR)/sbin
 	mkdir -p $(UTIL_LINUX_TARGET_DIR)/lib
@@ -54,17 +54,17 @@ $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 #	$(MAKE) -C $(LOOPAES_DIR) CC=$(TARGET_CC) CFLAGS_MODULE="$(BT_COPT_FLAGS)" LINUX_SOURCE=$(BT_LINUX_DIR) INSTALL_MOD_PATH=$(BT_STAGING_DIR) DEPMOD=$(BT_DEPMOD)
 #	-$(BT_STRIP) --strip-debug $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)/block/loop.o
 #	touch $(LOOPAES_DIR)/.build
-  
+
 source: $(UTIL_LINUX_DIR)/.source
 
-build: $(UTIL_LINUX_DIR)/.build 
+build: $(UTIL_LINUX_DIR)/.build
 
-clean: 
+clean:
 	-rm $(UTIL_LINUX_DIR)/.build
 	-rm $(LOOPAES_DIR)/.build
 	rm -rf $(UTIL_LINUX_TARGET_DIR)
 	$(MAKE) -C $(UTIL_LINUX_DIR) clean
 
-srcclean: 
+srcclean:
 	rm -rf $(UTIL_LINUX_TARGET_DIR)
 	rm -rf $(UTIL_LINUX_DIR)

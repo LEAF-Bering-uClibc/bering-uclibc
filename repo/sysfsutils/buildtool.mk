@@ -9,7 +9,7 @@ TARGET_DIR:=$(BT_BUILD_DIR)/sysfsutils
 
 
 $(DIR)/.source:
-	zcat $(SOURCE) | tar -xvf -  
+	zcat $(SOURCE) | tar -xvf -
 	touch $(DIR)/.source
 
 source:	$(DIR)/.source
@@ -33,7 +33,7 @@ $(DIR)/.build: $(DIR)/.source
 build:	$(DIR)/.build
 
 clean:
-	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) DESTDIR=$(BT_STAGING_DIR) -C $(DIR) clean 
+	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) DESTDIR=$(BT_STAGING_DIR) -C $(DIR) clean
 	rm -f $(DIR)/.build
 	rm -rf $(BT_BUILD_DIR)/modutils
-  
+

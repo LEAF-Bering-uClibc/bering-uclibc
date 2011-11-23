@@ -10,7 +10,7 @@ DIR:=elfutils-0.148
 TARGET_DIR:=$(BT_BUILD_DIR)/libelf
 
 $(DIR)/.source:
-	bzcat $(SOURCE) | tar -xvf - 	
+	bzcat $(SOURCE) | tar -xvf -
 	cat $(PATCH1) | patch -p1 -d $(DIR)
 	touch $(DIR)/.source
 
@@ -20,7 +20,7 @@ $(DIR)/.configured: $(DIR)/.source
 			--prefix=/usr \
 			--disable-nls);
 	touch $(DIR)/.configured
-	
+
 source: $(DIR)/.source
 
 $(DIR)/.build: $(DIR)/.configured
@@ -38,6 +38,6 @@ clean:
 	rm -rf $(TARGET_DIR)
 	$(MAKE) -C $(DIR)/libelf clean
 	rm -f $(BT_STAGING_DIR)/usr/lib/libelf.*
-	
+
 srcclean:
 	rm -rf $(DIR)

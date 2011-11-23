@@ -96,8 +96,8 @@ clean:
 	-make -C $(UCLIBC_DIR) clean
 	-rm -f $(UCLIBC_DIR)/.build
 
-                                                                                                                 
+
 srcclean: clean
-	-rm -rf $(BINUTILS_DIR) 
-	-rm -rf $(GCC_DIR) 
-	-rm -rf $(UCIBC_DIR) 
+	-rm -rf $(BINUTILS_DIR)
+	-rm -rf $(GCC_DIR)
+	-rm -rf $(UCIBC_DIR)

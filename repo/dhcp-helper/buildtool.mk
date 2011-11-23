@@ -11,7 +11,7 @@ DHCP-HELPER_TARGET_DIR:=$(BT_BUILD_DIR)/dhcp-helper
 
 
 $(DHCP-HELPER_DIR)/.source:
-	zcat $(DHCP-HELPER_SOURCE) |  tar -xvf - 
+	zcat $(DHCP-HELPER_SOURCE) |  tar -xvf -
 	touch $(DHCP-HELPER_DIR)/.source
 
 $(DHCP-HELPER_DIR)/.build:
@@ -27,7 +27,7 @@ $(DHCP-HELPER_DIR)/.build:
 	cp -a $(DHCP-HELPER_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DHCP-HELPER_DIR)/.build
 
-source: $(DHCP-HELPER_DIR)/.source 
+source: $(DHCP-HELPER_DIR)/.source
 
 build: $(DHCP-HELPER_DIR)/.build
 

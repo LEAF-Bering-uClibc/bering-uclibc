@@ -28,12 +28,12 @@ $(PORTSENTRY_DIR)/.build: $(PORTSENTRY_DIR)/.source
 	touch $(PORTSENTRY_DIR)/.build
 
 build: $(PORTSENTRY_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(PORTSENTRY_DIR) -f Makefile clean
 	rm -rf $(PORTSENTRY_TARGET_DIR)
 	rm -f $(PORTSENTRY_DIR)/.build
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(PORTSENTRY_DIR) 
+	rm -rf $(PORTSENTRY_DIR)
 	rm -f $(PORTSENTRY_DIR)/.source

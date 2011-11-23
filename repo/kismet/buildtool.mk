@@ -16,14 +16,14 @@ KISMET_TARGET_DIR:=$(BT_BUILD_DIR)/kismet
 CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var
 
 export CC=$(TARGET_CC)
-export CXX=$(BT_STAGING_DIR)/usr/bin/g++ 
+export CXX=$(BT_STAGING_DIR)/usr/bin/g++
 export CFLAGS=$(BT_COPT_FLAGS)
 export CXXFLAGS=$(BT_COPT_FLAGS)
 # Next line is required to locate the .pc file for libnl
 export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 
 $(KISMET_DIR)/.source:
-	zcat $(KISMET_SOURCE) | tar -xvf - 	
+	zcat $(KISMET_SOURCE) | tar -xvf -
 	# Change hard-coded setting of CPPFLAGS for ncurses' panel.h
 	( cd $(KISMET_DIR) ; perl -i -p -e "s,-I/usr/include/ncurses,-I$(BT_STAGING_DIR)/usr/include," configure )
 	# Prevent attempt to run chmod (as non-root user) at "make install" time
@@ -33,7 +33,7 @@ $(KISMET_DIR)/.source:
 $(KISMET_DIR)/.configure: $(KISMET_DIR)/.source
 	( cd $(KISMET_DIR); ./configure $(CONFOPTS) );
 	touch $(KISMET_DIR)/.configure
-	
+
 source: $(KISMET_DIR)/.source
 
 
@@ -59,7 +59,7 @@ clean:
 	-rm $(KISMET_DIR)/.build
 	rm -rf $(KISMET_TARGET_DIR)
 	$(MAKE) -C $(KISMET_DIR) clean
-	
+
 srcclean:
 	rm -rf $(KISMET_DIR)
 

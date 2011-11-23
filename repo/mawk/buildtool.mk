@@ -7,7 +7,7 @@ MAWK_TARGET_DIR:=$(BT_BUILD_DIR)/mawk
 $(MAWK_DIR)/.source:
 	zcat $(MAWK_SOURCE) | tar -xvf -
 	zcat $(MAWK_PATCH) | patch -d $(MAWK_DIR) -p1
-	(cd $(MAWK_DIR); export DEB_BUILD_ARCH=i386; $(BT_DPATCH) apply-all;)	
+	(cd $(MAWK_DIR); export DEB_BUILD_ARCH=i386; $(BT_DPATCH) apply-all;)
 	touch $(MAWK_DIR)/.source
 
 source: $(MAWK_DIR)/.source
@@ -36,5 +36,5 @@ clean:
 	rm -f $(MAWK_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(MAWK_DIR) 
+	rm -rf $(MAWK_DIR)
 	rm -f $(MAWK_DIR)/.source

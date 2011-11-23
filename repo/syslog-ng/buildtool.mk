@@ -11,8 +11,8 @@ DIR2:=$(DIR)/libol-0.3.18
 TARGET_DIR:=$(BT_BUILD_DIR)/syslog-ng
 
 
-$(DIR)/.source: 
-	zcat $(SOURCE) |  tar -xvf - 
+$(DIR)/.source:
+	zcat $(SOURCE) |  tar -xvf -
 	cat $(PATCH1) | patch -d $(DIR) -p1
 	touch $(DIR)/.source
 
@@ -34,7 +34,7 @@ $(DIR)/.build: $(DIR)/Makefile
 	$(MAKE) $(MAKEOPTS) -C $(DIR)
 	cp -a  $(DIR)/src/syslog-ng  $(TARGET_DIR)/sbin
 	cp -a  $(DIR)/debian/syslog-ng.conf  $(TARGET_DIR)/etc
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DIR)/src/syslog-ng 
+	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DIR)/src/syslog-ng
 	cp -a  $(TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(DIR)/.build
 
@@ -45,6 +45,6 @@ build: $(DIR)/Makefile $(DIR)/.build
 clean:
 	-rm $(DIR)/.build
 	-$(MAKE) -C $(DIR) clean
-  
+
 srcclean:
 	rm -rf $(DIR)

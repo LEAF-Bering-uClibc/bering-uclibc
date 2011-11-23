@@ -10,7 +10,7 @@ $(NTP_DIR)/.source:
 	touch $(NTP_DIR)/.source
 
 source: $(NTP_DIR)/.source
-                        
+
 $(NTP_DIR)/.configured: $(NTP_DIR)/.source
 	(cd $(NTP_DIR) ; ./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
@@ -30,15 +30,15 @@ $(NTP_DIR)/.configured: $(NTP_DIR)/.source
 #	--host=$(GNU_HOST_NAME) \
 #	--build=$(GNU_HOST_NAME) \
 
-                                                                 
+
 $(NTP_DIR)/.build: $(NTP_DIR)/.configured
 	mkdir -p $(NTP_TARGET_DIR)
 	mkdir -p $(NTP_TARGET_DIR)/etc/init.d
 	mkdir -p $(NTP_TARGET_DIR)/etc/default
-	mkdir -p $(NTP_TARGET_DIR)/etc/cron.daily	
-	mkdir -p $(NTP_TARGET_DIR)/etc/cron.weekly			
-	mkdir -p $(NTP_TARGET_DIR)/etc/network/if-up.d			
-	mkdir -p $(NTP_TARGET_DIR)/usr/sbin		
+	mkdir -p $(NTP_TARGET_DIR)/etc/cron.daily
+	mkdir -p $(NTP_TARGET_DIR)/etc/cron.weekly
+	mkdir -p $(NTP_TARGET_DIR)/etc/network/if-up.d
+	mkdir -p $(NTP_TARGET_DIR)/usr/sbin
 	make $(MAKEOPTS) -C $(NTP_DIR) all
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NTP_DIR)/ntpd/ntpd
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NTP_DIR)/ntpq/ntpq
@@ -55,12 +55,12 @@ $(NTP_DIR)/.build: $(NTP_DIR)/.configured
 	touch $(NTP_DIR)/.build
 
 build: $(NTP_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(NTP_DIR) clean
 	rm -rf $(NTP_TARGET_DIR)
 	-rm $(NTP_DIR)/.build
 	-rm $(NTP_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(NTP_DIR) 
+	rm -rf $(NTP_DIR)

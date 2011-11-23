@@ -20,17 +20,17 @@ $(SPEEDTOUCH_DIR)/.source:
 	touch $(SPEEDTOUCH_DIR)/.source
 
 source: $(SPEEDTOUCH_DIR)/.source
-                        
+
 $(SPEEDTOUCH_DIR)/.configured: $(SPEEDTOUCH_DIR)/.source
 	(cd $(SPEEDTOUCH_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
 	./configure --prefix=/usr \
 	--includedir=$(BT_STAGING_DIR)/include \
 	--oldincludedir=$(BT_STAGING_DIR)/include )
 	touch $(SPEEDTOUCH_DIR)/.configured
-                                                                 
+
 $(SPEEDTOUCH_DIR)/.build: $(SPEEDTOUCH_DIR)/.configured
 	mkdir -p $(SPEEDTOUCH_TARGET_DIR)
-	mkdir -p $(SPEEDTOUCH_TARGET_DIR)/usr/sbin	
+	mkdir -p $(SPEEDTOUCH_TARGET_DIR)/usr/sbin
 	make -C $(SPEEDTOUCH_DIR) all
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SPEEDTOUCH_DIR)/src/modem_run
 	cp -a $(SPEEDTOUCH_DIR)/src/modem_run $(SPEEDTOUCH_TARGET_DIR)/usr/sbin
@@ -38,13 +38,13 @@ $(SPEEDTOUCH_DIR)/.build: $(SPEEDTOUCH_DIR)/.configured
 	touch $(SPEEDTOUCH_DIR)/.build
 
 build: $(SPEEDTOUCH_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(SPEEDTOUCH_DIR) clean
 	rm -rf $(SPEEDTOUCH_TARGET_DIR)
 	rm -rf $(SPEEDTOUCH_DIR)/.build
 	rm -rf $(SPEEDTOUCH_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(SPEEDTOUCH_DIR) 
+	rm -rf $(SPEEDTOUCH_DIR)
 	rm -rf $(SPEEDTOUCH_DIR)/.source

@@ -60,7 +60,7 @@ clean:
 	rm -f .configure .build
 
 srcclean: clean
-	rm -rf $(ASTERISK_DIR) 
+	rm -rf $(ASTERISK_DIR)
 	-rm -f .source
 	-rm DIRNAME
 

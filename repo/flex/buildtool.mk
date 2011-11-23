@@ -9,8 +9,8 @@ include $(MASTERMAKEFILE)
 FLEX_DIR=$(shell echo $(FLEX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 FLEX_TARGET_DIR=$(BT_BUILD_DIR)/flex
 
-$(FLEX_DIR)/.source: 
-	bzcat $(FLEX_SOURCE) |  tar -xvf - 
+$(FLEX_DIR)/.source:
+	bzcat $(FLEX_SOURCE) |  tar -xvf -
 	touch $(FLEX_DIR)/.source
 
 $(FLEX_DIR)/.configured: $(FLEX_DIR)/.source
@@ -28,7 +28,7 @@ $(FLEX_DIR)/.build: $(FLEX_DIR)/.configured
 	cp -a $(FLEX_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(FLEX_DIR)/.build
 
-source: $(FLEX_DIR)/.source 
+source: $(FLEX_DIR)/.source
 
 build: $(FLEX_DIR)/.build
 
@@ -36,6 +36,6 @@ clean:
 	-rm $(FLEX_DIR)/.build
 	-$(MAKE) -C $(FLEX_DIR) clean
 	-rm -rf $(FLEX_TARGET_DIR)
-  
+
 srcclean:
 	-rm -rf $(FLEX_DIR)

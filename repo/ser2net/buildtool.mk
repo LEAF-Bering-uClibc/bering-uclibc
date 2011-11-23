@@ -10,7 +10,7 @@ $(SER2NET_DIR)/.source:
 	touch $(SER2NET_DIR)/.source
 
 source: $(SER2NET_DIR)/.source
-                        
+
 $(SER2NET_DIR)/.configured: $(SER2NET_DIR)/.source
 	(cd $(SER2NET_DIR) ; ./configure \
 	--host=$(GNU_TARGET_NAME) \
@@ -38,5 +38,5 @@ clean:
 	rm -rf $(SER2NET_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(SER2NET_DIR) 
+	rm -rf $(SER2NET_DIR)
 	rm -rf $(SER2NET_DIR)/.source

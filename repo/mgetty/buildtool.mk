@@ -61,5 +61,5 @@ clean:
 	rm -rf $(MGETTY_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(MGETTY_DIR) 
+	rm -rf $(MGETTY_DIR)
 	rm -rf $(MGETTY_DIR)/.source

@@ -53,12 +53,12 @@ $(QUAGGA_DIR)/.build: $(QUAGGA_DIR)/.configured
 	touch $(QUAGGA_DIR)/.build
 
 build: $(QUAGGA_DIR)/.build
-                                                                                         
+
 clean:
 	-make -C $(QUAGGA_DIR) clean
 	-rm -rf $(QUAGGA_TARGET_DIR)
 	-rm -rf $(QUAGGA_DIR)/.build
 	-rm -rf $(QUAGGA_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
 	-rm -rf $(QUAGGA_DIR)

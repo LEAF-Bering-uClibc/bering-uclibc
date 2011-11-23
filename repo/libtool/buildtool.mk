@@ -9,10 +9,10 @@ LIBTOOL_DIR:=libtool-2.4
 export CC=$(TARGET_CC)
 CFLAGS=-Os -s -I$(BT_STAGING_DIR)/include:$(BT_STAGING_DIR)/include/include
 export CFLAGS
-STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment 
+STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment
 
-$(LIBTOOL_DIR)/.source: 		
-	zcat $(LIBTOOL_SOURCE) |  tar -xvf - 	
+$(LIBTOOL_DIR)/.source:
+	zcat $(LIBTOOL_SOURCE) |  tar -xvf -
 	touch $(LIBTOOL_DIR)/.source
 
 $(LIBTOOL_DIR)/.configured: $(LIBTOOL_DIR)/.source
@@ -27,7 +27,7 @@ $(LIBTOOL_DIR)/.configured: $(LIBTOOL_DIR)/.source
 source: $(LIBTOOL_DIR)/.source
 
 $(LIBTOOL_DIR)/.build: $(LIBTOOL_DIR)/.configured
-	$(MAKE) CC=$(TARGET_CC) -C $(LIBTOOL_DIR) 
+	$(MAKE) CC=$(TARGET_CC) -C $(LIBTOOL_DIR)
 	$(MAKE) CC=$(TARGET_CC) -C $(LIBTOOL_DIR) install
 	touch $(LIBTOOL_DIR)/.build
 
@@ -41,4 +41,4 @@ clean:
 srcclean:
 	rm -rf $(LIBTOOL_DIR)
 
-  
+

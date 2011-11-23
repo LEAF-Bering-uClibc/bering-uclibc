@@ -42,7 +42,7 @@ CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--without-rlm_sql_iodbc --without-rlm_python \
 	--without-rlm_sql_oracle --without-rlm_sql_postgresql \
 	--with-dhcp \
-	--with-mysql-dir="$(BT_STAGING_DIR)"/usr 
+	--with-mysql-dir="$(BT_STAGING_DIR)"/usr
 
 .source:
 	bzcat $(RADIUS_SOURCE) | tar -xvf -
@@ -103,7 +103,7 @@ clean:
 	$(MAKE) -C $(RADIUS_DIR) clean
 
 srcclean: clean
-	rm -rf $(RADIUS_DIR) 
+	rm -rf $(RADIUS_DIR)
 	-rm .source
 	-rm DIRNAME
 

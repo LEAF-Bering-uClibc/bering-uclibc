@@ -2,8 +2,8 @@ include $(MASTERMAKEFILE)
 PATCH_DIR:=patch-2.5.9
 PATCH_TARGET_DIR:=$(BT_BUILD_DIR)/patch
 
-$(PATCH_DIR)/.source: 
-	zcat $(PATCH_SOURCE) |  tar -xvf - 
+$(PATCH_DIR)/.source:
+	zcat $(PATCH_SOURCE) |  tar -xvf -
 	touch $(PATCH_DIR)/.source
 
 $(PATCH_DIR)/.configured: $(PATCH_DIR)/.source
@@ -19,7 +19,7 @@ $(PATCH_DIR)/.build: $(PATCH_DIR)/.configured
 	cp -a $(PATCH_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(PATCH_DIR)/.build
 
-source: $(PATCH_DIR)/.source 
+source: $(PATCH_DIR)/.source
 
 build: $(PATCH_DIR)/.build
 

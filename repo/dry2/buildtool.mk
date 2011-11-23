@@ -10,7 +10,7 @@ DIR:=dry2
 TARGET_DIR:=$(BT_BUILD_DIR)/dry2
 
 
-$(DIR)/.source: 
+$(DIR)/.source:
 	mkdir -p $(DIR)
 	zcat $(SOURCE) >$(DIR)/dry.c
 	touch $(DIR)/.source
@@ -37,12 +37,12 @@ $(DIR)/.build: $(DIR)/.source
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build
 
-source: $(DIR)/.source 
+source: $(DIR)/.source
 
 build: $(DIR)/.build
 
 clean:
 	-rm $(DIR)/.build $(DIR)/*.o $(DIR)/dry2_*
-  
+
 srcclean:
 	rm -rf $(DIR)

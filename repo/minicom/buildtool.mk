@@ -34,13 +34,13 @@ $(MINICOM_DIR)/.build: $(MINICOM_DIR)/.configured
 	touch $(MINICOM_DIR)/.build
 
 build: $(MINICOM_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(MINICOM_DIR) clean
 	rm -rf $(MINICOM_TARGET_DIR)
 	rm -f $(MINICOM_DIR)/.build
 	rm -f $(MINICOM_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(MINICOM_DIR) 
+	rm -rf $(MINICOM_DIR)
 	rm -f $(MINICOM_DIR)/.source

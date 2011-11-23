@@ -27,13 +27,13 @@ $(NETSTAT_NAT_DIR)/.build: $(NETSTAT_NAT_DIR)/.configured
 	touch $(NETSTAT_NAT_DIR)/.build
 
 build: $(NETSTAT_NAT_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(NETSTAT_NAT_DIR) clean
 	rm -rf $(NETSTAT_NAT_TARGET_DIR)
 	rm -f $(NETSTAT_NAT_DIR)/.build
 	rm -f $(NETSTAT_NAT_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(NETSTAT_NAT_DIR) 
+	rm -rf $(NETSTAT_NAT_DIR)
 	rm -f $(NETSTAT_NAT_DIR)/.source

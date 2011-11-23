@@ -37,5 +37,5 @@ clean:
 	rm -f $(AICCU_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(AICCU_DIR) 
+	rm -rf $(AICCU_DIR)
 	rm -f $(AICCU_DIR)/.source

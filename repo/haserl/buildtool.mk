@@ -1,7 +1,7 @@
 #####################################################
-# 
+#
 # haserl setup
-# 
+#
 #####################################################
 include $(MASTERMAKEFILE)
 
@@ -17,7 +17,7 @@ HASERL_TARGET_DIR:=$(BT_BUILD_DIR)/haserl
 	zcat $(SOURCE_TARBALL) | tar -xvf -
 	echo $(SOURCE_DIR) > .source
 
-source: .source 
+source: .source
 
 .configured: .source
 	(cd $(SOURCE_DIR);  ./configure --prefix=/usr --host=$(GNU_TARGET_NAME))

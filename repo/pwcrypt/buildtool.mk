@@ -1,7 +1,7 @@
 #####################################################
-# 
+#
 # pwcrypt setup
-# 
+#
 #####################################################
 include $(MASTERMAKEFILE)
 
@@ -11,7 +11,7 @@ include $(MASTERMAKEFILE)
 PWCRYPT_DIR:=pwcrypt-1.2.2
 PWCRYPT_TARGET_DIR:=$(BT_BUILD_DIR)/pwcrypt
 
-source: $(PWCRYPT_DIR)/.source 
+source: $(PWCRYPT_DIR)/.source
 
 $(PWCRYPT_DIR)/.source:
 	zcat $(PWCRYPT_SOURCE) | tar -xvf -
@@ -40,5 +40,5 @@ clean:
 	rm -rf $(PWCRYPT_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(PWCRYPT_DIR) 
+	rm -rf $(PWCRYPT_DIR)
 	rm -rf $(PWCRYPT_DIR)/.source

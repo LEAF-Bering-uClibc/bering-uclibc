@@ -14,7 +14,7 @@ endif
 KEEPALIVED_TARGET_DIR:=$(BT_BUILD_DIR)/keepalived
 
 
-$(KEEPALIVED_DIR)/.source: 
+$(KEEPALIVED_DIR)/.source:
 	zcat $(KEEPALIVED_SOURCE) | tar -xvf -
 #	(cd $(KEEPALIVED_DIR); zcat ../$(KEEPALIVED_PATCH1) | patch -p1)
 	echo $(KEEPALIVED_DIR) > DIRNAME
@@ -47,7 +47,7 @@ $(KEEPALIVED_DIR)/.build: $(KEEPALIVED_DIR)/.configured
 source: $(KEEPALIVED_DIR)/.source
 
 build: $(KEEPALIVED_DIR)/.build
-	
+
 clean:
 	-rm -f $(KEEPALIVED_DIR)/.build
 	-rm -f $(KEEPALIVED_DIR)/.configured
@@ -55,6 +55,6 @@ clean:
 	-rm -rf $(KEEPALIVED_TARGET_DIR)
 
 srcclean:
-	-rm -rf $(KEEPALIVED_DIR) 
+	-rm -rf $(KEEPALIVED_DIR)
 
 

@@ -10,7 +10,7 @@ NUT_DIR:=nut-2.6.2
 NUT_TARGET_DIR:=$(BT_BUILD_DIR)/nut
 
 
-.source: 
+.source:
 	zcat $(SOURCE) |  tar -xvf -
 #	cat $(PATCH1) | patch -d $(NUT_DIR) -p1
 	cat $(PATCH2) | patch -d $(NUT_DIR) -p1
@@ -73,7 +73,7 @@ build: $(NUT_DIR)/Makefile
 
 clean:
 	-rm -f $(NUT_DIR)/bin/*
- 
+
 srcclean:
 	rm -rf $(NUT_DIR)
 	rm .source

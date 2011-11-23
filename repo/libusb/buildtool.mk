@@ -42,4 +42,4 @@ clean:
 	rm -rf $(LIBUSB_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(LIBUSB_DIR) 
+	rm -rf $(LIBUSB_DIR)

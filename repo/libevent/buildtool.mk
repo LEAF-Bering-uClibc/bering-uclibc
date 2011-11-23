@@ -18,11 +18,11 @@ $(LIBEVENT_DIR)/.source:
 	touch $(LIBEVENT_DIR)/.source
 
 source: $(LIBEVENT_DIR)/.source
-                        
+
 $(LIBEVENT_DIR)/.configured: $(LIBEVENT_DIR)/.source
 	(cd $(LIBEVENT_DIR) ; CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure)
 	touch $(LIBEVENT_DIR)/.configured
-                                                                 
+
 $(LIBEVENT_DIR)/.build: $(LIBEVENT_DIR)/.configured
 	mkdir -p $(LIBEVENT_TARGET_DIR)
 	make -C $(LIBEVENT_DIR) all
@@ -34,18 +34,18 @@ $(LIBEVENT_DIR)/.build: $(LIBEVENT_DIR)/.configured
 	cp -a $(LIBEVENT_DIR)/event-config.h $(LIBEVENT_TARGET_DIR)/usr/include
 	cp -a $(LIBEVENT_DIR)/evutil.h $(LIBEVENT_TARGET_DIR)/usr/include
 	cp -a -f $(LIBEVENT_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
-	cp -a -f $(LIBEVENT_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include	
+	cp -a -f $(LIBEVENT_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include
 	touch $(LIBEVENT_DIR)/.build
 
 build: $(LIBEVENT_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(LIBEVENT_DIR) clean
 	rm -rf $(LIBEVENT_TARGET_DIR)
 	rm -rf $(LIBEVENT_DIR)/.build
 	rm -rf $(LIBEVENT_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(LIBEVENT_DIR) 
+	rm -rf $(LIBEVENT_DIR)
 	rm -rf $(LIBEVENT_DIR)/.source
 	-rm DIRNAME

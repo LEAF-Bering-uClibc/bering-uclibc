@@ -18,7 +18,7 @@ TARGET_DIR:=$(BT_BUILD_DIR)/sysstat
 CONFOPTS:=--prefix=/usr --disable-nls --disable-documentation
 
 $(DIR)/.source:
-	bzcat $(SOURCE) | tar -xvf - 	
+	bzcat $(SOURCE) | tar -xvf -
 	echo $(DIR) > DIRNAME
 	touch $(DIR)/.source
 
@@ -32,7 +32,7 @@ $(DIR)/.configure: $(DIR)/.source
 
 $(DIR)/.build: $(DIR)/.configure
 	mkdir -p $(TARGET_DIR)
-	$(MAKE) -C $(DIR) 
+	$(MAKE) -C $(DIR)
 	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/bin/*
@@ -45,7 +45,7 @@ clean:
 	-rm $(DIR)/.build
 	rm -rf $(TARGET_DIR)
 	$(MAKE) -C $(DIR) clean
-	
+
 srcclean:
 	rm -rf $(DIR)
 	-rm DIRNAME

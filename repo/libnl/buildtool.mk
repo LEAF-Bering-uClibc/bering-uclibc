@@ -40,5 +40,5 @@ clean:
 	rm -rf $(LIBNL_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(LIBNL_DIR) 
+	rm -rf $(LIBNL_DIR)
 	rm -rf $(LIBNL_DIR)/.source

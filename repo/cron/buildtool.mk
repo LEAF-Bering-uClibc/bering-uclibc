@@ -10,8 +10,8 @@ CRON_DIR:=cron-3.0pl1.orig
 CRON_TARGET_DIR:=$(BT_BUILD_DIR)/cron
 
 
-$(CRON_DIR)/.source: 
-	zcat $(CRON_SOURCE) |  tar -xvf - 
+$(CRON_DIR)/.source:
+	zcat $(CRON_SOURCE) |  tar -xvf -
 	zcat $(CRON_PATCH1) | patch -d $(CRON_DIR) -p1
 	touch $(CRON_DIR)/.source
 
@@ -27,13 +27,13 @@ $(CRON_DIR)/.build: $(CRON_DIR)/.source
 	cp -a  $(CRON_TARGET_DIR)/* $(BT_STAGING_DIR)/usr/sbin
 	touch $(CRON_DIR)/.build
 
-source: $(CRON_DIR)/.source 
+source: $(CRON_DIR)/.source
 
 build: $(CRON_DIR)/.build
 
 clean:
 	-rm $(CRON_DIR)/.build
 	-$(MAKE) -C $(CRON_DIR) clean
-  
+
 srcclean:
 	rm -rf $(CRON_DIR)

@@ -1,6 +1,6 @@
 #############################################################
 #
-# SAMBA 
+# SAMBA
 #
 #############################################################
 
@@ -24,7 +24,7 @@ $(SAMBA_DIR)/.source:
 	zcat $(SAMBA_PATCH2) | patch -d $(SAMBA_DIR) -p1
 	zcat $(BT_TOOLS_DIR)/config.sub.gz > $(SAMBA_DIR)/source/config.sub
 	touch $(SAMBA_DIR)/.source
-	
+
 $(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
 	(cd $(SAMBA_DIR)/source ; \
 		./configure \

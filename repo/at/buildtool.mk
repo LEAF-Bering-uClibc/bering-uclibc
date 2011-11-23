@@ -9,7 +9,7 @@ SDIR:=at-3.1.10.2
 TARGET_DIR:=$(BT_BUILD_DIR)/at
 
 
-$(SDIR)/.source: 
+$(SDIR)/.source:
 	zcat $(SOURCE) |  tar -xvf -
 	cat getloadavg.c.patch | patch -p0 -d $(SDIR)
 #	cp Makefile $(SDIR)
@@ -51,6 +51,6 @@ build: $(SDIR)/.build
 clean:
 	-$(MAKE) -C $(SDIR) clean
 	-rm $(SDIR)/.source $(SDIR)/.build $(SDIR)/Makefile
-  
+
 srcclean:
 	rm -rf $(SDIR)

@@ -13,12 +13,12 @@ PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 CFLAGS=-Os -s -I$(BT_STAGING_DIR)/include:$(BT_STAGING_DIR)/include/include
 export CFLAGS
 
-$(AUTOMAKE_DIR_LATEST)/.source: 
-	bzcat $(AUTOMAKE_SOURCE_LATEST) |  tar -xvf - 	
+$(AUTOMAKE_DIR_LATEST)/.source:
+	bzcat $(AUTOMAKE_SOURCE_LATEST) |  tar -xvf -
 	touch $(AUTOMAKE_DIR_LATEST)/.source
 
 $(AUTOMAKE_DIR_4)/.source:
-	zcat $(AUTOMAKE_SOURCE_4) |  tar -xvf - 	
+	zcat $(AUTOMAKE_SOURCE_4) |  tar -xvf -
 	touch $(AUTOMAKE_DIR_4)/.source
 
 
@@ -46,14 +46,14 @@ $(AUTOMAKE_DIR_4)/.configured:$(AUTOMAKE_DIR_4)/.source
 	touch $(AUTOMAKE_DIR_4)/.configured
 
 
-source: $(AUTOMAKE_DIR_4)/.source $(AUTOMAKE_DIR_LATEST)/.source 
+source: $(AUTOMAKE_DIR_4)/.source $(AUTOMAKE_DIR_LATEST)/.source
 
-build: $(AUTOMAKE_DIR_4)/.configured $(AUTOMAKE_DIR_LATEST)/.configured 
-	$(MAKE) CC=$(TARGET_CC) -C $(AUTOMAKE_DIR_4) 
+build: $(AUTOMAKE_DIR_4)/.configured $(AUTOMAKE_DIR_LATEST)/.configured
+	$(MAKE) CC=$(TARGET_CC) -C $(AUTOMAKE_DIR_4)
 	$(MAKE) CC=$(TARGET_CC) -C $(AUTOMAKE_DIR_4) install
-	$(MAKE) CC=$(TARGET_CC) -C $(AUTOMAKE_DIR_LATEST) 
+	$(MAKE) CC=$(TARGET_CC) -C $(AUTOMAKE_DIR_LATEST)
 	$(MAKE) CC=$(TARGET_CC) -C $(AUTOMAKE_DIR_LATEST) install
-	
+
 
 clean:
 	$(MAKE) -C $(AUTOMAKE_DIR_LATEST) uninstall

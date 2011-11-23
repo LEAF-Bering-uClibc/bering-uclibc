@@ -43,4 +43,4 @@ clean:
 	rm -rf $(PMACCTD_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(PMACCTD_DIR) 
+	rm -rf $(PMACCTD_DIR)

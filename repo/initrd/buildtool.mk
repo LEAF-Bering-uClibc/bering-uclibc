@@ -12,7 +12,7 @@ $(INITRD_DIR)/.build:
 	mkdir -p $(INITRD_TARGET_DIR)/var/lib/lrpkg
 	mkdir -p $(INITRD_TARGET_DIR)/boot/etc
 	mkdir -p $(INITRD_TARGET_DIR)/sbin
-	
+
 	echo $(ESCKEY) "isofs\nvfat">$(INITRD_TARGET_DIR)/boot/etc/modules
 	(for a in $(KARCHS); do \
 	BT_STAGING_DIR=$(BT_STAGING_DIR) BT_KERNEL_RELEASE=$(BT_KERNEL_RELEASE)-$$a \
@@ -22,8 +22,8 @@ $(INITRD_DIR)/.build:
 	for m in `cat mod`; do echo $(ESCKEY) "<File>\n\tSource\t= lib/modules/__KVER__-$$a/$$m \n\t\
 	Filename\t= lib/modules/$$(echo $$m|sed 's/[a-z]*\/[a-z_/-]*\///g')\n\t\
 	Type\t= binary\n\tType\t= module\n\tPermissions\t= 644\n</File>">>files.$$a; done; done)
-	    
-	cp -aL README $(INITRD_TARGET_DIR)/boot/etc	
+
+	cp -aL README $(INITRD_TARGET_DIR)/boot/etc
 	cp -aL root.linuxrc $(INITRD_TARGET_DIR)/var/lib/lrpkg
 	cp -aL root.helper $(INITRD_TARGET_DIR)/var/lib/lrpkg
 	cp -aL hotplug.sh $(INITRD_TARGET_DIR)/sbin
@@ -31,15 +31,15 @@ $(INITRD_DIR)/.build:
 	touch $(INITRD_DIR)/.build
 
 build: $(INITRD_DIR)/.build
-                                                                                         
+
 clean:
 	rm -rf $(INITRD_TARGET_DIR)
 	rm -f $(INITRD_DIR)/.build
 	rm -f $(INITRD_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
 	rm -f $(INITRD_DIR)/.source
-	rm -f $(INITRD_DIR)/root.linuxrc	
+	rm -f $(INITRD_DIR)/root.linuxrc
 	rm -f $(INITRD_DIR)/modules
 	rm -f $(INITRD_DIR)/README
-				
+

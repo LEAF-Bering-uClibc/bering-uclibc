@@ -8,8 +8,8 @@ include $(MASTERMAKEFILE)
 
 ISCSI_DIR:=iscsitarget-1.4.20.1
 ISCSI_TARGET_DIR:=$(BT_BUILD_DIR)/iscsi
- 
-source: 		
+
+source:
 	-rm -rf $(ISCSI_DIR)
 	zcat $(ISCSI_SOURCE) | tar -xvf -
 #	cat $(ISCSI_PATCH1) | patch -d $(ISCSI_DIR) -p1

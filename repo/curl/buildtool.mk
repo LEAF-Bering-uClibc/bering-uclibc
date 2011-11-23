@@ -51,7 +51,7 @@ clean:
 	rm -f .configure
 
 srcclean: clean
-	rm -rf $(CURL_DIR) 
+	rm -rf $(CURL_DIR)
 	rm -f .source
 	-rm DIRNAME
 

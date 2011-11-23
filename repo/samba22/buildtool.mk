@@ -1,6 +1,6 @@
 #############################################################
 #
-# SAMBA 
+# SAMBA
 #
 #############################################################
 
@@ -18,7 +18,7 @@ BVARS = BASEDIR=/usr \
 $(SAMBA_DIR)/.source:
 	zcat $(SAMBA_SOURCE) | tar -xvf -
 	touch $(SAMBA_DIR)/.source
-	
+
 $(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
 	(cd $(SAMBA_DIR)/source ; $(AUTOCONF) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
 		./configure \
@@ -40,7 +40,7 @@ $(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
 		--without-smbmount );
 	touch $(SAMBA_DIR)/.configured
 
-	
+
 source: $(SAMBA_DIR)/.source
 
 build: $(SAMBA_DIR)/.configured
@@ -69,15 +69,15 @@ build: $(SAMBA_DIR)/.configured
 	cp -a $(SAMBA_DIR)/source/bin/smbd $(SAMBA_TARGET_DIR)/usr/sbin/smbd22
 	cp -a $(SAMBA_DIR)/source/bin/nmbd $(SAMBA_TARGET_DIR)/usr/sbin/nmbd22
 	cp -a $(SAMBA_DIR)/source/bin/smbpasswd $(SAMBA_TARGET_DIR)/usr/sbin/smbpasswd22
-	cp -a $(SAMBA_TARGET_DIR)/* $(BT_STAGING_DIR)	
-	touch $(SAMBA_DIR)/.build	
+	cp -a $(SAMBA_TARGET_DIR)/* $(BT_STAGING_DIR)
+	touch $(SAMBA_DIR)/.build
 
 clean:
 	-make -C $(SAMBA_DIR) clean
 	rm -rf $(SAMBA_TARGET_DIR)
 	rm -f $(SAMBA_DIR)/.build
 	rm -f $(SAMBA_DIR)/.configured
-	
+
 srcclean:
 	rm -rf $(SAMBA_DIR)
-	
+

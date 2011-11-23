@@ -15,8 +15,8 @@ endif
 HDPARM_TARGET_DIR:=$(BT_BUILD_DIR)/hdparm
 export CC=$(TARGET_CC)
 
-$(HDPARM_DIR)/.source: 
-	zcat $(HDPARM_SOURCE) |  tar -xvf - 
+$(HDPARM_DIR)/.source:
+	zcat $(HDPARM_SOURCE) |  tar -xvf -
 	echo $(HDPARM_DIR) > DIRNAME
 	touch $(HDPARM_DIR)/.source
 
@@ -30,7 +30,7 @@ $(HDPARM_DIR)/.build: $(HDPARM_DIR)/.source
 	-rm -rf $(HDPARM_TARGET_DIR)/usr
 	cp -r $(HDPARM_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(HDPARM_DIR)/.build
-	
+
 build: $(HDPARM_DIR)/.build
 
 clean:
@@ -38,7 +38,7 @@ clean:
 	-rm $(HDPARM_DIR)/.build
 	$(MAKE) -C $(HDPARM_DIR) clean
 	-rm $(BT_STAGING_DIR)/sbin/hdparm
-	
+
 
 srcclean:
 	rm -rf $(HDPARM_DIR)

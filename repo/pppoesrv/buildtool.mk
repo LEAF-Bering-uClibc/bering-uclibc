@@ -34,7 +34,7 @@ $(PPPOESRV_DIR)/.build: $(PPPOESRV_DIR)/.configured
 
 build: $(PPPOESRV_DIR)/.build
 
-clean: 
+clean:
 	-$(MAKE) -C $(PPPOESRV_DIR)/src distclean
 	rm -f $(BT_STAGING_DIR)/usr/sbin/pppoe-server
 	rm -f $(BT_STAGING_DIR)/etc/ppp/pppoe-server-options

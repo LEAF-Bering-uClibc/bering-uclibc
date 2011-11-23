@@ -10,8 +10,8 @@ IBOD_DIR:=ibod-1.5.0
 IBOD_TARGET_DIR:=$(BT_BUILD_DIR)/ibod
 
 
-$(IBOD_DIR)/.source: 
-	zcat $(IBOD_SOURCE) | tar -xvf - 
+$(IBOD_DIR)/.source:
+	zcat $(IBOD_SOURCE) | tar -xvf -
 	zcat $(IBOD_PATCH1) | patch -d $(IBOD_DIR) -p1
 	touch $(IBOD_DIR)/.source
 
@@ -30,13 +30,13 @@ $(IBOD_DIR)/.build:
 	cp -a $(IBOD_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(IBOD_DIR)/.build
 
-source: $(IBOD_DIR)/.source 
+source: $(IBOD_DIR)/.source
 
 build: $(IBOD_DIR)/.build
 
 clean:
 	-rm $(IBOD_DIR)/.build
 	$(MAKE) -C $(IBOD_DIR) clean
-  
+
 srcclean:
 	rm -rf $(IBOD_DIR)

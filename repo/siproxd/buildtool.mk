@@ -10,12 +10,12 @@ SIPROXD_DIR:=siproxd-0.5.13
 SIPROXD_TARGET_DIR:=$(BT_BUILD_DIR)/siproxd
 
 
-$(SIPROXD_DIR)/.source: 
-	zcat $(SIPROXD_SOURCE) |  tar -xvf - 
+$(SIPROXD_DIR)/.source:
+	zcat $(SIPROXD_SOURCE) |  tar -xvf -
 	zcat $(SIPROXD_PATCH1) | patch -d $(SIPROXD_DIR) -p1
 	touch $(SIPROXD_DIR)/.source
 
-$(SIPROXD_DIR)/.configured: $(SIPROXD_DIR)/.source 
+$(SIPROXD_DIR)/.configured: $(SIPROXD_DIR)/.source
 	(cd $(SIPROXD_DIR); CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
 	./configure --host=$(GNU_ARCH)-linux --build=$(GNU_ARCH)-linux \
 	--enable-fli4l-22-uclibc --with-extra-libs=$(BT_STAGING_DIR)/usr );
@@ -34,7 +34,7 @@ $(SIPROXD_DIR)/.build: $(SIPROXD_DIR)/.configured
 	cp -a $(SIPROXD_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(SIPROXD_DIR)/.build
 
-source: $(SIPROXD_DIR)/.source 
+source: $(SIPROXD_DIR)/.source
 
 build: $(SIPROXD_DIR)/.build
 
@@ -42,6 +42,6 @@ clean:
 	-rm $(SIPROXD_DIR)/.build
 	-$(MAKE) -C $(SIPROXD_DIR) clean
 	-rm -rf $(SIPROXD_TARGET_DIR)
-  
+
 srcclean:
 	rm -rf $(SIPROXD_DIR)

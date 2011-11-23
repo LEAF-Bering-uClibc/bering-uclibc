@@ -16,7 +16,7 @@ source: $(SNARF_DIR)/.source
 $(SNARF_DIR)/.configured: $(SNARF_DIR)/.source
 	(cd $(SNARF_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure --prefix=/usr --with-guess-winsize)
 	touch $(SNARF_DIR)/.configured
-                        
+
 $(SNARF_DIR)/.build: $(SNARF_DIR)/.configured
 	mkdir -p $(SNARF_TARGET_DIR)
 	mkdir -p $(SNARF_TARGET_DIR)/usr/bin
@@ -27,13 +27,13 @@ $(SNARF_DIR)/.build: $(SNARF_DIR)/.configured
 	touch $(SNARF_DIR)/.build
 
 build: $(SNARF_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(SNARF_DIR) clean
 	rm -rf $(SNARF_TARGET_DIR)
 	rm -f $(SNARF_DIR)/.build
 	rm -f $(SNARF_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(SNARF_DIR) 
+	rm -rf $(SNARF_DIR)
 	rm -f $(SNARF_DIR)/.source

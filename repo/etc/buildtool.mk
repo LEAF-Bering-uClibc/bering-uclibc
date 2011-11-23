@@ -26,12 +26,12 @@ $(ETC_DIR)/.build: $(ETC_DIR)/.source
 	cp -aL group $(ETC_TARGET_DIR)/etc
 	cp -aL gshadow $(ETC_TARGET_DIR)/etc
 	cp -aL hostname $(ETC_TARGET_DIR)/etc
-	cp -aL hosts $(ETC_TARGET_DIR)/etc		
-	cp -aL hosts.allow $(ETC_TARGET_DIR)/etc	
-	cp -aL hosts.deny $(ETC_TARGET_DIR)/etc		
+	cp -aL hosts $(ETC_TARGET_DIR)/etc
+	cp -aL hosts.allow $(ETC_TARGET_DIR)/etc
+	cp -aL hosts.deny $(ETC_TARGET_DIR)/etc
 	cp -aL inetd.conf $(ETC_TARGET_DIR)/etc
 	cp -aL inittab $(ETC_TARGET_DIR)/etc
-	cp -aL lrp.conf $(ETC_TARGET_DIR)/etc	
+	cp -aL lrp.conf $(ETC_TARGET_DIR)/etc
 	cp -aL networks $(ETC_TARGET_DIR)/etc
 	cp -aL passwd $(ETC_TARGET_DIR)/etc
 	cp -aL profile $(ETC_TARGET_DIR)/etc
@@ -45,18 +45,18 @@ $(ETC_DIR)/.build: $(ETC_DIR)/.source
 	cp -aL sysctl.conf $(ETC_TARGET_DIR)/etc
 	cp -aL syslog-ng.conf $(ETC_TARGET_DIR)/etc/syslog-ng
 	cp -aL TZ $(ETC_TARGET_DIR)/etc
-	cp -aL multicron $(ETC_TARGET_DIR)/etc/cron.d				
+	cp -aL multicron $(ETC_TARGET_DIR)/etc/cron.d
 	cp -aL multicron-d $(ETC_TARGET_DIR)/etc/cron.daily
 	cp -aL rcS.default $(ETC_TARGET_DIR)/etc/default/rcS
-	cp -aL interfaces $(ETC_TARGET_DIR)/etc/network	
+	cp -aL interfaces $(ETC_TARGET_DIR)/etc/network
 	cp -aL bootmisc.sh $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL checkroot.sh $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL cron $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL hostname.sh $(ETC_TARGET_DIR)/etc/init.d
-	cp -aL hwclock $(ETC_TARGET_DIR)/etc/init.d	
+	cp -aL hwclock $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL ifupdown $(ETC_TARGET_DIR)/etc/init.d
-	cp -aL inetd $(ETC_TARGET_DIR)/etc/init.d	
-	cp -aL local $(ETC_TARGET_DIR)/etc/init.d	
+	cp -aL inetd $(ETC_TARGET_DIR)/etc/init.d
+	cp -aL local $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL local.start $(ETC_TARGET_DIR)/etc/default
 	cp -aL local.stop $(ETC_TARGET_DIR)/etc/default
 	cp -aL mountall.sh $(ETC_TARGET_DIR)/etc/init.d
@@ -67,7 +67,7 @@ $(ETC_DIR)/.build: $(ETC_DIR)/.source
 	cp -aL rmnologin $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL syslog-ng $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL umountfs $(ETC_TARGET_DIR)/etc/init.d
-	cp -aL urandom $(ETC_TARGET_DIR)/etc/init.d	
+	cp -aL urandom $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL watchdog $(ETC_TARGET_DIR)/etc/init.d
 	cp -aL ifenslave.up $(ETC_TARGET_DIR)/etc/network/if-up.d/ifenslave
 	cp -aL ip.up $(ETC_TARGET_DIR)/etc/network/if-up.d/ip

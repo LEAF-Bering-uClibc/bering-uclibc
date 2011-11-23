@@ -6,7 +6,7 @@
 
 include $(MASTERMAKEFILE)
 
-source: 
+source:
 	# nothing to be done
 
 build:

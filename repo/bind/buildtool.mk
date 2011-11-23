@@ -10,9 +10,9 @@ $(DIR)/.source:
 	touch $(DIR)/.source
 
 source: $(DIR)/.source
-                        
+
 $(DIR)/.configured: $(DIR)/.source
-#	(cd $(DIR) ; [ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); 
+#	(cd $(DIR) ; [ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER);
 	(cd $(DIR) ; \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	CFLAGS="$(BT_COPT_FLAGS)" \
@@ -34,7 +34,7 @@ $(DIR)/.configured: $(DIR)/.source
 	--without-libxml2 \
 	--disable-static)
 	touch $(DIR)/.configured
-                                                                 
+
 $(DIR)/.build: $(DIR)/.configured
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	mkdir -p $(TARGET_DIR)/etc/named
@@ -42,7 +42,7 @@ $(DIR)/.build: $(DIR)/.configured
 	mkdir -p $(TARGET_DIR)/var/named/pri
 #       breaks patch
 	[ -$(PERLVER) = - ] || PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
-	make -C $(DIR) all 
+	make -C $(DIR) all
 #	make CFLAGS="-Wall" -C $(DIR) all
 	make DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
@@ -60,13 +60,13 @@ $(DIR)/.build: $(DIR)/.configured
 	touch $(DIR)/.build
 
 build: $(DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(DIR) clean
 	rm -rf $(TARGET_DIR)
 	rm -rf $(DIR)/.build
 	rm -rf $(DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(DIR) 
+	rm -rf $(DIR)
 	rm -rf $(DIR)/.source

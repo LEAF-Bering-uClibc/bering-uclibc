@@ -20,7 +20,7 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 #	cp $(SHOREWALL_DIR)/init.debian.sh $(SHOREWALL_DIR)/init.sh
 	mkdir -p $(TARGET_DIR)
 	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
-	
+
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL6_DEFAULT) $(TARGET_DIR)/etc/default/shorewall6-lite
 	install -c $(SHOREWALL6_INIT) $(TARGET_DIR)/etc/init.d/shorewall6-lite
@@ -31,7 +31,7 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 
 source: $(SHOREWALL_DIR)/.source
 
-build:  $(SHOREWALL_DIR)/.build                                                                                                   
+build:  $(SHOREWALL_DIR)/.build
 	cp -afv $(TARGET_DIR)/* $(BT_STAGING_DIR)
 
 clean:	stageclean

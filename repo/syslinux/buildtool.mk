@@ -1,6 +1,6 @@
 #############################################################
 #
-# syslinux 
+# syslinux
 #
 #############################################################
 
@@ -9,11 +9,11 @@ SYSLINUX_DIR:=syslinux-4.03
 SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
 
 
-$(SYSLINUX_DIR)/.source: 
-	bzcat $(SYSLINUX_SOURCE) |  tar -xvf - 
+$(SYSLINUX_DIR)/.source:
+	bzcat $(SYSLINUX_SOURCE) |  tar -xvf -
 #	cat $(SYSLINUX_PATCH) | patch -d $(SYSLINUX_DIR) -p1
 	touch $(SYSLINUX_DIR)/.source
-	
+
 $(SYSLINUX_DIR)/.build: $(SYSLINUX_DIR)/.source
 	mkdir -p $(SYSLINUX_TARGET_DIR)/usr/bin
 	mkdir -p $(SYSLINUX_TARGET_DIR)/usr/share/syslinux
@@ -31,7 +31,7 @@ source: $(SYSLINUX_DIR)/.source
 
 build: $(SYSLINUX_DIR)/.build
 
-clean: 
+clean:
 	-rm $(SYSLINUX_DIR)/.build
 	rm -rf $(SYSLINUX_TARGET_DIR)
 	$(MAKE) -C $(SYSLINUX_DIR) clean

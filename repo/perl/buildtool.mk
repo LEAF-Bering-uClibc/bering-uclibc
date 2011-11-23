@@ -48,9 +48,9 @@ clean:
 	rm -f $(PERL_DIR)/.build
 	rm -rf $(BT_STAGING_DIR)/usr/lib/perl5/$(PERL_VER)
 	rm -rf $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
-# this is probably not enough?	
+# this is probably not enough?
 	rm -f $(PERL_DIR)/.configured
 
 srcclean: clean
 	rm -f $(PERL_DIR)/.source
-	rm -rf $(PERL_DIR) 
+	rm -rf $(PERL_DIR)

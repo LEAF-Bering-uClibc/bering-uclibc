@@ -9,7 +9,7 @@ $(BASH_DIR)/.source:
 	touch $(BASH_DIR)/.source
 
 source: $(BASH_DIR)/.source
-                        
+
 $(BASH_DIR)/.configured: $(BASH_DIR)/.source
 	(cd $(BASH_DIR) ; ./configure \
 			--host=$(GNU_TARGET_NAME) \

@@ -9,8 +9,8 @@ DIR:=readline-6.2
 TARGET_DIR:=$(BT_BUILD_DIR)/libreadline
 export CC=$(TARGET_CC)
 
-$(DIR)/.source: 		
-	zcat $(SOURCE) |  tar -xvf - 	
+$(DIR)/.source:
+	zcat $(SOURCE) |  tar -xvf -
 	touch $(DIR)/.source
 
 
@@ -39,11 +39,11 @@ build: $(DIR)/.build
 clean:
 	-rm $(DIR)/.build
 	rm -rf $(TARGET_DIR)
-	rm -f $(BT_STAGING_DIR)/usr/lib/libhistory.* 
-	rm -f $(BT_STAGING_DIR)/usr/lib/libreadline.* 
+	rm -f $(BT_STAGING_DIR)/usr/lib/libhistory.*
+	rm -f $(BT_STAGING_DIR)/usr/lib/libreadline.*
 	rm -rf $(BT_STAGING_DIR)/usr/include/readline
 	$(MAKE) -C $(DIR) clean
-	
+
 srcclean:
 	rm -rf $(DIR)
 

@@ -16,13 +16,13 @@ IP_NF_SET_MAX=256
 #max items count in set
 IP_NF_SET_HASHSIZE=4096
 
-$(DIR)/.source: 
-	bzcat $(SOURCE) |  tar -xvf - 
+$(DIR)/.source:
+	bzcat $(SOURCE) |  tar -xvf -
 	touch $(DIR)/.source
 
 $(DIR)/.build: $(DIR)/Makefile
 	mkdir -p $(TARGET_DIR)
-	
+
 	(export IP_NF_SET_MAX=$(IP_NF_SET_MAX); \
 	export IP_NF_SET_HASHSIZE=$(IP_NF_SET_HASHSIZE); \
 	cd $(DIR) && for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
@@ -43,13 +43,13 @@ $(DIR)/.build: $(DIR)/Makefile
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build
 
-source: $(DIR)/.source 
+source: $(DIR)/.source
 
 build: $(DIR)/.build
 
 clean:
 	-rm $(DIR)/.build
 	-$(MAKE) -C $(DIR) clean
-  
+
 srcclean:
 	rm -rf $(DIR)

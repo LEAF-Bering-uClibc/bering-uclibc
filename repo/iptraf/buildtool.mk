@@ -49,4 +49,4 @@ clean:
 	rm -rf $(IPTRAF_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(IPTRAF_DIR) 
+	rm -rf $(IPTRAF_DIR)

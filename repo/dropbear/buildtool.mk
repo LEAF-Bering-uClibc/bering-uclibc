@@ -43,6 +43,6 @@ clean:
 	rm -rf $(DROPBEAR_TARGET_DIR)
 	rm -f $(DROPBEAR_DIR)/.build
 	rm -f $(DROPBEAR_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(DROPBEAR_DIR) 
+	rm -rf $(DROPBEAR_DIR)

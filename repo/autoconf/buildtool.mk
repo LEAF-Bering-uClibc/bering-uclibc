@@ -9,12 +9,12 @@ AUTOCONF_DIR:=autoconf-2.68
 export CC=$(TARGET_CC)
 CFLAGS=-Os -s -I$(BT_STAGING_DIR)/include:$(BT_STAGING_DIR)/include/include
 export CFLAGS
-STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment 
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5) 
+STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment
+PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 
-$(AUTOCONF_DIR)/.source: 		
-	bzcat $(AUTOCONF_SOURCE) |  tar -xvf - 	
+$(AUTOCONF_DIR)/.source:
+	bzcat $(AUTOCONF_SOURCE) |  tar -xvf -
 	touch $(AUTOCONF_DIR)/.source
 
 
@@ -31,14 +31,14 @@ build: $(AUTOCONF_DIR)/.configured
 	(export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	$(MAKE) CC=$(TARGET_CC) -C $(AUTOCONF_DIR))
 	$(MAKE) CC=$(TARGET_CC) -C $(AUTOCONF_DIR) install
-	
+
 
 clean:
 	-rm $(AUTOCONF_DIR)/.configured
 	$(MAKE) -C $(AUTOCONF_DIR) uninstall
 	$(MAKE) -C $(AUTOCONF_DIR) clean
-  
+
 
 srcclean:
 	rm -rf $(AUTOCONF_DIR)
-	
+

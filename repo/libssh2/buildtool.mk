@@ -50,6 +50,6 @@ clean:
 	rm -f $(LIBSSH2_DIR)/.configure
 
 srcclean: clean
-	rm -rf $(LIBSSH2_DIR) 
+	rm -rf $(LIBSSH2_DIR)
 	-rm DIRNAME
 

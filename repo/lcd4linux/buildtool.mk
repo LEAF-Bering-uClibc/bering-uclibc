@@ -10,7 +10,7 @@ LCD4LINUX_TARGET_DIR:=$(BT_BUILD_DIR)/lcd4linux
 
 
 $(LCD4LINUX_DIR)/.source:
-	zcat $(LCD4LINUX_SOURCE) |  tar -xvf - 
+	zcat $(LCD4LINUX_SOURCE) |  tar -xvf -
 	zcat $(LCD4LINUX_PATCH1) |  patch -p1 -d $(LCD4LINUX_DIR)
 	touch $(LCD4LINUX_DIR)/.source
 
@@ -45,21 +45,21 @@ $(LCD4LINUX_DIR)/.configured: $(LCD4LINUX_DIR)/.source
 	touch $(LCD4LINUX_DIR)/.configured
 
 source: $(LCD4LINUX_DIR)/.source
-	
+
 $(LCD4LINUX_DIR)/.build: $(LCD4LINUX_DIR)/.configured
 	-mkdir $(LCD4LINUX_TARGET_DIR)
-	-mkdir -p $(LCD4LINUX_TARGET_DIR)/etc/init.d 
+	-mkdir -p $(LCD4LINUX_TARGET_DIR)/etc/init.d
 	-mkdir -p $(BT_STAGING_DIR)/etc/init.d
 	-mkdir -p $(BT_STAGING_DIR)/usr/sbin
 	$(MAKE) CC=$(TARGET_CC) -C $(LCD4LINUX_DIR) lcd4linux
 	perl -i -p -e 's,DESTDIR =.*,DESTDIR =$(LCD4LINUX_TARGET_DIR),' $(LCD4LINUX_DIR)/Makefile
 	$(MAKE) DESTDIR=$(LCD4LINUX_TARGET_DIR) CC=$(TARGET_CC) -C $(LCD4LINUX_DIR) install
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LCD4LINUX_TARGET_DIR)/usr/bin/lcd4linux
-	-cp lcd4linux.conf $(LCD4LINUX_TARGET_DIR)/etc/ 
-	-cp $(LCD4LINUX_TARGET_DIR)/etc/lcd4linux.conf $(BT_STAGING_DIR)/etc/ 
+	-cp lcd4linux.conf $(LCD4LINUX_TARGET_DIR)/etc/
+	-cp $(LCD4LINUX_TARGET_DIR)/etc/lcd4linux.conf $(BT_STAGING_DIR)/etc/
 	-cp $(LCD4LINUX_TARGET_DIR)/usr/bin/lcd4linux* $(BT_STAGING_DIR)/usr/sbin/
-	-cp lcd4linux.init $(LCD4LINUX_TARGET_DIR)/etc/init.d/lcd4linux 
-	-cp lcd4linux.init $(BT_STAGING_DIR)/etc/init.d/lcd4linux 
+	-cp lcd4linux.init $(LCD4LINUX_TARGET_DIR)/etc/init.d/lcd4linux
+	-cp lcd4linux.init $(BT_STAGING_DIR)/etc/init.d/lcd4linux
 	touch $(LCD4LINUX_DIR)/.build
 
 build: $(LCD4LINUX_DIR)/.build
@@ -69,10 +69,10 @@ clean:
 	-rm $(LCD4LINUX_DIR)/.build
 	-$(MAKE) -C $(LCD4LINUX_DIR) clean
 	rm -f $(BT_STAGING_DIR)/etc/lcd4linux.conf
-	rm -f $(BT_STAGING_DIR)/usr/sbin/lcd4linux* 
-	rm -f $(BT_STAGING_DIR)/etc/init.d/lcd4linux 
-	
-  
+	rm -f $(BT_STAGING_DIR)/usr/sbin/lcd4linux*
+	rm -f $(BT_STAGING_DIR)/etc/init.d/lcd4linux
+
+
 srcclean:
 	rm -rf $(LCD4LINUX_DIR)
-    
+

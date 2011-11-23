@@ -11,8 +11,8 @@ export CC=$(TARGET_CC)
 PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER)
 
-$(DIR)/.source: 		
-	zcat $(SOURCE) |  tar -xvf - 	
+$(DIR)/.source:
+	zcat $(SOURCE) |  tar -xvf -
 	touch $(DIR)/.source
 
 
@@ -43,10 +43,10 @@ build: $(DIR)/.build
 clean:
 	-rm $(DIR)/.build
 	rm -rf $(TARGET_DIR)
-	rm -f $(BT_STAGING_DIR)/usr/lib/libintl.* 
+	rm -f $(BT_STAGING_DIR)/usr/lib/libintl.*
 	rm -f $(BT_STAGING_DIR)/usr/include/libintl.h
 	$(MAKE) -C $(DIR) clean
-	
+
 srcclean:
 	rm -rf $(DIR)
 

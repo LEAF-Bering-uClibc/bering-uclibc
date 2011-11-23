@@ -21,15 +21,15 @@ EXTRA_VARS := BINDIR=/sbin \
 	INCDIR=/usr/include \
 	DESTDIR=$(IPTABLES_TARGET_DIR)
 
-BUILD_TARGETS :=all 
+BUILD_TARGETS :=all
 #iptables-save iptables-restore ip6tables-save ip6tables-restore
-	
-$(IPTABLES_DIR)/.source: 
-	bzcat $(IPTABLES_SOURCE) |  tar -xvf - 
+
+$(IPTABLES_DIR)/.source:
+	bzcat $(IPTABLES_SOURCE) |  tar -xvf -
 	touch $(IPTABLES_DIR)/.source
 
-$(IPT_NF_DIR)/.source: 
-	zcat $(IPT_NF_SOURCE) |  tar -xvf - 
+$(IPT_NF_DIR)/.source:
+	zcat $(IPT_NF_SOURCE) |  tar -xvf -
 	perl -i -p -e 's/gcc/\$$(CC)/' $(IPT_NF_DIR)/Makefile.in
 	touch $(IPT_NF_DIR)/.source
 
@@ -91,6 +91,6 @@ clean:
 	-rm $(IPTABLES_DIR)/.build
 	-rm iptables
 	-$(MAKE) -C $(IPTABLES_DIR) clean
-  
+
 srcclean:
 	rm -rf $(IPTABLES_DIR)

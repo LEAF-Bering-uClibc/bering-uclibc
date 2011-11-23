@@ -43,4 +43,4 @@ clean:
 	rm -rf $(TINYPROXY_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(TINYPROXY_DIR) 
+	rm -rf $(TINYPROXY_DIR)

@@ -14,7 +14,7 @@ $(ULOGD_DIR)/.source:
 	touch $(ULOGD_DIR)/.source
 
 source: $(ULOGD_DIR)/.source
-                        
+
 $(ULOGD_DIR)/.configured: $(ULOGD_DIR)/.source
 #	(cd $(ULOGD_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -I$(BT_LINUX_DIR)/include" \
 #	./configure --prefix=/usr --sysconfdir=/etc )
@@ -23,16 +23,16 @@ $(ULOGD_DIR)/.configured: $(ULOGD_DIR)/.source
 	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib" \
 	./configure --prefix=/usr --sysconfdir=/etc --with-mysql=$(BT_STAGING_DIR)/usr/ )
 	touch $(ULOGD_DIR)/.configured
-                                                                 
+
 $(ULOGD_DIR)/.build: $(ULOGD_DIR)/.configured
 	mkdir -p $(ULOGD_TARGET_DIR)
-	mkdir -p $(ULOGD_TARGET_DIR)/etc/init.d	
-	mkdir -p $(ULOGD_TARGET_DIR)/etc/cron.daily	
+	mkdir -p $(ULOGD_TARGET_DIR)/etc/init.d
+	mkdir -p $(ULOGD_TARGET_DIR)/etc/cron.daily
 	mkdir -p $(ULOGD_TARGET_DIR)/etc/cron.weekly
-	mkdir -p $(ULOGD_TARGET_DIR)/usr/lib/ulogd	
-	make -C $(ULOGD_DIR) DESTDIR=$(ULOGD_TARGET_DIR) all  
-	DESTDIR=$(ULOGD_TARGET_DIR) make -C $(ULOGD_DIR) install 
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ULOGD_TARGET_DIR)/usr/sbin/ulogd	
+	mkdir -p $(ULOGD_TARGET_DIR)/usr/lib/ulogd
+	make -C $(ULOGD_DIR) DESTDIR=$(ULOGD_TARGET_DIR) all
+	DESTDIR=$(ULOGD_TARGET_DIR) make -C $(ULOGD_DIR) install
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ULOGD_TARGET_DIR)/usr/sbin/ulogd
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ULOGD_TARGET_DIR)/usr/lib/ulogd/*.so
 	cp -aL ulogd.init $(ULOGD_TARGET_DIR)/etc/init.d/ulogd
 	cp -aL ulogd.conf $(ULOGD_TARGET_DIR)/etc/
@@ -42,13 +42,13 @@ $(ULOGD_DIR)/.build: $(ULOGD_DIR)/.configured
 	touch $(ULOGD_DIR)/.build
 
 build: $(ULOGD_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(ULOGD_DIR) clean
 	rm -rf $(ULOGD_TARGET_DIR)
 	rm $(ULOGD_DIR)/.build
 	rm $(ULOGD_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(ULOGD_DIR) 
+	rm -rf $(ULOGD_DIR)
 	rm $(ULOGD_DIR)/.source

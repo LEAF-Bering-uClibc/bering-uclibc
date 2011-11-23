@@ -9,11 +9,11 @@ include $(MASTERMAKEFILE)
 LIBOSIP2_DIR=libosip2-2.2.2
 LIBOSIP2_TARGET_DIR=$(BT_BUILD_DIR)/libosip
 
-$(LIBOSIP2_DIR)/.source: 
+$(LIBOSIP2_DIR)/.source:
 	zcat $(LIBOSIP2_SOURCE) | tar -xvf -
 	touch $(LIBOSIP2_DIR)/.source
 
-$(LIBOSIP2_DIR)/.configured: $(LIBOSIP2_DIR)/.source 
+$(LIBOSIP2_DIR)/.configured: $(LIBOSIP2_DIR)/.source
 	(cd $(LIBOSIP2_DIR) ; autoconf ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	./configure --host=$(GNU_HOST_NAME) --build=$(GNU_HOST_NAME) --prefix=/usr --disable-shared );
 	touch $(LIBOSIP2_DIR)/.configured
@@ -34,10 +34,10 @@ source: $(LIBOSIP2_DIR)/.source
 
 build: $(LIBOSIP2_DIR)/.build
 
-clean:         
+clean:
 	make -C $(LIBOSIP2_DIR) clean
 	rm $(LIBOSIP2_TARGET_DIR)/.build
 	rm -rf $(LIBOSIP2_TARGET_DIR)
 
 srcclean:
-	rm -rf $(LIBOSIP2_DIR)	
+	rm -rf $(LIBOSIP2_DIR)

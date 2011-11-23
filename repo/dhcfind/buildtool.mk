@@ -1,11 +1,11 @@
-# makefile 
+# makefile
 include $(MASTERMAKEFILE)
 
 PKG_DIR=.
 PKG_TARGET_DIR:=$(BT_BUILD_DIR)/dhcfind
 
 source:
-                        
+
 build:
 	mkdir -p $(PKG_TARGET_DIR)
 	mkdir -p $(PKG_TARGET_DIR)/usr/bin
@@ -15,9 +15,9 @@ build:
 	cp -aL dhcfind.conf $(PKG_TARGET_DIR)/etc
 	cp -a $(PKG_TARGET_DIR)/* $(BT_STAGING_DIR)
 
-                                                                                         
+
 clean:
 	rm -rf $(PKG_TARGET_DIR)
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(PKG_DIR) 
+	rm -rf $(PKG_DIR)

@@ -41,4 +41,4 @@ clean:
 	rm -rf $(EBTABLES_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(EBTABLES_DIR) 
+	rm -rf $(EBTABLES_DIR)

@@ -17,13 +17,13 @@ $(SHOREWALL_DIR)/.source:
 	touch $(SHOREWALL_DIR)/.source
 
 #errata
-#	cp compiler $(SHOREWALL_DIR)	
+#	cp compiler $(SHOREWALL_DIR)
 
 $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 	cp $(SHOREWALL_DIR)/init.debian.sh $(SHOREWALL_DIR)/init.sh
 	mkdir -p $(TARGET_DIR)
 	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
-	
+
 #	chmod 755 $(TARGET_DIR)/usr/share/shorewall/firewall
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL_DEFAULT) $(TARGET_DIR)/etc/default/shorewall6
@@ -36,7 +36,7 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 
 source: $(SHOREWALL_DIR)/.source
 
-build:  $(SHOREWALL_DIR)/.build                                                                                                   
+build:  $(SHOREWALL_DIR)/.build
 	cp -afv $(TARGET_DIR)/* $(BT_STAGING_DIR)
 
 clean:	stageclean

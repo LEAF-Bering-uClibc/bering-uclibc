@@ -8,10 +8,10 @@ $(CONFIG_DIR)/.source:
 	touch $(CONFIG_DIR)/.source
 
 source: $(CONFIG_DIR)/.source
-                        
+
 $(CONFIG_DIR)/.configured: $(CONFIG_DIR)/.source
 	touch $(CONFIG_DIR)/.configured
-                                                                 
+
 $(CONFIG_DIR)/.build: $(CONFIG_DIR)/.configured
 	mkdir -p $(CONFIG_TARGET_DIR)
 	mkdir -p $(CONFIG_TARGET_DIR)/etc/init.d
@@ -23,11 +23,11 @@ $(CONFIG_DIR)/.build: $(CONFIG_DIR)/.configured
 	touch $(CONFIG_DIR)/.build
 
 build: $(CONFIG_DIR)/.build
-                                                                                         
+
 clean:
 	rm -rf $(CONFIG_TARGET_DIR)
 	rm -f $(CONFIG_DIR)/.build
 	rm -f $(CONFIG_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
 	rm -f $(CONFIG_DIR)/.source

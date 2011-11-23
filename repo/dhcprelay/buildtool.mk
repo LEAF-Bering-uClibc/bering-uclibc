@@ -39,7 +39,7 @@ clean:
 	rm -rf $(DHCPRELAY_TARGET_DIR)
 	rm -rf $(DHCPRELAY_DIR)/.build
 	rm -rf $(DHCPRELAY_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(DHCPRELAY_DIR) 
+	rm -rf $(DHCPRELAY_DIR)
 	rm -rf $(DHCPRELAY_DIR)/.source

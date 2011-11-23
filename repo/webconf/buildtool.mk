@@ -1,7 +1,7 @@
 #####################################################
-# 
+#
 # webconf - based on weblet buildtool.mk
-# 
+#
 #####################################################
 include $(MASTERMAKEFILE)
 
@@ -17,7 +17,7 @@ LINKS=	etc\
 $(LINKS):
 	ln -s $(REPODIR)/$@ $@
 
-source: .source 
+source: .source
 
 .source: $(LINKS)
 	touch .source
@@ -35,7 +35,7 @@ clean:
 	rm -rf .build
 	rm -rf .configured
 
-srcclean: 
+srcclean:
 	rm -rf `cat .source`
 	rm -f .source
 	rm -f $(LINKS)

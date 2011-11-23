@@ -63,7 +63,7 @@ clean:
 	-rm .build .configure
 
 srcclean: clean
-	rm -rf $(DHCPD_DIR) 
+	rm -rf $(DHCPD_DIR)
 	rm DIRNAME
 	rm .source
 

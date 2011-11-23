@@ -67,5 +67,5 @@ clean:
 	rm -rf $(YATE_TARGET_DIR)
 
 srcclean: clean
-	rm -rf $(YATE_DIR) 
+	rm -rf $(YATE_DIR)
 

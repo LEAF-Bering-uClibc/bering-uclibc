@@ -47,6 +47,6 @@ clean:
 	-rm $(LIBPOPT_DIR)/.build $(LIBPOPT_DIR)/.configured
 	-rm -rf $(LIBPOPT_TARGET_DIR)
 	$(MAKE) -C $(LIBPOPT_DIR) clean
-	
+
 srcclean:
 	rm -rf $(LIBPOPT_DIR)

@@ -42,7 +42,7 @@ clean:
 	-rm $(BT_STAGING_DIR)/etc/init.d/bird
 	-rm -rf $(DIR)/.build
 	-rm -rf $(DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(DIR) 
+	rm -rf $(DIR)
 	rm -rf $(DIR)/.source

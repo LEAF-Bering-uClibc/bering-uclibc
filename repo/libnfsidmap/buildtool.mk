@@ -45,6 +45,6 @@ clean:
 	rm -f $(LIBNFSIDMAP_DIR)/.configure
 
 srcclean: clean
-	rm -rf $(LIBNFSIDMAP_DIR) 
+	rm -rf $(LIBNFSIDMAP_DIR)
 	-rm DIRNAME
 

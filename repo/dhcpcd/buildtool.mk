@@ -51,6 +51,6 @@ clean:
 	-rm -f $(DHCPCD_DIR)/.configure
 
 srcclean: clean
-	-rm -rf $(DHCPCD_DIR) 
+	-rm -rf $(DHCPCD_DIR)
 	-rm DIRNAME
 

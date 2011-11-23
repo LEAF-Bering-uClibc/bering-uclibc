@@ -8,7 +8,7 @@ include $(MASTERMAKEFILE)
 UPNPBRIDGE_DIR:=.
 UPNPBRIDGE_TARGET_DIR:=$(BT_BUILD_DIR)/upnpbridge
 
-$(UPNPBRIDGE_DIR)/.source: 
+$(UPNPBRIDGE_DIR)/.source:
 	touch $(UPNPBRIDGE_DIR)/.source
 
 $(UPNPBRIDGE_DIR)/.build: $(UPNPBRIDGE_DIR)/.source
@@ -24,13 +24,13 @@ $(UPNPBRIDGE_DIR)/.build: $(UPNPBRIDGE_DIR)/.source
 	cp -a  $(UPNPBRIDGE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(UPNPBRIDGE_DIR)/.build
 
-source: $(UPNPBRIDGE_DIR)/.source 
+source: $(UPNPBRIDGE_DIR)/.source
 
 build: $(UPNPBRIDGE_DIR)/.build
 
 clean:
 	-rm $(UPNPBRIDGE_DIR)/.build
 	-rm $(UPNPBRIDGE_DIR)/*.o
-  
+
 srcclean:
 	rm -rf $(UPNPBRIDGE_DIR)

@@ -26,7 +26,7 @@ $(XL2TPD_DIR)/.build:
 
 build: $(XL2TPD_DIR)/.build
 
-clean: 
+clean:
 	$(MAKE) -C $(XL2TPD_DIR) clean
 	rm -f $(BT_STAGING_DIR)/usr/sbin/xl2tpd
 	rm -f $(BT_STAGING_DIR)/usr/sbin/safe_xl2tpd

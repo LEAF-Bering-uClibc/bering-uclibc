@@ -9,16 +9,16 @@ include $(MASTERMAKEFILE)
 OPENSSL_DIR:=openssl-1.0.0e
 OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
-$(OPENSSL_DIR)/.source: 
+$(OPENSSL_DIR)/.source:
 	zcat $(OPENSSL_SOURCE) | tar -xvf -
 #	zcat $(OPENSSL_PATCH1) | patch -d $(OPENSSL_DIR) -p1
 
 #	# Clean up the configure script
-#	perl -i -p -e 's,tcc=\"cc\";,tcc=\"$(TARGET_CC)\";,' $(OPENSSL_DIR)/Configure 
+#	perl -i -p -e 's,tcc=\"cc\";,tcc=\"$(TARGET_CC)\";,' $(OPENSSL_DIR)/Configure
 	touch $(OPENSSL_DIR)/.source
 
 $(OPENSSL_DIR)/.configured: $(OPENSSL_DIR)/.source
-	
+
 	(cd $(OPENSSL_DIR); \
 	./Configure linux-elf  \
 		--prefix=/usr \
@@ -29,9 +29,9 @@ $(OPENSSL_DIR)/.configured: $(OPENSSL_DIR)/.source
 		-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib \
 		-I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include \
 		 );
-#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/domd 
-#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/pl/linux.pl 
-#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/crypto/bn/Makefile 	
+#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/domd
+#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/pl/linux.pl
+#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/crypto/bn/Makefile
 #	perl -i -p -e 's,AR=ar.*,AR=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ar r,' $(OPENSSL_DIR)/Makefile
 	touch $(OPENSSL_DIR)/.configured
 
@@ -62,19 +62,19 @@ source: $(OPENSSL_DIR)/.source
 
 build: $(OPENSSL_DIR)/.build
 
-clean: 
+clean:
 	-rm $(OPENSSL_DIR)/.build
-	-rm -f $(BT_STAGING_DIR)/bin/openssl  
-	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so* 
-	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so* 
+	-rm -f $(BT_STAGING_DIR)/bin/openssl
+	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so*
+	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so*
 	-rm -rf $(BT_STAGING_DIR)/usr/ssl
 	-rm -rf $(OPENSSL_BUILD_DIR)
 	-$(MAKE) -C $(OPENSSL_DIR) clean
 
-srcclean: 
-	-rm -f $(BT_STAGING_DIR)/bin/openssl  
-	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so* 
-	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so* 
+srcclean:
+	-rm -f $(BT_STAGING_DIR)/bin/openssl
+	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so*
+	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so*
 	-rm -rf $(BT_STAGING_DIR)/usr/ssl
 	-rm -rf $(OPENSSL_BUILD_DIR)
 	-rm -rf $(OPENSSL_DIR)

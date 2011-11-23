@@ -12,31 +12,31 @@ $(EZ_IPUPDATE_DIR)/.source:
 	touch $(EZ_IPUPDATE_DIR)/.source
 
 source: $(EZ_IPUPDATE_DIR)/.source
-                        
+
 $(EZ_IPUPDATE_DIR)/.configured: $(EZ_IPUPDATE_DIR)/.source
 	(cd $(EZ_IPUPDATE_DIR) ; export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" ./configure --prefix=/usr/ )
 	touch $(EZ_IPUPDATE_DIR)/.configured
-                                                                 
+
 $(EZ_IPUPDATE_DIR)/.build: $(EZ_IPUPDATE_DIR)/.configured
 	mkdir -p $(EZ_IPUPDATE_TARGET_DIR)
-	mkdir -p $(EZ_IPUPDATE_TARGET_DIR)/etc/init.d	
+	mkdir -p $(EZ_IPUPDATE_TARGET_DIR)/etc/init.d
 	PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER) \
-	make -C $(EZ_IPUPDATE_DIR) DESTDIR=$(EZ_IPUPDATE_TARGET_DIR) install 
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(EZ_IPUPDATE_TARGET_DIR)/usr/bin/ez-ipupdate	
+	make -C $(EZ_IPUPDATE_DIR) DESTDIR=$(EZ_IPUPDATE_TARGET_DIR) install
+	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(EZ_IPUPDATE_TARGET_DIR)/usr/bin/ez-ipupdate
 	cp -aL ez-ipupd $(EZ_IPUPDATE_TARGET_DIR)/etc/init.d/
 	cp -aL ez-ipupd.conf $(EZ_IPUPDATE_TARGET_DIR)/etc/
 	cp -a $(EZ_IPUPDATE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(EZ_IPUPDATE_DIR)/.build
 
 build: $(EZ_IPUPDATE_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(EZ_IPUPDATE_DIR) clean
 	rm -rf $(EZ_IPUPDATE_TARGET_DIR)
 	rm $(EZ_IPUPDATE_DIR)/.build
 	rm $(EZ_IPUPDATE_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(EZ_IPUPDATE_DIR) 
+	rm -rf $(EZ_IPUPDATE_DIR)
 	rm $(EZ_IPUPDATE_DIR)/.source

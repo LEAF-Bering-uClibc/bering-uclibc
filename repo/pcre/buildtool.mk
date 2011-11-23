@@ -18,7 +18,7 @@ CONFFLAGS:= --prefix=/usr --disable-cpp
 $(PCRE_DIR)/.source:
 	zcat $(PCRE_SOURCE) | tar -xvf -
 	echo $(PCRE_DIR) > DIRNAME
-	touch $(PCRE_DIR)/.source	
+	touch $(PCRE_DIR)/.source
 
 source: $(PCRE_DIR)/.source
 
@@ -30,7 +30,7 @@ $(PCRE_DIR)/.configured: $(PCRE_DIR)/.source
 
 $(PCRE_DIR)/.build: $(PCRE_DIR)/.configured
 	mkdir -p $(PCRE_TARGET_DIR)
-	make -C $(PCRE_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)"  
+	make -C $(PCRE_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)"
 	make -C $(PCRE_DIR) install
 #	make -C $(PCRE_DIR) DESTDIR=$(PCRE_TARGET_DIR) install
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PCRE_TARGET_DIR)/usr/lib/libpcre.so.0.0.1

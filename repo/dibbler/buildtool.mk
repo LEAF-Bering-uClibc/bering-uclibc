@@ -53,6 +53,6 @@ clean:
 	-rm $(DIBBLER_DIR)/.build
 
 srcclean: clean
-	rm -rf $(DIBBLER_DIR) 
+	rm -rf $(DIBBLER_DIR)
 	rm DIRNAME
 

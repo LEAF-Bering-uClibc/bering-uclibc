@@ -23,7 +23,7 @@ $(SNMP_DIR)/.source:
 
 source: $(SNMP_DIR)/.source
 
-$(SNMP_DIR)/.configured: $(SNMP_DIR)/.source 
+$(SNMP_DIR)/.configured: $(SNMP_DIR)/.source
 	(cd $(SNMP_DIR) ; \
 	 ./configure --prefix=/usr --sysconfdir=/etc --host=$(GNU_TARGET_NAME) \
 		--enable-fast-install \
@@ -73,6 +73,6 @@ clean:
 	rm $(SNMP_DIR)/.build
 	rm $(SNMP_DIR)/.configured
 	rm -rf "$(SNMP_TARGET_DIR)"
-  
+
 srcclean: clean
 	rm -rf $(SNMP_DIR)

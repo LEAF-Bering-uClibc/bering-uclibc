@@ -17,7 +17,7 @@ LIBUPNP_FLAGS= DESTDIR=$(TARGET_DIR)
 
 $(LIBUPNP_DIR)/.source:
 	zcat $(LIBUPNP_SOURCE) | tar -xvf -
-	touch $(LIBUPNP_DIR)/.source	
+	touch $(LIBUPNP_DIR)/.source
 
 $(LIBUPNP_DIR)/.configured: $(LIBUPNP_DIR)/.source
 	(cd $(LIBUPNP_DIR); ./configure \

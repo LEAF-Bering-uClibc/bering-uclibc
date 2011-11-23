@@ -14,7 +14,7 @@ LIBPCAP_TARGET_DIR:=$(BT_BUILD_DIR)/libpcap
 export CC=$(TARGET_CC)
 
 $(LIBPCAP_DIR)/.source:
-	zcat $(LIBPCAP_SOURCE) | tar -xvf - 	
+	zcat $(LIBPCAP_SOURCE) | tar -xvf -
 	echo $(LIBPCAP_DIR) > DIRNAME
 	touch $(LIBPCAP_DIR)/.source
 
@@ -28,7 +28,7 @@ $(LIBPCAP_DIR)/.configured: $(LIBPCAP_DIR)/.source
 			--with-dag=no \
 			--with-septel=no );
 	touch $(LIBPCAP_DIR)/.configured
-	
+
 source: $(LIBPCAP_DIR)/.source
 
 
@@ -56,7 +56,7 @@ clean:
 	-rm -f $(BT_STAGING_DIR)/usr/include/pcap.h
 	-rm -f $(BT_STAGING_DIR)/usr/include/pcap-namedb.h
 	-rm -f $(BT_STAGING_DIR)/usr/include/pcap-bpf.h
-	
+
 srcclean:
 	-rm -rf $(LIBPCAP_DIR)
 	-rm DIRNAME

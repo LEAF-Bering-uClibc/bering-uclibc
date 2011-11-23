@@ -69,6 +69,6 @@ clean:
 	rm -f $(NFSUTILS_DIR)/.configure
 
 srcclean: clean
-	rm -rf $(NFSUTILS_DIR) 
+	rm -rf $(NFSUTILS_DIR)
 	-rm DIRNAME
 

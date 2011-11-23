@@ -1,10 +1,10 @@
 # buildtool make file for kernel (pseudo package)
 # $Id: buildtool.mk,v 1.8 2011/01/15 14:51:50 davidmbrooke Exp $
-# 
+#
 # Note that this is some kind of a hack the linux source
-# does not build the kernel, but only unpacks it as the headers 
+# does not build the kernel, but only unpacks it as the headers
 # are needed by some programs
-# 
+#
 # so a ./buildtool2.pl build kernel (we in here ) must do it
 
 ifneq ($(strip $(MASTERMAKEFILE)),)
@@ -17,17 +17,17 @@ LINUX_BUILDDIR=$(BT_BUILD_DIR)/kernel
 KVERSION:=$(BT_KERNEL_RELEASE)
 KIMAGE:=linux-$(KVERSION)
 
-source: 
+source:
 	echo "already unpacked by linux source"
 
 
-$(LINUX_BUILDDIR): 
+$(LINUX_BUILDDIR):
 	mkdir -p $(LINUX_BUILDDIR)
 
 
 .build: $(LINUX_BUILDDIR) chklinuxdir
 #	perl -i -p -e 's,^CROSS_COMPILE\s*=.*,CROSS_COMPILE =$(BT_STAGING_DIR)/usr/bin/,g' $(BT_LINUX_DIR)/Makefile
-#	perl -i -p -e 's/CFLAGS\s*\:=\s*.*$$/CFLAGS \:= \$$\(CPPFLAGS\) -Wall -Wstrict-prototypes -Wno-trigraphs -Os \\/g' $(BT_LINUX_DIR)/Makefile	
+#	perl -i -p -e 's/CFLAGS\s*\:=\s*.*$$/CFLAGS \:= \$$\(CPPFLAGS\) -Wall -Wstrict-prototypes -Wno-trigraphs -Os \\/g' $(BT_LINUX_DIR)/Makefile
 	mkdir -p $(BT_STAGING_DIR)/boot
 	(for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
 	cd $(BT_LINUX_DIR)-$$i && \
@@ -58,7 +58,7 @@ endif
 
 clean: chklinuxdir
 	(for i in $(KARCHS); do cd $(BT_LINUX_DIR)-$$i && make clean; done)
-	rm -rf $(LINUX_BUILDDIR)  
+	rm -rf $(LINUX_BUILDDIR)
 	-rm .build
 
 srcclean:

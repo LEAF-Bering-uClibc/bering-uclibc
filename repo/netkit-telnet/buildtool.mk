@@ -8,8 +8,8 @@ include $(MASTERMAKEFILE)
 TELNET_DIR:=netkit-telnet-0.17
 TELNET_TARGET_DIR:=$(BT_BUILD_DIR)/netkit-telnet
 
-$(TELNET_DIR)/.source: 
-	zcat $(TELNET_SOURCE) |  tar -xvf - 
+$(TELNET_DIR)/.source:
+	zcat $(TELNET_SOURCE) |  tar -xvf -
 	zcat $(TELNET_PATCH1) | patch -d $(TELNET_DIR) -p1
 	touch $(TELNET_DIR)/.source
 
@@ -33,7 +33,7 @@ $(TELNET_DIR)/.build: $(TELNET_DIR)/.configured
 
 build: $(TELNET_DIR)/.build
 
-clean: 
+clean:
 	$(MAKE) -C $(TELNET_DIR) clean
 	rm -rf $(TELNET_TARGET_DIR)
 	rm -rf $(TELNET_DIR)/.build

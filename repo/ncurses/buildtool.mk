@@ -12,11 +12,11 @@ NCURSES_BUILD_DIR=$(BT_BUILD_DIR)/ncurses
 
 NCURSES_CFLAGS="-Os"
 
-$(NCURSES_DIR)/.source: 
+$(NCURSES_DIR)/.source:
 	zcat $(NCURSES_SOURCE) | tar -xvf -
 #	zcat $(NCURSES_PATCH1) | patch -d $(NCURSES_DIR) -p1
 	touch $(NCURSES_DIR)/.source
-	
+
 $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 	(cd $(NCURSES_DIR); \
 		DESTDIR=$(NCURSES_BUILD_DIR) \
@@ -54,12 +54,12 @@ source: $(NCURSES_DIR)/.source
 
 build: $(NCURSES_DIR)/.build
 
-clean:  
+clean:
 	-rm $(NCURSES_DIR)/.build
 	-rm -r $(NCURSES_BUILD_DIR)
 	-make -C $(NCURSES_DIR) clean
 
 srcclean:
-	rm -rf $(NCURSES_DIR)	
+	rm -rf $(NCURSES_DIR)
 
 

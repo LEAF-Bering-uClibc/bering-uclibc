@@ -38,4 +38,4 @@ clean:
 	rm -rf $(DNSMASQ_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(DNSMASQ_DIR) 
+	rm -rf $(DNSMASQ_DIR)

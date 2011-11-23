@@ -14,7 +14,7 @@ source: .source
 build: .source
 	mkdir -p var/webconf/www
 	mkdir -p etc/webconf
-	
+
 	cp dropbear.cgi var/webconf/www
 	cp config.cgi var/webconf/www
 	cp pppoe.cgi var/webconf/www

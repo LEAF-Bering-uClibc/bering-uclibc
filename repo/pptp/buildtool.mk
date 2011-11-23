@@ -20,11 +20,11 @@ $(PPTP_DIR)/.build: $(PPTP_DIR)/.source
 	touch $(PPTP_DIR)/.build
 
 build: $(PPTP_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(PPTP_DIR) clean
 	rm -rf $(PPTP_TARGET_DIR)
 	rm -f $(PPTP_DIR)/.build
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(PPTP_DIR) 
+	rm -rf $(PPTP_DIR)

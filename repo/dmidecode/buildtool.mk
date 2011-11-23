@@ -34,6 +34,6 @@ clean:
 	rm -f $(DMI_DIR)/.build
 
 srcclean: clean
-	rm -rf $(DMI_DIR) 
+	rm -rf $(DMI_DIR)
 	-rm DIRNAME
 

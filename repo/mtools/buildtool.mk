@@ -10,8 +10,8 @@ MTOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/mtools
 export CC=$(TARGET_CC)
 
 
-$(MTOOLS_DIR)/.source: 
-	zcat $(MTOOLS_SOURCE) |  tar -xvf - 
+$(MTOOLS_DIR)/.source:
+	zcat $(MTOOLS_SOURCE) |  tar -xvf -
 	zcat $(MTOOLS_PATCH1) | patch -d $(MTOOLS_DIR) -p1
 	touch $(MTOOLS_DIR)/.source
 
@@ -45,6 +45,6 @@ clean:
 	rm -rf $(MTOOLS_TARGET_DIR)
 	-rm $(MTOOLS_DIR)/.build
 	$(MAKE) -C $(MTOOLS_DIR) clean
-  
+
 srcclean:
 	rm -rf $(MTOOLS_DIR)

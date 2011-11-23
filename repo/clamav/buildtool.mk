@@ -10,7 +10,7 @@ $(CLAMAV_DIR)/.source:
 	touch $(CLAMAV_DIR)/.source
 
 source: $(CLAMAV_DIR)/.source
-                        
+
 $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
 	(cd $(CLAMAV_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	./configure \
@@ -32,14 +32,14 @@ $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
 	--disable-unrar \
 	--datadir=/etc/clamav )
 	touch $(CLAMAV_DIR)/.configured
-                                                                 
+
 $(CLAMAV_DIR)/.build: $(CLAMAV_DIR)/.configured
 	mkdir -p $(CLAMAV_TARGET_DIR)
-	mkdir -p $(CLAMAV_TARGET_DIR)/etc/clamav	
-	mkdir -p $(CLAMAV_TARGET_DIR)/etc/init.d	
-	mkdir -p $(CLAMAV_TARGET_DIR)/usr/sbin	
+	mkdir -p $(CLAMAV_TARGET_DIR)/etc/clamav
+	mkdir -p $(CLAMAV_TARGET_DIR)/etc/init.d
+	mkdir -p $(CLAMAV_TARGET_DIR)/usr/sbin
 	mkdir -p $(CLAMAV_TARGET_DIR)/usr/bin
-	make -C $(CLAMAV_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) all	
+	make -C $(CLAMAV_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) all
 
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(CLAMAV_DIR)/libclamav/.libs/libclamav.so.6.1.12
 
@@ -53,13 +53,13 @@ $(CLAMAV_DIR)/.build: $(CLAMAV_DIR)/.configured
 	touch $(CLAMAV_DIR)/.build
 
 build: $(CLAMAV_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(CLAMAV_DIR) clean
 	rm -rf $(CLAMAV_TARGET_DIR)
 	rm -rf $(CLAMAV_DIR)/.build
 	rm -rf $(CLAMAV_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(CLAMAV_DIR) 
+	rm -rf $(CLAMAV_DIR)
 	rm -rf $(CLAMAV_DIR)/.source

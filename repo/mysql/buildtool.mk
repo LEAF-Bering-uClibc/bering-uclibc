@@ -22,7 +22,7 @@ CONFFLAGS:= --prefix=/usr \
 $(MYSQL_DIR)/.source:
 	zcat $(MYSQL_SOURCE) | tar -xvf -
 #	cat $(MYSQL_PATCH1) | patch -d $(MYSQL_DIR) -p1
-	touch $(MYSQL_DIR)/.source	
+	touch $(MYSQL_DIR)/.source
 
 source: $(MYSQL_DIR)/.source
 
@@ -35,8 +35,8 @@ $(MYSQL_DIR)/.configured: $(MYSQL_DIR)/.source
 $(MYSQL_DIR)/.build: $(MYSQL_DIR)/.configured
 	mkdir -p $(MYSQL_TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/include/mysql
-	make -C $(MYSQL_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="-Os" 
-	make -C $(MYSQL_DIR) DESTDIR=$(MYSQL_TARGET_DIR) install  
+	make -C $(MYSQL_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="-Os"
+	make -C $(MYSQL_DIR) DESTDIR=$(MYSQL_TARGET_DIR) install
 	$(BT_STRIP) $(BT_STRIP_LIB) $(MYSQL_TARGET_DIR)/usr/lib/mysql/libmysqlclient.so.15.0.0
 	$(BT_STRIP) $(BT_STRIP_LIB) $(MYSQL_TARGET_DIR)/usr/lib/mysql/libmysqlclient_r.so.15.0.0
 	-$(BT_STRIP) $(BT_STRIP_BIN) $(MYSQL_TARGET_DIR)/usr/bin/*

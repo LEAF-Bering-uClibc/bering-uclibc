@@ -10,13 +10,13 @@ $(ATM_DIR)/.source:
 	touch $(ATM_DIR)/.source
 
 source: $(ATM_DIR)/.source
-                        
+
 $(ATM_DIR)/.configured: $(ATM_DIR)/.source
-	perl -i -p -e 's,/usr/include/asm/errno.h,$(BT_STAGING_DIR)/include/asm/errno.h,g' $(ATM_DIR)/src/test/Makefile.in	
+	perl -i -p -e 's,/usr/include/asm/errno.h,$(BT_STAGING_DIR)/include/asm/errno.h,g' $(ATM_DIR)/src/test/Makefile.in
 	(cd $(ATM_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
 		./configure --prefix=/usr --sysconfdir=/etc --oldincludedir=$(BT_STAGING_DIR)/include )
 	touch $(ATM_DIR)/.configured
-                                                                 
+
 $(ATM_DIR)/.build: $(ATM_DIR)/.configured
 	mkdir -p $(ATM_TARGET_DIR)
 	mkdir -p $(ATM_TARGET_DIR)/sbin
@@ -25,7 +25,7 @@ $(ATM_DIR)/.build: $(ATM_DIR)/.configured
 	mkdir -p $(ATM_TARGET_DIR)/etc/init.d
 	mkdir -p $(ATM_TARGET_DIR)/usr/lib
 	mkdir -p $(ATM_TARGET_DIR)/usr/include
-	make CC=$(TARGET_CC) -C $(ATM_DIR) 
+	make CC=$(TARGET_CC) -C $(ATM_DIR)
 	-$(BT_STRIP) --strip-unneeded $(ATM_DIR)/src/lib/.libs/libatm.so.1.0.0
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(ATM_DIR)/src/arpd/.libs/*
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(ATM_DIR)/src/test/.libs/*
@@ -35,9 +35,9 @@ $(ATM_DIR)/.build: $(ATM_DIR)/.configured
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(ATM_DIR)/src/led/.libs/*
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(ATM_DIR)/src/ilmid/.libs/*
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(ATM_DIR)/src/sigd/.libs/*
-	cp -a $(ATM_DIR)/src/include/atm.h $(ATM_TARGET_DIR)/usr/include;	
-	cp -a $(ATM_DIR)/src/include/atmd.h $(ATM_TARGET_DIR)/usr/include;	
-	cp -a $(ATM_DIR)/src/include/atmsap.h $(ATM_TARGET_DIR)/usr/include;	
+	cp -a $(ATM_DIR)/src/include/atm.h $(ATM_TARGET_DIR)/usr/include;
+	cp -a $(ATM_DIR)/src/include/atmd.h $(ATM_TARGET_DIR)/usr/include;
+	cp -a $(ATM_DIR)/src/include/atmsap.h $(ATM_TARGET_DIR)/usr/include;
 	cp -a $(ATM_DIR)/src/lib/.libs/libatm.so* $(ATM_TARGET_DIR)/usr/lib;
 	cp -a $(ATM_DIR)/src/lib/.libs/libatm.a $(ATM_TARGET_DIR)/usr/lib;
 	cp -a $(ATM_DIR)/src/arpd/.libs/* $(ATM_TARGET_DIR)/sbin;
@@ -65,13 +65,13 @@ $(ATM_DIR)/.build: $(ATM_DIR)/.configured
 	touch $(ATM_DIR)/.build
 
 build: $(ATM_DIR)/.build
-                                                                                         
+
 clean:
 	rm -rf $(ATM_TARGET_DIR)
 	(cd $(ATM_DIR); make distclean)
 	rm -f $(ATM_DIR)/.build
 	rm -f $(ATM_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(ATM_DIR) 
+	rm -rf $(ATM_DIR)
 	rm -f $(ATM_DIR)/.source

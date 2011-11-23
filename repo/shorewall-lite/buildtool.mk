@@ -19,7 +19,7 @@ $(SHOREWALL_DIR)/.source:
 $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 	mkdir -p $(TARGET_DIR)
 	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
-	
+
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL_DEFAULT) $(TARGET_DIR)/etc/default/shorewall-lite
 	install -c $(SHOREWALL_INIT) $(TARGET_DIR)/etc/init.d/shorewall-lite
@@ -30,7 +30,7 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 
 source: $(SHOREWALL_DIR)/.source
 
-build:  $(SHOREWALL_DIR)/.build                                                                                                   
+build:  $(SHOREWALL_DIR)/.build
 	cp -afv $(TARGET_DIR)/* $(BT_STAGING_DIR)
 
 clean:	stageclean

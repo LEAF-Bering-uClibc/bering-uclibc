@@ -24,7 +24,7 @@ $(ELVIS-TINY_DIR)/.build: $(ELVIS-TINY_DIR)/.source
 	touch $(ELVIS-TINY_DIR)/.build
 
 build: $(ELVIS-TINY_DIR)/.build
-                                                                                         
+
 clean:
 	-make -C $(ELVIS-TINY_DIR) clobber
 	rm -f $(ELVIS-TINY_DIR)/.build debian/{files,substvars,wrapper}
@@ -32,7 +32,7 @@ clean:
 	find . -name '*.bak' -o name '*~' | xargs -r rm -f --
 	rm -rf $(ELVIS-TINY_TARGET_DIR)
 
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(ELVIS-TINY_DIR) 
+	rm -rf $(ELVIS-TINY_DIR)
 	rm -f $(ELVIS-TINY_DIR)/.source

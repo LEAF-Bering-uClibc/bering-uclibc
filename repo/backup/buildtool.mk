@@ -1,11 +1,11 @@
-# makefile 
+# makefile
 include $(MASTERMAKEFILE)
 
 PKG_DIR=.
 PKG_TARGET_DIR:=$(BT_BUILD_DIR)/backup
 
 source:
-                        
+
 build:
 	mkdir -p $(PKG_TARGET_DIR)
 	mkdir -p $(PKG_TARGET_DIR)/sbin
@@ -16,9 +16,9 @@ build:
 	cp -aL backup.sh $(PKG_TARGET_DIR)/sbin
 	cp -a $(PKG_TARGET_DIR)/* $(BT_STAGING_DIR)
 
-                                                                                         
+
 clean:
 	rm -rf $(PKG_TARGET_DIR)
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(PKG_DIR) 
+	rm -rf $(PKG_DIR)

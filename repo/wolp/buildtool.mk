@@ -22,12 +22,12 @@ $(WOLP_DIR)/.build: $(WOLP_DIR)/.source
 	touch $(WOLP_DIR)/.build
 
 build: $(WOLP_DIR)/.build
-                                                                                         
+
 clean:
 	make -C $(WOLP_DIR) clean
 	rm -rf $(WOLP_TARGET_DIR)
 	rm -f $(WOLP_DIR)/.build
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(WOLP_DIR) 
+	rm -rf $(WOLP_DIR)
 	rm -f $(WOLP_DIR)/.source

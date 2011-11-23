@@ -13,7 +13,7 @@ TCPDUMP_TARGET_DIR:=$(BT_BUILD_DIR)/tcpdump
 $(TCPDUMP_DIR)/.source:
 	zcat $(TCPDUMP_SOURCE) | tar -xvf -
 #	zcat $(TCPDUMP_PATCH) | patch -d $(TCPDUMP_DIR) -p1
-	touch $(TCPDUMP_DIR)/.source	
+	touch $(TCPDUMP_DIR)/.source
 
 source: $(TCPDUMP_DIR)/.source
 

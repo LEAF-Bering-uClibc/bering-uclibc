@@ -22,7 +22,7 @@ $(SNORT_DIR)/.source:
 	zcat $(SNORT_SOURCE) | tar -xvf -
 	zcat $(SNORT_PATCH) | patch -d $(SNORT_DIR) -p1
 	cd $(SNORT_DIR); zcat ../$(SNORT_RULES) | tar -xvf -
-	touch $(SNORT_DIR)/.source	
+	touch $(SNORT_DIR)/.source
 
 source: $(SNORT_DIR)/.source
 
@@ -43,12 +43,12 @@ $(SNORT_DIR)/.build: $(SNORT_DIR)/.source
 	cp -a -f $(SNORT_DIR)/etc/*.map $(SNORT_TARGET_DIR)/etc/snort/
 	cp -a -f $(SNORT_DIR)/etc/gen* $(SNORT_TARGET_DIR)/etc/snort/
 	cp -a -f $(SNORT_DIR)/rules/*.rules $(SNORT_TARGET_DIR)/etc/snort/rules/
-	cp -aL -f $(SNORT_INIT) $(SNORT_TARGET_DIR)/etc/init.d/snort 
+	cp -aL -f $(SNORT_INIT) $(SNORT_TARGET_DIR)/etc/init.d/snort
 	chmod 755 $(SNORT_TARGET_DIR)/etc/init.d/snort
-	cp -aL -f $(SNORT_DEFAULT) $(SNORT_TARGET_DIR)/etc/default/snort 
-	
+	cp -aL -f $(SNORT_DEFAULT) $(SNORT_TARGET_DIR)/etc/default/snort
+
 	make -C $(SNORT_DIR) distclean
-	
+
 	(cd $(SNORT_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure $(CONFFLAGS) --with-mysql=$(BT_STAGING_DIR)/usr/ )
 	make -C $(SNORT_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)"
 	cp -a -f $(SNORT_DIR)/src/snort $(SNORT_TARGET_DIR)/usr/bin/snortsql
