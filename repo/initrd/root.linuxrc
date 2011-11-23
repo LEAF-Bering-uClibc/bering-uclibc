@@ -98,41 +98,19 @@ for i in `echo $KCMD_KMODULES|sed 's/,/ /g'`; do
 	/sbin/modprobe $i 2>/dev/null 
 done
 
-#define module probing as function
-probe() {
-	MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
-	TMODALIAS=""
-	while [ `echo "$MODALIAS"|wc -l` -gt `echo "$TMODALIAS"|wc -l` ]; do
-		[ "$VERBOSE" ] && qt echo Next iteration: `date`
-		MODCOUNT=0
-		for i in $MODALIAS; do
-			[ "$VERBOSE" ] && qt echo -n Probing $i ...
-			if [ -z "`/sbin/modprobe $i 2>&1|grep \"not found\"`" ]; then
-				MODCOUNT=$(($MODCOUNT+1))
-				[ "$VERBOSE" ] && qt echo " found."
-			else
-				[ "$VERBOSE" ] && qt echo " not found."
-			fi
-		done
-		[ "$VERBOSE" ] && qt echo Successfully probed $MODCOUNT modules for `echo "$MODALIAS"|wc -l` modaliases, currently loaded:
-		[ "$VERBOSE" ] && qt lsmod
-		sleep $usb_wait
-		TMODALIAS="$MODALIAS"
-		MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
-	done
-}
+# touch uevent for load all required modules for cold-plugged devices
+find /sys -type f -name 'uevent' | while read dev_event; do
+    echo 'add' > $dev_event
+done
 
-probe
-
-# wait for USB drive
-#sleep $usb_wait
+# wait for module loading
+sleep $usb_wait
 
 if [ -z "$KCMD_NOLEGACY" ]; then
 	ata_cnt=`lsmod|grep '\w*ata_' | wc -l`
 	if [ "$ata_cnt" -eq 0 ]; then
 		modprobe pata_legacy
 		sleep $usb_wait
-		probe
 	fi
 fi
 
