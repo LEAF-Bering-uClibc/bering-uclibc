@@ -31,22 +31,15 @@ rm -rf $MODDIR
 mkdir $KVER; cd $KVER
 tar -xzf $MODPKG
 depmod
-echo -e -n "Done.\nProbing modaliases... "
+echo -e -n "Done.\nRunning module loading..."
 
-MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
-TMODALIAS=""
-while [ `echo "$MODALIAS"|wc -l` -gt `echo "$TMODALIAS"|wc -l` ]; do
-	MODCOUNT=0
-	for i in $MODALIAS; do
-		if [ -z "`modprobe $i 2>&1 | grep \"not found\"`" ]; then
-			MODCOUNT=$(($MODCOUNT+1))
-		fi
-	done
-	sleep $DELAY
-	TMODALIAS="$MODALIAS"
-	MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
+# touch uevent for load all required modules for cold-plugged devices
+find /sys -type f -name 'uevent' | while read dev_event; do
+    echo 'add' > $dev_event
 done
-echo -e "Done.\n$MODCOUNT devices have modules."
+#wait till all devices should be detected...
+sleep 1
+echo "Done."
 
 echo "Checking entries in /etc/modules..."
 MODLIST="`grep -v ^# /etc/modules | sed 's/ .*//g;s/_/?/g'`"
@@ -59,7 +52,7 @@ for i in $MODLIST; do
 		fi
 	fi
 done
-echo -e "Done.\n$MODCOUNT modules was probed."
+echo "Done."
 
 echo "Copying new modules to /lib/modules..."
 MODLIST="`lsmod | sed 's/ .*//g;s/_/?/g'`"
