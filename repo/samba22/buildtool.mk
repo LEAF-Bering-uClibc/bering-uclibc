@@ -8,7 +8,6 @@ include $(MASTERMAKEFILE)
 
 SAMBA_DIR:=samba-2.2.12
 SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba22
-export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
 
 
 BVARS = BASEDIR=/usr \
@@ -20,10 +19,9 @@ $(SAMBA_DIR)/.source:
 	touch $(SAMBA_DIR)/.source
 
 $(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
-	(cd $(SAMBA_DIR)/source ; $(AUTOCONF) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
+	(cd $(SAMBA_DIR)/source ; libtoolize -i -f && autoconf -f && \
 		./configure \
-		--host=$(GNU_HOST_NAME) \
-		--build=$(GNU_HOST_NAME) \
+		--host=$(GNU_TARGET_NAME) \
 		--prefix=/usr \
 		--sysconfdir=/etc \
 		--with-privatedir=/etc/samba \
@@ -51,14 +49,14 @@ build: $(SAMBA_DIR)/.configured
 	-mkdir -p $(SAMBA_TARGET_DIR)/usr/sbin
 	-mkdir -p $(SAMBA_TARGET_DIR)/usr/share/samba
 
-	make -C $(SAMBA_DIR)/source $(BVARS) CFLAGS="$(BT_COPT_FLAGS)" all
+	make $(MAKEOPTS) -C $(SAMBA_DIR)/source $(BVARS) all
 
 	$(SAMBA_DIR)/source/script/installcp.sh \
 	$(SAMBA_DIR)/source \
 	$(SAMBA_TARGET_DIR)/usr/share/samba \
 	$(SAMBA_TARGET_DIR)/usr/share/samba/codepages \
 	$(SAMBA_DIR)/source/bin \
-	850 ISO8859-1
+	850 ISO8859-1 866 1251
 
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/smbd
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/nmbd
