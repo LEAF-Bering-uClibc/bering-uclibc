@@ -11,10 +11,10 @@ $(TOR_DIR)/.source:
 source: $(TOR_DIR)/.source
 
 $(TOR_DIR)/.configured: $(TOR_DIR)/.source
-	(cd $(TOR_DIR) ;  CFLAGS="-I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include" \
-	LD_RUN_PATH="$(BT_STAGING_DIR)/lib:$(BT_STAGING_DIR)/usr/lib" \
-	LDFLAGS="-s -L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib" \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure --prefix=/usr --sysconfdir=/etc)
+	(cd $(TOR_DIR) ;  ./configure \
+	--host=$(GNU_TARGET_NAME) \
+	--prefix=/usr \
+	--sysconfdir=/etc)
 	touch $(TOR_DIR)/.configured
 
 $(TOR_DIR)/.build: $(TOR_DIR)/.configured
@@ -23,14 +23,14 @@ $(TOR_DIR)/.build: $(TOR_DIR)/.configured
 	mkdir -p $(TOR_TARGET_DIR)/etc/tor
 	mkdir -p $(TOR_TARGET_DIR)/usr/bin
 	mkdir -p $(TOR_TARGET_DIR)/usr/sbin
-	make -C $(TOR_DIR)
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(TOR_DIR)/src/or/tor
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(TOR_DIR)/src/tools/tor-resolve
+	make $(MAKEOPTS) -C $(TOR_DIR)
 	cp -aL tor.init $(TOR_TARGET_DIR)/etc/init.d/tor
 #	cp -a $(TOR_DIR)/contrib/tor-tsocks.conf $(TOR_TARGET_DIR)/etc/tor
 	cp -aL torrc $(TOR_TARGET_DIR)/etc/tor
 	cp -a $(TOR_DIR)/src/or/tor $(TOR_TARGET_DIR)/usr/sbin
 	cp -a $(TOR_DIR)/src/tools/tor-resolve $(TOR_TARGET_DIR)/usr/bin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TOR_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TOR_TARGET_DIR)/usr/sbin/*
 	cp -a $(TOR_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(TOR_DIR)/.build
 
