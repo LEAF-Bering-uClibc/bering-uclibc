@@ -14,10 +14,10 @@ $(WOLP_DIR)/.build: $(WOLP_DIR)/.source
 	mkdir -p $(WOLP_TARGET_DIR)
 	mkdir -p $(WOLP_TARGET_DIR)/usr/sbin
 	mkdir -p $(WOLP_TARGET_DIR)/etc
-	make CC=$(TARGET_CC) CFLAGS="$(BT_COPT_FLAGS)" -C $(WOLP_DIR)
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(WOLP_DIR)/wold
+	make $(MAKEOPTS) CC="$(TARGET_CC) $(CFLAGS)" -C $(WOLP_DIR)
 	cp -a $(WOLP_DIR)/wold $(WOLP_TARGET_DIR)/usr/sbin
 	cp -aL wolp.conf $(WOLP_TARGET_DIR)/etc
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(WOLP_TARGET_DIR)/usr/sbin/*
 	cp -a $(WOLP_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(WOLP_DIR)/.build
 

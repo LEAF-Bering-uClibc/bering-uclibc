@@ -29,7 +29,7 @@ $(FREENET6_DIR)/.build: $(FREENET6_DIR)/.configured
 	cp -aL 0freenet6.down $(FREENET6_TARGET_DIR)/etc/ppp/ip-down.d/0freenet6
 	cp -a $(FREENET6_DIR)/template/checktunnel.sh $(FREENET6_TARGET_DIR)/etc/freenet6
 	cp -a $(FREENET6_DIR)/bin/tspc $(FREENET6_TARGET_DIR)/usr/sbin
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(FREENET6_TARGET_DIR)/usr/sbin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(FREENET6_TARGET_DIR)/usr/sbin/*
 	cp -a $(FREENET6_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(FREENET6_DIR)/.build
 

@@ -19,7 +19,7 @@ $(PORTSENTRY_DIR)/.build: $(PORTSENTRY_DIR)/.source
 	mkdir -p $(PORTSENTRY_TARGET_DIR)/etc/init.d
 	make $(MAKEOPTS) CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" -f Makefile debian-linux -C $(PORTSENTRY_DIR)
 	cp -a $(PORTSENTRY_DIR)/portsentry $(PORTSENTRY_TARGET_DIR)/usr/sbin
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PORTSENTRY_TARGET_DIR)/usr/sbin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PORTSENTRY_TARGET_DIR)/usr/sbin/*
 	cp -aL portsentry.conf $(PORTSENTRY_TARGET_DIR)/etc/portsentry
 	cp -aL portsentry.ignore $(PORTSENTRY_TARGET_DIR)/etc/portsentry
 	cp -aL portsentry.default $(PORTSENTRY_TARGET_DIR)/etc/default/portsentry
