@@ -21,8 +21,7 @@ $(FREENET6_DIR)/.build: $(FREENET6_DIR)/.configured
 	mkdir -p $(FREENET6_TARGET_DIR)/etc/freenet6
 	mkdir -p $(FREENET6_TARGET_DIR)/etc/init.d
 	mkdir -p $(FREENET6_TARGET_DIR)/usr/sbin
-	make CC=$(TARGET_CC) -C $(FREENET6_DIR) DESTDIR=$(FREENET6_TARGET_DIR) all target=linux
-	-$(BT_STRIP) --strip-unneeded $(FREENET6_DIR)/bin/tspc
+	make $(MAKEOPTS) CC=$(TARGET_CC) DEFINES="$(CFLAGS)" -C $(FREENET6_DIR) all target=linux
 	cp -aL setup.sh $(FREENET6_TARGET_DIR)/etc/freenet6
 	cp -aL tspc.conf $(FREENET6_TARGET_DIR)/etc/freenet6
 	cp -aL freenet6.init $(FREENET6_TARGET_DIR)/etc/init.d/freenet6
@@ -30,6 +29,7 @@ $(FREENET6_DIR)/.build: $(FREENET6_DIR)/.configured
 	cp -aL 0freenet6.down $(FREENET6_TARGET_DIR)/etc/ppp/ip-down.d/0freenet6
 	cp -a $(FREENET6_DIR)/template/checktunnel.sh $(FREENET6_TARGET_DIR)/etc/freenet6
 	cp -a $(FREENET6_DIR)/bin/tspc $(FREENET6_TARGET_DIR)/usr/sbin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(FREENET6_TARGET_DIR)/usr/sbin
 	cp -a $(FREENET6_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(FREENET6_DIR)/.build
 
