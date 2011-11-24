@@ -7,16 +7,19 @@ $(RSYNC_DIR)/.source:
 	touch $(RSYNC_DIR)/.source
 
 $(RSYNC_DIR)/.configured: $(RSYNC_DIR)/.source
-	cd $(RSYNC_DIR); CFLAGS="$(BT_COPT_FLAGS)" ./configure \
+	cd $(RSYNC_DIR); ./configure \
+		--host=$(GNU_TARGET_NAME) \
 		--prefix=/usr \
-		--disable-locale
+		--disable-locale \
+		--disable-iconv
 	touch $(RSYNC_DIR)/.configured
 
 $(RSYNC_DIR)/.build: $(RSYNC_DIR)/.configured
 	mkdir -p $(BT_STAGING_DIR)/usr/bin
-	$(MAKE) -C $(RSYNC_DIR) DESTDIR=$(RSYNC_TARGET_DIR) install
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RSYNC_TARGET_DIR)/usr/bin/rsync
-	cp -a -f $(RSYNC_TARGET_DIR)/usr/bin/rsync $(BT_STAGING_DIR)/usr/bin
+	$(MAKE) $(MAKEOPTS) -C $(RSYNC_DIR) DESTDIR=$(RSYNC_TARGET_DIR) install
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RSYNC_TARGET_DIR)/usr/bin/*
+	-rm -rf $(RSYNC_TARGET_DIR)/usr/share
+	cp -a -f $(RSYNC_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(RSYNC_DIR)/.build
 
 source: $(RSYNC_DIR)/.source
