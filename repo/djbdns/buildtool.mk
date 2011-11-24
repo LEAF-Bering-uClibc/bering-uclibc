@@ -69,7 +69,7 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	cp $(DJBDNS_DIR)/dnsq $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/dnstrace $(DJBDNS_TARGET_DIR)/usr/bin/
 
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DJBDNS_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DJBDNS_TARGET_DIR)/usr/bin/*
 
 	cp $(DJBDNS_DIR)/dnstracesort $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/dnsroots.global $(DJBDNS_TARGET_DIR)/etc/

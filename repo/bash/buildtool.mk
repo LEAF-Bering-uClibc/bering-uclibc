@@ -27,7 +27,7 @@ $(BASH_DIR)/.build: $(BASH_DIR)/.configured
 	mkdir -p $(BASH_TARGET_DIR)/bin
 	make $(MAKEOPTS) -C $(BASH_DIR) all
 	cp -a $(BASH_DIR)/bash $(BASH_TARGET_DIR)/bin
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BASH_TARGET_DIR)/bin/bash
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BASH_TARGET_DIR)/bin/*
 	cp -a $(BASH_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(BASH_DIR)/.build
 

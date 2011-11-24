@@ -58,15 +58,13 @@ build: $(SAMBA_DIR)/.configured
 	$(SAMBA_DIR)/source/bin \
 	850 ISO8859-1 866 1251
 
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/smbd
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/nmbd
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/smbpasswd
 	cp -aL samba.init $(SAMBA_TARGET_DIR)/etc/init.d/samba22
 	cp -aL samba.cron $(SAMBA_TARGET_DIR)/etc/cron.weekly/samba22
 	cp -aL smb.conf $(SAMBA_TARGET_DIR)/etc/samba/smb.conf22
 	cp -a $(SAMBA_DIR)/source/bin/smbd $(SAMBA_TARGET_DIR)/usr/sbin/smbd22
 	cp -a $(SAMBA_DIR)/source/bin/nmbd $(SAMBA_TARGET_DIR)/usr/sbin/nmbd22
 	cp -a $(SAMBA_DIR)/source/bin/smbpasswd $(SAMBA_TARGET_DIR)/usr/sbin/smbpasswd22
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/sbin/*
 	cp -a $(SAMBA_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(SAMBA_DIR)/.build
 

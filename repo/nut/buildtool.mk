@@ -58,7 +58,7 @@ build: $(NUT_DIR)/Makefile
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(NUT_TARGET_DIR)/usr/lib/*.la
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NUT_TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NUT_TARGET_DIR)/usr/sbin/*
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(NUT_TARGET_DIR)/usr/lib/libupsclient.so.1.0.0
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(NUT_TARGET_DIR)/usr/lib/*
 	rm -rf $(NUT_TARGET_DIR)/usr/cgi-bin
 	rm -rf $(NUT_TARGET_DIR)/usr/html
 	rm -rf $(NUT_TARGET_DIR)/usr/lib/pkgconfig

@@ -32,8 +32,8 @@ $(ULOGD_DIR)/.build: $(ULOGD_DIR)/.configured
 #multi-threaded make fails, build in single thread
 	make -C $(ULOGD_DIR) DESTDIR=$(ULOGD_TARGET_DIR) all
 	make DESTDIR=$(ULOGD_TARGET_DIR) -C $(ULOGD_DIR) install
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ULOGD_TARGET_DIR)/usr/sbin/ulogd
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ULOGD_TARGET_DIR)/usr/lib/ulogd/*.so
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ULOGD_TARGET_DIR)/usr/sbin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ULOGD_TARGET_DIR)/usr/lib/ulogd/*
 	cp -aL ulogd.init $(ULOGD_TARGET_DIR)/etc/init.d/ulogd
 	cp -aL ulogd.conf $(ULOGD_TARGET_DIR)/etc/
 	cp -aL ulogd_daily $(ULOGD_TARGET_DIR)/etc/cron.daily/ulogd

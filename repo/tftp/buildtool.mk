@@ -20,10 +20,10 @@ $(TFTP_DIR)/.build: $(TFTP_DIR)/.configured
 	mkdir -p $(TFTP_TARGET_DIR)/usr/sbin
 	mkdir -p $(TFTP_TARGET_DIR)/usr/bin
 	make $(MAKEOPTS) -C $(TFTP_DIR)
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TFTP_DIR)/tftpd/tftpd
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TFTP_DIR)/tftp/tftp
 	cp -a $(TFTP_DIR)/tftpd/tftpd $(TFTP_TARGET_DIR)/usr/sbin/in.tftpd
 	cp -a $(TFTP_DIR)/tftp/tftp $(TFTP_TARGET_DIR)/usr/bin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TFTP_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TFTP_TARGET_DIR)/usr/sbin/*
 	cp -a $(TFTP_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(TFTP_DIR)/.build
 

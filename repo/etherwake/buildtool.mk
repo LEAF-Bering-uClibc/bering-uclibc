@@ -20,8 +20,8 @@ $(ETHERWAKE_DIR)/.build:
 	mkdir -p $(ETHERWAKE_TARGET_DIR)
 	mkdir -p $(ETHERWAKE_TARGET_DIR)/usr/sbin
 	$(MAKE) -C $(ETHERWAKE_DIR) CC=$(TARGET_CC) CFLAGS="$(CFLAGS)"
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ETHERWAKE_DIR)/etherwake
 	cp -a $(ETHERWAKE_DIR)/etherwake $(ETHERWAKE_TARGET_DIR)/usr/sbin/ether-wake
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ETHERWAKE_TARGET_DIR)/usr/sbin/*
 	cp -a $(ETHERWAKE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(ETHERWAKE_DIR)/.build
 

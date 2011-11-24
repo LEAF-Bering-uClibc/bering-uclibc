@@ -24,8 +24,8 @@ $(BRIDGE-UTILS_DIR)/.build: $(BRIDGE-UTILS_DIR)/.configured
 	mkdir -p $(BRIDGE-UTILS_TARGET_DIR)/etc/network/if-post-down.d
 	mkdir -p $(BRIDGE-UTILS_TARGET_DIR)/etc/network/if-up.d
 	make $(MAKEOPTS) -C $(BRIDGE-UTILS_DIR) all
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BRIDGE-UTILS_DIR)/brctl/brctl
 	cp -a $(BRIDGE-UTILS_DIR)/brctl/brctl $(BRIDGE-UTILS_TARGET_DIR)/usr/sbin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BRIDGE-UTILS_TARGET_DIR)/usr/sbin/*
 	cp -aL bridge_if-pre-up $(BRIDGE-UTILS_TARGET_DIR)/etc/network/if-pre-up.d/bridge
 	cp -aL bridge_if-post-down $(BRIDGE-UTILS_TARGET_DIR)/etc/network/if-post-down.d/bridge
 	cp -aL bridge_if-up $(BRIDGE-UTILS_TARGET_DIR)/etc/network/if-up.d/bridge

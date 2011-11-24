@@ -27,7 +27,7 @@ $(EBTABLES_DIR)/.build: $(EBTABLES_DIR)/.source
 	cp -a $(EBTABLES_DIR)/*.so $(EBTABLES_TARGET_DIR)/usr/lib/
 	cp -a $(EBTABLES_DIR)/extensions/*.so $(EBTABLES_TARGET_DIR)/usr/lib/
 	cp -a $(EBTABLES_DIR)/ethertypes $(EBTABLES_TARGET_DIR)/etc
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(EBTABLES_TARGET_DIR)/usr/sbin/ebtables
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(EBTABLES_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(EBTABLES_TARGET_DIR)/usr/lib/*
 	cp -a $(EBTABLES_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(EBTABLES_DIR)/.build

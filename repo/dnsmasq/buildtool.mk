@@ -25,7 +25,7 @@ $(DNSMASQ_DIR)/.build: $(DNSMASQ_DIR)/.source
 	cp -aL dnsmasq.init $(DNSMASQ_TARGET_DIR)/etc/init.d/dnsmasq
 	cp -a $(DNSMASQ_DIR)/src/dnsmasq $(DNSMASQ_TARGET_DIR)/usr/sbin
 	cp -a $(DNSMASQ_DIR)/dnsmasq.conf.example $(DNSMASQ_TARGET_DIR)/etc/dnsmasq.conf
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DNSMASQ_TARGET_DIR)/usr/sbin/dnsmasq
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DNSMASQ_TARGET_DIR)/usr/sbin/*
 	cp -a $(DNSMASQ_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DNSMASQ_DIR)/.build
 

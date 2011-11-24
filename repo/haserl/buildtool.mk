@@ -27,8 +27,8 @@ source: .source
 	mkdir -p $(HASERL_TARGET_DIR)
 	mkdir -p $(HASERL_TARGET_DIR)/usr/bin
 	make $(MAKEOPTS) -C $(SOURCE_DIR) all
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SOURCE_DIR)/src/haserl
 	cp -a $(SOURCE_DIR)/src/haserl $(HASERL_TARGET_DIR)/usr/bin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(HASERL_TARGET_DIR)/usr/bin/*
 	cp -a $(HASERL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch .build
 

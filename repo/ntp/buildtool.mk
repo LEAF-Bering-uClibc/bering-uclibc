@@ -40,8 +40,6 @@ $(NTP_DIR)/.build: $(NTP_DIR)/.configured
 	mkdir -p $(NTP_TARGET_DIR)/etc/network/if-up.d
 	mkdir -p $(NTP_TARGET_DIR)/usr/sbin
 	make $(MAKEOPTS) -C $(NTP_DIR) all
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NTP_DIR)/ntpd/ntpd
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NTP_DIR)/ntpq/ntpq
 	cp -a $(NTP_DIR)/ntpd/ntpd $(NTP_TARGET_DIR)/usr/sbin
 	cp -a $(NTP_DIR)/ntpq/ntpq $(NTP_TARGET_DIR)/usr/sbin
 	cp -aL ntp-wait $(NTP_TARGET_DIR)/usr/sbin
@@ -51,6 +49,7 @@ $(NTP_DIR)/.build: $(NTP_DIR)/.configured
 	cp -aL ntp.daily $(NTP_TARGET_DIR)/etc/cron.daily/ntp
 	cp -aL ntp.weekly $(NTP_TARGET_DIR)/etc/cron.weekly/ntp
 	cp -aL ntp.ifup $(NTP_TARGET_DIR)/etc/network/if-up.d/ntp
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NTP_TARGET_DIR)/usr/sbin/*
 	cp -a $(NTP_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(NTP_DIR)/.build
 

@@ -24,7 +24,7 @@ $(MAWK_DIR)/.build: $(MAWK_DIR)/.configured
 # Multi-threaded make fails
 	make -C $(MAWK_DIR)
 	cp -a $(MAWK_DIR)/mawk $(MAWK_TARGET_DIR)/usr/bin
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(MAWK_TARGET_DIR)/mawk
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MAWK_TARGET_DIR)/usr/bin/*
 	cp -a $(MAWK_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(MAWK_DIR)/.build
 

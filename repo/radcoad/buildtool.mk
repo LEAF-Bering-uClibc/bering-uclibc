@@ -20,13 +20,14 @@ $(RADIUS_DIR)/.build: $(RADIUS_DIR)/.source
 	mkdir -p $(RADIUS_TARGET_DIR)/etc/radcoadb
 	make $(MAKEOPTS) CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" \
 	LIBS= LSHADOW= LCRYPT=-lcrypt SHAREDIR=/etc/raddb -C $(RADIUS_DIR)/src
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_DIR)/src/radcoad
 
 	cp -a $(RADIUS_DIR)/src/radcoad $(RADIUS_TARGET_DIR)/usr/sbin
 	cp -aL radcoad.init $(RADIUS_TARGET_DIR)/etc/init.d/radcoad
 
 	# Install the config files
 	cp $(RADIUS_DIR)/radcoadb/* $(RADIUS_TARGET_DIR)/etc/radcoadb
+
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(RADIUS_TARGET_DIR)/usr/sbin/*
 
 	cp -a $(RADIUS_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(RADIUS_DIR)/.build

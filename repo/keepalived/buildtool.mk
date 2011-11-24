@@ -35,12 +35,11 @@ $(KEEPALIVED_DIR)/.build: $(KEEPALIVED_DIR)/.configured
 	-mkdir -p $(KEEPALIVED_TARGET_DIR)/etc/init.d
 	-mkdir -p $(KEEPALIVED_TARGET_DIR)/usr/bin
 	-mkdir -p $(KEEPALIVED_TARGET_DIR)/usr/sbin
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(KEEPALIVED_DIR)/bin/genhash
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(KEEPALIVED_DIR)/bin/keepalived
 	cp -aL keepalived.init $(KEEPALIVED_TARGET_DIR)/etc/init.d/keepalived
 	cp -aL keepalived.conf $(KEEPALIVED_TARGET_DIR)/etc/keepalived/keepalived.conf
 	cp -f $(KEEPALIVED_DIR)/bin/genhash $(KEEPALIVED_TARGET_DIR)/usr/bin/
 	cp -f $(KEEPALIVED_DIR)/bin/keepalived $(KEEPALIVED_TARGET_DIR)/usr/sbin/
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(KEEPALIVED_TARGET_DIR)/usr/bin/*
 	cp -a -f $(KEEPALIVED_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(KEEPALIVED_DIR)/.build
 

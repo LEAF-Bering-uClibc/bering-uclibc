@@ -32,10 +32,9 @@ $(IPTRAF_DIR)/.build: $(IPTRAF_DIR)/.configured
 	mkdir -p $(IPTRAF_TARGET_DIR)/var/run/iptraf
 	mkdir -p $(IPTRAF_TARGET_DIR)/usr/sbin
 	make $(MAKEOPTS) -C $(IPTRAF_DIR)/src $(ENVVAR)
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTRAF_DIR)/src/iptraf
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTRAF_DIR)/src/rvnamed
 	cp -a $(IPTRAF_DIR)/src/iptraf $(IPTRAF_TARGET_DIR)/usr/sbin
 	cp -a $(IPTRAF_DIR)/src/rvnamed $(IPTRAF_TARGET_DIR)/usr/sbin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTRAF_TARGET_DIR)/usr/sbin/*
 	cp -a $(IPTRAF_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(IPTRAF_DIR)/.build
 

@@ -22,7 +22,7 @@ $(EZ_IPUPDATE_DIR)/.build: $(EZ_IPUPDATE_DIR)/.configured
 	mkdir -p $(EZ_IPUPDATE_TARGET_DIR)
 	mkdir -p $(EZ_IPUPDATE_TARGET_DIR)/etc/init.d
 	make $(MAKEOPTS) -C $(EZ_IPUPDATE_DIR) DESTDIR=$(EZ_IPUPDATE_TARGET_DIR) install
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(EZ_IPUPDATE_TARGET_DIR)/usr/bin/ez-ipupdate
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(EZ_IPUPDATE_TARGET_DIR)/usr/bin/*
 	cp -aL ez-ipupd $(EZ_IPUPDATE_TARGET_DIR)/etc/init.d/
 	cp -aL ez-ipupd.conf $(EZ_IPUPDATE_TARGET_DIR)/etc/
 	cp -a $(EZ_IPUPDATE_TARGET_DIR)/* $(BT_STAGING_DIR)

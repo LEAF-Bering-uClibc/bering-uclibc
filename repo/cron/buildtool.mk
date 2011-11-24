@@ -21,9 +21,8 @@ $(CRON_DIR)/.build: $(CRON_DIR)/.source
 	$(MAKE) $(MAKEOPTS) -C $(CRON_DIR) 	\
 		CC=$(TARGET_CC) OPTIM="$(CFLAGS) -Wall -Wno-comment" \
 		DEBUG_DEFS="-DDEBUGGING=0"
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(CRON_DIR)/cron
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(CRON_DIR)/crontab
 	cp -a  $(CRON_DIR)/cron  $(CRON_TARGET_DIR)/
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CRON_TARGET_DIR)/*
 	cp -a  $(CRON_TARGET_DIR)/* $(BT_STAGING_DIR)/usr/sbin
 	touch $(CRON_DIR)/.build
 

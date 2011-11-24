@@ -47,8 +47,8 @@ $(TCP_WRAPPERS_DIR)/.build: $(TCP_WRAPPERS_DIR)/.unpack
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/*.a $(TCP_WRAPPERS_BUILDDIR)/lib/
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/shared/*.so* $(TCP_WRAPPERS_BUILDDIR)/lib/
 	cp -a $(TCP_WRAPPERS_DIR)/build-tree/tcp_wrappers_7.6/tcpd.h $(TOOLCHAIN_DIR)/usr/include/
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/*
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TCP_WRAPPERS_BUILDDIR)/lib/*.so.0
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TCP_WRAPPERS_BUILDDIR)/usr/sbin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TCP_WRAPPERS_BUILDDIR)/lib/*
 	cp -a $(TCP_WRAPPERS_BUILDDIR)/* $(BT_STAGING_DIR)
 	touch $(TCP_WRAPPERS_DIR)/.build
 

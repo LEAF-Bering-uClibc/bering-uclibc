@@ -20,10 +20,10 @@ $(DHCP-HELPER_DIR)/.build:
 	mkdir -p $(DHCP-HELPER_TARGET_DIR)/etc/default
 	mkdir -p $(DHCP-HELPER_TARGET_DIR)/etc/init.d
 	$(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) -C $(DHCP-HELPER_DIR)
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCP-HELPER_DIR)/dhcp-helper
 	cp -a $(DHCP-HELPER_DIR)/dhcp-helper $(DHCP-HELPER_TARGET_DIR)/usr/sbin
 	cp -aL dhcp-helper.init $(DHCP-HELPER_TARGET_DIR)/etc/init.d/dhcp-helper
 	cp -aL dhcp-helper.default $(DHCP-HELPER_TARGET_DIR)/etc/default/dhcp-helper
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCP-HELPER_TARGET_DIR)/usr/sbin/*
 	cp -a $(DHCP-HELPER_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DHCP-HELPER_DIR)/.build
 

@@ -27,9 +27,8 @@ build: $(OPENRRCP_DIR)/Makefile
 		$(MAKEOPTS) \
 		-C $(OPENRRCP_DIR)
 
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENRRCP_DIR)/bin/rrcpcli
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENRRCP_DIR)/bin/rtl83xx
 	cp -a  $(OPENRRCP_DIR)/bin/* $(OPENRRCP_TARGET_DIR)/usr/bin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENRRCP_TARGET_DIR)/usr/bin/*
 	cp -a $(OPENRRCP_TARGET_DIR)/* $(BT_STAGING_DIR)
 
 clean:

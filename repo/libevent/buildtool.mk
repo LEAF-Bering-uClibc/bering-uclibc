@@ -29,7 +29,7 @@ $(LIBEVENT_DIR)/.build: $(LIBEVENT_DIR)/.configured
 	mkdir -p $(LIBEVENT_TARGET_DIR)
 	make $(MAKEOPTS) -C $(LIBEVENT_DIR) all
 	make DESTDIR=$(LIBEVENT_TARGET_DIR) -C $(LIBEVENT_DIR) install
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBEVENT_TARGET_DIR)/usr/lib
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBEVENT_TARGET_DIR)/usr/lib/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBEVENT_TARGET_DIR)/usr/lib/*.la
 	rm -rf $(LIBEVENT_TARGET_DIR)/usr/share
 	cp -a -f $(LIBEVENT_TARGET_DIR)/* $(BT_STAGING_DIR)

@@ -54,7 +54,7 @@ $(UPNPD_DIR)/.build: $(UPNPD_DIR)/.source $(LIBUPNP_DIR)/.build
 	make $(MAKEOPTS) -C $(UPNPD_DIR) $(UPNPD_FLAGS)
 	make -C $(UPNPD_DIR) $(UPNPD_FLAGS) install
 	cp $(UPNPD_DIR)/etc/ligd.gif    $(TARGET_DIR)/etc/linuxigd
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/upnpd
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/*
 	touch $(UPNPD_DIR)/.build
 
 # ----------------------------------------------------------------------

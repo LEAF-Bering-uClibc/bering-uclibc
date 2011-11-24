@@ -36,15 +36,6 @@ $(PPP_DIR)/.build: $(PPP_DIR)/.configured
 	$(MAKE) -C $(PPP_DIR) clean
 	make CC=$(TARGET_CC) $(MAKEOPTS) -C $(PPP_DIR) COPTS="$(CFLAGS)" \
 		FILTER= HAVE_INET6=y CBCP=
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppd/pppd
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppstats/pppstats
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/chat/chat
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PPP_DIR)/pppd/plugins/pppoatm/pppoatm.so
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PPP_DIR)/pppd/plugins/rp-pppoe/rp-pppoe.so
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppd/plugins/rp-pppoe/pppoe-discovery
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PPP_DIR)/pppd/plugins/radius/*.so
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PPP_DIR)/pppd/plugins/pppol2tp/*.so
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PPP_DIR)/pppd/plugins/*.so
 	cp -aL poff $(PPP_TARGET_DIR)/usr/bin
 	cp -aL plog $(PPP_TARGET_DIR)/usr/bin
 	cp -aL pon $(PPP_TARGET_DIR)/usr/bin
@@ -76,8 +67,9 @@ $(PPP_DIR)/.build: $(PPP_DIR)/.configured
 
 	$(MAKE) -C $(PPP_DIR) clean
 	make CC=$(TARGET_CC) -C $(PPP_DIR) COPTS="$(CFLAGS)" FILTER=y HAVE_INET6=y CBCP=
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_DIR)/pppd/pppd
 	cp -a $(PPP_DIR)/pppd/pppd $(PPP_TARGET_DIR)/usr/sbin/pppd-filter
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PPP_TARGET_DIR)/usr/sbin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PPP_TARGET_DIR)/usr/lib/pppd/*
 	cp -a $(PPP_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(PPP_DIR)/.build
 

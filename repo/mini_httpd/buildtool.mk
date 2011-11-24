@@ -62,8 +62,7 @@ $(MINI_HTTPD_DIR)/.build: $(MINI_HTTPD_DIR)/.configured
 
 	-cp -aL mini_httpds.conf $(BT_STAGING_DIR)/etc/
 	-cp -aL mini_httpd.conf $(BT_STAGING_DIR)/etc/
-	-$(BT_STRIP) $(STRIP_OPTIONS) $(MINI_HTTPD_TARGET_DIR)/usr/bin/mini_httpd.ssl
-	-$(BT_STRIP) $(STRIP_OPTIONS) $(MINI_HTTPD_TARGET_DIR)/usr/bin/mini_httpd
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MINI_HTTPD_TARGET_DIR)/usr/bin/*
 	-cp -a $(MINI_HTTPD_TARGET_DIR)/usr/bin/* $(BT_STAGING_DIR)/usr/bin/
 	-cp -a $(MINI_HTTPD_TARGET_DIR)/etc/init.d/* $(BT_STAGING_DIR)/etc/init.d/
 	-cp -a $(MINI_HTTPD_TARGET_DIR)/etc/cron.daily/* $(BT_STAGING_DIR)/etc/cron.daily/

@@ -32,13 +32,11 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	)
 
 	make $(MAKEOPTS) CC=$(TARGET_CC) -C $(WGET_DIR)
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(WGET_DIR)/src/wget
 	cp -a $(WGET_DIR)/src/wget $(WGET_TARGET_DIR)/usr/bin
 	make -C $(WGET_DIR) clean
 
 # hack cause distclean removes files like src/css.c
 #	zcat $(WGET_SOURCE) | tar -xvf -
-
 	#Build a version with SSL support
 	(cd $(WGET_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	./configure \
@@ -52,11 +50,11 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	     --with-libssl-prefix=$(BT_STAGING_DIR)/usr \
 	)
 	make $(MAKEOPTS) -C $(WGET_DIR)
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(WGET_DIR)/src/wget
 	cp -a $(WGET_DIR)/src/wget $(WGET_TARGET_DIR)/usr/bin/wget-ssl
 	make -C $(WGET_DIR) clean
 
 	cp -aL wgetrc $(WGET_TARGET_DIR)/etc
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(WGET_TARGET_DIR)/usr/bin/*
 	cp -a $(WGET_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(WGET_DIR)/.build
 

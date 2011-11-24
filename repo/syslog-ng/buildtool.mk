@@ -34,7 +34,7 @@ $(DIR)/.build: $(DIR)/Makefile
 	$(MAKE) $(MAKEOPTS) -C $(DIR)
 	cp -a  $(DIR)/src/syslog-ng  $(TARGET_DIR)/sbin
 	cp -a  $(DIR)/debian/syslog-ng.conf  $(TARGET_DIR)/etc
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DIR)/src/syslog-ng
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/sbin/*
 	cp -a  $(TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(DIR)/.build
 

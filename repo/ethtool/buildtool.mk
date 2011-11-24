@@ -19,8 +19,8 @@ $(ETHTOOL_DIR)/.build: $(ETHTOOL_DIR)/.configured
 	mkdir -p $(ETHTOOL_TARGET_DIR)
 	mkdir -p $(ETHTOOL_TARGET_DIR)/usr/sbin
 	make $(MAKEOPTS) -C $(ETHTOOL_DIR)
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ETHTOOL_DIR)/ethtool
 	cp -a $(ETHTOOL_DIR)/ethtool $(ETHTOOL_TARGET_DIR)/usr/sbin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ETHTOOL_TARGET_DIR)/usr/sbin/*
 	cp -a $(ETHTOOL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(ETHTOOL_DIR)/.build
 

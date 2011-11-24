@@ -20,7 +20,7 @@ $(DIR)/.build: $(DIR)/Makefile
 	mkdir -p $(TARGET_DIR)/usr/sbin
 	make $(MAKEOPTS) -C $(DIR)
 	$(MAKE) DESTDIR=$(TARGET_DIR) -C $(DIR) install
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/dhcdrop
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/*
 	rm -rf $(TARGET_DIR)/usr/share
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build

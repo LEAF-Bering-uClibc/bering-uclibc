@@ -16,7 +16,7 @@ $(DIR)/.build:
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	make -C $(DIR) CC=$(TARGET_CC)
 	cp -a $(DIR)/irqbalance $(TARGET_DIR)/usr/sbin
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/irqbalance
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/*
 	cp -aL irqbalance.init $(TARGET_DIR)/etc/init.d/irqbalance
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build

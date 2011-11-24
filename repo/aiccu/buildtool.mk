@@ -21,10 +21,10 @@ $(AICCU_DIR)/.build: $(AICCU_DIR)/.configured
 	CC=$(TARGET_CC) make $(MAKEOPTS) -C $(AICCU_DIR) all
 	mkdir -p "$(AICCU_TARGET_DIR)"
 	cd "$(AICCU_TARGET_DIR)" && mkdir -p usr/sbin etc etc/init.d
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(AICCU_DIR)/unix-console/aiccu
 	cp -a $(AICCU_DIR)/unix-console/aiccu $(AICCU_TARGET_DIR)/usr/sbin
 	cp -a $(AICCU_DIR)/doc/aiccu.conf     $(AICCU_TARGET_DIR)/etc
 	cp -aL aiccu.init $(AICCU_TARGET_DIR)/etc/init.d/aiccu
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(AICCU_TARGET_DIR)/usr/sbin/*
 	cp -a $(AICCU_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $@
 
