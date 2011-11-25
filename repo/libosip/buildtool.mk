@@ -14,19 +14,18 @@ $(LIBOSIP2_DIR)/.source:
 	touch $(LIBOSIP2_DIR)/.source
 
 $(LIBOSIP2_DIR)/.configured: $(LIBOSIP2_DIR)/.source
-	(cd $(LIBOSIP2_DIR) ; autoconf ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
-	./configure --host=$(GNU_HOST_NAME) --build=$(GNU_HOST_NAME) --prefix=/usr --disable-shared );
+	(cd $(LIBOSIP2_DIR) ; \
+	./configure --host=$(GNU_TARGET_NAME) --prefix=/usr --disable-shared );
 	touch $(LIBOSIP2_DIR)/.configured
 
 $(LIBOSIP2_DIR)/.build: $(LIBOSIP2_DIR)/.configured
 	mkdir -p $(LIBOSIP2_TARGET_DIR)
 	mkdir -p $(LIBOSIP2_TARGET_DIR)/usr/lib
-	$(MAKE) -C $(LIBOSIP2_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)"
-	$(MAKE) -C $(LIBOSIP2_DIR) DESTDIR=$(LIBOSIP2_TARGET_DIR) install-data
-	cp $(LIBOSIP2_DIR)/src/osip2/.libs/libosip2.a $(LIBOSIP2_TARGET_DIR)/usr/lib/
-	cp $(LIBOSIP2_DIR)/src/osipparser2/.libs/libosipparser2.a $(LIBOSIP2_TARGET_DIR)/usr/lib/
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBOSIP2_TARGET_DIR)/usr/lib/libosip2.a
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBOSIP2_TARGET_DIR)/usr/lib/libosipparser2.a
+	$(MAKE) $(MAKEOPTS) -C $(LIBOSIP2_DIR)
+	$(MAKE) -C $(LIBOSIP2_DIR) DESTDIR=$(LIBOSIP2_TARGET_DIR) install
+	-rm -rf $(LIBOSIP2_TARGET_DIR)/usr/man
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBOSIP2_TARGET_DIR)/usr/lib/*.la
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBOSIP2_TARGET_DIR)/usr/lib/*
 	cp -a $(LIBOSIP2_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LIBOSIP2_DIR)/.build
 
