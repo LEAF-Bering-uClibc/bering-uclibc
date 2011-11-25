@@ -8,6 +8,7 @@ SQUID_TARGET_DIR:=$(BT_BUILD_DIR)/squid
 
 $(SQUID_DIR)/.source:
 	zcat $(SQUID_SOURCE) | tar -xvf -
+	cp config.test $(SQUID_DIR)/helpers/external_acl/session/
 	touch $(SQUID_DIR)/.source
 
 source: $(SQUID_DIR)/.source
