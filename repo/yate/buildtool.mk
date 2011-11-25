@@ -8,8 +8,6 @@ include $(MASTERMAKEFILE)
 
 YATE_DIR:=yate
 YATE_TARGET_DIR:=$(BT_BUILD_DIR)/yate
-export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 $(YATE_DIR)/.source:
 	zcat $(YATE_SOURCE) | tar -xvf -
@@ -20,11 +18,9 @@ $(YATE_DIR)/.source:
 source: $(YATE_DIR)/.source
 
 $(YATE_DIR)/.configured: $(YATE_DIR)/.source
-	(cd $(YATE_DIR) ;  export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
-	$(AUTOCONF) ; CC=$(TARGET_CC) CXX=$(BT_STAGING_DIR)/usr/bin/g++ LD=$(TARGET_LD) \
+	(cd $(YATE_DIR) ;  autoreconf -i -f && \
 			./configure \
-			--build=$(GNU_HOST_NAME) \
-			--host=$(GNU_HOST_NAME) \
+			--host=$(GNU_TARGET_NAME) \
 			--prefix=/ \
 			--disable-dahdi \
 			--disable-zaptel \
@@ -44,19 +40,18 @@ $(YATE_DIR)/.configured: $(YATE_DIR)/.source
 	touch $(YATE_DIR)/.configured
 
 $(YATE_DIR)/.build: $(YATE_DIR)/.configured
-	echo "YATE_TARGET_DIR=$(YATE_TARGET_DIR)"
 	mkdir -p $(YATE_TARGET_DIR)
-	make -C $(YATE_DIR) all
+	make $(MAKEOPTS) -C $(YATE_DIR) all
 	touch $@
 
 $(YATE_DIR)/.install: $(YATE_DIR)/.build
 	make -C $(YATE_DIR) DESTDIR=$(YATE_TARGET_DIR) install-noapi
 	install -d -m 0755 $(YATE_TARGET_DIR)/etc/init.d
 	install    -m 0755 $(YATE_INIT) $(YATE_TARGET_DIR)/etc/init.d/yate
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(YATE_TARGET_DIR)/bin/yate
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/*.so
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/yate/*.yate
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/yate/*/*.yate
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(YATE_TARGET_DIR)/bin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/*.so
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/yate/*.yate
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/yate/*/*.yate
 	cp -a $(YATE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $@
 
