@@ -3,7 +3,6 @@ include $(MASTERMAKEFILE)
 
 DIR:=bind-9.8.0-P1
 TARGET_DIR:=$(BT_BUILD_DIR)/bind
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -
@@ -12,16 +11,11 @@ $(DIR)/.source:
 source: $(DIR)/.source
 
 $(DIR)/.configured: $(DIR)/.source
-#	(cd $(DIR) ; [ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER);
 	(cd $(DIR) ; \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) \
-	CFLAGS="$(BT_COPT_FLAGS)" \
-	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(LDFLAGS)" \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/named \
 	--localstatedir=/var \
-	--target=$(GNU_TARGET_MANE) \
-	--host=$(GNU_HOST_MANE) \
+	--host=$(GNU_TARGET_NAME) \
 	--with-openssl=$(BT_STAGING_DIR)/usr \
 	--enable-linux-caps \
 	--enable-threads \
@@ -40,10 +34,7 @@ $(DIR)/.build: $(DIR)/.configured
 	mkdir -p $(TARGET_DIR)/etc/named
 	mkdir -p $(TARGET_DIR)/etc/default
 	mkdir -p $(TARGET_DIR)/var/named/pri
-#       breaks patch
-	[ -$(PERLVER) = - ] || PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
-	make -C $(DIR) all
-#	make CFLAGS="-Wall" -C $(DIR) all
+	make $(MAKEOPTS) -C $(DIR) all
 	make DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/*
