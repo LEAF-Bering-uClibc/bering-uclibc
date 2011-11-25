@@ -57,6 +57,7 @@ export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(ARCH)
 
 #Paths
 export PATH:=$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
+export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 export PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 
 #Cross-compile target
@@ -74,7 +75,7 @@ export CFLAGS=-O2 -march=$(GNU_ARCH) -mtune=$(GNU_TUNE) -I$(BT_STAGING_DIR)/usr/
 export CPPFLAGS=$(CFLAGS)
 
 # default ld flags
-export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib
+export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib
 
 # check for linux version
 
