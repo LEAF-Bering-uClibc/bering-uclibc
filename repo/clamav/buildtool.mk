@@ -12,9 +12,11 @@ $(CLAMAV_DIR)/.source:
 source: $(CLAMAV_DIR)/.source
 
 $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
-	(cd $(CLAMAV_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
+	(cd $(CLAMAV_DIR) ; \
 	./configure \
-	--sysconfdir=/etc/clamav --prefix= \
+	--host=$(GNU_TARGET_NAME) \
+	--sysconfdir=/etc/clamav --prefix=/ \
+	--includedir=/usr/include \
 	--exec-prefix=/usr --libexecdir=/usr/bin \
 	--disable-clamav \
 	--disable-clamuko \
@@ -30,25 +32,28 @@ $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
 	--with-zlib=$(BT_STAGING_DIR)/usr \
 	--disable-zlib-vcheck \
 	--disable-unrar \
-	--datadir=/etc/clamav )
+	--datadir=/etc/clamav \
+	--with-libncurses-prefix=$(BT_STAGING_DIR)/usr \
+	--without-libpdcurses-prefix)
+
+
 	touch $(CLAMAV_DIR)/.configured
 
 $(CLAMAV_DIR)/.build: $(CLAMAV_DIR)/.configured
 	mkdir -p $(CLAMAV_TARGET_DIR)
 	mkdir -p $(CLAMAV_TARGET_DIR)/etc/clamav
 	mkdir -p $(CLAMAV_TARGET_DIR)/etc/init.d
-	mkdir -p $(CLAMAV_TARGET_DIR)/usr/sbin
-	mkdir -p $(CLAMAV_TARGET_DIR)/usr/bin
-	make -C $(CLAMAV_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) all
-
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(CLAMAV_DIR)/libclamav/.libs/libclamav.so.6.1.12
-
+	make $(MAKEOPTS) -C $(CLAMAV_DIR) all
 	make -C $(CLAMAV_DIR) DESTDIR=$(CLAMAV_TARGET_DIR) install
 	rm -rf $(CLAMAV_TARGET_DIR)/share/man
 	cp -aL clamd.conf $(CLAMAV_TARGET_DIR)/etc/clamav
 	cp -aL freshclam.conf $(CLAMAV_TARGET_DIR)/etc/clamav
 	cp -aL rc.freshclam $(CLAMAV_TARGET_DIR)/etc/init.d/freshclam
 	cp -aL rc.clamd $(CLAMAV_TARGET_DIR)/etc/init.d/clamd
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(CLAMAV_TARGET_DIR)/usr/lib/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CLAMAV_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CLAMAV_TARGET_DIR)/usr/sbin/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(CLAMAV_TARGET_DIR)/usr/lib/*.la
 	cp -a $(CLAMAV_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(CLAMAV_DIR)/.build
 
@@ -62,4 +67,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(CLAMAV_DIR)
-	rm -rf $(CLAMAV_DIR)/.source
