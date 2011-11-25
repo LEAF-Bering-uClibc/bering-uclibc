@@ -1,11 +1,14 @@
 # makefile for squid
 include $(MASTERMAKEFILE)
 
-DIR:=bind-9.8.0-P1
+DIR:=bind-9.8.1-P1
 TARGET_DIR:=$(BT_BUILD_DIR)/bind
 
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -
+	cat $(PATCH1) | patch -p1 -d $(DIR)
+	cat $(PATCH2) | patch -p1 -d $(DIR)
+#	perl -i -p -e 's,\s+driver.o, .libs/driver.o,'  $(DIR)/bin/tests/system/dlzexternal/Makefile.in
 	touch $(DIR)/.source
 
 source: $(DIR)/.source
