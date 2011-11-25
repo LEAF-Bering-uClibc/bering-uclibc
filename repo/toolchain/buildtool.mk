@@ -26,6 +26,7 @@ $(UCLIBC_DIR)/.source:
 	bzcat $(UCLIBC_SOURCE) | tar xvf -
 	patch $(UC_CONFIG_$(ARCH)) $(UC_CONFIG_PATCH) -o $(UC_CONFIG_$(ARCH))_headers
 	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
 	touch $(UCLIBC_DIR)/.source
 
 $(BINUTILS_DIR)/.source:
