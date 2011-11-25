@@ -20,6 +20,8 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --without-libbind
 .source:
 	zcat $(SOURCE) | tar -xvf -
 	echo $(DHCPD_DIR) > DIRNAME
+	#hack to compile included BIND for target platform
+	perl -i -p -e 's,\s./configure\s, ./configure --host=$(GNU_TARGET_NAME) ,' $(DHCPD_DIR)/bind/Makefile
 	touch .source
 
 source: .source
