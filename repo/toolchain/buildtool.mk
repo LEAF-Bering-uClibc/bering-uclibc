@@ -59,7 +59,7 @@ $(BINUTILS_BUILD_DIR)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.headers
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include &&  make install) || exit 1
 	touch $(BINUTILS_BUILD_DIR)/.build
 
-$(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source
+$(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source $(BINUTILS_BUILD_DIR)/.build
 	mkdir -p $(GCC_STAGE1_BUILD_DIR)
 	(cd $(GCC_STAGE1_BUILD_DIR) && \
 	 $(GCC_DIR)/configure --target=$(GNU_TARGET_NAME) --with-sysroot=$(TOOLCHAIN_DIR) \
@@ -100,7 +100,7 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	 install-libiberty install-intl install-bfd install-binutils install-opcodes) || exit 1
 	touch $(BINUTILS_BUILD_DIR2)/.build
 
-build: $(BINUTILS_BUILD_DIR2)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build
+build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build
 	mkdir -p $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so.* $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so $(BT_STAGING_DIR)/lib
