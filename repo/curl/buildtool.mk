@@ -21,6 +21,8 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) \
 	--with-sysroot=$(BT_STAGING_DIR) \
 	--prefix=/usr --with-libssh2 --disable-manual --disable-ldap
 
+export LDFLAGS += $(EXTCCLDFLAGS)
+
 .source:
 	zcat $(CURL_SOURCE) | tar -xvf -
 	echo $(CURL_DIR) > DIRNAME
