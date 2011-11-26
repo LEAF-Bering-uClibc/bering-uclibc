@@ -7,15 +7,15 @@ $(PATCH_DIR)/.source:
 	touch $(PATCH_DIR)/.source
 
 $(PATCH_DIR)/.configured: $(PATCH_DIR)/.source
-	(cd $(PATCH_DIR); CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure --prefix=/usr)
+	(cd $(PATCH_DIR); \
+	./configure --prefix=/usr --host=$(GNU_TARGET_NAME) )
 	touch $(PATCH_DIR)/.configured
 
 $(PATCH_DIR)/.build: $(PATCH_DIR)/.configured
 	mkdir -p $(PATCH_TARGET_DIR)/usr/bin
-	$(MAKE) -C $(PATCH_DIR)
+	$(MAKE) $(MAKEOPTS) -C $(PATCH_DIR)
 	cp -a $(PATCH_DIR)/patch $(PATCH_TARGET_DIR)/usr/bin
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PATCH_TARGET_DIR)/usr/bin/patch
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PATCH_TARGET_DIR)/usr/bin/*
 	cp -a $(PATCH_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(PATCH_DIR)/.build
 
