@@ -22,6 +22,7 @@ export USE_EXTRACRYPTO=true
 source: .source
 
 .build: .source
+	-rm -rf $(OPENSWAN_TARGET_DIR)
 	mkdir -p $(OPENSWAN_TARGET_DIR)
 	mkdir -p $(OPENSWAN_TARGET_DIR)/etc/init.d
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
@@ -29,45 +30,51 @@ source: .source
 	mkdir -p $(BT_STAGING_DIR)/usr/sbin
 
 	############################################################
-	## build the userland programs and install them
+	## build the userland programs
 	############################################################
-	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) programs install\
-	    USERCOMPILE="-g $(BT_COPT_FLAGS)" \
-	    LDFLAGS="-L$(BT_STAGING_DIR)/usr/lib" \
+	$(MAKE) $(MAKEOPTS) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) programs \
 	    INC_USRLOCAL="/usr" \
 	    FINALBINDIR="/usr/lib/ipsec" \
 	    FINALLIBEXECDIR="/usr/lib/ipsec" \
 	    KERNELSRC=$(BT_LINUX_DIR) \
-	    DESTDIR=$(OPENSWAN_TARGET_DIR)
+	    DESTDIR=$(OPENSWAN_TARGET_DIR) \
+	    WERROR=" "
 
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSWAN_TARGET_DIR)/usr/lib/ipsec/*
-
-	cp -fL ipsec.secrets $(OPENSWAN_TARGET_DIR)/etc
-	cp -fL ipsec.init $(OPENSWAN_TARGET_DIR)/etc/init.d/ipsec
-	cp -a $(OPENSWAN_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
-	cp -a $(OPENSWAN_TARGET_DIR)/etc/* $(BT_STAGING_DIR)/etc/
-	cp -a $(OPENSWAN_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin/
+	############################################################
+	## install the userland programs
+	############################################################
+	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) install \
+	    INC_USRLOCAL="/usr" \
+	    FINALBINDIR="/usr/lib/ipsec" \
+	    FINALLIBEXECDIR="/usr/lib/ipsec" \
+	    KERNELSRC=$(BT_LINUX_DIR) \
+	    DESTDIR=$(OPENSWAN_TARGET_DIR) \
+	    WERROR=" "
 
 	############################################################
 	## build a KLIPS module for all supported platforms
 	############################################################
 	for i in $(KARCHS); do \
-	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) module\
-	    USERCOMPILE="-g $(BT_COPT_FLAGS)" \
-	    LDFLAGS=-L$(BT_STAGING_DIR)/usr/lib \
+	$(MAKE) $(MAKEOPTS) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) module\
+	    LDFLAGS="" \
 	    INC_USRLOCAL="/usr" \
 	    FINALBINDIR="/usr/lib/ipsec" \
 	    FINALLIBEXECDIR="/usr/lib/ipsec" \
 	    KERNELSRC=$(BT_LINUX_DIR)-$$i \
-	    DESTDIR=$(OPENSWAN_TARGET_DIR) ; \
-	    mkdir -p  $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipsec ;\
-	    cp $(OPENSWAN_DIR)/modobj26/ipsec.ko $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipsec ;\
-	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) modclean ;\
+	    DESTDIR=$(OPENSWAN_TARGET_DIR) && \
+	    mkdir -p $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipsec &&\
+	    gzip -9 $(OPENSWAN_DIR)/modobj26/ipsec.ko &&\
+	    mv -f $(OPENSWAN_DIR)/modobj26/ipsec.ko.gz $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipsec &&\
+	    $(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) modclean || exit 1 ;\
 	done;
 
 	cp -fL ipsec.secrets $(OPENSWAN_TARGET_DIR)/etc/
 	cp -fL ipsec.init $(OPENSWAN_TARGET_DIR)/etc/init.d/ipsec
-
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSWAN_TARGET_DIR)/usr/lib/ipsec/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSWAN_TARGET_DIR)/usr/sbin/*
+	-rm -rf $(OPENSWAN_TARGET_DIR)/usr/man
+	-rm -rf $(OPENSWAN_TARGET_DIR)/usr/share
+	cp -a $(OPENSWAN_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch .build
 
 build: .build

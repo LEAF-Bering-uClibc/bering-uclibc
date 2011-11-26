@@ -5,12 +5,8 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-LIBGMP_DIR:=gmp-5.0.1
+LIBGMP_DIR:=gmp-5.0.2
 LIBGMP_TARGET_DIR:=$(BT_BUILD_DIR)/libgmp
-export CC=$(TARGET_CC)
-CNFL=--enable-mpbsd
-CFCT="-Os "
-STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment
 
 $(LIBGMP_DIR)/.source:
 	bzcat $(LIBGMP_SOURCE) |  tar -xvf -
@@ -19,26 +15,24 @@ $(LIBGMP_DIR)/.source:
 
 
 $(LIBGMP_DIR)/.configured: $(LIBGMP_DIR)/.source
-	(cd $(LIBGMP_DIR); ./configure --build=i486-pc-linux-gnu --host=i486-pc-linux-gnu --prefix=/usr $(CNFL));
+	(cd $(LIBGMP_DIR); ./configure --host=$(GNU_TARGET_NAME) --prefix=/usr);
 	touch $(LIBGMP_DIR)/.configured
 
-#source: $(LIBGMP_DIR)/.source
-source:
+source: $(LIBGMP_DIR)/.source
 
 $(LIBGMP_DIR)/.build: $(LIBGMP_DIR)/.configured
 	mkdir -p $(LIBGMP_TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
 	mkdir -p $(BT_STAGING_DIR)/usr/include
-	$(MAKE) CFLAGS=$(CFCT) -C $(LIBGMP_DIR)
-	$(MAKE) CFLAGS=$(CFCT) DESTDIR=$(LIBGMP_TARGET_DIR) -C $(LIBGMP_DIR) install
-	cp -a $(LIBGMP_TARGET_DIR)/usr/lib/libgmp.* $(BT_STAGING_DIR)/usr/lib/
-	cp -a $(LIBGMP_TARGET_DIR)/usr/lib/libmp.* $(BT_STAGING_DIR)/usr/lib/
-	cp -a $(LIBGMP_TARGET_DIR)/usr/include/gmp.h $(BT_STAGING_DIR)/usr/include
-	cp -a $(LIBGMP_TARGET_DIR)/usr/include/mp.h $(BT_STAGING_DIR)/usr/include
+	$(MAKE) $(MAKEOPTS) -C $(LIBGMP_DIR)
+	$(MAKE) DESTDIR=$(LIBGMP_TARGET_DIR) -C $(LIBGMP_DIR) install
+	-$(BT_STRIP) $(BTSTRIP_LIBOPTS) $(LIBGMP_TARGET_DIR)/usr/lib
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBGMP_TARGET_DIR)/usr/lib/*.la
+	-rm -rf $(LIBGMP_TARGET_DIR)/usr/share
+	cp -a $(LIBGMP_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(LIBGMP_DIR)/.build
 
-build:
-#build: $(LIBGMP_DIR)/.build
+build: $(LIBGMP_DIR)/.build
 
 clean:
 	-rm $(LIBGMP_DIR)/.build
