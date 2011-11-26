@@ -3,6 +3,7 @@ include $(MASTERMAKEFILE)
 
 CLAMAV_DIR:=clamav-0.97.3
 CLAMAV_TARGET_DIR:=$(BT_BUILD_DIR)/clamav
+export LDFLAGS += $(EXTCCLDFLAGS)
 
 $(CLAMAV_DIR)/.source:
 	zcat $(CLAMAV_SOURCE) | tar -xvf -

@@ -21,8 +21,9 @@ $(ATM_DIR)/.configured: $(ATM_DIR)/.source
 $(ATM_DIR)/.build: $(ATM_DIR)/.configured
 	mkdir -p $(ATM_TARGET_DIR)
 	mkdir -p $(ATM_TARGET_DIR)/etc/init.d
-	make $(MAKEOPTS) -C $(ATM_DIR)
-	make $(MAKEOPTS) -C $(ATM_DIR) DESTDIR=$(ATM_TARGET_DIR) install
+#multithreaded build fails - build in single thread
+	make -C $(ATM_DIR)
+	make -C $(ATM_DIR) DESTDIR=$(ATM_TARGET_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ATM_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ATM_TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ATM_TARGET_DIR)/usr/lib/*
