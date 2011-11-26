@@ -74,8 +74,11 @@ $(GCC_STAGE2_BUILD_DIR)/.build: $(GCC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.buil
 
 $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
 	cp -aL $(UC_CONFIG_$(ARCH)) $(UCLIBC_DIR)/.config
-	(cd $(UCLIBC_DIR) && make $(MAKEOPTS) oldconfig && make $(MAKEOPTS) && \
+	(cd $(UCLIBC_DIR) && make $(MAKEOPTS) oldconfig && make $(MAKEOPTS) all utils && \
 	 make $(MAKEOPTS) install)
+	mkdir -p $(BT_STAGING_DIR)/usr/bin
+	cp -a $(UCLIBC_DIR)/utils/ldd $(BT_STAGING_DIR)/usr/bin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BT_STAGING_DIR)/usr/bin/ldd
 	touch $(UCLIBC_DIR)/.build
 
 #binutils + libs for target host
@@ -87,7 +90,7 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include configure-host && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
 	 install-libiberty install-bfd install-binutils install-opcodes) || exit 1
-	touch $(BINUTILS_BUILD_DIR)/.build
+	touch $(BINUTILS_BUILD_DIR2)/.build
 
 build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build
 	mkdir -p $(BT_STAGING_DIR)/lib

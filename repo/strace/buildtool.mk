@@ -15,7 +15,7 @@ STRACE_TARGET_DIR:=$(BT_BUILD_DIR)/strace
 
 # Option settings for 'configure':
 #   Move default install from /usr/local to /usr
-CONFOPTS:=--prefix=/usr
+CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME)
 
 $(STRACE_DIR)/.source:
 	bzcat $(STRACE_SOURCE) | tar -xvf -
@@ -30,9 +30,10 @@ $(STRACE_DIR)/.configure: $(STRACE_DIR)/.source
 
 $(STRACE_DIR)/.build: $(STRACE_DIR)/.configure
 	mkdir -p $(STRACE_TARGET_DIR)
-	$(MAKE) -C $(STRACE_DIR)
+	$(MAKE) $(MAKEOPTS) -C $(STRACE_DIR)
 	$(MAKE) DESTDIR=$(STRACE_TARGET_DIR) -C $(STRACE_DIR) install
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(STRACE_TARGET_DIR)/usr/bin/strace
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(STRACE_TARGET_DIR)/usr/bin/*
+	-rm -rf $(STRACE_TARGET_DIR)/usr/share
 	cp -ra $(STRACE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(STRACE_DIR)/.build
 
