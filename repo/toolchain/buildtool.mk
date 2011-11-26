@@ -10,6 +10,7 @@ BUILD_DIR=$(BT_BUILD_DIR)/toolchain
 GCC_STAGE1_BUILD_DIR=$(BUILD_DIR)/gcc-stage1
 GCC_STAGE2_BUILD_DIR=$(BUILD_DIR)/gcc-stage2
 BINUTILS_BUILD_DIR=$(BUILD_DIR)/binutils
+BINUTILS_BUILD_DIR2=$(BUILD_DIR)/binutils-target
 
 export TARGET_DIR=$(TOOLCHAIN_DIR)
 export PREFIX=$(TOOLCHAIN_DIR)
@@ -18,6 +19,9 @@ GCC_CONFOPTS=   --with-gnu-ld --with-gnu-as \
 		--disable-libmudflap --disable-libssp \
 		--disable-libquadmath --disable-libgomp
 
+#save flags for cross-compiling target libs, and clean flags for toolchain
+BT_CFLAGS=$(CFLAGS)
+BT_LDFLAGS=$(LDFLAGS)
 unexport CFLAGS
 unexport CPPFLAGS
 unexport LDFLAGS
@@ -46,14 +50,6 @@ $(UCLIBC_DIR)/.headers: $(UCLIBC_DIR)/.source
 	make $(MAKEOPTS) -C $(UCLIBC_DIR) install_headers KERNEL_HEADERS=$(TARGET_DIR)/usr/include
 	touch $(UCLIBC_DIR)/.headers
 
-$(BINUTILS_BUILD_DIR)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.headers
-	mkdir -p $(BINUTILS_BUILD_DIR)
-	(cd $(BINUTILS_BUILD_DIR) && \
-	 $(BINUTILS_DIR)/configure --target=$(GNU_TARGET_NAME) --prefix=$(TOOLCHAIN_DIR) \
-	  --includedir=$(TOOLCHAIN_DIR)/usr/include  --with-sysroot=$(TOOLCHAIN_DIR) \
-	  --with-build-sysroot=$(TOOLCHAIN_DIR) && \
-	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include &&  make install) || exit 1
-	touch $(BINUTILS_BUILD_DIR)/.build
 
 $(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source
 	mkdir -p $(GCC_STAGE1_BUILD_DIR)
@@ -82,12 +78,27 @@ $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
 	 make $(MAKEOPTS) install)
 	touch $(UCLIBC_DIR)/.build
 
-build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build
+#binutils + libs for target host
+$(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build
+	mkdir -p $(BINUTILS_BUILD_DIR2)
+	(cd $(BINUTILS_BUILD_DIR2) && CFLAGS="$(BT_CFLAGS)" LDFLAGS="$(BT_LDFLAGS)" \
+	 $(BINUTILS_DIR)/configure --host=$(GNU_TARGET_NAME) --prefix=/usr \
+	  --with-build-sysroot=$(BT_STAGING_DIR) && \
+	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include configure-host && \
+	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
+	 install-libiberty install-bfd install-binutils install-opcodes) || exit 1
+	touch $(BINUTILS_BUILD_DIR)/.build
+
+build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build
 	mkdir -p $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so.* $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so.* $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so $(BT_STAGING_DIR)/lib
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BINUTILS_BUILD_DIR2)-built/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BINUTILS_BUILD_DIR2)-built/usr/$(GNU_TARGET_NAME)/*
+	-rm -rf $(BINUTILS_BUILD_DIR2)-built/usr/share
+	cp -a $(BINUTILS_BUILD_DIR2)-built/* $(BT_STAGING_DIR)/
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(BT_STAGING_DIR)/lib/*
 
 ###############################
