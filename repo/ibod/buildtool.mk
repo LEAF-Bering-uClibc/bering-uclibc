@@ -21,9 +21,9 @@ $(IBOD_DIR)/.build:
 	mkdir -p $(IBOD_TARGET_DIR)/etc/isdn
 	mkdir -p $(IBOD_TARGET_DIR)/etc/ppp/ip-up.d
 	mkdir -p $(IBOD_TARGET_DIR)/etc/ppp/ip-down.d
-	$(MAKE) -C $(IBOD_DIR) CC=$(TARGET_CC) CFLAGS="$(BT_COPT_FLAGS) -Wall -g"
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IBOD_DIR)/ibod
+	$(MAKE) -C $(IBOD_DIR) CC=$(TARGET_CC) CFLAGS="$(CFLAGS) $(LDFLAGS)" ibod
 	cp -a $(IBOD_DIR)/ibod $(IBOD_TARGET_DIR)/usr/bin/
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IBOD_TARGET_DIR)/usr/bin/*
 	cp -aL ibod.cf $(IBOD_TARGET_DIR)/etc/isdn/
 	cp -aL 00-ibod $(IBOD_TARGET_DIR)/etc/ppp/ip-up.d/
 	cp -aL zz-ibod $(IBOD_TARGET_DIR)/etc/ppp/ip-down.d/
