@@ -12,7 +12,7 @@ LIBSSH2_DIR:=$(shell cat DIRNAME)
 endif
 LIBSSH2_TARGET_DIR:=$(BT_BUILD_DIR)/libssh2
 
-export LDFLAGS += $(EXTLDFLAGS)
+export LDFLAGS += $(EXTCCLDFLAGS)
 
 # Option settings for 'configure':
 #   Move installed files out from under /usr/local/

@@ -4,6 +4,7 @@ include $(MASTERMAKEFILE)
 ULOGD_DIR:=ulogd-1.24
 ULOGD_TARGET_DIR:=$(BT_BUILD_DIR)/ulogd
 
+#export LDFLAGS += $(EXTCCLDFLAGS)
 
 $(ULOGD_DIR)/.source:
 	bzcat $(ULOGD_SOURCE) | tar -xvf -
@@ -15,8 +16,6 @@ $(ULOGD_DIR)/.source:
 source: $(ULOGD_DIR)/.source
 
 $(ULOGD_DIR)/.configured: $(ULOGD_DIR)/.source
-#	(cd $(ULOGD_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -I$(BT_LINUX_DIR)/include" \
-#	./configure --prefix=/usr --sysconfdir=/etc )
 	(cd $(ULOGD_DIR) ; rm aclocal.m4; libtoolize -i -f && autoreconf -i -f && \
 	./configure --prefix=/usr --sysconfdir=/etc \
 	--host=$(GNU_TARGET_NAME) \
