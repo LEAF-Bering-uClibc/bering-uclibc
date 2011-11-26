@@ -23,9 +23,9 @@ $(ATM_DIR)/.build: $(ATM_DIR)/.configured
 	mkdir -p $(ATM_TARGET_DIR)/etc/init.d
 	make $(MAKEOPTS) -C $(ATM_DIR)
 	make $(MAKEOPTS) -C $(ATM_DIR) DESTDIR=$(ATM_TARGET_DIR) install
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ATM_TARGET_DIR)/usr/sbin
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ATM_TARGET_DIR)/usr/bin
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ATM_TARGET_DIR)/usr/lib
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ATM_TARGET_DIR)/usr/sbin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ATM_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ATM_TARGET_DIR)/usr/lib/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(ATM_TARGET_DIR)/usr/lib/*.la
 	-rm -rf $(ATM_TARGET_DIR)/usr/share
 	cp -aL atmsigd.conf $(ATM_TARGET_DIR)/etc
