@@ -76,7 +76,7 @@ export CPPFLAGS=$(CFLAGS)
 
 # default ld flags
 export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib
-EXTLDFLAGS=-Wl,-rpath,$(BT_STAGING_DIR)/usr/lib
+EXTLDFLAGS=-Wl,-rpath,$(BT_STAGING_DIR)/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib
 
 # check for linux version
 
