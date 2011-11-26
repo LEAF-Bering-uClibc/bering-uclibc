@@ -51,7 +51,6 @@ $(OPENSSL_DIR)/.build: $(OPENSSL_DIR)/.configured
 	make -C $(OPENSSL_DIR) INSTALL_PREFIX=$(OPENSSL_TARGET_DIR) install_sw
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENSSL_TARGET_DIR)/usr/lib/* $(OPENSSL_TARGET_DIR)/usr/lib/engines/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSSL_TARGET_DIR)/usr/bin/*
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSSL_TARGET_DIR)/usr/bin/*
 	rm -rf $(OPENSSL_TARGET_DIR)/usr/ssl/man
 	cp -a $(OPENSSL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	# workaround for strange behaviour of install, dir is not readable and so not removable
