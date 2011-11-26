@@ -97,7 +97,7 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	  --with-build-sysroot=$(BT_STAGING_DIR) && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include configure-host && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
-	 install-libiberty install-bfd install-binutils install-opcodes) || exit 1
+	 install-libiberty install-intl install-bfd install-binutils install-opcodes) || exit 1
 	touch $(BINUTILS_BUILD_DIR2)/.build
 
 build: $(BINUTILS_BUILD_DIR2)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build
