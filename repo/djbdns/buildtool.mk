@@ -9,7 +9,7 @@ $(DJBDNS_DIR)/.source:
 	bzcat $(DJBDNS_PATCH1) | patch -d $(DJBDNS_DIR) -p1
 	perl -i -p -e 's,-O2,$(CFLAGS),g' $(DJBDNS_DIR)/conf-cc
 	perl -i -p -e 's,gcc\s+,$(TARGET_CC) ,g' $(DJBDNS_DIR)/conf-cc
-	perl -i -p -e 's,gcc\s*-s,$(TARGET_CC) -s $(LDFLAGS),g' $(DJBDNS_DIR)/conf-ld
+	perl -i -p -e 's;gcc\s*-s;$(TARGET_CC) -s $(LDFLAGS);g' $(DJBDNS_DIR)/conf-ld
 	perl -i -p -e 's,/usr/local,/usr,g' $(DJBDNS_DIR)/conf-home
 	touch $(DJBDNS_DIR)/.source
 
