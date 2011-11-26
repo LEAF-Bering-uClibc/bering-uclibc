@@ -17,6 +17,7 @@ $(PORTMAP_DIR)/.source:
 # omit "-o root -g root" arguments from "install", so can run "make install"
 # without being "root"; will get corrected as part of LRP installation
 	( cd $(PORTMAP_DIR) ; sed -i -e "/-o root -g root /s///" Makefile )
+	perl -i -p -e 's,^.*\s0644\s.*share/man.*$$,,g' $(PORTMAP_DIR)/Makefile
 	echo $(PORTMAP_DIR) > DIRNAME
 	touch $(PORTMAP_DIR)/.source
 
