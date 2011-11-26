@@ -31,6 +31,7 @@ source: $(OPENLDAP_DIR)/.source
 
 $(OPENLDAP_DIR)/.configure: $(OPENLDAP_DIR)/.source
 	( cd $(OPENLDAP_DIR) ; ./configure $(CONFOPTS) )
+	sed -i 's,#define NEED_MEMCMP_REPLACEMENT 1,/* undef NEED_MEMCMP_REPLACEMENT */,' $(OPENLDAP_DIR)/include/portable.h
 	touch $(OPENLDAP_DIR)/.configure
 
 build: $(OPENLDAP_DIR)/.configure
