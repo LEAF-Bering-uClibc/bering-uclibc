@@ -18,10 +18,9 @@ $(DIR)/.source:
 
 $(DIR)/.configured: $(DIR)/.source
 	(cd $(DIR); \
-		CFLAGS="$(BT_COPT_FLAGS)" ./configure \
-		--build=i486-pc-linux-gnu --host=i486-pc-linux-gnu \
+		./configure \
+		--host=$(GNU_TARGET_NAME) \
 		--prefix=/usr);
-#	./autogen.sh --quick --skip-gnulib && \
 	touch $(DIR)/.configured
 
 source: $(DIR)/.source
@@ -30,8 +29,8 @@ $(DIR)/.build: $(DIR)/.configured
 	mkdir -p $(TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
 	mkdir -p $(BT_STAGING_DIR)/usr/include
-	$(MAKE) CFLAGS="$(BT_COPT_FLAGS)" -C $(DIR)/gettext-runtime/intl
-	$(MAKE) CFLAGS="$(BT_COPT_FLAGS)" DESTDIR=$(TARGET_DIR) \
+	$(MAKE) $(MAKEOPTS) -C $(DIR)/gettext-runtime/intl
+	$(MAKE) DESTDIR=$(TARGET_DIR) \
 		-C $(DIR)/gettext-runtime/intl install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*
 	cp -a $(TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
