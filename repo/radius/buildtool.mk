@@ -47,6 +47,8 @@ CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--with-dhcp \
 	--with-mysql-dir="$(BT_STAGING_DIR)"/usr
 
+export LDFLAGS += $(EXTCCLDFLAGS) -L$(BT_STAGING_DIR)/usr/lib/mysql
+
 .source:
 	bzcat $(RADIUS_SOURCE) | tar -xvf -
 	echo $(RADIUS_DIR) > DIRNAME
