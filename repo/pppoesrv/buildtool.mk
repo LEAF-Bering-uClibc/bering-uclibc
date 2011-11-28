@@ -4,6 +4,7 @@ PPPOESRV_BUILD_DIR:=$(BT_BUILD_DIR)/pppoesrv
 
 $(PPPOESRV_DIR)/.source:
 	zcat $(PPPOESRV_SOURCE) |  tar -xvf -
+	perl -i -p -e 's,"event.h","libevent/event.h",' $(PPPOESRV_DIR)/src/pppoe-server.h
 	touch $(PPPOESRV_DIR)/.source
 
 source: $(PPPOESRV_DIR)/.source
