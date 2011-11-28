@@ -19,9 +19,9 @@ $(INITRD_DIR)/.build:
 		    sh $(BT_TOOLS_DIR)/getdep.sh "ata_.*" ahci ehci-hcd uhci-hcd \
 		    ohci-hcd usb-storage sd_mod sr_mod isofs vfat floppy usbhid >mod ; \
 	[ -f files.$$a ] && rm -f files.$$a ; \
-	for m in `cat mod`; do echo $(ESCKEY) "<File>\n\tSource\t= lib/modules/__KVER__-$$a/$$m \n\t\
+	for m in `cat mod`; do echo $(ESCKEY) "<File>\n\tSource\t\t= lib/modules/__KVER__-$$a/$$m \n\t\
 	Filename\t= lib/modules/$$(echo $$m|sed 's/[a-z]*\/[a-z_/-]*\///g')\n\t\
-	Type\t= binary\n\tType\t= module\n\tPermissions\t= 644\n</File>">>files.$$a; done; done)
+	Type\t\t= binary\n\tType\t\t= module\n\tPermissions\t= 644\n</File>">>files.$$a; done; done)
 
 	cp -aL README $(INITRD_TARGET_DIR)/boot/etc
 	cp -aL root.linuxrc $(INITRD_TARGET_DIR)/var/lib/lrpkg
