@@ -78,7 +78,7 @@ $(IPT_NF_DIR)/.build: $(IPT_NF_DIR)/configure $(IPTABLES_DIR)/.build
 	mkdir -p $(IPTABLES_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipv4/netfilter && \
 	cp -a ipt_NETFLOW.ko.gz $(IPTABLES_TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipv4/netfilter || \
 	exit 1 ; done; \
-	CC=$(TARGET_CC) $(MAKE) install)
+	CC=$(TARGET_CC) $(MAKE) linstall)
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
 	touch $(IPT_NF_DIR)/.build
 
