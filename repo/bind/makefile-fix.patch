@@ -1,0 +1,40 @@
+diff -ur bind-9.8.1-P1.old/lib/isc/Makefile.in bind-9.8.1-P1/lib/isc/Makefile.in
+--- bind-9.8.1-P1.old/lib/isc/Makefile.in	2011-07-09 02:47:16.000000000 +0300
++++ bind-9.8.1-P1/lib/isc/Makefile.in	2011-11-25 13:54:06.116152009 +0200
+@@ -100,7 +100,7 @@
+ 		-DLIBAGE=${LIBAGE} \
+ 		-c ${srcdir}/version.c
+ 
+-libisc.@SA@: ${OBJS} ${SYMTBLOBJS}
++libisc.@SA@: ${OBJS} ${SYMTBLOBJS} subdirs
+ 	${AR} ${ARFLAGS} $@ ${OBJS} ${SYMTBLOBJS}
+ 	${RANLIB} $@
+ 
+@@ -108,13 +108,13 @@
+ 	${AR} ${ARFLAGS} $@ ${OBJS}
+ 	${RANLIB} $@
+ 
+-libisc.la: ${OBJS} ${SYMTBLOBJS}
++libisc.la: ${OBJS} ${SYMTBLOBJS} subdirs
+ 	${LIBTOOL_MODE_LINK} \
+ 		${CC} ${ALL_CFLAGS} ${LDFLAGS} -o libisc.la -rpath ${libdir} \
+ 		-version-info ${LIBINTERFACE}:${LIBREVISION}:${LIBAGE} \
+ 		${OBJS} ${SYMTBLOBJS} ${LIBS}
+ 
+-libisc-nosymtbl.la: ${OBJS}
++libisc-nosymtbl.la: ${OBJS} subdirs
+ 	${LIBTOOL_MODE_LINK} \
+ 		${CC} ${ALL_CFLAGS} ${LDFLAGS} -o libisc-nosymtbl.la -rpath ${libdir} \
+ 		-version-info ${LIBINTERFACE}:${LIBREVISION}:${LIBAGE} \
+diff -ur bind-9.8.1-P1.old/bin/tests/system/dlzexternal/Makefile.in bind-9.8.1-P1/bin/tests/system/dlzexternal/Makefile.in
+--- bind-9.8.1-P1.old/bin/tests/system/dlzexternal/Makefile.in	2011-03-11 09:10:10.000000000 +0200
++++ bind-9.8.1-P1/bin/tests/system/dlzexternal/Makefile.in	2011-11-25 20:02:36.763422431 +0200
+@@ -49,7 +49,7 @@
+ 		-o $@ ${DLOPENOBJS} ${LIBS}
+ 
+ driver.@SO@: ${SO_OBJS}
+-	@SO_LD@ -o $@ driver.o
++	${LIBTOOL_MODE_LINK} @SO_LD@ -o $@ driver.@O@
+ 
+ clean distclean::
+ 	rm -f ${TARGETS}

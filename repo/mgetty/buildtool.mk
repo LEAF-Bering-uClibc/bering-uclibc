@@ -36,7 +36,8 @@ $(MGETTY_DIR)/.build: $(MGETTY_DIR)/.source
 	mkdir -p $(MGETTY_TARGET_DIR)/sbin
 	mkdir -p $(MGETTY_TARGET_DIR)/usr/sbin
 	mkdir -p $(MGETTY_TARGET_DIR)/usr/bin
-	make  $(MAKEOPTS) CC=$(TARGET_CC) CFLAGS="$(CFLAGS) -pipe -DAUTO_PPP -DFIFO" \
+#build in single thread
+	make  CC=$(TARGET_CC) CFLAGS="$(CFLAGS) -pipe -DAUTO_PPP -DFIFO" \
 	SHELL=/bin/sh -C $(MGETTY_DIR) bin-all
 	cp -aL issue.mgetty $(MGETTY_TARGET_DIR)/etc
 	cp -aL mgetty.cron_daily $(MGETTY_TARGET_DIR)/etc/cron.daily/mgetty
