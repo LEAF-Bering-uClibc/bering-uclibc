@@ -14,14 +14,14 @@ $(FLEX_DIR)/.source:
 	touch $(FLEX_DIR)/.source
 
 $(FLEX_DIR)/.configured: $(FLEX_DIR)/.source
-	(cd $(FLEX_DIR); \
+	(cd $(FLEX_DIR); ac_cv_func_malloc_0_nonnull=yes \
 		./configure --verbose --prefix=/usr --host=$(GNU_TARGET_NAME));
 	touch $(FLEX_DIR)/.configured
 
 $(FLEX_DIR)/.build: $(FLEX_DIR)/.configured
 	mkdir -p $(FLEX_TARGET_DIR)
 	$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR)
-	#don't fail on errors - we haven't uClibc so c++ tests failed
+	#don't fail on errors in check
 	-$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) check
 	$(MAKE) $(MAKEOPTS) -C $(FLEX_DIR) DESTDIR=$(FLEX_TARGET_DIR) install
 	rm -rf $(FLEX_TARGET_DIR)/usr/info $(FLEX_TARGET_DIR)/usr/man $(FLEX_TARGET_DIR)/usr/bin
