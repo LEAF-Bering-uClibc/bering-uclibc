@@ -5,6 +5,7 @@ CUR_DIR=$(shell pwd)
 GCC_DIR=$(CUR_DIR)/$(shell echo $(GCC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 UCLIBC_DIR=$(CUR_DIR)/$(shell echo $(UCLIBC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 BINUTILS_DIR=$(CUR_DIR)/binutils-2.21.1
+DEPMOD_DIR=$(CUR_DIR)/module-init-tools-3.15
 
 BUILD_DIR=$(BT_BUILD_DIR)/toolchain
 GCC_STAGE1_BUILD_DIR=$(BUILD_DIR)/gcc-stage1
@@ -40,8 +41,12 @@ $(BINUTILS_DIR)/.source:
 $(GCC_DIR)/.source:
 	bzcat $(GCC_SOURCE) | tar -xvf -
 	touch $(GCC_DIR)/.source
+	
+$(DEPMOD_DIR)/.source:
+	bzcat $(DEPMOD_SOURCE) | tar -xvf -
+	touch $(DEPMOD_DIR)/.source
 
-source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source
+source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source $(DEPMOD_DIR)/.source
 
 ###############################
 
@@ -100,7 +105,17 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	 install-libiberty install-intl install-bfd install-binutils install-opcodes) || exit 1
 	touch $(BINUTILS_BUILD_DIR2)/.build
 
-build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build
+#depmod
+$(DEPMOD_DIR)/Makefile: $(DEPMOD_DIR)/.source
+	(cd $(DEPMOD_DIR); ./configure --enable-zlib --enable-zlib-dynamic --disable-static-utils)
+
+$(DEPMOD_DIR)/.build: $(DEPMOD_DIR)/Makefile
+	mkdir -p $(TOOLCHAIN_DIR)/bin
+	make $(MAKEOPTS) -C $(DEPMOD_DIR) depmod
+	cp -a $(DEPMOD_DIR)/build/depmod $(TOOLCHAIN_DIR)/bin
+	touch $@
+
+build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build $(DEPMOD_DIR)/.build
 	mkdir -p $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so.* $(BT_STAGING_DIR)/lib
 	cp -a $(TOOLCHAIN_DIR)/lib/*.so $(BT_STAGING_DIR)/lib
