@@ -15,6 +15,8 @@ LINUX_BUILDDIR:=$(BT_BUILD_DIR)/kernel
 IP_NF_SET_MAX=256
 #max items count in set
 IP_NF_SET_HASHSIZE=4096
+export CC=$(TARGET_CC)
+export LD=$(TARGET_LD)
 
 $(DIR)/.source:
 	bzcat $(SOURCE) |  tar -xvf -
@@ -30,12 +32,14 @@ $(DIR)/.build: $(DIR)/Makefile
 	export KBUILD_OUTPUT=$(BT_LINUX_DIR)-$$i ; \
 	export INSTALL_MOD_PATH=$(BT_STAGING_DIR) ; \
 	find ./kernel -name '*.ko.gz' -delete ; $(MAKE) clean && \
-	$(MAKE) $(MAKEOPTS) modules && gzip -9 -f kernel/*.ko && \
+	$(MAKE) $(MAKEOPTS) EXTRA_WARN_FLAGS="" COPT_FLAGS="$(CFLAGS)" modules && \
+	gzip -9 -f kernel/*.ko && \
 	mkdir -p $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/extra && \
 	cp kernel/*.ko.gz $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/extra && \
 	depmod -ae -b $(BT_STAGING_DIR) -F $(LINUX_BUILDDIR)/System.map-$(BT_KERNEL_RELEASE)-$$i \
 	$(BT_KERNEL_RELEASE)-$$i || exit 1 ; done; \
-	$(MAKE) $(MAKEOPTS) binaries && $(MAKE) PREFIX=$(TARGET_DIR) binaries_install)
+	$(MAKE) $(MAKEOPTS) EXTRA_WARN_FLAGS="" COPT_FLAGS="$(CFLAGS)" binaries && \
+	$(MAKE) PREFIX=$(TARGET_DIR) binaries_install)
 	cp -a $(DIR)/kernel/include $(TARGET_DIR)/
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/lib/ipset/*
