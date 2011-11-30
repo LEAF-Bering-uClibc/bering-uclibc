@@ -14,7 +14,7 @@ $(FLEX_DIR)/.source:
 	touch $(FLEX_DIR)/.source
 
 $(FLEX_DIR)/.configured: $(FLEX_DIR)/.source
-	(cd $(FLEX_DIR); ac_cv_func_malloc_0_nonnull=yes \
+	(cd $(FLEX_DIR); \
 		./configure --verbose --prefix=/usr --host=$(GNU_TARGET_NAME));
 	touch $(FLEX_DIR)/.configured
 
