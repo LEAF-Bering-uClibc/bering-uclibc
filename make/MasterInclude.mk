@@ -7,6 +7,7 @@ export ARCH:=i386
 #cross-compile fix
 export ac_cv_func_malloc_0_nonnull=yes
 export ac_cv_func_realloc_0_nonnull=yes
+export ac_cv_va_copy=C99
 
 # where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
