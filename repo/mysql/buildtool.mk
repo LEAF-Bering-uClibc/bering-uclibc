@@ -6,14 +6,14 @@
 
 include $(MASTERMAKEFILE)
 
-MYSQL_DIR:=mysql-5.0.91
+MYSQL_DIR:=mysql-5.1.60
 MYSQL_TARGET_DIR:=$(BT_BUILD_DIR)/mysql
 
 
 CONFFLAGS:= --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
 	--without-server \
-	--without-openssl \
+	--without-ssl \
 	--with-libwrap=$(BT_STAGING_DIR)/usr/lib \
 	--without-extra-tools \
 	--without-docs \
@@ -24,13 +24,15 @@ CONFFLAGS:= --prefix=/usr \
 
 $(MYSQL_DIR)/.source:
 	zcat $(MYSQL_SOURCE) | tar -xvf -
-#	cat $(MYSQL_PATCH1) | patch -d $(MYSQL_DIR) -p1
+	cat $(MYSQL_PATCH1) | patch -d $(MYSQL_DIR) -p1
 	touch $(MYSQL_DIR)/.source
 
 source: $(MYSQL_DIR)/.source
 
 
 $(MYSQL_DIR)/.configured: $(MYSQL_DIR)/.source
+#	(cd $(MYSQL_DIR) ; find . -name Makefile.in -o -name aclocal.m4 -delete && \
+#	 autoreconf -i -f && ./configure $(CONFFLAGS) )
 	(cd $(MYSQL_DIR) ; ./configure $(CONFFLAGS) )
 	touch $(MYSQL_DIR)/.configured
 

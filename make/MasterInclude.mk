@@ -8,6 +8,7 @@ export ARCH:=i386
 export ac_cv_func_malloc_0_nonnull=yes
 export ac_cv_func_realloc_0_nonnull=yes
 export ac_cv_va_copy=C99
+export ac_cv_sys_restartable_syscalls=yes
 
 # where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
@@ -37,9 +38,9 @@ export GNU_ARCH:=i486
 # set target optimization here
 export GNU_TUNE:=pentiumpro
 
-#cross-compile hacks
-#libnet:
+#cross-compile arch-dependent vars
 export ac_cv_libnet_endianess=lil
+export ac_cv_c_bigendian=no
 
 #
 export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
