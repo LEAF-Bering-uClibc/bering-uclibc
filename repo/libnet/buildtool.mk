@@ -11,10 +11,10 @@ LIBNET_TARGET_DIR:=$(BT_BUILD_DIR)/libnet
 source:
 	zcat $(LIBNET_SOURCE) | tar -xvf -
 	zcat $(BT_TOOLS_DIR)/config.sub.gz > $(LIBNET_DIR)/config.sub
-#	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1
+	cat $(LIBNET_PATCH1) | patch -d $(LIBNET_DIR) -p0
 
 $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
-	(cd $(LIBNET_DIR); \
+	(cd $(LIBNET_DIR); autoconf && \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr );

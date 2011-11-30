@@ -35,6 +35,11 @@ export KARCHS:=i686 i486 geode
 export GNU_ARCH:=i486
 # set target optimization here
 export GNU_TUNE:=pentiumpro
+
+#cross-compile hacks
+#libnet:
+export ac_cv_libnet_endianess=lil
+
 #
 export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
 # target gcc
@@ -88,6 +93,7 @@ EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
 BT_KERNEL_RELEASE1=$(shell cat $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH)/.config | awk '/version:/ {print $$5}')
 export BT_KERNEL_RELEASE=$(shell echo ${BT_KERNEL_RELEASE1})
+export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
 
 #BT_DEPMOD=$(BT_STAGING_DIR)/sbin/depmod
 

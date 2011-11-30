@@ -17,12 +17,12 @@ $(NCURSES_DIR)/.source:
 #	zcat $(NCURSES_PATCH1) | patch -d $(NCURSES_DIR) -p1
 	touch $(NCURSES_DIR)/.source
 
+#		--with-build-libs="$(BT_STAGING_DIR)/lib" \
 $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 	(cd $(NCURSES_DIR); \
 		DESTDIR=$(NCURSES_BUILD_DIR) \
 		./configure --prefix=/usr \
 		--host=$(GNU_TARGET_NAME) \
-		--with-build-libs="$(BT_STAGING_DIR)/lib" \
 		--with-shared \
 		--mandir='$${datadir}/man' \
 		--without-profile \
@@ -44,7 +44,8 @@ $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 $(NCURSES_DIR)/.build: $(NCURSES_DIR)/.configured
 	mkdir -p $(NCURSES_BUILD_DIR)
 #build in single thread
-	make -C $(NCURSES_DIR)
+	make -C $(NCURSES_DIR) sources
+	make $(MAKEOPTS) -C $(NCURSES_DIR) all
 	make -C $(NCURSES_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(NCURSES_BUILD_DIR)/usr/lib/*
 	cp -a $(NCURSES_BUILD_DIR)/* $(BT_STAGING_DIR)
