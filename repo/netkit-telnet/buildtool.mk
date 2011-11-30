@@ -13,6 +13,7 @@ export CXXFLAGS = $(CPPFLAGS) $(LDFLAGS)
 $(TELNET_DIR)/.source:
 	zcat $(TELNET_SOURCE) |  tar -xvf -
 	zcat $(TELNET_PATCH1) | patch -d $(TELNET_DIR) -p1
+	cat $(TELNET_PATCH2) | patch -d $(TELNET_DIR) -p1
 	perl -i -p -e 's,-I/usr,-I$(BT_STAGING_DIR)/usr,g' $(TELNET_DIR)/configure
 	perl -i -p -e 's,LDFLAGS=\s*$$,,g' $(TELNET_DIR)/configure
 	touch $(TELNET_DIR)/.source
