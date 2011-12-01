@@ -38,9 +38,10 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 # hack cause distclean removes files like src/css.c
 #	zcat $(WGET_SOURCE) | tar -xvf -
 	#Build a version with SSL support
-	(cd $(WGET_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
+	(cd $(WGET_DIR) ; \
 	./configure \
 	     --prefix=/usr \
+	     --host=$(GNU_TARGET_NAME) \
 	     --sysconfdir=/etc \
 	     --disable-nls \
 	     --disable-debug \
