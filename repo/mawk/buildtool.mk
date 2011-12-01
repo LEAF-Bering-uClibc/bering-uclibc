@@ -22,7 +22,7 @@ $(MAWK_DIR)/.build: $(MAWK_DIR)/.configured
 	perl -i -p -e "s,trap 0,trap - 0,g" ${MAWK_DIR}/test/mawktest
 	perl -i -p -e "s,\strap\s*0,trap - 0,g" ${MAWK_DIR}/test/fpe_test
 # Multi-threaded make fails
-	make -C $(MAWK_DIR)
+	make -C $(MAWK_DIR) mawk
 	cp -a $(MAWK_DIR)/mawk $(MAWK_TARGET_DIR)/usr/bin
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MAWK_TARGET_DIR)/usr/bin/*
 	cp -a $(MAWK_TARGET_DIR)/* $(BT_STAGING_DIR)

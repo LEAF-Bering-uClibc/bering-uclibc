@@ -9,6 +9,7 @@ export ac_cv_func_malloc_0_nonnull=yes
 export ac_cv_func_realloc_0_nonnull=yes
 export ac_cv_va_copy=C99
 export ac_cv_sys_restartable_syscalls=yes
+export td_cv_buggygetaddrinfo=no
 
 # where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source

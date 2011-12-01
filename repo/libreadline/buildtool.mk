@@ -16,7 +16,7 @@ $(DIR)/.source:
 
 $(DIR)/.configured: $(DIR)/.source
 	(cd $(DIR); ./configure \
-	--host=$(GNU_TARGET_MANE) \
+	--host=$(GNU_TARGET_NAME) \
 	--prefix=/usr \
 	--with-curses \
 	)
