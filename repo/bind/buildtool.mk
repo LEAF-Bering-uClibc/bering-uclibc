@@ -14,7 +14,7 @@ $(DIR)/.source:
 source: $(DIR)/.source
 
 $(DIR)/.configured: $(DIR)/.source
-	(cd $(DIR) ; \
+	(cd $(DIR) ; BUILD_CC=gcc \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/named \
 	--localstatedir=/var \
@@ -25,6 +25,8 @@ $(DIR)/.configured: $(DIR)/.source
 	--with-libtool \
 	--without-idn \
 	--enable-ipv6 \
+	--enable-epoll \
+	--with-gost \
 	--without-gssapi \
 	--with-randomdev=/dev/random \
 	--disable-symtable \
