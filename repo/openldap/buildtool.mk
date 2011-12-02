@@ -18,7 +18,7 @@ OPENLDAP_TARGET_DIR:=$(BT_BUILD_DIR)/openldap
 #  Explicitly disable Cyrus SASL support
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
 	--prefix=/usr --disable-slapd --without-cyrus-sasl --with-tls=openssl \
-	--with-threads --with-mp=gmp
+	--with-threads --with-mp=gmp --with-yielding-select=yes
 export CC=$(TARGET_CC)
 export AR=$(TARGET_AR)
 
