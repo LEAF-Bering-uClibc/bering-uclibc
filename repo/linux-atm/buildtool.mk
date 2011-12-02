@@ -3,6 +3,7 @@ include $(MASTERMAKEFILE)
 
 ATM_DIR:=linux-atm-2.5.1
 ATM_TARGET_DIR:=$(BT_BUILD_DIR)/linuxatm
+unexport CFLAGS CPPFLAGS
 
 $(ATM_DIR)/.source:
 	zcat $(ATM_SOURCE) | tar -xvf -
@@ -13,7 +14,8 @@ source: $(ATM_DIR)/.source
 
 $(ATM_DIR)/.configured: $(ATM_DIR)/.source
 	#perl -i -p -e 's,/usr/include/asm/errno.h,$(BT_STAGING_DIR)/include/asm/errno.h,g' $(ATM_DIR)/src/test/Makefile.in
-	(cd $(ATM_DIR) ; ./configure --prefix=/usr \
+	(cd $(ATM_DIR) ; CFLAGS="$(CFLAGS)" \
+	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
 	--sysconfdir=/etc --oldincludedir=$(BT_STAGING_DIR)/include )
 	touch $(ATM_DIR)/.configured

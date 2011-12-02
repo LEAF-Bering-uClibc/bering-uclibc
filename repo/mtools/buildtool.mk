@@ -7,24 +7,25 @@
 include $(MASTERMAKEFILE)
 MTOOLS_DIR:=mtools-3.9.9
 MTOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/mtools
-export CC=$(TARGET_CC)
 
 
 $(MTOOLS_DIR)/.source:
 	zcat $(MTOOLS_SOURCE) |  tar -xvf -
 	zcat $(MTOOLS_PATCH1) | patch -d $(MTOOLS_DIR) -p1
+	perl -i -p -e 's,-m486,,' $(MTOOLS_DIR)/configure.in
 	touch $(MTOOLS_DIR)/.source
 
 $(MTOOLS_DIR)/.configured: $(MTOOLS_DIR)/.source
 
-	( cd $(MTOOLS_DIR) ; CFLAGS="$(BT_COPT_FLAGS) -Wall" ./configure \
+	( cd $(MTOOLS_DIR) ; libtoolize -i -f && autoreconf -i -f && \
+		./configure \
 		--prefix=/usr \
 		--sysconfdir=/etc \
-		--target=$(GNU_HOST_NAME) \
+		--host=$(GNU_TARGET_NAME) \
 		--disable-floppyd \
 		--disable-debug \
 		--disable-new-vold \
-		--disable-vold 	;)
+		--disable-vold ;)
 	touch $(MTOOLS_DIR)/.configured
 
 $(MTOOLS_DIR)/.build: $(MTOOLS_DIR)/.configured
