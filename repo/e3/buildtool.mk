@@ -19,7 +19,7 @@ $(E3_DIR)/.build: $(E3_DIR)/.source
 	mkdir -p $(E3_TARGET_DIR)/bin
 	$(MAKE) $(MAKEOPTS) -C $(E3_DIR) CC=$(TARGET_CC)  PREFIX=/usr COMPRESS= EXMODE=SED
 	cp $(E3_DIR)/e3 $(E3_TARGET_DIR)/bin
-	cp -a $(E3_TARGET_DIR) $(BT_STAGING_DIR)
+	cp -a $(E3_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(E3_DIR)/.build
 
 source: $(E3_DIR)/.source
