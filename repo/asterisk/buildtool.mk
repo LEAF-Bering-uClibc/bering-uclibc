@@ -15,9 +15,10 @@ ASTERISK_TARGET_DIR:=$(BT_BUILD_DIR)/asterisk
 # Option settings for 'configure':
 #   Move files out from under /usr/local/
 #   Disable generation of XML documentation
-CONFOPTS:=--host=$(GNU_TARGET_NAME) \
-	--prefix=/usr --disable-xmldoc --without-sdl
+CONFOPTS:= --prefix=/usr --disable-xmldoc --without-sdl
 # --enable-dev-mode
+
+unexport CFLAGS CPPFLAGS
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
@@ -28,8 +29,9 @@ CONFOPTS:=--host=$(GNU_TARGET_NAME) \
 source: .source
 
 .configure: .source
-	( cd $(ASTERISK_DIR) ; ./configure $(CONFOPTS) )
-	( cd $(ASTERISK_DIR)/menuselect ; ./configure $(CONFOPTS) --host=$(GNU_TARGET_NAME) )
+	( cd $(ASTERISK_DIR) ; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)" \
+	    ./configure $(CONFOPTS) --host=$(GNU_TARGET_NAME))
+	( cd $(ASTERISK_DIR)/menuselect ; ./configure $(CONFOPTS) )
 	touch .configure
 
 build: .configure
