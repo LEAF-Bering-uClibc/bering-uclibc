@@ -26,7 +26,7 @@ $(DIR)/.configured: $(DIR)/.source
 	--without-idn \
 	--enable-ipv6 \
 	--enable-epoll \
-	--with-gost \
+	--without-gost \
 	--without-gssapi \
 	--with-randomdev=/dev/random \
 	--disable-symtable \

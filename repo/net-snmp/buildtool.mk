@@ -11,7 +11,7 @@ SNMP_DIR:=net-snmp-5.7.1
 SNMP_TARGET_DIR:=$(BT_BUILD_DIR)/net-snmp
 
 export CFLAGS += -D_REENTRANT
-MIB_MODULES = host smux ucd-snmp/dlmod ucd-snmp/lmsensorsMib #ucd-snmp/lmSensors
+MIB_MODULES = host smux ucd-snmp/dlmod ucd-snmp/lmsensorsMib
 
 $(SNMP_DIR)/.source:
 	zcat $(SNMP_SOURCE) | tar -xvf -
@@ -19,7 +19,8 @@ $(SNMP_DIR)/.source:
 	cat $(SNMP_PATCH3) | patch -d $(SNMP_DIR) -p1
 #	cat $(SNMP_PATCH4) | patch -d $(SNMP_DIR) -p1
 #	cat $(SNMP_PATCH5) | patch -d $(SNMP_DIR) -p1
-	touch $(SNMP_DIR)/.source
+	perl -i -p -e 's,\$$CPP\s+\$$PARTIALTARGETFLAGS,\$$CPP \$$CFLAGS,' $(SNMP_DIR)/configure
+	touch $@
 
 source: $(SNMP_DIR)/.source
 
@@ -30,18 +31,19 @@ $(SNMP_DIR)/.configured: $(SNMP_DIR)/.source
 		--with-install-prefix="$(SNMP_TARGET_DIR)" \
 		--with-cflags="$(CFLAGS)" \
 		--with-ldflags="$(LDFLAGS)" \
+		--with-defaults \
 		--with-persistent-directory=/var/lib/snmp \
 		--disable-scripts \
 		--disable-manuals \
 		--disable-embedded-perl \
 		--enable-shared \
 		--enable-ipv6 --with-logfile=none \
-		--without-rpm --with-libwrap --without-openssl \
+		--without-rpm --with-libwrap --with-openssl=internal \
 		--without-dmalloc --without-efence --without-rsaref \
 		--with-sys-contact="root" --with-sys-location="Unknown" \
 		--with-mib-modules="$(MIB_MODULES)" \
 		--without-perl-modules \
-		--with-defaults)
+		)
 	touch $(SNMP_DIR)/.configured
 
 #	  	--enable-ucd-snmp-compatability \
