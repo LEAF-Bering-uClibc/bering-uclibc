@@ -20,6 +20,7 @@ $(SNMP_DIR)/.source:
 	cat $(SNMP_PATCH3) | patch -d $(SNMP_DIR) -p1
 	cat $(SNMP_PATCH4) | patch -d $(SNMP_DIR) -p1
 	cat $(SNMP_PATCH5) | patch -d $(SNMP_DIR) -p1
+	cat $(SNMP_PATCH6) | patch -d $(SNMP_DIR) -p1
 	touch $(SNMP_DIR)/.source
 
 source: $(SNMP_DIR)/.source
