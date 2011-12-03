@@ -11,15 +11,15 @@ TARGET_DIR:=$(BT_BUILD_DIR)/at
 
 $(SDIR)/.source:
 	zcat $(SOURCE) |  tar -xvf -
-	cat getloadavg.c.patch | patch -p0 -d $(SDIR)
-#	cp Makefile $(SDIR)
-#	cp config.h $(SDIR)
+	cat $(PATCH1) | patch -p0 -d $(SDIR)
+	cat $(PATCH2) | patch -p1 -d $(SDIR)
 	touch $(SDIR)/.source
 
 source: $(SDIR)/.source
 
 $(SDIR)/Makefile: $(SDIR)/.source
-	(cd $(SDIR) ; CC=$(TARGET_CC) SENDMAIL=/sbin/sendmail \
+	(cd $(SDIR) ; autoconf -i -f && \
+	SENDMAIL=/sbin/sendmail \
 	CFLAGS="$(CFLAGS) $(LDFLAGS)" \
 	 ./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
 	 --with-jobdir=/var/spool/cron/atjobs \
