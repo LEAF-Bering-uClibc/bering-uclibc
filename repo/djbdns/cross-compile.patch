@@ -1,0 +1,48 @@
+--- djbdns-1.05/Makefile	2011-12-03 20:51:02.456031354 +0200
++++ djbdns-1.05.new/Makefile	2011-12-03 20:49:09.000000000 +0200
+@@ -1,6 +1,7 @@
+ # Don't edit Makefile! Use conf-* for configuration.
+ 
+ SHELL=/bin/sh
++HOSTCC ?= gcc
+ 
+ default: it
+ 
+@@ -21,9 +22,8 @@
+ compile alloc_re.c alloc.h byte.h
+ 	./compile alloc_re.c
+ 
+-auto-str: \
+-load auto-str.o buffer.a unix.a byte.a
+-	./load auto-str buffer.a unix.a byte.a 
++auto-str:
++	$(HOSTCC) -o auto-str auto-str.c buffer_put.c buffer_write.c byte_copy.c str_len.c error.c
+ 
+ auto-str.o: \
+ compile auto-str.c buffer.h exit.h
+@@ -196,14 +196,6 @@
+ it instcheck
+ 	./instcheck
+ 
+-chkshsgr: \
+-load chkshsgr.o
+-	./load chkshsgr 
+-
+-chkshsgr.o: \
+-compile chkshsgr.c exit.h
+-	./compile chkshsgr.c
+-
+ choose: \
+ warn-auto.sh choose.sh conf-home
+ 	cat warn-auto.sh choose.sh \
+@@ -559,9 +551,7 @@
+ 	esac ) > hasdevtcp.h
+ 
+ hasshsgr.h: \
+-choose compile load tryshsgr.c hasshsgr.h1 hasshsgr.h2 chkshsgr \
+-warn-shsgr
+-	./chkshsgr || ( cat warn-shsgr; exit 1 )
++choose compile load tryshsgr.c hasshsgr.h1 hasshsgr.h2
+ 	./choose clr tryshsgr hasshsgr.h1 hasshsgr.h2 > hasshsgr.h
+ 
+ hier.o: \

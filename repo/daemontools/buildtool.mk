@@ -17,6 +17,7 @@ $(DAEMONTOOLS_DIR)/.configured: $(DAEMONTOOLS_DIR)/.source
 	echo "$(TARGET_CC) $(LDFLAGS)" >$(DAEMONTOOLS_DIR)/src/conf-ld
 	perl -i -p -e 's,\s+make\s+\), make $(MAKEOPTS) ),' $(DAEMONTOOLS_DIR)/package/compile
 	perl -i -p -e 's,env\s+-\s+/bin/sh\s+rts.tests.*$$,touch rts,' $(DAEMONTOOLS_DIR)/src/Makefile
+	perl -i -p -e 's,^\s*\./chkshsgr.*$$,,' $(DAEMONTOOLS_DIR)/src/Makefile
 	touch $(DAEMONTOOLS_DIR)/.configured
 
 $(DAEMONTOOLS_DIR)/.build: $(DAEMONTOOLS_DIR)/.configured

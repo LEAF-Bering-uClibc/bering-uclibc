@@ -8,6 +8,7 @@ include $(MASTERMAKEFILE)
 
 TCPDUMP_DIR:=tcpdump-4.1.1
 TCPDUMP_TARGET_DIR:=$(BT_BUILD_DIR)/tcpdump
+export td_cv_buggygetaddrinfo=no
 
 
 $(TCPDUMP_DIR)/.source:

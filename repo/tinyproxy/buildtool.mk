@@ -3,6 +3,7 @@ include $(MASTERMAKEFILE)
 
 TINYPROXY_DIR:=tinyproxy-1.8.3
 TINYPROXY_TARGET_DIR:=$(BT_BUILD_DIR)/tinyproxy
+export tinyproxy_cv_regex_broken=no
 
 $(TINYPROXY_DIR)/.source:
 	bzcat $(TINYPROXY_SOURCE) | tar -xvf -
