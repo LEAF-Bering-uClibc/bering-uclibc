@@ -8,10 +8,8 @@ include $(MASTERMAKEFILE)
 
 SAMBA_DIR:=samba-2.0.10
 SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba
-export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
 export CC=$(TARGET_CC)
 export LD=$(TARGET_LD)
-
 
 BVARS = BASEDIR=/usr \
 	LIBDIR=/etc/samba \
@@ -28,7 +26,7 @@ $(SAMBA_DIR)/.source:
 $(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
 	(cd $(SAMBA_DIR)/source ; \
 		./configure \
-		--host=$(GNU_TARGET_ARCH) \
+		--host=$(GNU_TARGET_NAME) \
 		--prefix=/usr \
 		--sysconfdir=/etc \
 		--with-privatedir=/etc/samba \

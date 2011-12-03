@@ -39,8 +39,9 @@ build: $(NFSUTILS_DIR)/.configure
 	mkdir -p $(NFSUTILS_TARGET_DIR)
 	mkdir -p $(NFSUTILS_TARGET_DIR)/etc/default
 	mkdir -p $(NFSUTILS_TARGET_DIR)/etc/init.d
-	$(MAKE) $(MAKEOPTS) -C $(NFSUTILS_DIR)
-	$(MAKE) -C $(NFSUTILS_DIR) DESTDIR=$(NFSUTILS_TARGET_DIR) install
+	$(MAKE) $(MAKEOPTS) -C $(NFSUTILS_DIR)/support
+	$(MAKE) $(MAKEOPTS) -C $(NFSUTILS_DIR)/utils
+	$(MAKE) -C $(NFSUTILS_DIR)/utils DESTDIR=$(NFSUTILS_TARGET_DIR) install
 #
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NFSUTILS_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NFSUTILS_TARGET_DIR)/sbin/*

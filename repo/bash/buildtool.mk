@@ -3,6 +3,7 @@ include $(MASTERMAKEFILE)
 
 BASH_DIR:=bash-4.2
 BASH_TARGET_DIR:=$(BT_BUILD_DIR)/bash
+export bash_cv_job_control_missing=no
 
 $(BASH_DIR)/.source:
 	zcat $(BASH_SOURCE) | tar -xvf -
@@ -17,6 +18,7 @@ $(BASH_DIR)/.configured: $(BASH_DIR)/.source
 			--infodir=/usr/share/info --mandir=/usr/share/man \
 			--enable-command-timing \
 			--enable-debugger \
+			--enable-job-control \
 			--enable-history \
 			--enable-readline \
 			--disable-nls --disable-rpath )

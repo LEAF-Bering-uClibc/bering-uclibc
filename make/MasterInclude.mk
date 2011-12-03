@@ -43,6 +43,7 @@ export GNU_TUNE:=pentiumpro
 export ac_cv_libnet_endianess=lil
 export ac_cv_c_bigendian=no
 export rpppoe_cv_pack_bitfields=rev
+export gnupg_cv_c_endian=little
 
 #
 export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
