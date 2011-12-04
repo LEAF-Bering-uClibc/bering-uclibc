@@ -2,15 +2,18 @@ include $(MASTERMAKEFILE)
 PPPOESRV_DIR:=rp-pppoe-3.10
 PPPOESRV_BUILD_DIR:=$(BT_BUILD_DIR)/pppoesrv
 
+export ac_cv_linux_kernel_pppoe=yes
+
 $(PPPOESRV_DIR)/.source:
 	zcat $(PPPOESRV_SOURCE) |  tar -xvf -
+	cat $(PPPOESRV_PATCH1) |  patch -p1 -d $(PPPOESRV_DIR)
 	perl -i -p -e 's,"event.h","libevent/event.h",' $(PPPOESRV_DIR)/src/pppoe-server.h
 	touch $(PPPOESRV_DIR)/.source
 
 source: $(PPPOESRV_DIR)/.source
 
 $(PPPOESRV_DIR)/.configured: $(PPPOESRV_DIR)/.source
-	(cd $(PPPOESRV_DIR)/src ; \
+	(cd $(PPPOESRV_DIR)/src ; autoconf -f && \
 		PPPD=/usr/sbin/pppd \
 		./configure --disable-plugin --disable-debugging --host=$(GNU_TARGET_NAME))
 	touch $(PPPOESRV_DIR)/.configured

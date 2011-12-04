@@ -1,0 +1,19 @@
+diff -aur rp-pppoe-3.10/src/configure.in rp-pppoe-3.10.new/src/configure.in
+--- rp-pppoe-3.10/src/configure.in	2008-06-30 17:00:42.000000000 +0300
++++ rp-pppoe-3.10.new/src/configure.in	2011-12-04 12:05:12.078524057 +0200
+@@ -231,6 +231,7 @@
+ 
+ dnl Figure out packing order of structures
+ AC_MSG_CHECKING([packing order of bit fields])
++AC_CACHE_VAL(rpppoe_cv_pack_bitfields,[
+ AC_TRY_RUN([
+ union foo {
+     struct bar {
+@@ -255,6 +256,7 @@
+     }
+ }], rpppoe_cv_pack_bitfields=normal, rpppoe_cv_pack_bitfields=rev,
+ $ECHO "no defaults for cross-compiling"; exit 0)
++])
+ 
+ if test "$rpppoe_cv_pack_bitfields" = "rev" ; then
+ 	AC_MSG_RESULT(reversed)
