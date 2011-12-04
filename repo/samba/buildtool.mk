@@ -21,11 +21,7 @@ DEFS =	samba_cv_HAVE_GETTIMEOFDAY_TZ=yes \
 	samba_cv_HAVE_FCNTL_LOCK=yes \
 	samba_cv_HAVE_FNMATCH=yes \
 	samba_cv_HAVE_IFACE_IFCONF=yes \
-	samba_cv_SIZEOF_INO_T=yes \
-	samba_cv_SIZEOF_OFF_T=yes \
-	samba_cv_USE_SETRESUID=yes \
-	samba_cv_have_setresgid=yes \
-	samba_cv_have_setresuid=yes
+	samba_cv_HAVE_SECURE_MKSTEMP=yes
 
 BVARS = BASEDIR=/usr \
 	LIBDIR=/etc/samba \

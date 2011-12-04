@@ -10,17 +10,19 @@ SAMBA_DIR:=samba-2.2.12
 SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba22
 
 DEFS =	samba_cv_HAVE_GETTIMEOFDAY_TZ=yes \
-	samba_cv_HAVE_UNSIGNED_CHAR=yes \
+	samba_cv_HAVE_C99_VSNPRINTF=yes \
 	samba_cv_have_longlong=yes \
-	samba_cv_HAVE_SHARED_MMAP=yes \
+	samba_cv_HAVE_MMAP=yes \
 	samba_cv_HAVE_FCNTL_LOCK=yes \
-	samba_cv_HAVE_FNMATCH=yes \
+	samba_cv_HAVE_DEVICE_MAJOR_FN=yes \
+	samba_cv_HAVE_DEVICE_MINOR_FN=yes \
 	samba_cv_HAVE_IFACE_IFCONF=yes \
-	samba_cv_SIZEOF_INO_T=yes \
-	samba_cv_SIZEOF_OFF_T=yes \
-	samba_cv_USE_SETRESUID=yes \
-	samba_cv_have_setresgid=yes \
-	samba_cv_have_setresuid=yes
+	samba_cv_HAVE_SECURE_MKSTEMP=yes \
+	samba_cv_HAVE_KERNEL_CHANGE_NOTIFY=yes \
+	samba_cv_HAVE_KERNEL_OPLOCKS_LINUX=yes \
+	samba_cv_HAVE_KERNEL_SHARE_MODES=yes \
+	samba_cv_HAVE_MAKEDEV_FN=yes
+	
 
 BVARS = BASEDIR=/usr \
 	LIBDIR=/etc/samba \
@@ -32,7 +34,7 @@ $(SAMBA_DIR)/.source:
 
 $(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
 	(cd $(SAMBA_DIR)/source ; libtoolize -i -f && autoconf -f && \
-		./configure \
+		$(DEFS) ./configure \
 		--host=$(GNU_TARGET_NAME) \
 		--prefix=/usr \
 		--sysconfdir=/etc \
@@ -61,8 +63,12 @@ build: $(SAMBA_DIR)/.configured
 	-mkdir -p $(SAMBA_TARGET_DIR)/usr/sbin
 	-mkdir -p $(SAMBA_TARGET_DIR)/usr/share/samba
 
-	make $(MAKEOPTS) -C $(SAMBA_DIR)/source $(BVARS) all
 
+
+#hack to build host binaries
+	make -C $(SAMBA_DIR)/source clean
+	make $(MAKEOPTS) CC=gcc CFLAGS="-O2" -C $(SAMBA_DIR)/source \
+	    bin/make_smbcodepage bin/make_unicodemap bin/make_printerdef
 	$(SAMBA_DIR)/source/script/installcp.sh \
 	$(SAMBA_DIR)/source \
 	$(SAMBA_TARGET_DIR)/usr/share/samba \
@@ -70,6 +76,8 @@ build: $(SAMBA_DIR)/.configured
 	$(SAMBA_DIR)/source/bin \
 	850 ISO8859-1 866 1251
 
+	make -C $(SAMBA_DIR)/source clean
+	make $(MAKEOPTS) -C $(SAMBA_DIR)/source $(BVARS) all
 	cp -aL samba.init $(SAMBA_TARGET_DIR)/etc/init.d/samba22
 	cp -aL samba.cron $(SAMBA_TARGET_DIR)/etc/cron.weekly/samba22
 	cp -aL smb.conf $(SAMBA_TARGET_DIR)/etc/samba/smb.conf22
