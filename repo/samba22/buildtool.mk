@@ -9,6 +9,18 @@ include $(MASTERMAKEFILE)
 SAMBA_DIR:=samba-2.2.12
 SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba22
 
+DEFS =	samba_cv_HAVE_GETTIMEOFDAY_TZ=yes \
+	samba_cv_HAVE_UNSIGNED_CHAR=yes \
+	samba_cv_have_longlong=yes \
+	samba_cv_HAVE_SHARED_MMAP=yes \
+	samba_cv_HAVE_FCNTL_LOCK=yes \
+	samba_cv_HAVE_FNMATCH=yes \
+	samba_cv_HAVE_IFACE_IFCONF=yes \
+	samba_cv_SIZEOF_INO_T=yes \
+	samba_cv_SIZEOF_OFF_T=yes \
+	samba_cv_USE_SETRESUID=yes \
+	samba_cv_have_setresgid=yes \
+	samba_cv_have_setresuid=yes
 
 BVARS = BASEDIR=/usr \
 	LIBDIR=/etc/samba \

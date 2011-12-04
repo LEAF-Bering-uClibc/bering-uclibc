@@ -1,5 +1,6 @@
---- djbdns-1.05/Makefile	2011-12-03 20:51:02.456031354 +0200
-+++ djbdns-1.05.new/Makefile	2011-12-03 20:49:09.000000000 +0200
+diff -aur djbdns-1.05/Makefile djbdns-1.05.new/Makefile
+--- djbdns-1.05/Makefile	2011-12-04 14:41:22.591153392 +0200
++++ djbdns-1.05.new/Makefile	2011-12-04 14:40:39.000000000 +0200
 @@ -1,6 +1,7 @@
  # Don't edit Makefile! Use conf-* for configuration.
  
@@ -35,14 +36,52 @@
  choose: \
  warn-auto.sh choose.sh conf-home
  	cat warn-auto.sh choose.sh \
-@@ -559,9 +551,7 @@
+@@ -558,12 +550,6 @@
+ 	  *) cat hasdevtcp.h1 ;; \
  	esac ) > hasdevtcp.h
  
- hasshsgr.h: \
+-hasshsgr.h: \
 -choose compile load tryshsgr.c hasshsgr.h1 hasshsgr.h2 chkshsgr \
 -warn-shsgr
 -	./chkshsgr || ( cat warn-shsgr; exit 1 )
-+choose compile load tryshsgr.c hasshsgr.h1 hasshsgr.h2
- 	./choose clr tryshsgr hasshsgr.h1 hasshsgr.h2 > hasshsgr.h
- 
+-	./choose clr tryshsgr hasshsgr.h1 hasshsgr.h2 > hasshsgr.h
+-
  hier.o: \
+ compile hier.c auto_home.h
+ 	./compile hier.c
+@@ -584,10 +570,6 @@
+ compile instcheck.c strerr.h error.h exit.h
+ 	./compile instcheck.c
+ 
+-iopause.h: \
+-choose compile load trypoll.c iopause.h1 iopause.h2
+-	./choose clr trypoll iopause.h1 iopause.h2 > iopause.h
+-
+ iopause.o: \
+ compile iopause.c taia.h tai.h uint64.h select.h iopause.h taia.h
+ 	./compile iopause.c
+@@ -1148,13 +1129,6 @@
+ compile uint16_unpack.c uint16.h
+ 	./compile uint16_unpack.c
+ 
+-uint32.h: \
+-tryulong32.c compile load uint32.h1 uint32.h2
+-	( ( ./compile tryulong32.c && ./load tryulong32 && \
+-	./tryulong32 ) >/dev/null 2>&1 \
+-	&& cat uint32.h2 || cat uint32.h1 ) > uint32.h
+-	rm -f tryulong32.o tryulong32
+-
+ uint32_pack.o: \
+ compile uint32_pack.c uint32.h
+ 	./compile uint32_pack.c
+@@ -1163,10 +1137,6 @@
+ compile uint32_unpack.c uint32.h
+ 	./compile uint32_unpack.c
+ 
+-uint64.h: \
+-choose compile load tryulong64.c uint64.h1 uint64.h2
+-	./choose clr tryulong64 uint64.h1 uint64.h2 > uint64.h
+-
+ unix.a: \
+ makelib buffer_read.o buffer_write.o error.o error_str.o ndelay_off.o \
+ ndelay_on.o open_read.o open_trunc.o openreadclose.o readclose.o \

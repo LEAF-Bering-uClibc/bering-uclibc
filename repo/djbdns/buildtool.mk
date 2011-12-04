@@ -12,6 +12,12 @@ $(DJBDNS_DIR)/.source:
 	perl -i -p -e 's,gcc\s+,$(TARGET_CC) ,g' $(DJBDNS_DIR)/conf-cc
 	perl -i -p -e 's;gcc\s*-s;$(TARGET_CC) -s $(LDFLAGS);g' $(DJBDNS_DIR)/conf-ld
 	perl -i -p -e 's,/usr/local,/usr,g' $(DJBDNS_DIR)/conf-home
+	echo "#include <stdint.h>" >$(DJBDNS_DIR)/uint32.h
+	echo "#include <stdint.h>" >$(DJBDNS_DIR)/uint64.h
+	perl -p -e 's,unsigned int,uint32_t,g' $(DJBDNS_DIR)/uint32.h1 >>$(DJBDNS_DIR)/uint32.h
+	perl -p -e 's,unsigned long long,uint64_t,g' $(DJBDNS_DIR)/uint64.h1 >>$(DJBDNS_DIR)/uint64.h
+	cp $(DJBDNS_DIR)/iopause.h2 $(DJBDNS_DIR)/iopause.h
+	cp $(DJBDNS_DIR)/hasshsgr.h2 $(DJBDNS_DIR)/hasshsgr.h
 	touch $(DJBDNS_DIR)/.source
 
 source: $(DJBDNS_DIR)/.source
