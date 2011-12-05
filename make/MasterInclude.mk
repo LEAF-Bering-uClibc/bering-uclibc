@@ -5,7 +5,7 @@
 export ARCH:=i386
 
 #export vars only if this is not a toolchain building
-ifeq ($(GCC_SOURCE),)
+ifndef GCC_SOURCE
 #cross-compile fix
 export ac_cv_func_malloc_0_nonnull=yes
 export ac_cv_func_realloc_0_nonnull=yes
@@ -44,15 +44,36 @@ export GNU_ARCH:=i486
 # set target optimization here
 export GNU_TUNE:=pentiumpro
 
-#export vars only if this is not a toolchain building
-ifeq ($(GCC_SOURCE),)
-#cross-compile arch-dependent vars
+# Export cross-compile arch-dependent vars
+# only if this is not a toolchain building
+ifndef GCC_SOURCE
 export ac_cv_libnet_endianess=lil
 export ac_cv_c_bigendian=no
 export rpppoe_cv_pack_bitfields=rev
 export gnupg_cv_c_endian=little
 export ac_cv_sizeof_int=4
 export ac_cv_sizeof_long=4
+export ac_cv_sizeof_short=2
+endif
+
+# === sample for second arch ====
+else ifeq ($(ARCH),x86_64)
+# available kernel archs
+export KARCHS:=x86_64
+# set target subarch here
+export GNU_ARCH:=generic
+# set target optimization here
+export GNU_TUNE:=generic
+
+# Export cross-compile arch-dependent vars
+# only if this is not a toolchain building
+ifndef GCC_SOURCE
+export ac_cv_libnet_endianess=lil
+export ac_cv_c_bigendian=no
+export rpppoe_cv_pack_bitfields=rev
+export gnupg_cv_c_endian=little
+export ac_cv_sizeof_int=4
+export ac_cv_sizeof_long=8
 export ac_cv_sizeof_short=2
 endif
 
