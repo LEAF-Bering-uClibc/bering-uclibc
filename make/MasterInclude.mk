@@ -4,12 +4,15 @@
 # set arch here - temporary
 export ARCH:=i386
 
+#export vars only if this is not a toolchain building
+ifeq ($(GCC_SOURCE),)
 #cross-compile fix
 export ac_cv_func_malloc_0_nonnull=yes
 export ac_cv_func_realloc_0_nonnull=yes
 export ac_cv_va_copy=C99
 export ac_cv_sys_restartable_syscalls=yes
 export ac_cv_func_setpgrp_void=yes
+endif
 
 # where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
@@ -26,12 +29,14 @@ export BT_PACKAGE_DIR:=$(BT_BUILDROOT)/package
 export BT_TOOLS_DIR:=$(BT_BUILDROOT)/tools
 # where to find the patchtool
 export BT_PATCHTOOL:=$(BT_TOOLS_DIR)/make-patches.sh
-#  where is dpatch 
+#  where is dpatch
 export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch 
 # getdirname tool
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
 
 ########################################
+
+ifeq ($(ARCH),i386)
 # available kernel archs
 export KARCHS:=i686 i486 geode
 # set target subarch here
@@ -39,6 +44,8 @@ export GNU_ARCH:=i486
 # set target optimization here
 export GNU_TUNE:=pentiumpro
 
+#export vars only if this is not a toolchain building
+ifeq ($(GCC_SOURCE),)
 #cross-compile arch-dependent vars
 export ac_cv_libnet_endianess=lil
 export ac_cv_c_bigendian=no
@@ -47,7 +54,9 @@ export gnupg_cv_c_endian=little
 export ac_cv_sizeof_int=4
 export ac_cv_sizeof_long=4
 export ac_cv_sizeof_short=2
+endif
 
+endif
 
 #
 export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
