@@ -12,6 +12,7 @@ export ac_cv_func_realloc_0_nonnull=yes
 export ac_cv_va_copy=C99
 export ac_cv_sys_restartable_syscalls=yes
 export ac_cv_func_setpgrp_void=yes
+export ac_cv_file__dev_random=yes
 endif
 
 # where the sources are
