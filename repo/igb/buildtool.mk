@@ -14,7 +14,7 @@ $(DIR)/.source:
 source: $(DIR)/.source
 
 $(DIR)/.build:
-	(cd $(DIR)/src && for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
+	(cd $(DIR)/src && for i in $(KARCHS_PCIE); do export LOCALVERSION="-$$i" ; \
 	mkdir -p $(TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/$(MODULE_PATH) ; \
 	$(MAKE) $(EXTRA_VARS) KSRC=$(BT_LINUX_DIR)-$$i CC=$(TARGET_CC) clean && \
 	$(MAKE) $(EXTRA_VARS) KSRC=$(BT_LINUX_DIR)-$$i CC=$(TARGET_CC) && \
