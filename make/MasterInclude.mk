@@ -20,8 +20,10 @@ export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
 # where the buildstuff goes into
 export BT_BUILD_DIR=$(BT_BUILDROOT)/build
 export BT_BUILDDIR=$(BT_BUILDROOT)/build
-# we assume that we have the global root dir for buildtool as environment var
+# we assume that we have the target root dir as environment var
 export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging/$(ARCH)
+# we assume that we have the toolchain dir as environment var
+export BT_TOOLCHAIN_DIR:=$(BT_BUILDROOT)/toolchain/$(ARCH)
 # where are the linux sources
 export BT_LINUX_DIR:=$(BT_SOURCE_DIR)/linux/linux
 # where to put finished packages
