@@ -1,22 +1,5 @@
-*** Bering-2.6.35.14.config	2011-12-06 15:49:34.294205943 +0100
---- Bering-2.6.35.14.config-i486	2011-12-06 15:50:54.267868053 +0100
-***************
-*** 1,7 ****
-  #
-  # Automatically generated make config: don't edit
-  # Linux kernel version: 2.6.35.14
-! # Tue Dec  6 06:23:19 2011
-  #
-  # CONFIG_64BIT is not set
-  CONFIG_X86_32=y
---- 1,7 ----
-  #
-  # Automatically generated make config: don't edit
-  # Linux kernel version: 2.6.35.14
-! # Tue Dec  6 15:50:43 2011
-  #
-  # CONFIG_64BIT is not set
-  CONFIG_X86_32=y
+*** Bering-2.6.35.14.config	2011-12-11 14:12:01.476844908 +0200
+--- Bering-2.6.35.14.config-i486	2011-12-10 21:49:39.761441061 +0200
 ***************
 *** 14,20 ****
   CONFIG_GENERIC_CMOS_UPDATE=y
@@ -650,7 +633,7 @@
   CONFIG_FEALNX=m
   CONFIG_NATSEMI=m
 ***************
-*** 1318,1332 ****
+*** 1318,1330 ****
   CONFIG_VIA_RHINE_MMIO=y
   CONFIG_SC92031=m
   # CONFIG_NET_POCKET is not set
@@ -662,11 +645,9 @@
   CONFIG_E1000=m
 ! CONFIG_E1000E=m
   CONFIG_IP1000=m
-! CONFIG_IGB=m
+  # CONFIG_IGB is not set
   # CONFIG_IGBVF is not set
-  CONFIG_NS83820=m
-  CONFIG_HAMACHI=m
---- 1306,1320 ----
+--- 1306,1318 ----
   CONFIG_VIA_RHINE_MMIO=y
   CONFIG_SC92031=m
   # CONFIG_NET_POCKET is not set
@@ -678,10 +659,8 @@
   CONFIG_E1000=m
 ! # CONFIG_E1000E is not set
   CONFIG_IP1000=m
-! # CONFIG_IGB is not set
+  # CONFIG_IGB is not set
   # CONFIG_IGBVF is not set
-  CONFIG_NS83820=m
-  CONFIG_HAMACHI=m
 ***************
 *** 1336,1349 ****
   # CONFIG_SIS190 is not set

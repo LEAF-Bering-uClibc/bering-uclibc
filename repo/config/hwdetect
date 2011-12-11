@@ -42,14 +42,12 @@ sleep 1
 echo "Done."
 
 echo "Checking entries in /etc/modules..."
-MODLIST="`grep -v ^# /etc/modules | sed 's/ .*//g;s/_/?/g'`"
+MODLIST="`grep -v ^# /etc/modules | sed 's,\(\w\)\W.*,\1,g'`"
 MODCOUNT=0
 for i in $MODLIST; do
-	MODPATH=`find -name $i.ko`
+	MODPATH=`find -name "$i.ko" -o -name "$i.ko.gz"`
 	if [ ! -z "$MODPATH" ]; then
-		if [ -z "`modprobe $i 2>&1 | grep \"not found\"`" ]; then
-			MODCOUNT=$(($MODCOUNT+1))
-		fi
+		modprobe $i
 	fi
 done
 echo "Done."
