@@ -28,6 +28,8 @@ export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
 export ARCH:=i386
 # available kernel archs
 export KARCHS:=i686 i486 geode
+# available kernel archs with pci-express support
+export KARCHS_PCIE:=i686
 # set target subarch here
 export GNU_ARCH:=i486
 # set target optimization here
