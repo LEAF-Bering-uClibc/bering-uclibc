@@ -1,5 +1,22 @@
-*** Bering-2.6.35.14.config	2011-12-11 17:14:19.516865057 +0200
---- Bering-2.6.35.14.config-geode	2011-12-11 17:14:43.109963180 +0200
+*** Bering-2.6.35.14.config	2011-12-11 18:12:31.913246779 +0100
+--- Bering-2.6.35.14.config-geode	2011-12-16 16:47:08.485661868 +0100
+***************
+*** 1,7 ****
+  #
+  # Automatically generated make config: don't edit
+  # Linux kernel version: 2.6.35.14
+! # Sun Dec 11 17:11:04 2011
+  #
+  # CONFIG_64BIT is not set
+  CONFIG_X86_32=y
+--- 1,7 ----
+  #
+  # Automatically generated make config: don't edit
+  # Linux kernel version: 2.6.35.14
+! # Fri Dec 16 16:46:59 2011
+  #
+  # CONFIG_64BIT is not set
+  CONFIG_X86_32=y
 ***************
 *** 14,20 ****
   CONFIG_GENERIC_CMOS_UPDATE=y
@@ -554,40 +571,45 @@
   # CONFIG_IDE is not set
   
 ***************
-*** 1114,1125 ****
+*** 1098,1104 ****
+  CONFIG_SATA_AHCI=m
+  # CONFIG_SATA_AHCI_PLATFORM is not set
+  # CONFIG_SATA_INIC162X is not set
+! CONFIG_SATA_SIL24=m
+  CONFIG_ATA_SFF=y
+  
   #
-  CONFIG_ATA_PIIX=m
-  CONFIG_SATA_MV=m
+--- 1081,1087 ----
+  CONFIG_SATA_AHCI=m
+  # CONFIG_SATA_AHCI_PLATFORM is not set
+  # CONFIG_SATA_INIC162X is not set
+! # CONFIG_SATA_SIL24 is not set
+  CONFIG_ATA_SFF=y
+  
+  #
+***************
+*** 1112,1151 ****
+  #
+  # SATA SFF controllers with BMDMA
+  #
+! CONFIG_ATA_PIIX=m
+! CONFIG_SATA_MV=m
 ! CONFIG_SATA_NV=m
   # CONFIG_SATA_PROMISE is not set
-  CONFIG_SATA_SIL=m
+! CONFIG_SATA_SIL=m
 ! CONFIG_SATA_SIS=m
   # CONFIG_SATA_SVW is not set
 ! CONFIG_SATA_ULI=m
-  CONFIG_SATA_VIA=m
+! CONFIG_SATA_VIA=m
   # CONFIG_SATA_VITESSE is not set
   
---- 1097,1108 ----
   #
-  CONFIG_ATA_PIIX=m
-  CONFIG_SATA_MV=m
-! # CONFIG_SATA_NV is not set
-  # CONFIG_SATA_PROMISE is not set
-  CONFIG_SATA_SIL=m
-! # CONFIG_SATA_SIS is not set
-  # CONFIG_SATA_SVW is not set
-! # CONFIG_SATA_ULI is not set
-  CONFIG_SATA_VIA=m
-  # CONFIG_SATA_VITESSE is not set
-  
-***************
-*** 1127,1141 ****
   # PATA SFF controllers with BMDMA
   #
-  CONFIG_PATA_ALI=m
+! CONFIG_PATA_ALI=m
 ! CONFIG_PATA_AMD=m
   # CONFIG_PATA_ARTOP is not set
-  CONFIG_PATA_ATIIXP=m
+! CONFIG_PATA_ATIIXP=m
   # CONFIG_PATA_ATP867X is not set
   # CONFIG_PATA_CMD64X is not set
 ! # CONFIG_PATA_CS5520 is not set
@@ -597,13 +619,38 @@
   # CONFIG_PATA_CYPRESS is not set
   # CONFIG_PATA_EFAR is not set
   # CONFIG_PATA_HPT366 is not set
---- 1110,1124 ----
+  # CONFIG_PATA_HPT37X is not set
+  # CONFIG_PATA_HPT3X2N is not set
+  # CONFIG_PATA_HPT3X3 is not set
+! CONFIG_PATA_IT8213=m
+! CONFIG_PATA_IT821X=m
+! CONFIG_PATA_JMICRON=m
+! CONFIG_PATA_MARVELL=m
+  # CONFIG_PATA_NETCELL is not set
+  # CONFIG_PATA_NINJA32 is not set
+  # CONFIG_PATA_NS87415 is not set
+--- 1095,1134 ----
+  #
+  # SATA SFF controllers with BMDMA
+  #
+! # CONFIG_ATA_PIIX is not set
+! # CONFIG_SATA_MV is not set
+! # CONFIG_SATA_NV is not set
+  # CONFIG_SATA_PROMISE is not set
+! # CONFIG_SATA_SIL is not set
+! # CONFIG_SATA_SIS is not set
+  # CONFIG_SATA_SVW is not set
+! # CONFIG_SATA_ULI is not set
+! # CONFIG_SATA_VIA is not set
+  # CONFIG_SATA_VITESSE is not set
+  
+  #
   # PATA SFF controllers with BMDMA
   #
-  CONFIG_PATA_ALI=m
+! # CONFIG_PATA_ALI is not set
 ! # CONFIG_PATA_AMD is not set
   # CONFIG_PATA_ARTOP is not set
-  CONFIG_PATA_ATIIXP=m
+! # CONFIG_PATA_ATIIXP is not set
   # CONFIG_PATA_ATP867X is not set
   # CONFIG_PATA_CMD64X is not set
 ! CONFIG_PATA_CS5520=m
@@ -613,23 +660,64 @@
   # CONFIG_PATA_CYPRESS is not set
   # CONFIG_PATA_EFAR is not set
   # CONFIG_PATA_HPT366 is not set
+  # CONFIG_PATA_HPT37X is not set
+  # CONFIG_PATA_HPT3X2N is not set
+  # CONFIG_PATA_HPT3X3 is not set
+! # CONFIG_PATA_IT8213 is not set
+! # CONFIG_PATA_IT821X is not set
+! # CONFIG_PATA_JMICRON is not set
+! # CONFIG_PATA_MARVELL is not set
+  # CONFIG_PATA_NETCELL is not set
+  # CONFIG_PATA_NINJA32 is not set
+  # CONFIG_PATA_NS87415 is not set
 ***************
-*** 1156,1162 ****
+*** 1155,1168 ****
+  # CONFIG_PATA_PDC_OLD is not set
   # CONFIG_PATA_RADISYS is not set
   # CONFIG_PATA_RDC is not set
-  CONFIG_PATA_SC1200=m
+! CONFIG_PATA_SC1200=m
 ! CONFIG_PATA_SCH=m
   # CONFIG_PATA_SERVERWORKS is not set
   # CONFIG_PATA_SIL680 is not set
-  CONFIG_PATA_SIS=m
---- 1139,1145 ----
+! CONFIG_PATA_SIS=m
+  # CONFIG_PATA_TOSHIBA is not set
+  # CONFIG_PATA_TRIFLEX is not set
+! CONFIG_PATA_VIA=m
+  # CONFIG_PATA_WINBOND is not set
+  
+  #
+--- 1138,1151 ----
+  # CONFIG_PATA_PDC_OLD is not set
   # CONFIG_PATA_RADISYS is not set
   # CONFIG_PATA_RDC is not set
-  CONFIG_PATA_SC1200=m
+! # CONFIG_PATA_SC1200 is not set
 ! # CONFIG_PATA_SCH is not set
   # CONFIG_PATA_SERVERWORKS is not set
   # CONFIG_PATA_SIL680 is not set
-  CONFIG_PATA_SIS=m
+! # CONFIG_PATA_SIS is not set
+  # CONFIG_PATA_TOSHIBA is not set
+  # CONFIG_PATA_TRIFLEX is not set
+! # CONFIG_PATA_VIA is not set
+  # CONFIG_PATA_WINBOND is not set
+  
+  #
+***************
+*** 1181,1187 ****
+  #
+  CONFIG_PATA_ACPI=m
+  CONFIG_ATA_GENERIC=m
+! CONFIG_PATA_LEGACY=m
+  CONFIG_MD=y
+  CONFIG_BLK_DEV_MD=m
+  CONFIG_MD_LINEAR=m
+--- 1164,1170 ----
+  #
+  CONFIG_PATA_ACPI=m
+  CONFIG_ATA_GENERIC=m
+! # CONFIG_PATA_LEGACY is not set
+  CONFIG_MD=y
+  CONFIG_BLK_DEV_MD=m
+  CONFIG_MD_LINEAR=m
 ***************
 *** 1189,1195 ****
   CONFIG_MD_RAID1=m
