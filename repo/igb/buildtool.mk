@@ -1,7 +1,7 @@
 # makefile for accel-pptp
 include $(MASTERMAKEFILE)
 
-DIR:=igb-3.0.22
+DIR:=igb-3.3.6
 TARGET_DIR:=$(BT_BUILD_DIR)/igb
 MODULE_PATH=kernel/drivers/net/igb
 
