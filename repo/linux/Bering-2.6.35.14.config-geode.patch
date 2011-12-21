@@ -1,5 +1,5 @@
-*** Bering-2.6.35.14.config	2011-12-11 18:12:31.913246779 +0100
---- Bering-2.6.35.14.config-geode	2011-12-17 14:53:56.754546279 +0100
+*** Bering-2.6.35.14.config	2011-12-21 20:38:24.517642307 +0200
+--- Bering-2.6.35.14.config-geode	2011-12-21 20:37:38.330422236 +0200
 ***************
 *** 1,7 ****
   #
@@ -1067,7 +1067,36 @@
   # CONFIG_SOUND_PRIME is not set
   CONFIG_AC97_BUS=m
 ***************
-*** 2563,2569 ****
+*** 2513,2530 ****
+  #
+  # DMA Devices
+  #
+! CONFIG_ASYNC_TX_DISABLE_CHANNEL_SWITCH=y
+! CONFIG_INTEL_IOATDMA=m
+  # CONFIG_TIMB_DMA is not set
+- CONFIG_DMA_ENGINE=y
+- 
+- #
+- # DMA Clients
+- #
+- CONFIG_NET_DMA=y
+- CONFIG_ASYNC_TX_DMA=y
+- # CONFIG_DMATEST is not set
+- CONFIG_DCA=m
+  # CONFIG_AUXDISPLAY is not set
+  CONFIG_UIO=m
+  # CONFIG_UIO_CIF is not set
+--- 2473,2480 ----
+  #
+  # DMA Devices
+  #
+! # CONFIG_INTEL_IOATDMA is not set
+  # CONFIG_TIMB_DMA is not set
+  # CONFIG_AUXDISPLAY is not set
+  CONFIG_UIO=m
+  # CONFIG_UIO_CIF is not set
+***************
+*** 2573,2579 ****
   # CONFIG_JFS_FS is not set
   CONFIG_FS_POSIX_ACL=y
   # CONFIG_XFS_FS is not set
@@ -1077,7 +1106,7 @@
   # CONFIG_NILFS2_FS is not set
 --- 2523,2528 ----
 ***************
-*** 2727,2733 ****
+*** 2737,2743 ****
   # CONFIG_SCHEDSTATS is not set
   # CONFIG_TIMER_STATS is not set
   # CONFIG_DEBUG_OBJECTS is not set
@@ -1087,7 +1116,7 @@
   # CONFIG_RT_MUTEX_TESTER is not set
 --- 2686,2691 ----
 ***************
-*** 2758,2764 ****
+*** 2768,2774 ****
   # CONFIG_BACKTRACE_SELF_TEST is not set
   # CONFIG_DEBUG_BLOCK_EXT_DEVT is not set
   # CONFIG_DEBUG_FORCE_WEAK_PER_CPU is not set
@@ -1097,7 +1126,7 @@
   # CONFIG_SYSCTL_SYSCALL_CHECK is not set
 --- 2716,2721 ----
 ***************
-*** 2782,2795 ****
+*** 2792,2805 ****
   CONFIG_HAVE_ARCH_KGDB=y
   # CONFIG_KGDB is not set
   CONFIG_HAVE_ARCH_KMEMCHECK=y
@@ -1114,7 +1143,18 @@
   CONFIG_DEBUG_RODATA_TEST=y
 --- 2739,2750 ----
 ***************
-*** 2850,2856 ****
+*** 2838,2845 ****
+  CONFIG_ASYNC_XOR=m
+  CONFIG_ASYNC_PQ=m
+  CONFIG_ASYNC_RAID6_RECOV=m
+- CONFIG_ASYNC_TX_DISABLE_PQ_VAL_DMA=y
+- CONFIG_ASYNC_TX_DISABLE_XOR_VAL_DMA=y
+  CONFIG_CRYPTO=y
+  
+  #
+--- 2783,2788 ----
+***************
+*** 2862,2868 ****
   CONFIG_CRYPTO_MANAGER_TESTS=y
   CONFIG_CRYPTO_GF128MUL=m
   CONFIG_CRYPTO_NULL=m
@@ -1124,7 +1164,7 @@
   CONFIG_CRYPTO_AUTHENC=m
 --- 2805,2810 ----
 ***************
-*** 2936,2942 ****
+*** 2948,2954 ****
   CONFIG_CRYPTO_ANSI_CPRNG=m
   CONFIG_CRYPTO_HW=y
   # CONFIG_CRYPTO_DEV_PADLOCK is not set
