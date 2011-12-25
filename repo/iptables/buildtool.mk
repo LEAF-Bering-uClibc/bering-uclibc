@@ -46,6 +46,7 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
+	mkdir -p $(IPTABLES_TARGET_DIR)/usr/lib
 	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) $(BUILD_TARGETS)
 	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) DESTDIR=$(IPTABLES_TARGET_DIR) install
 	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/usr/include
@@ -55,7 +56,8 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/lib\'," $(IPTABLES_TARGET_DIR)/lib/*.la
-	rm -rf $(IPTABLES_TARGET_DIR)/lib/pkgconfig $(IPTABLES_TARGET_DIR)/share
+	mv $(IPTABLES_TARGET_DIR)/lib/pkgconfig $(IPTABLES_TARGET_DIR)/usr/lib
+	rm -rf $(IPTABLES_TARGET_DIR)/share
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/iptables
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/ip6tables
 	cp -aL iptables-config $(IPTABLES_TARGET_DIR)/etc/iptables/iptables-config
