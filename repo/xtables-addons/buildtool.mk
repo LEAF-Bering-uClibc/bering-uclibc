@@ -39,7 +39,7 @@ $(DIR)/.build: $(DIR)/.source
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/lib/xtables/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/sbin/*
-	rm -rf $(TARGET_DIR)/usr/share
+	rm -rf $(TARGET_DIR)/share
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build
 
