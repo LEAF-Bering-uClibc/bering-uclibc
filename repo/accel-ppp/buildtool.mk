@@ -1,9 +1,8 @@
 # makefile for accel-pptp
 include $(MASTERMAKEFILE)
 
-ACCEL_DIR:=accel-ppp-1.4.0
+ACCEL_DIR:=accel-ppp
 ACCEL_TARGET_DIR:=$(BT_BUILD_DIR)/accel-ppp
-BT_KERNEL_SOURCE:=$(BT_SOURCE_DIR)/linux/linux
 
 export PPPD_VER=2.4.5
 
