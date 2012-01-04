@@ -37,9 +37,8 @@ $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.configured
 
 	$(MAKE) -C $(ACCEL_DIR)
 	$(MAKE) -C $(ACCEL_DIR) install DESTDIR=$(ACCEL_TARGET_DIR)
-	exit 1
 	cp -aL accel-ppp.conf $(ACCEL_TARGET_DIR)/etc
-	cp -aL accel-ppp.init $(ACCEL_TARGET_DIR)/etc/init.d
+	cp -aL accel-ppp.init $(ACCEL_TARGET_DIR)/etc/init.d/accel-ppp
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ACCEL_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ACCEL_TARGET_DIR)/usr/lib/accel-ppp/*
 	rm -rf $(ACCEL_TARGET_DIR)/usr/share/man
