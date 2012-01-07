@@ -8,7 +8,7 @@ export PPPD_VER=2.4.5
 
 $(ACCEL_DIR)/.source:
 	bzcat $(ACCEL_SOURCE) | tar -xvf -
-	cp toolchain-cross.cmake $(ACCEL_DIR)
+#	cp toolchain-cross.cmake $(ACCEL_DIR)
 	perl -i -p -e 's,#include\s*\<printf.h\>,,' $(ACCEL_DIR)/accel-pppd/ctrl/pppoe/pppoe.c
 	touch $@
 
@@ -28,6 +28,7 @@ $(ACCEL_DIR)/.configured: $(ACCEL_DIR)/.source
 	    -DSHAPER=TRUE \
 	    -DRADIUS=TRUE \
 	    -DNETSNMP=TRUE \
+	    -DLOG_FILE=FALSE \
 	    -DCMAKE_INSTALL_PREFIX=/usr \
 	    .)
 	touch $@
