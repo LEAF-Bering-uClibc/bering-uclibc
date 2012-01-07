@@ -50,11 +50,6 @@ $(PPP_DIR)/.build: $(PPP_DIR)/.configured
 	cp -a $(PPP_DIR)/etc.ppp/chap-secrets $(PPP_TARGET_DIR)/etc/ppp
 	cp -aL options $(PPP_TARGET_DIR)/etc/ppp
 	cp -aL pap-secrets $(PPP_TARGET_DIR)/etc/ppp
-	cp -aL ip-up $(PPP_TARGET_DIR)/etc/ppp
-	cp -aL ip-mod $(PPP_TARGET_DIR)/etc/ppp
-	cp -aL ip-down $(PPP_TARGET_DIR)/etc/ppp
-	cp -aL ipv6-up $(PPP_TARGET_DIR)/etc/ppp
-	cp -aL ipv6-down $(PPP_TARGET_DIR)/etc/ppp
 	cp -aL provider.chat $(PPP_TARGET_DIR)/etc/chatscripts/provider
 	cp -aL provider.peer $(PPP_TARGET_DIR)/etc/ppp/peers/provider
 	cp -aL dsl-provider.atm $(PPP_TARGET_DIR)/etc/ppp/peers/
