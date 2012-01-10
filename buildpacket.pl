@@ -26,7 +26,7 @@ use Carp;
 
 # DEFINITION OF GLOBALS
 # uclibc Version
-my $version = "0.9.32";
+my $version = "0.9.32.1";
 # kernel Version
 my $kver = qx(cat source/linux/linux*/.config | awk '/version:.*2\.6/ {print \$5}' | head -n 1);
 $kver =~ s/\n//;
