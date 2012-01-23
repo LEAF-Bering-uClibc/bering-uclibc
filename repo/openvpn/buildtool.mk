@@ -79,6 +79,7 @@ $(OPENVPN_DIR)/.build: $(OPENVPN_DIR)/.source
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/pkitool $(OPENVPN_TARGET_DIR)/usr/sbin/ 
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/sign-req $(OPENVPN_TARGET_DIR)/usr/sbin/ 
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/build-dh $(OPENVPN_TARGET_DIR)/usr/sbin/ 
+		cp $(OPENVPN_DIR)/easy-rsa/2.0/build-ca $(OPENVPN_TARGET_DIR)/usr/sbin/ 
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/revoke-full $(OPENVPN_TARGET_DIR)/usr/sbin/ 
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/vars $(OPENVPN_TARGET_DIR)/usr/sbin/ 
 		
