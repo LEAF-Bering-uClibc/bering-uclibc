@@ -13,6 +13,7 @@ source: $(QUAGGA_DIR)/.source
 $(QUAGGA_DIR)/.configured: $(QUAGGA_DIR)/.source
 	(cd $(QUAGGA_DIR) ; ./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--sysconfdir=/etc/zebra \
 	--disable-doc \
 	--disable-ospfapi \

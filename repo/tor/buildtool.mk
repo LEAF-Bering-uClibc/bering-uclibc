@@ -13,6 +13,7 @@ source: $(TOR_DIR)/.source
 $(TOR_DIR)/.configured: $(TOR_DIR)/.source
 	(cd $(TOR_DIR) ;  ./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr \
 	--sysconfdir=/etc)
 	touch $(TOR_DIR)/.configured

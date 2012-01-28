@@ -15,7 +15,7 @@ STRACE_TARGET_DIR:=$(BT_BUILD_DIR)/strace
 
 # Option settings for 'configure':
 #   Move default install from /usr/local to /usr
-CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME)
+CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
 $(STRACE_DIR)/.source:
 	bzcat $(STRACE_SOURCE) | tar -xvf -

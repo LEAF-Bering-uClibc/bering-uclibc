@@ -16,9 +16,9 @@ source: $(PPTP_DIR)/.source
 
 $(PPTP_DIR)/.configured: $(PPTP_DIR)/.source
 	(cd $(PPTP_DIR)/pptpd-1.3.3; libtoolize && autoreconf && KDIR=$(BT_LINUX_DIR)$(FIRSTKARCH) \
-	sh ./configure --prefix=/usr --enable-bcrelay --with-libwrap --host=$(GNU_TARGET_NAME))
+	sh ./configure --prefix=/usr --enable-bcrelay --with-libwrap --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	(cd $(PPTP_DIR)/pppd_plugin; libtoolize && autoreconf && KDIR=$(BT_LINUX_DIR)$(FIRSTKARCH) \
-	sh ./configure --prefix=/usr --host=$(GNU_TARGET_NAME))
+	sh ./configure --prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	touch $(PPTP_DIR)/.configured
 
 $(PPTP_DIR)/.build: $(PPTP_DIR)/.configured

@@ -16,6 +16,7 @@ source:
 $(LIBGCRYPT_DIR)/Makefile: $(LIBGCRYPT_DIR)/configure
 	(cd $(LIBGCRYPT_DIR); ./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			--disable-asm \
 			--with-gpg-error-prefix=$(BT_STAGING_DIR)/usr \

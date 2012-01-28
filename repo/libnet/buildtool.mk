@@ -17,6 +17,7 @@ $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
 	(cd $(LIBNET_DIR); autoconf && \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr );
 
 build: $(LIBNET_DIR)/Makefile

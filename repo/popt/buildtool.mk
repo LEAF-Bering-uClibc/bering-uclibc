@@ -21,6 +21,7 @@ $(LIBPOPT_DIR)/.configured: $(LIBPOPT_DIR)/.source
 	(cd $(LIBPOPT_DIR); \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			--disable-nls \
 			--disable-rpath );

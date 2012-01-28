@@ -18,6 +18,7 @@ CURL_TARGET_DIR:=$(BT_BUILD_DIR)/curl
 #   Disable inclusion of full man page text
 #   Disable use of OpenLDAP client library, if present
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-sysroot=$(BT_STAGING_DIR) \
 	--prefix=/usr --with-libssh2 --disable-manual --disable-ldap
 

@@ -11,6 +11,7 @@ SNORT_TARGET_DIR:=$(BT_BUILD_DIR)/snort
 
 
 CONFFLAGS:= --prefix=/usr --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-libpcap_includes=$(BT_STAGING_DIR)/usr/include/ \
 	--with-libpcap_libraries=$(BT_STAGING_DIR)/usr/lib/ \
 	--with-libpcre_includes=$(BT_STAGING_DIR)/usr/include/ \

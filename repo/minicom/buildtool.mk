@@ -16,6 +16,7 @@ $(MINICOM_DIR)/.configured: $(MINICOM_DIR)/.source
 	(cd $(MINICOM_DIR) ; \
 		./configure \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--prefix=/usr \
 		--disable-nls \
 		--disable-rpath \

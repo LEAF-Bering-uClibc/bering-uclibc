@@ -22,6 +22,7 @@ $(DIR)/.configured: $(DIR)/.source
 	--with-kernel-support \
 	--with-sysroot=$(BT_STAGING_DIR) \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	)
 	touch $(DIR)/.configured
 

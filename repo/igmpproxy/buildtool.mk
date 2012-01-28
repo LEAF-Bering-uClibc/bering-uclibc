@@ -14,6 +14,7 @@ $(IGMPPROXY_DIR)/.configured: $(IGMPPROXY_DIR)/.source
 	(cd $(IGMPPROXY_DIR) ; \
 	./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr )
 	touch $(IGMPPROXY_DIR)/.configured
 

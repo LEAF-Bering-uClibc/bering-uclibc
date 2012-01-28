@@ -19,7 +19,8 @@ $(DIR)/.build: $(DIR)/.source
 	(cd $(DIR); rm -rf config.cache; \
 		libtoolize -if && aclocal -I m4 && autoheader && \
 		automake --add-missing --copy --foreign && autoconf && \
-		./configure --prefix=/usr --host=$(GNU_TARGET_NAME) );
+		./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME));
 #	cat defs.patch|patch -p1 -d $(DIR)
 	make $(MAKEOPTS) -C $(DIR)
 	make $(MAKEOPTS) DESTDIR=$(TARGET_DIR) -C $(DIR) install

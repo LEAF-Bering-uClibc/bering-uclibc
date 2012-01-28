@@ -17,14 +17,18 @@ $(DIR)/.source:
 	touch $(DIR)/.source
 
 $(DIR2)/Makefile: $(DIR2)
-	(cd $(DIR2) ; ./configure --host=$(GNU_TARGET_NAME))
+	(cd $(DIR2) ; ./configure \
+	--host=$(GNU_TARGET_NAME)\
+	--build=$(GNU_BUILD_NAME))
 
 $(DIR2)/.build: $(DIR2)/Makefile
 	$(MAKE) -C $(DIR2)
 	touch $(DIR2)/.build
 
 $(DIR)/Makefile: $(DIR)/.source $(DIR2)/.build
-	(cd $(DIR) ; ./configure --with-libol=../$(DIR2) --prefix=/ --host=$(GNU_TARGET_NAME))
+	(cd $(DIR) ; ./configure --with-libol=../$(DIR2) --prefix=/ \
+	--host=$(GNU_TARGET_NAME)\
+	--build=$(GNU_BUILD_NAME))
 
 $(DIR)/.build: $(DIR)/Makefile
 	mkdir -p $(TARGET_DIR)/sbin

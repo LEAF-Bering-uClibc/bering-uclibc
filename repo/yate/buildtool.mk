@@ -21,6 +21,7 @@ $(YATE_DIR)/.configured: $(YATE_DIR)/.source
 	(cd $(YATE_DIR) ;  autoreconf -i -f && \
 			./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/ \
 			--disable-dahdi \
 			--disable-zaptel \

@@ -17,6 +17,7 @@ $(SNARF_DIR)/.configured: $(SNARF_DIR)/.source
 	rm -f aclocal.m4 Makefile.in; autoreconf -i -f && \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-guess-winsize)
 	touch $(SNARF_DIR)/.configured
 

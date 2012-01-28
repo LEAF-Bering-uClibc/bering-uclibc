@@ -14,7 +14,7 @@ LIBNFSIDMAP_TARGET_DIR:=$(BT_BUILD_DIR)/libnfsidmap
 
 # Option settings for 'configure':
 #   Move default install from /usr/local to /usr
-CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME) --disable-ldap
+CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME) --disable-ldap --build=$(GNU_BUILD_NAME)
 
 $(LIBNFSIDMAP_DIR)/.source:
 	zcat $(LIBNFSIDMAP_SOURCE) | tar -xvf -

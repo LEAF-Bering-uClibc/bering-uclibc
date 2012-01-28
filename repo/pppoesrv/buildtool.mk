@@ -15,7 +15,9 @@ source: $(PPPOESRV_DIR)/.source
 $(PPPOESRV_DIR)/.configured: $(PPPOESRV_DIR)/.source
 	(cd $(PPPOESRV_DIR)/src ; autoconf -f && \
 		PPPD=/usr/sbin/pppd \
-		./configure --disable-plugin --disable-debugging --host=$(GNU_TARGET_NAME))
+		./configure --disable-plugin --disable-debugging \
+		--host=$(GNU_TARGET_NAME)\
+		--build=$(GNU_BUILD_NAME))
 	touch $(PPPOESRV_DIR)/.configured
 
 $(PPPOESRV_DIR)/.build: $(PPPOESRV_DIR)/.configured

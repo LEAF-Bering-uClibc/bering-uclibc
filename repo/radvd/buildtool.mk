@@ -13,6 +13,7 @@ source: $(RADVD_DIR)/.source
 $(RADVD_DIR)/.configured: $(RADVD_DIR)/.source
 	(cd $(RADVD_DIR) ; ./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man )
 	touch $(RADVD_DIR)/.configured
 

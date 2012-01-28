@@ -12,7 +12,9 @@ source: $(ETHTOOL_DIR)/.source
 
 $(ETHTOOL_DIR)/.configured: $(ETHTOOL_DIR)/.source
 	(cd $(ETHTOOL_DIR) ; ./configure \
-	--host=$(GNU_TARGET_NAME) --prefix=/usr)
+	--build=$(GNU_BUILD_NAME) \
+	--host=$(GNU_TARGET_NAME) \
+	--prefix=/usr)
 	touch $(ETHTOOL_DIR)/.configured
 
 $(ETHTOOL_DIR)/.build: $(ETHTOOL_DIR)/.configured

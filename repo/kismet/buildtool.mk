@@ -13,7 +13,7 @@ KISMET_TARGET_DIR:=$(BT_BUILD_DIR)/kismet
 #   Move default install from /usr/local to /usr
 #   But keep config files in /etc (rather than /usr/etc)
 #   And keep state files in /var (rather than /usr/var)
-CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var --host=$(GNU_TARGET_NAME)
+CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
 # Next line is required to locate the .pc file for libnl
 export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig

@@ -25,8 +25,8 @@ $(DIR)/.build: $(DIR)/.source
 	(cd $(DIR) && for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
 	export KERNEL_DIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) ; \
 	export KBUILD_OUTPUT=$(BT_LINUX_DIR)-$$i ; \
-	./configure --host=$(GNU_TARGET_NAME) --prefix=/ \
-	--with-kbuild=$$KERNEL_DIR --with-xtlibdir=/lib/xtables &&\
+	./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) \
+	--prefix=/ --with-kbuild=$$KERNEL_DIR --with-xtlibdir=/lib/xtables &&\
 	$(MAKE) -C extensions clean && \
 	$(MAKE) $(MAKEOPTS) -C extensions modules && \
 	find extensions -name '*.ko' -exec $(BT_STRIP) $(BT_STRIP_LIBOPTS) {} + && \

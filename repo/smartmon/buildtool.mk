@@ -14,6 +14,7 @@ $(SMARTMON_DIR)/.configured: $(SMARTMON_DIR)/.source
 	(cd $(SMARTMON_DIR) ; ./configure \
 		--prefix=/usr \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--sysconfdir=/etc \
 		--with-initscriptdir=/etc/init.d)
 	touch $(SMARTMON_DIR)/.configured

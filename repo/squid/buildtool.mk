@@ -20,6 +20,7 @@ $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
 	./configure \
 	--sysconfdir=/etc/squid --prefix= \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--enable-internal-dns \
 	--exec-prefix=/usr --libexecdir=/usr/bin \
 	--enable-snmp \

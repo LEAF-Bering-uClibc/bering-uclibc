@@ -13,7 +13,7 @@ $(MAWK_DIR)/.source:
 source: $(MAWK_DIR)/.source
 
 $(MAWK_DIR)/.configured: $(MAWK_DIR)/.source
-	(cd $(MAWK_DIR) ; CC=$(TARGET_CC) ./configure --host=$(GNU_TARGET_NAME))
+	(cd $(MAWK_DIR) ; CC=$(TARGET_CC) ./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	touch $(MAWK_DIR)/.configured
 
 $(MAWK_DIR)/.build: $(MAWK_DIR)/.configured

@@ -24,6 +24,7 @@ RADIUS_TARGET_DIR:=$(BT_BUILD_DIR)/radius
 
 CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-rlm_acctlog --with-rlm_acct_unique --with-rlm_always \
 	--with-rlm_attr_filter --with-rlm_attr_rewrite --with-rlm_chap \
 	--with-rlm_checkval --with-rlm_copy_packet --with-rlm_detail \

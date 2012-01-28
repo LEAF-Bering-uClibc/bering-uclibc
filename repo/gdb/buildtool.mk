@@ -17,6 +17,7 @@ $(DIR)/.source:
 $(DIR)/.configured: $(DIR)/.source
 	(cd $(DIR); ./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			);
 	touch $(DIR)/.configured

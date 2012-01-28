@@ -17,6 +17,7 @@ export LDFLAGS += $(EXTCCLDFLAGS)
 # Option settings for 'configure':
 #   Move installed files out from under /usr/local/
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr \
 	--with-libssl \
 	--with-libssl-prefix=$(BT_STAGING_DIR)/usr

@@ -27,6 +27,7 @@ source: $(SNMP_DIR)/.source
 $(SNMP_DIR)/.configured: $(SNMP_DIR)/.source
 	(cd $(SNMP_DIR) ; \
 	 ./configure --prefix=/usr --sysconfdir=/etc --host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--enable-fast-install \
 		--with-install-prefix="$(SNMP_TARGET_DIR)" \
 		--with-cflags="$(CFLAGS)" \

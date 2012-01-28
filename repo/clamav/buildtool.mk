@@ -16,6 +16,7 @@ $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
 	(cd $(CLAMAV_DIR) ; \
 	./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--sysconfdir=/etc/clamav --prefix=/ \
 	--includedir=/usr/include \
 	--exec-prefix=/usr --libexecdir=/usr/bin \

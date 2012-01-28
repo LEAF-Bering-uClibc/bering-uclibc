@@ -15,7 +15,7 @@ $(FLEX_DIR)/.source:
 
 $(FLEX_DIR)/.configured: $(FLEX_DIR)/.source
 	(cd $(FLEX_DIR); \
-		./configure --verbose --prefix=/usr --host=$(GNU_TARGET_NAME));
+		./configure --verbose --prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME));
 	touch $(FLEX_DIR)/.configured
 
 $(FLEX_DIR)/.build: $(FLEX_DIR)/.configured

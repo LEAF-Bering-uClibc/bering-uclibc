@@ -100,6 +100,7 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	mkdir -p $(BINUTILS_BUILD_DIR2)
 	(cd $(BINUTILS_BUILD_DIR2) && CFLAGS="$(BT_CFLAGS)" LDFLAGS="$(BT_LDFLAGS)" \
 	 $(BINUTILS_DIR)/configure --host=$(GNU_TARGET_NAME) --prefix=/usr \
+	  --build=$(GNU_BUILD_NAME) \
 	  --with-build-sysroot=$(BT_STAGING_DIR) && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include configure-host && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \

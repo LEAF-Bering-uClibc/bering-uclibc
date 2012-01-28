@@ -19,7 +19,9 @@ $(PWCRYPT_DIR)/.source:
 
 $(PWCRYPT_DIR)/.configured: $(PWCRYPT_DIR)/.source
 	(cd $(PWCRYPT_DIR); CC=$(TARGET_CC) LD=$(TARGET_LD) \
-		./configure --prefix=/usr --host=$(GNU_TARGET_NAME) )
+		./configure --prefix=/usr \
+		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) )
 	touch $(PWCRYPT_DIR)/.configured
 
 $(PWCRYPT_DIR)/.build: $(PWCRYPT_DIR)/.configured

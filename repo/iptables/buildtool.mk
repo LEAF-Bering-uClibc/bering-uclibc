@@ -35,6 +35,7 @@ $(IPT_NF_DIR)/.source:
 
 $(IPTABLES_DIR)/Makefile: $(IPTABLES_DIR)/.source
 	(cd $(IPTABLES_DIR); ./configure --prefix=/ --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--libexecdir=/lib --includedir=/usr/include \
 	--with-kernel=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) --enable-devel )
 

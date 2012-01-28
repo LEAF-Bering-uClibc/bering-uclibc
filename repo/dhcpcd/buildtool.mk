@@ -13,7 +13,7 @@ endif
 DHCPCD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpcd
 
 # Option settings for 'configure':
-CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/
+CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --build=$(GNU_BUILD_NAME)
 
 $(DHCPCD_DIR)/.source:
 	bzcat $(DHCPCD_SOURCE) | tar -xvf -

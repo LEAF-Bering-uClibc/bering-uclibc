@@ -27,6 +27,7 @@ $(PCRE_DIR)/.configured: $(PCRE_DIR)/.source
 	(cd $(PCRE_DIR) ; \
 	./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr )
 	touch $(PCRE_DIR)/.configured
 

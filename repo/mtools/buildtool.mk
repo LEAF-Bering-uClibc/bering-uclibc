@@ -22,6 +22,7 @@ $(MTOOLS_DIR)/.configured: $(MTOOLS_DIR)/.source
 		--prefix=/usr \
 		--sysconfdir=/etc \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--disable-floppyd \
 		--disable-debug \
 		--disable-new-vold \

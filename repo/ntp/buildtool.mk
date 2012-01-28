@@ -14,6 +14,7 @@ source: $(NTP_DIR)/.source
 $(NTP_DIR)/.configured: $(NTP_DIR)/.source
 	(cd $(NTP_DIR) ; ./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--without-openssl-libdir \
 	--without-openssl-incdir \
 	--without-crypto \
@@ -26,10 +27,6 @@ $(NTP_DIR)/.configured: $(NTP_DIR)/.source
 	--sysconfdir=/var/lib/ntp \
 	--disable-errorcache );
 	touch $(NTP_DIR)/.configured
-
-#	--host=$(GNU_HOST_NAME) \
-#	--build=$(GNU_HOST_NAME) \
-
 
 $(NTP_DIR)/.build: $(NTP_DIR)/.configured
 	mkdir -p $(NTP_TARGET_DIR)

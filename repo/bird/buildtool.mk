@@ -16,6 +16,7 @@ $(DIR)/.configured: $(DIR)/.source
 	--sysconfdir=/etc/bird \
 	--localstatedir=/var \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-iproutedir="$(BT_STAGING_DIR)/etc/iproute2" \
 	--enable-ipv6)
 	touch $(DIR)/.configured

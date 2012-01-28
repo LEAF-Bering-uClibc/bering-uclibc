@@ -10,6 +10,7 @@ $(SETSERIAL_DIR)/.source:
 $(SETSERIAL_DIR)/.configured: $(SETSERIAL_DIR)/.source
 	cd $(SETSERIAL_DIR); CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--prefix=/usr
 	touch $(SETSERIAL_DIR)/.configured
 

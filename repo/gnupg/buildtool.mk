@@ -14,6 +14,7 @@ source: .source
 $(GNUPG_DIR)/.configured: .source
 	(cd $(GNUPG_DIR) ; ./configure --without-readline \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--disable-gnupg-iconv --disable-asm --disable-card-support --disable-nls )
 	perl -i -p -e 's,checks\s*=\s*checks,,' $(GNUPG_DIR)/Makefile
 	touch $(GNUPG_DIR)/.configured

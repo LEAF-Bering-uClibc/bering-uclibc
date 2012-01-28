@@ -23,6 +23,7 @@ $(LIBUPNP_DIR)/.configured: $(LIBUPNP_DIR)/.source
 	(cd $(LIBUPNP_DIR); ./configure \
 	--prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--disable-shared );
 	touch $(LIBUPNP_DIR)/.configured
 

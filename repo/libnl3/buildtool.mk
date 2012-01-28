@@ -13,6 +13,7 @@ source: $(LIBNL_DIR)/.source
 $(LIBNL_DIR)/.configured: $(LIBNL_DIR)/.source
 	(cd $(LIBNL_DIR) ; ./configure \
 	    --host=$(GNU_TARGET_NAME) \
+	    --build=$(GNU_BUILD_NAME) \
 	    --prefix=/usr \
 	    --disable-cli \
 	    )

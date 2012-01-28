@@ -15,6 +15,7 @@ source: $(TINYPROXY_DIR)/.source
 $(TINYPROXY_DIR)/.configured: $(TINYPROXY_DIR)/.source
 	(cd $(TINYPROXY_DIR) ; ./autogen.sh \
 	--prefix=/usr --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--sysconfdir=/etc/tinyproxy --enable-xtinyproxy \
 	--bindir=/usr/sbin --enable-transparent-proxy )
 	touch $(TINYPROXY_DIR)/.configured

@@ -14,6 +14,7 @@ source:
 $(LIBECAP_DIR)/Makefile: $(LIBECAP_DIR)/configure
 	(cd $(LIBECAP_DIR); ./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr );
 
 build: $(LIBECAP_DIR)/Makefile

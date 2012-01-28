@@ -14,6 +14,7 @@ source: $(SER2NET_DIR)/.source
 $(SER2NET_DIR)/.configured: $(SER2NET_DIR)/.source
 	(cd $(SER2NET_DIR) ; ./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr --with-tcp-wrappers )
 	touch $(SER2NET_DIR)/.configured
 

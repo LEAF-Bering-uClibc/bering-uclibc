@@ -18,6 +18,7 @@ $(OPENSSH_DIR)/.configured: $(OPENSSH_DIR)/.source
 	(cd $(OPENSSH_DIR); autoreconf -i -f && \
 		./configure \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--prefix=/usr \
 		--disable-lastlog \
 		--disable-libutil \

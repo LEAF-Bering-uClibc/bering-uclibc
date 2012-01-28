@@ -22,6 +22,7 @@ $(LIBPCAP_DIR)/.configured: $(LIBPCAP_DIR)/.source
 	(cd $(LIBPCAP_DIR); \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			--enable-ipv6 \
 			--with-pcap=linux \

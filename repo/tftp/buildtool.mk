@@ -12,7 +12,7 @@ source: $(TFTP_DIR)/.source
 
 $(TFTP_DIR)/.configured: $(TFTP_DIR)/.source
 	(cd $(TFTP_DIR) ; \
-		./configure --prefix=/usr --without-readline --host=$(GNU_TARGET_NAME) )
+		./configure --prefix=/usr --without-readline --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	touch $(TFTP_DIR)/.configured
 
 $(TFTP_DIR)/.build: $(TFTP_DIR)/.configured

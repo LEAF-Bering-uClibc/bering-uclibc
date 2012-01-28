@@ -17,6 +17,7 @@ OPENLDAP_TARGET_DIR:=$(BT_BUILD_DIR)/openldap
 #  Do not build the Standalone LDAP Daemon, just the libraries
 #  Explicitly disable Cyrus SASL support
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr --disable-slapd --without-cyrus-sasl --with-tls=openssl \
 	--with-threads --with-mp=gmp --with-yielding-select=yes
 export CC=$(TARGET_CC)

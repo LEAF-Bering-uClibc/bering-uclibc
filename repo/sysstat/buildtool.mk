@@ -15,7 +15,7 @@ TARGET_DIR:=$(BT_BUILD_DIR)/sysstat
 
 # Option settings for 'configure':
 #   Move default install from /usr/local to /usr
-CONFOPTS:=--prefix=/usr --disable-nls --disable-documentation --host=$(GNU_TARGET_NAME)
+CONFOPTS:=--prefix=/usr --disable-nls --disable-documentation --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 export CFLAGS += $(LDFLAGS)
 
 $(DIR)/.source:

@@ -17,6 +17,7 @@ NFSUTILS_TARGET_DIR:=$(BT_BUILD_DIR)/nfs-utils
 #   Disable uuid to avoid the need for libblkid
 #   Disable gss to avoid the need for libgssglue etc.
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--disable-tirpc --disable-uuid --disable-gss
 
 $(NFSUTILS_DIR)/.source:

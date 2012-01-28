@@ -22,7 +22,8 @@ source: $(LIBEVENT_DIR)/.source
 $(LIBEVENT_DIR)/.configured: $(LIBEVENT_DIR)/.source
 	(cd $(LIBEVENT_DIR) ; ./configure \
 	--prefix=/usr \
-	--host=$(GNU_TARGET_NAME) )
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME))
 	touch $(LIBEVENT_DIR)/.configured
 
 $(LIBEVENT_DIR)/.build: $(LIBEVENT_DIR)/.configured

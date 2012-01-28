@@ -39,6 +39,7 @@ $(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
 	(cd $(SAMBA_DIR)/source ; $(DEFS) \
 		./configure \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--prefix=/usr \
 		--sysconfdir=/etc \
 		--with-privatedir=/etc/samba \

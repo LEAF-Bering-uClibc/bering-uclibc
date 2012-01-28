@@ -24,6 +24,7 @@ $(NUT_DIR)/Makefile: .source
 	KERNEL_INCLUDE=$(BT_LINUX_DIR)-$(BT_KERNEL_VERSION)/include \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--sysconfdir=/etc/nut \
 	--localstatedir=/var/run \
 	--with-usb \

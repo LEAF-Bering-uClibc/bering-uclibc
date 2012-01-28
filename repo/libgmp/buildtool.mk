@@ -15,7 +15,7 @@ $(LIBGMP_DIR)/.source:
 
 
 $(LIBGMP_DIR)/.configured: $(LIBGMP_DIR)/.source
-	(cd $(LIBGMP_DIR); ./configure --host=$(GNU_TARGET_NAME) --prefix=/usr);
+	(cd $(LIBGMP_DIR); ./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) --prefix=/usr);
 	touch $(LIBGMP_DIR)/.configured
 
 source: $(LIBGMP_DIR)/.source

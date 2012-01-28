@@ -11,6 +11,7 @@ $(DIR)/.source:
 $(DIR)/Makefile:
 	(cd $(DIR) ; ./configure \
 	--prefix=/usr \
+	--build=$(GNU_BUILD_NAME) \
 	--host=$(GNU_TARGET_NAME) )
 
 source: $(DIR)/.source

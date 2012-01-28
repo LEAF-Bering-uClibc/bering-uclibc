@@ -19,6 +19,7 @@ $(LIBDNET_DIR)/Makefile: $(LIBDNET_DIR)/configure
 	(cd $(LIBDNET_DIR); \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			--without-check );
 

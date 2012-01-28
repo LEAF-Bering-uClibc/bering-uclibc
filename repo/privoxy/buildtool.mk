@@ -15,6 +15,7 @@ $(PRIVOXY_DIR)/.configured: $(PRIVOXY_DIR)/.source
 	(cd $(PRIVOXY_DIR) ; autoreconf -i -f; \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--disable-dynamic-pcre );
 	touch $(PRIVOXY_DIR)/.configured
 

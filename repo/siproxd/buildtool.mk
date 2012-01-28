@@ -18,6 +18,7 @@ $(SIPROXD_DIR)/.source:
 $(SIPROXD_DIR)/.configured: $(SIPROXD_DIR)/.source
 	(cd $(SIPROXD_DIR); rm -f Makefile.in aclocal.m4; autoreconf -i -f && \
 	./configure --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr );
 	#--with-extra-libs=$(BT_STAGING_DIR)/usr );
 	touch $(SIPROXD_DIR)/.configured

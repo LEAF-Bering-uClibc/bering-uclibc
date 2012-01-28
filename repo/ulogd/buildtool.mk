@@ -19,6 +19,7 @@ $(ULOGD_DIR)/.configured: $(ULOGD_DIR)/.source
 	(cd $(ULOGD_DIR) ; rm aclocal.m4; libtoolize -i -f && autoreconf -i -f && \
 	./configure --prefix=/usr --sysconfdir=/etc \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-mysql=$(BT_STAGING_DIR)/usr/ )
 	touch $(ULOGD_DIR)/.configured
 

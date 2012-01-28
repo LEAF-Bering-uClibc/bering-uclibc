@@ -15,7 +15,10 @@ $(LIBOSIP2_DIR)/.source:
 
 $(LIBOSIP2_DIR)/.configured: $(LIBOSIP2_DIR)/.source
 	(cd $(LIBOSIP2_DIR) ; \
-	./configure --host=$(GNU_TARGET_NAME) --prefix=/usr --disable-shared );
+	./configure \
+		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
+		--prefix=/usr --disable-shared );
 	touch $(LIBOSIP2_DIR)/.configured
 
 $(LIBOSIP2_DIR)/.build: $(LIBOSIP2_DIR)/.configured

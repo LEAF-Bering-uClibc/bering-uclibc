@@ -23,6 +23,7 @@ $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 		DESTDIR=$(NCURSES_BUILD_DIR) \
 		./configure --prefix=/usr \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--with-shared \
 		--mandir='$${datadir}/man' \
 		--without-profile \

@@ -18,6 +18,7 @@ $(LZO_DIR)/.configured: $(LZO_DIR)/.source
 	(cd $(LZO_DIR); \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--enable-shared \
 			--prefix=/usr );
 		touch $(LZO_DIR)/.configured

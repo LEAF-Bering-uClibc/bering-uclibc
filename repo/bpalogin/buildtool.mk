@@ -12,6 +12,7 @@ source: $(BPALOGIN_DIR)/.source
 
 $(BPALOGIN_DIR)/.configured: $(BPALOGIN_DIR)/.source
 	(cd $(BPALOGIN_DIR) ; ./configure --prefix=/usr \
+	--build=$(GNU_BUILD_NAME) \
 	--host=$(GNU_TARGET_NAME) )
 	touch $(BPALOGIN_DIR)/.configured
 

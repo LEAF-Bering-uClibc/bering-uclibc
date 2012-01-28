@@ -15,6 +15,7 @@ source: $(EZ_IPUPDATE_DIR)/.source
 $(EZ_IPUPDATE_DIR)/.configured: $(EZ_IPUPDATE_DIR)/.source
 	(cd $(EZ_IPUPDATE_DIR) ; autoreconf -i -f && \
 	./configure --prefix=/usr/ \
+	--build=$(GNU_BUILD_NAME) \
 	--host=$(GNU_TARGET_NAME) )
 	touch $(EZ_IPUPDATE_DIR)/.configured
 

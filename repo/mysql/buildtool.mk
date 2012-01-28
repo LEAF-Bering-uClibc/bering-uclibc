@@ -12,6 +12,7 @@ MYSQL_TARGET_DIR:=$(BT_BUILD_DIR)/mysql
 
 CONFFLAGS:= --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--without-server \
 	--without-ssl \
 	--with-libwrap=$(BT_STAGING_DIR)/usr/lib \

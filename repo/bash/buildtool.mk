@@ -14,6 +14,7 @@ source: $(BASH_DIR)/.source
 $(BASH_DIR)/.configured: $(BASH_DIR)/.source
 	(cd $(BASH_DIR) ; ./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--with-curses --disable-net-redirections --prefix=/ \
 			--infodir=/usr/share/info --mandir=/usr/share/man \
 			--enable-command-timing \

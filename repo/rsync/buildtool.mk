@@ -9,6 +9,7 @@ $(RSYNC_DIR)/.source:
 $(RSYNC_DIR)/.configured: $(RSYNC_DIR)/.source
 	cd $(RSYNC_DIR); ./configure \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--prefix=/usr \
 		--disable-locale \
 		--disable-iconv

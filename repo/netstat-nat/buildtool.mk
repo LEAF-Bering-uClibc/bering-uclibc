@@ -14,6 +14,7 @@ $(NETSTAT_NAT_DIR)/.configured: $(NETSTAT_NAT_DIR)/.source
 	(cd $(NETSTAT_NAT_DIR) ; ./configure \
 		--prefix=/usr \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 	)
 	touch $(NETSTAT_NAT_DIR)/.configured
 

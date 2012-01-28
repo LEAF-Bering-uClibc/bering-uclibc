@@ -22,6 +22,7 @@ source: $(TCPDUMP_DIR)/.source
 $(TCPDUMP_DIR)/.configured: $(TCPDUMP_DIR)/.source
 	(cd $(TCPDUMP_DIR) ; \
 	./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--without-crypto \
 	--enable-ipv6 \
 	--disable-smb )

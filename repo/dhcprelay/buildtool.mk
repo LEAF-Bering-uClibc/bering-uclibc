@@ -17,6 +17,7 @@ source: $(DHCPRELAY_DIR)/.source
 $(DHCPRELAY_DIR)/.configured: $(DHCPRELAY_DIR)/.source
 	(cd $(DHCPRELAY_DIR) ; ./configure \
 		--prefix=/usr \
+		--build=$(GNU_BUILD_NAME) \
 		--host=$(GNU_TARGET_NAME) )
 	touch $(DHCPRELAY_DIR)/.configured
 

@@ -15,6 +15,7 @@ $(LIBUSB_DIR)/.configured: $(LIBUSB_DIR)/.source
 	(cd $(LIBUSB_DIR); \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--disable-build-docs)
 	touch $(LIBUSB_DIR)/.configured
 

@@ -15,13 +15,13 @@ DHCPD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpd
 # Option settings for 'configure':
 #   Move default install from /usr/local to /
 #   Disable included BIND (we really need it? If yes - add it into deps)
-CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --without-libbind
+CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --without-libbind --build=$(GNU_BUILD_NAME)
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
 	echo $(DHCPD_DIR) > DIRNAME
 	#hack to compile included BIND for target platform
-	perl -i -p -e 's,\s./configure\s, ./configure --host=$(GNU_TARGET_NAME) ,' $(DHCPD_DIR)/bind/Makefile
+	perl -i -p -e 's,\s./configure\s, ./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) ,' $(DHCPD_DIR)/bind/Makefile
 	touch .source
 
 source: .source

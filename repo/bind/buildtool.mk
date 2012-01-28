@@ -19,6 +19,7 @@ $(DIR)/.configured: $(DIR)/.source
 	--sysconfdir=/etc/named \
 	--localstatedir=/var \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-openssl=$(BT_STAGING_DIR)/usr \
 	--enable-linux-caps \
 	--enable-threads \

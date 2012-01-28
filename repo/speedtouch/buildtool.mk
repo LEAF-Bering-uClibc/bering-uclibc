@@ -25,6 +25,7 @@ $(SPEEDTOUCH_DIR)/.configured: $(SPEEDTOUCH_DIR)/.source
 	(cd $(SPEEDTOUCH_DIR) ; libtoolize -i -f && autoreconf -i -f && \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--includedir=$(BT_STAGING_DIR)/usr/include \
 	--oldincludedir=$(BT_STAGING_DIR)/usr/include )
 	touch $(SPEEDTOUCH_DIR)/.configured

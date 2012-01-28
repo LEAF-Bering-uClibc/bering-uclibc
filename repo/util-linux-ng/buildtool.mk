@@ -19,6 +19,7 @@ $(UTIL_LINUX_DIR)/.source:
 $(UTIL_LINUX_DIR)/.configured: $(UTIL_LINUX_DIR)/.source
 	(cd $(UTIL_LINUX_DIR) ; ./configure \
 		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--disable-nls --without-ncurses);
 	touch $(UTIL_LINUX_DIR)/.configured
 

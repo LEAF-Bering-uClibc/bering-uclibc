@@ -21,6 +21,7 @@ $(E2FSPROGS_DIR)/.configured: $(E2FSPROGS_DIR)/.source
 	(cd $(E2FSPROGS_DIR); ./configure \
 	--prefix=/ \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--disable-debugfs \
 	--disable-imager \
 	--disable-resizer \

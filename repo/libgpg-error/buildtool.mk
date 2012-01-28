@@ -14,6 +14,7 @@ source:
 $(LIBGPG-ERROR_DIR)/Makefile: $(LIBGPG-ERROR_DIR)/configure
 	(cd $(LIBGPG-ERROR_DIR); ./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			--disable-nls --disable-languages );
 

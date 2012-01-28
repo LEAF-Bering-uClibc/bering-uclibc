@@ -87,7 +87,10 @@ endif
 
 endif
 
-#
+# arch of build system
+GNU_BUILD_NAME=$(shell LANG=C gcc -v 2>&1|awk '/Target:/ {print $$2}')
+
+# #arch of target system
 export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
 # target gcc
 export TARGET_CC=$(GNU_TARGET_NAME)-gcc

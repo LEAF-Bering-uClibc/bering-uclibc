@@ -15,6 +15,7 @@ $(PMACCTD_DIR)/.configured: $(PMACCTD_DIR)/.source
 	./configure \
 	--prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--enable-ipv6 \
 	--enable-threads \
 	--with-pcap-includes=$(BT_STAGING_DIR)/usr/include/ )

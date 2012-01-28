@@ -20,7 +20,7 @@ HASERL_TARGET_DIR:=$(BT_BUILD_DIR)/haserl
 source: .source
 
 .configured: .source
-	(cd $(SOURCE_DIR);  ./configure --prefix=/usr --host=$(GNU_TARGET_NAME))
+	(cd $(SOURCE_DIR);  ./configure --prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	touch .configured
 
 .build: .configured

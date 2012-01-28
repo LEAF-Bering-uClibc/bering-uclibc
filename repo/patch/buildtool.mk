@@ -8,7 +8,7 @@ $(PATCH_DIR)/.source:
 
 $(PATCH_DIR)/.configured: $(PATCH_DIR)/.source
 	(cd $(PATCH_DIR); \
-	./configure --prefix=/usr --host=$(GNU_TARGET_NAME) )
+	./configure --prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	touch $(PATCH_DIR)/.configured
 
 $(PATCH_DIR)/.build: $(PATCH_DIR)/.configured

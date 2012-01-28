@@ -22,6 +22,7 @@ $(SDIR)/Makefile: $(SDIR)/.source
 	SENDMAIL=/sbin/sendmail \
 	CFLAGS="$(CFLAGS) $(LDFLAGS)" \
 	 ./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
+	 --build=$(GNU_BUILD_NAME) \
 	 --with-jobdir=/var/spool/cron/atjobs \
 	 --with-atspool=/var/spool/cron/atspool)
 

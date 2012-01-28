@@ -19,6 +19,7 @@ $(KNOCKD_DIR)/.configured: $(KNOCKD_DIR)/.source
 	(cd $(KNOCKD_DIR) ; \
 	./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr  )
 	touch $(KNOCKD_DIR)/.configured
 

@@ -14,7 +14,7 @@ source: $(DIR)/.source
 $(DIR)/.configured: $(DIR)/.source
 	(cd $(DIR) ; rm -f aclocal.m4 Makefile.in ; libtoolize -if && \
 	 CFLAGS="$(CFLAGS) -DTRXCTL" \
-	./autogen.sh --prefix=/usr --host=$(GNU_TARGET_NAME) )
+	./autogen.sh --prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	touch $(DIR)/.configured
 
 $(DIR)/.build: $(DIR)/.configured

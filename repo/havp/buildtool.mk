@@ -16,6 +16,7 @@ $(HAVP_DIR)/.configured: $(HAVP_DIR)/.source
 	(cd $(HAVP_DIR) ; \
 	./configure \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--disable-clamav \
 	--disable-trophie \
 	--enable-ssl-tunnel \

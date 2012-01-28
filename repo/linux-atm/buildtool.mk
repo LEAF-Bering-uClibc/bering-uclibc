@@ -17,6 +17,7 @@ $(ATM_DIR)/.configured: $(ATM_DIR)/.source
 	(cd $(ATM_DIR) ; CFLAGS="$(CFLAGS)" \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--sysconfdir=/etc --oldincludedir=$(BT_STAGING_DIR)/include )
 	touch $(ATM_DIR)/.configured
 

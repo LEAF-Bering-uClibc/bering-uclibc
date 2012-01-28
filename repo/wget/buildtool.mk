@@ -23,6 +23,7 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	./configure \
 	     --prefix=/usr \
 	     --host=$(GNU_TARGET_NAME) \
+	     --build=$(GNU_BUILD_NAME) \
 	     --sysconfdir=/etc \
 	     --disable-nls \
 	     --disable-debug \
@@ -42,6 +43,7 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	./configure \
 	     --prefix=/usr \
 	     --host=$(GNU_TARGET_NAME) \
+	     --build=$(GNU_BUILD_NAME) \
 	     --sysconfdir=/etc \
 	     --disable-nls \
 	     --disable-debug \

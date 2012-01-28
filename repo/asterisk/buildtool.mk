@@ -30,7 +30,7 @@ source: .source
 
 .configure: .source
 	( cd $(ASTERISK_DIR) ; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)" \
-	    ./configure $(CONFOPTS) --host=$(GNU_TARGET_NAME))
+	    ./configure $(CONFOPTS) --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	( cd $(ASTERISK_DIR)/menuselect ; ./configure $(CONFOPTS) )
 	touch .configure
 

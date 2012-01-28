@@ -38,6 +38,7 @@ $(OPENVPN_DIR)/.build: $(OPENVPN_DIR)/.source
 		rm -rf config.cache; \
 		./configure \
 			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--with-ssl-headers=$(BT_STAGING_DIR)/usr/include \
 			--with-ssl-lib=$(BT_STAGING_DIR)/usr/lib \
 			--disable-dependency-tracking \
@@ -86,6 +87,7 @@ $(OPENVPN_DIR)/.build: $(OPENVPN_DIR)/.source
 			rm -rf config.cache; \
 			./configure \
 				--host=$(GNU_TARGET_NAME) \
+				--build=$(GNU_BUILD_NAME) \
 				--with-ssl-headers=$(BT_STAGING_DIR)/usr/include \
 				--with-ssl-lib=$(BT_STAGING_DIR)/usr/lib \
 				--disable-dependency-tracking \
