@@ -38,6 +38,7 @@ source: .source
 	    FINALBINDIR="/usr/lib/ipsec" \
 	    FINALLIBEXECDIR="/usr/lib/ipsec" \
 	    KERNELSRC=$(BT_LINUX_DIR) \
+	    USE_IPSECPOLICY=true \
 	    DESTDIR=$(OPENSWAN_TARGET_DIR)
 
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSWAN_TARGET_DIR)/usr/lib/ipsec/*
