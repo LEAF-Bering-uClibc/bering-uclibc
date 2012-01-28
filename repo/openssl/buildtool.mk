@@ -52,6 +52,7 @@ $(OPENSSL_DIR)/.build: $(OPENSSL_DIR)/.configured
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENSSL_TARGET_DIR)/usr/lib/* $(OPENSSL_TARGET_DIR)/usr/lib/engines/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSSL_TARGET_DIR)/usr/bin/*
 	rm -rf $(OPENSSL_TARGET_DIR)/usr/ssl/man
+	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(OPENSSL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	cp -a $(OPENSSL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	# workaround for strange behaviour of install, dir is not readable and so not removable
 	-chmod 755 $(OPENSSL_TARGET_DIR)/usr/lib/pkgconfig

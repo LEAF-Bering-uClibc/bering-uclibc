@@ -52,6 +52,7 @@ $(YATE_DIR)/.install: $(YATE_DIR)/.build
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/*.so
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/yate/*.yate
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(YATE_TARGET_DIR)/lib/yate/*/*.yate
+	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(YATE_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	cp -a $(YATE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $@
 

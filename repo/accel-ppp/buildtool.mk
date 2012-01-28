@@ -1,14 +1,13 @@
 # makefile for accel-pptp
 include $(MASTERMAKEFILE)
 
-ACCEL_DIR:=accel-ppp
+ACCEL_DIR:=accel-ppp-1.5.0
 ACCEL_TARGET_DIR:=$(BT_BUILD_DIR)/accel-ppp
 
 export PPPD_VER=2.4.5
 
 $(ACCEL_DIR)/.source:
 	bzcat $(ACCEL_SOURCE) | tar -xvf -
-#	cp toolchain-cross.cmake $(ACCEL_DIR)
 	perl -i -p -e 's,#include\s*\<printf.h\>,,' $(ACCEL_DIR)/accel-pppd/ctrl/pppoe/pppoe.c
 	touch $@
 
@@ -25,10 +24,10 @@ $(ACCEL_DIR)/.configured: $(ACCEL_DIR)/.source
 	    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
 	    -DKDIR=$(BT_SOURCE_DIR)/linux/linux \
 	    -DCMAKE_BUILD_TYPE=Release \
+	    -DLOG_FILE=FALSE \
 	    -DSHAPER=TRUE \
 	    -DRADIUS=TRUE \
 	    -DNETSNMP=TRUE \
-	    -DLOG_FILE=FALSE \
 	    -DCMAKE_INSTALL_PREFIX=/usr \
 	    .)
 	touch $@
