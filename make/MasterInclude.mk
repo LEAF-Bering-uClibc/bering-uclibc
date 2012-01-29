@@ -51,6 +51,10 @@ export BT_STRIP:=$(BT_STAGING_DIR)/usr/bin/strip
 export BT_STRIP_LIBOPTS:=--strip-unneeded 
 export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
 
+#pkgconfig path
+export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
+export PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib/pkgconfig
+
 #make options
 CPUCOUNT=$(shell ls /sys/class/cpuid/ | wc -w)
 export MAKEOPTS:=-j$(shell echo $$(($(CPUCOUNT)+1)))
