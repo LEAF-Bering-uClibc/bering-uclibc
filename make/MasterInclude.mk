@@ -36,8 +36,6 @@ export BT_PATCHTOOL:=$(BT_TOOLS_DIR)/make-patches.sh
 export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch 
 # getdirname tool
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
-# pkgconfig dir
-export PKG_CONFIG_PATH:=$(BT_BUILDROOT)/staging/$(ARCH)/usr/lib/pkgconfig
 
 
 ########################################
