@@ -47,11 +47,15 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/include/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/include/net/netfilter
+	mkdir -p $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig
+
 	$(MAKE) -C $(IPTABLES_DIR) $(EXTRA_VARS) $(BUILD_TARGETS)
 	$(MAKE) -C $(IPTABLES_DIR) $(EXTRA_VARS) install
 	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/include
 	cp -a $(IPTABLES_DIR)/include/iptables/*.h $(IPTABLES_TARGET_DIR)/include/iptables
 	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/include/net/netfilter
+	cp -a $(IPTABLES_DIR)/xtables.pc $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig
+
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTABLES_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
