@@ -1,5 +1,22 @@
-*** Bering-2.6.35.14.config	2011-12-21 20:38:24.517642307 +0200
---- Bering-2.6.35.14.config-i486	2011-12-21 20:37:36.351498495 +0200
+*** Bering-2.6.35.14.config	2012-02-01 16:30:59.679751899 +0100
+--- Bering-2.6.35.14.config-i486	2012-02-03 18:35:06.004978166 +0100
+***************
+*** 1,7 ****
+  #
+  # Automatically generated make config: don't edit
+  # Linux kernel version: 2.6.35.14
+! # Sun Dec 11 17:11:04 2011
+  #
+  # CONFIG_64BIT is not set
+  CONFIG_X86_32=y
+--- 1,7 ----
+  #
+  # Automatically generated make config: don't edit
+  # Linux kernel version: 2.6.35.14
+! # Fri Feb  3 18:34:44 2012
+  #
+  # CONFIG_64BIT is not set
+  CONFIG_X86_32=y
 ***************
 *** 14,20 ****
   CONFIG_GENERIC_CMOS_UPDATE=y
@@ -701,12 +718,7 @@
   # CONFIG_IGB is not set
   # CONFIG_IGBVF is not set
 ***************
-*** 1336,1349 ****
-  # CONFIG_SIS190 is not set
-  CONFIG_SKGE=m
-  CONFIG_SKY2=m
-! CONFIG_VIA_VELOCITY=m
-  CONFIG_TIGON3=m
+*** 1341,1349 ****
   CONFIG_BNX2=m
   CONFIG_CNIC=m
   CONFIG_QLA3XXX=m
@@ -716,12 +728,7 @@
   # CONFIG_JME is not set
   # CONFIG_NETDEV_10000 is not set
   # CONFIG_TR is not set
---- 1323,1336 ----
-  # CONFIG_SIS190 is not set
-  CONFIG_SKGE=m
-  CONFIG_SKY2=m
-! # CONFIG_VIA_VELOCITY is not set
-  CONFIG_TIGON3=m
+--- 1328,1336 ----
   CONFIG_BNX2=m
   CONFIG_CNIC=m
   CONFIG_QLA3XXX=m
