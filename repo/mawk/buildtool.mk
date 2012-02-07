@@ -1,7 +1,7 @@
 # makefile for mawk
 include $(MASTERMAKEFILE)
 
-MAWK_DIR:=mawk-1.3.3
+MAWK_DIR:=mawk-1.3.4-20100625
 MAWK_TARGET_DIR:=$(BT_BUILD_DIR)/mawk
 
 $(MAWK_DIR)/.source:

@@ -164,8 +164,12 @@ mailadmin () {
 		cat >/dev/null
 	else
                 MAIL=$(mktemp /tmp/mail.XXXXXXXX)
-                echo "Subject: "$HOSTNAME "alert: "$1   >> $MAIL
+                echo "Subject: Alert: "$1   >> $MAIL
+		if [ "$MAIL_USER" = "" ]; then
+		sendmail -S $MAIL_SERVER -f $USER"@"$DOMAIN "$lrp_MAIL_ADMIN" < $MAIL 
+	else	
 		sendmail -S $MAIL_SERVER -au$MAIL_USER -ap$MAIL_PASSWORD -f $USER"@"$DOMAIN "$lrp_MAIL_ADMIN" < $MAIL 
+	fi	
 	fi
 }
 

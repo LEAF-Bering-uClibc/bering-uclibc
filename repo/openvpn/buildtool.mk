@@ -5,7 +5,7 @@ include $(MASTERMAKEFILE)
 # and changes by Charles Duffy
 
 
-OPENVPN_DIR:=openvpn-2.2.0
+OPENVPN_DIR:=openvpn-2.2.2
 OPENVPN_TARGET_DIR:=$(BT_BUILD_DIR)/openvpn
 
 
