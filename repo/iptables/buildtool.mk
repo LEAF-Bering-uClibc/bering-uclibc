@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-IPTABLES_VER=1.4.9.1
+IPTABLES_VER=1.4.12.2
 IPTABLES_DIR:=iptables-$(IPTABLES_VER)
 IPT_NF_DIR:=ipt_netflow-1.7.1
 IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
@@ -26,6 +26,7 @@ BUILD_TARGETS :=all
 
 $(IPTABLES_DIR)/.source:
 	bzcat $(IPTABLES_SOURCE) |  tar -xvf -
+	cat $(IPTABLES_PATCH1) | patch -d $(IPTABLES_DIR) -p1
 	touch $(IPTABLES_DIR)/.source
 
 $(IPT_NF_DIR)/.source:
@@ -35,10 +36,8 @@ $(IPT_NF_DIR)/.source:
 
 $(IPTABLES_DIR)/Makefile: $(IPTABLES_DIR)/.source
 	(cd $(IPTABLES_DIR); ./configure --prefix=/ --host=$(GNU_TARGET_NAME) \
-	--build=$(GNU_BUILD_NAME) \
 	--libexecdir=/lib --includedir=/usr/include \
 	--with-kernel=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) --enable-devel )
-
 
 $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	-rm -rf $(IPTABLES_TARGET_DIR)

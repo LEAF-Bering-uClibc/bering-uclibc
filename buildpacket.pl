@@ -28,8 +28,9 @@ use Carp;
 # uclibc Version
 my $version = "0.9.32.1";
 # kernel Version
-my $kver = qx(cat source/linux/linux*/.config | awk '/version:.*2\.6/ {print \$5}' | head -n 1);
+my $kver = qx(cat source/linux/linux*/.config | awk '/Linux/ {print \$3}' | head -n 1);
 $kver =~ s/\n//;
+
 # archivers for different package type
 my $initrd_pkr="gzip";
 my $initrd_ext="gz";

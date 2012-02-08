@@ -36,6 +36,8 @@ export BT_PATCHTOOL:=$(BT_TOOLS_DIR)/make-patches.sh
 export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch 
 # getdirname tool
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
+# pkgconfig dir
+export PKG_CONFIG_PATH:=$(BT_BUILDROOT)/staging/$(ARCH)/usr/lib/pkgconfig
 
 
 ########################################
@@ -85,10 +87,7 @@ endif
 
 endif
 
-# arch of build system
-GNU_BUILD_NAME=$(shell LANG=C gcc -v 2>&1|awk '/Target:/ {print $$2}')
-
-# #arch of target system
+#
 export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
 # target gcc
 export TARGET_CC=$(GNU_TARGET_NAME)-gcc
@@ -121,7 +120,7 @@ export PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 export CROSS_COMPILE=$(GNU_TARGET_NAME)-
 
 #make options
-CPUCOUNT=$(shell ls /sys/class/cpuid/ | wc -w)
+CPUCOUNT= 3
 export MAKEOPTS:=-j$(shell echo $$(($(CPUCOUNT)+1)))
 
 # hack for RH 9 systems - perl seems to have a problem with UTF8
@@ -139,7 +138,7 @@ EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib
 # check for linux version
 
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
-BT_KERNEL_RELEASE1=$(shell cat $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH)/.config | awk '/version:/ {print $$5}')
+BT_KERNEL_RELEASE1=$(shell cat $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH)/.config | awk '/Linux\/i386/ {print $$3}')
 export BT_KERNEL_RELEASE=$(shell echo ${BT_KERNEL_RELEASE1})
 export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
 
