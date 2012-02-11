@@ -33,6 +33,8 @@ $(UCLIBC_DIR)/.source:
 	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH3) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH4) | patch -p1 -d $(UCLIBC_DIR)
+
 	touch $(UCLIBC_DIR)/.source
 
 $(BINUTILS_DIR)/.source:
