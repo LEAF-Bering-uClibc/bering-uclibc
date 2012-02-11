@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-DIR:=xtables-addons-1.40
+DIR:=xtables-addons-1.41
 TARGET_DIR:=$(BT_BUILD_DIR)/xtables-addons
 
 #IPhash settings
@@ -17,7 +17,7 @@ IP_NF_SET_HASHSIZE=4096
 
 $(DIR)/.source:
 	xzcat $(SOURCE) |  tar -xvf -
-	perl -i -p -e 's,build_CHECKSUM=.*,build_CHECKSUM=m,;s,build_ipset6=.*,build_ipset6=,' $(DIR)/mconfig
+	perl -i -p -e 's,build_ipset6=.*,build_ipset6=,' $(DIR)/mconfig
 	touch $(DIR)/.source
 
 $(DIR)/.build: $(DIR)/.source
