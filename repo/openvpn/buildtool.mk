@@ -69,7 +69,7 @@ $(OPENVPN_DIR)/.build: $(OPENVPN_DIR)/.source
 		perl -i -p -e 's,^comp-lzo,;comp-lzo,' $(OPENVPN_TARGET_DIR)/etc/openvpn/client.conf
 
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/clean-all $(OPENVPN_TARGET_DIR)/usr/sbin/
-		cp $(OPENVPN_DIR)/easy-rsa/2.0/openssl.cnf $(OPENVPN_TARGET_DIR)/usr/sbin/
+		cp $(OPENVPN_DIR)/easy-rsa/2.0/openssl-1.0.0.cnf $(OPENVPN_TARGET_DIR)/usr/sbin/openssl.cnf
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/list-crl $(OPENVPN_TARGET_DIR)/usr/sbin/
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/inherit-inter $(OPENVPN_TARGET_DIR)/usr/sbin/
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/pkitool $(OPENVPN_TARGET_DIR)/usr/sbin/
