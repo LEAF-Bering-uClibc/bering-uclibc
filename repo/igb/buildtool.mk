@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 DIR:=igb-3.3.6
 TARGET_DIR:=$(BT_BUILD_DIR)/igb
-MODULE_PATH=kernel/drivers/net/igb
+MODULE_PATH=kernel/drivers/net/ethernet/intel/igb
 EXTRA_VARS=$(MAKEOPTS)
 
 $(DIR)/.source:
