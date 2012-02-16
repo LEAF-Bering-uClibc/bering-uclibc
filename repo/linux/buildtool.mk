@@ -13,8 +13,8 @@ LINVER=$(shell echo $(KERNEL_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//;s/^.*
 	ln -s linux-$(LINVER) linux
 	cat $(KERNEL_PATCH1) | patch -d linux-$(LINVER)/lib -p0
 	cat $(KERNEL_PATCH2) | patch -d linux-$(LINVER) -p1
-#	zcat $(KERNEL_PATCH3) | patch -d linux-$(LINVER) -p1
-#	cat $(KERNEL_PATCH4) | patch -d linux-$(LINVER) -p1
+	cat $(KERNEL_PATCH3) | patch -d linux-$(LINVER) -p1
+	cat $(KERNEL_PATCH4) | patch -d linux-$(LINVER) -p1
 	mkdir -p $(TOOLCHAIN_DIR)/usr
 	touch .source
 

@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-IPTABLES_VER=1.4.10
+IPTABLES_VER=1.4.12.2
 IPTABLES_DIR:=iptables-$(IPTABLES_VER)
 IPT_NF_DIR:=ipt_netflow-1.7.1
 IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
@@ -27,6 +27,7 @@ BUILD_TARGETS :=all
 $(IPTABLES_DIR)/.source:
 	bzcat $(IPTABLES_SOURCE) |  tar -xvf -
 	cat $(IPTABLES_PATCH1) | patch -d $(IPTABLES_DIR) -p1
+	cat $(IPTABLES_PATCH2) | patch -d $(IPTABLES_DIR)/extensions -p0
 	touch $(IPTABLES_DIR)/.source
 
 $(IPT_NF_DIR)/.source:

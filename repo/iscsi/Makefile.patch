@@ -1,0 +1,33 @@
+--- Makefile	2010-06-30 00:58:35.000000000 +0300
++++ Makefile.new	2012-02-16 16:15:58.000000000 +0200
+@@ -36,7 +36,12 @@
+ KMIN := $(shell echo $(KVER) | \
+ 	sed -e 's/^[0-9][0-9]*\.\([0-9][0-9]*\)\.[0-9][0-9]*.*/\1/')
+ KREV := $(shell echo $(KVER) | \
+-	sed -e 's/^[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/')
++	sed -e 's/^[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/;\
++	s/^\([0-9]\)$$/0\1/')
++
++ifeq ($(KREV),$(KVER))
++KREV := 00
++endif
+ 
+ kver_eq = $(shell [ $(KMAJ)$(KMIN)$(KREV) -eq $(1)$(2)$(3) ] && \
+ 	echo 1 || echo 0)
+@@ -114,6 +119,7 @@
+ # We don't support kernels < 2.6.14 except for explicit distros
+ ifeq ($(call kver_lt,2,6,14),1)
+ 	UNSUPPORTED := true
++	WARN := kver_lt
+ endif
+ 
+ # Compatibility patches for SuSE distros
+@@ -171,7 +177,7 @@
+ 
+ $(UNSUPPORTED):
+ 	@echo "Sorry, your kernel version and/or distribution is currently"
+-	@echo "not supported."
++	@echo "not supported. ($(KMAJ).$(KMIN).$(KREV) $(WARN))"
+ 	@echo ""
+ 	@echo "Please read the README file for information on how you can"
+ 	@echo "contribute compatibility/bug fixes to the IET project."
