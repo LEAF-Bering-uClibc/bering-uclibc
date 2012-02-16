@@ -27,6 +27,7 @@ BUILD_TARGETS :=all
 $(IPTABLES_DIR)/.source:
 	bzcat $(IPTABLES_SOURCE) |  tar -xvf -
 	cat $(IPTABLES_PATCH1) | patch -d $(IPTABLES_DIR) -p1
+	cat $(IPTABLES_PATCH2) | patch -d $(IPTABLES_DIR)/extensions -p0
 	touch $(IPTABLES_DIR)/.source
 
 $(IPT_NF_DIR)/.source:
