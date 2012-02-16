@@ -32,7 +32,8 @@ $(SDIR)/.build: $(SDIR)/Makefile
 	mkdir -p $(TARGET_DIR)/usr/sbin
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	mkdir -p $(TARGET_DIR)/var/spool/cron/atjobs
-	$(MAKE) $(MAKEOPTS) -C $(SDIR)
+#building in more than 1 thread fails
+	$(MAKE) -C $(SDIR)
 
 	cp -a $(SDIR)/atd $(TARGET_DIR)/usr/sbin
 	cp -a $(SDIR)/atrun $(TARGET_DIR)/usr/sbin
