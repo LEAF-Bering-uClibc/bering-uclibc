@@ -27,6 +27,7 @@ $(OPENVPN_DIR)/.source:
 
 $(OPENVPN_DIR)/.build: $(OPENVPN_DIR)/.source
 	mkdir -p $(OPENVPN_TARGET_DIR)/etc/openvpn
+	mkdir -p $(OPENVPN_TARGET_DIR)/etc/easyrsa
 	mkdir -p $(OPENVPN_TARGET_DIR)/etc/init.d
 	mkdir -p $(OPENVPN_TARGET_DIR)/etc/default
 	mkdir -p $(OPENVPN_TARGET_DIR)/etc/network/if-up.d
@@ -69,14 +70,15 @@ $(OPENVPN_DIR)/.build: $(OPENVPN_DIR)/.source
 		perl -i -p -e 's,^comp-lzo,;comp-lzo,' $(OPENVPN_TARGET_DIR)/etc/openvpn/client.conf
 
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/clean-all $(OPENVPN_TARGET_DIR)/usr/sbin/
-		cp $(OPENVPN_DIR)/easy-rsa/2.0/openssl-1.0.0.cnf $(OPENVPN_TARGET_DIR)/usr/sbin/openssl.cnf
+		cp $(OPENVPN_DIR)/easy-rsa/2.0/openssl-1.0.0.cnf $(OPENVPN_TARGET_DIR)/etc/easyrsa/openssl.cnf
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/list-crl $(OPENVPN_TARGET_DIR)/usr/sbin/
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/inherit-inter $(OPENVPN_TARGET_DIR)/usr/sbin/
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/pkitool $(OPENVPN_TARGET_DIR)/usr/sbin/
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/sign-req $(OPENVPN_TARGET_DIR)/usr/sbin/
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/build-dh $(OPENVPN_TARGET_DIR)/usr/sbin/
+		cp $(OPENVPN_DIR)/easy-rsa/2.0/build-ca $(OPENVPN_TARGET_DIR)/usr/sbin/
 		cp $(OPENVPN_DIR)/easy-rsa/2.0/revoke-full $(OPENVPN_TARGET_DIR)/usr/sbin/
-		cp $(OPENVPN_DIR)/easy-rsa/2.0/vars $(OPENVPN_TARGET_DIR)/usr/sbin/
+		cp $(OPENVPN_DIR)/easy-rsa/2.0/vars $(OPENVPN_TARGET_DIR)/etc/easyrsa/
 
 
 		# clean up for the next round
