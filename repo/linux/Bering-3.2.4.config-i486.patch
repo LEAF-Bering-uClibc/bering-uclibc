@@ -1,5 +1,5 @@
-*** Bering-3.2.4.config	2012-02-16 00:22:35.575912179 +0200
---- Bering-3.2.4.config-i486	2012-02-16 00:47:34.133811873 +0200
+*** Bering-3.2.4.config	2012-02-16 00:53:24.826389038 +0200
+--- Bering-3.2.4.config-i486	2012-02-16 13:20:49.219953646 +0200
 ***************
 *** 12,24 ****
   CONFIG_GENERIC_CMOS_UPDATE=y
@@ -1241,12 +1241,8 @@
   CONFIG_WLAN=y
   # CONFIG_PCMCIA_RAYCS is not set
 ***************
-*** 1592,1616 ****
-  CONFIG_ATH9K_HW=m
-  CONFIG_ATH9K_COMMON=m
-  CONFIG_ATH9K=m
-! CONFIG_ATH9K_PCI=y
-! CONFIG_ATH9K_AHB=y
+*** 1596,1616 ****
+  # CONFIG_ATH9K_AHB is not set
   CONFIG_ATH9K_RATE_CONTROL=y
   CONFIG_ATH9K_HTC=m
 ! CONFIG_CARL9170=m
@@ -1267,12 +1263,8 @@
   CONFIG_B43_LEDS=y
   CONFIG_B43_HWRNG=y
   # CONFIG_B43_DEBUG is not set
---- 1526,1545 ----
-  CONFIG_ATH9K_HW=m
-  CONFIG_ATH9K_COMMON=m
-  CONFIG_ATH9K=m
-! # CONFIG_ATH9K_PCI is not set
-! # CONFIG_ATH9K_AHB is not set
+--- 1530,1545 ----
+  # CONFIG_ATH9K_AHB is not set
   CONFIG_ATH9K_RATE_CONTROL=y
   CONFIG_ATH9K_HTC=m
 ! # CONFIG_CARL9170 is not set
@@ -1431,15 +1423,24 @@
   CONFIG_I2C_ALGOBIT=m
   
 ***************
-*** 1967,1986 ****
+*** 1967,1973 ****
   #
   # I2C system bus drivers (mostly embedded / system-on-chip)
   #
 ! CONFIG_I2C_DESIGNWARE_PCI=m
   # CONFIG_I2C_GPIO is not set
-! CONFIG_I2C_INTEL_MID=m
+  # CONFIG_I2C_INTEL_MID is not set
   # CONFIG_I2C_OCORES is not set
-  # CONFIG_I2C_PCA_PLATFORM is not set
+--- 1893,1899 ----
+  #
+  # I2C system bus drivers (mostly embedded / system-on-chip)
+  #
+! # CONFIG_I2C_DESIGNWARE_PCI is not set
+  # CONFIG_I2C_GPIO is not set
+  # CONFIG_I2C_INTEL_MID is not set
+  # CONFIG_I2C_OCORES is not set
+***************
+*** 1975,1986 ****
   # CONFIG_I2C_PXA_PCI is not set
   # CONFIG_I2C_SIMTEC is not set
   # CONFIG_I2C_XILINX is not set
@@ -1452,15 +1453,7 @@
   # CONFIG_I2C_PARPORT is not set
   # CONFIG_I2C_PARPORT_LIGHT is not set
   # CONFIG_I2C_TAOS_EVM is not set
---- 1893,1912 ----
-  #
-  # I2C system bus drivers (mostly embedded / system-on-chip)
-  #
-! # CONFIG_I2C_DESIGNWARE_PCI is not set
-  # CONFIG_I2C_GPIO is not set
-! # CONFIG_I2C_INTEL_MID is not set
-  # CONFIG_I2C_OCORES is not set
-  # CONFIG_I2C_PCA_PLATFORM is not set
+--- 1901,1912 ----
   # CONFIG_I2C_PXA_PCI is not set
   # CONFIG_I2C_SIMTEC is not set
   # CONFIG_I2C_XILINX is not set
