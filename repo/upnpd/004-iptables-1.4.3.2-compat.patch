@@ -1,7 +1,7 @@
 diff -ur linuxigd-1.0.orig/iptc.c linuxigd-1.0/iptc.c
 --- linuxigd-1.0.orig/iptc.c	2009-05-05 14:01:59.000000000 +0200
 +++ linuxigd-1.0/iptc.c	2009-05-05 14:05:48.000000000 +0200
-@@ -7,16 +7,24 @@
+@@ -7,16 +7,28 @@
  #include <iptables.h>
  #include <libiptc/libiptc.h>
  #include <linux/version.h>
@@ -24,6 +24,10 @@ diff -ur linuxigd-1.0.orig/iptc.c linuxigd-1.0/iptc.c
  #include "util.h"
  #include "iptc.h"
  
++#ifndef IPT_ALIGN
++#define IPT_ALIGN XT_ALIGN
++#endif
++
 +#define IPTC_HANDLE struct iptc_handle *
 +
  struct ipt_natinfo
