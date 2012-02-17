@@ -142,7 +142,7 @@ my $kver;
 die "ERROR: No kernel .config file at $kconfig" unless ( -r $kconfig );
 open( FH, "<".$kconfig );
 while ( <FH> )
-{ if ( /version: (.*)/ ) { $kver = $1; last; } }
+{ if ( /Linux\/\w+ ([0-9.]+) Kernel Configuration/ ) { $kver = $1; last; } }
 close( FH );
 print "Kernel Version is:\t$kver\n" if $verbose;
 
