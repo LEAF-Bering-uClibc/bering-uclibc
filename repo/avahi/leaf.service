@@ -1,0 +1,48 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+
+<!--
+  Sample avahi service file for LEAF router
+  See e.g. http://avahi.org/download/avahi.service.5.xml for syntax
+
+  $Header: /cvsroot/leaf/devel/davidmbrooke/src/bering-uclibc4/source/avahi/leaf.service,v 1.1 2010/12/04 18:06:16 davidmbrooke Exp $
+-->
+
+<!-- Advertise the local HTTP service -->
+<service-group>
+
+  <name replace-wildcards="yes">HTTP Server on %h</name>
+
+  <service>
+    <type>_http._tcp</type>
+    <port>80</port>
+    <txt-record>path=/</txt-record>
+  </service>
+
+</service-group>
+
+
+<!-- Example to Advertise a network printer -->
+<!--
+<service-group>
+
+  <name>HP LaserJet 2100M</name>
+
+  <service>
+    <type>_printer._tcp</type>
+    <host-name>lj2100m.private.network.</host-name>
+    <port>515</port>
+    <txt-record>txtvers=1 qtotal=1</txt-record>
+  </service>
+
+  <service>
+    <type>_ipp._tcp</type>
+    <host-name>lj2100m.private.network.</host-name>
+    <port>631</port>
+    <txt-record>txtvers=1 qtotal=1</txt-record>
+  </service>
+
+</service-group>
+-->
+
+
