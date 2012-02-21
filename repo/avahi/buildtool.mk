@@ -62,8 +62,8 @@ source: .source
 	cp -ar $(AVAHI_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib
 	cp -ar $(AVAHI_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include
 	cp -ar $(AVAHI_TARGET_DIR)/etc/avahi/ $(BT_STAGING_DIR)/etc
-	cp -a leaf.service $(BT_STAGING_DIR)/etc/avahi/services/
-	cp -a avahi-daemon.init $(BT_STAGING_DIR)/etc/init.d/avahi-daemon
+	cp -aL leaf.service $(BT_STAGING_DIR)/etc/avahi/services/
+	cp -aL avahi-daemon.init $(BT_STAGING_DIR)/etc/init.d/avahi-daemon
 	touch .build
 
 build: .build
