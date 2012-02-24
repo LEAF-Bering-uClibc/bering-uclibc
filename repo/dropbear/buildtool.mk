@@ -1,7 +1,7 @@
 # makefile for dropbear
 include $(MASTERMAKEFILE)
 
-DROPBEAR_DIR:=dropbear-2011.54
+DROPBEAR_DIR:=dropbear-2012.55
 DROPBEAR_TARGET_DIR:=$(BT_BUILD_DIR)/dropbear
 
 $(DROPBEAR_DIR)/.source:
