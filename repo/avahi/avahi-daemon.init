@@ -10,17 +10,18 @@ test -f $AVAHI_DAEMON || exit 0
 
 case "$1" in
 start)  echo -n "Starting mDNS/DNS-SD Daemon: avahi-daemon"
-        start-stop-daemon --start --quiet --pidfile /var/run/avahi-daemon.pid --startas $AVAHI_DAEMON -- $ARGS
+        start-stop-daemon --start --quiet --pidfile /var/run/avahi-daemon/pid --startas $AVAHI_DAEMON -- $ARGS
         echo "."
         ;;
 stop)   echo -n "Stopping mDNS/DNS-SD Daemon: avahi-daemon"
-        start-stop-daemon --stop --quiet --pidfile /var/run/avahi-daemon/miniupnpd.pid
+        start-stop-daemon --stop --quiet --pidfile /var/run/avahi-daemon/pid
         echo "."
         ;;
 restart|reload|force-reload)
         echo -n "Restarting mDNS/DNS-SD Daemon: avahi-daemon..."
-        start-stop-daemon --stop --retry 5 --quiet --pidfile /var/run/miniupnpd.pid
-        start-stop-daemon --start --quiet --pidfile /var/run/miniupnpd.pid --startas $AVAHI_DAEMON -- $ARGS
+        start-stop-daemon --stop --retry 5 --quiet --pidfile /var/run/avahi-daemon/pid
+        sleep 1
+        start-stop-daemon --start --quiet --pidfile /var/run/avahi-daemon/pid --startas $AVAHI_DAEMON -- $ARGS
         echo "done."
         ;;
 *)      echo "Usage: /etc/init.d/avahi-daemon {start|stop|restart|reload|force-reload}"
