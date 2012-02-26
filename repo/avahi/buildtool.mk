@@ -75,5 +75,8 @@ clean:
 	
 srcclean:
 	-rm -rf $(AVAHI_DIR)
+	-rm -rf .source
+	-rm -rf .configure
+
 	rm DIRNAME
 
