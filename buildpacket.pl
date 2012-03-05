@@ -53,6 +53,9 @@ my $gzipOptions;
 my $buildInitrd = 0;
 my $initrdImage = 0;
 my $mountcmd;
+my $sign;
+my $passphrase;
+my $localuser;
 my $umountcmd;
 my $Usage =
 qq{$0: --package=packagename --packager=name [--all|--target=packagefile] [--lrp=filename.lrp] [--verbose] 
@@ -64,6 +67,8 @@ qq{$0: --package=packagename --packager=name [--all|--target=packagefile] [--lrp
  lrp       (optional) existing lrp-file to import config from
  all       (optional) create all packages defined by packagename. Default if target
            is not specified
+ sign      sign package with gpg signature. The passphrase has to be set in conf/buildtool.conf. 
+           Default is off.
 };
 
 # TODO: add command line key
@@ -906,8 +911,12 @@ sub createRegularLRP($$$$) {
 	print "Creating lrp\n"  if $verbose;	
 	my $package_filename = $p_h_package->{'packagefilename'};
 	my $cmd ="cd $tmpDir ; tar cvf - * 2>/dev/null | $genlrp_pkr $gzip_options > $package_dir/$package_filename.lrp ";
-
 	system_exec($cmd,"Creating lrp package failed.");
+#sign
+	if ($sign) {
+	my $signcmd ="cd $tmpDir ; gpg --local-user $localuser --quiet --passphrase $passphrase --yes --output $package_dir/$package_filename.gpg --detach-sign --armor $package_dir/$package_filename.lrp";
+	system_exec($signcmd,"Signing package failed!");
+	}
 	system_exec("chown -h $lrp_owner:$lrp_group $package_dir/$package_filename.lrp","chown failed on $package_dir/$package_filename.lrp ");
 }
 
@@ -920,6 +929,12 @@ sub createInitrd($$$$) {
 	my $cmd ="cd $tmpDir ; ls; find . -print | cpio -o -H newc | gzip -9 -c - > $package_dir/$package_filename.lrp ";
 
 	system_exec($cmd,"Creating lrp package failed.");
+
+#sign
+	if ($sign) {
+	my $signcmd ="cd $tmpDir ; gpg --local-user $localuser --quiet --passphrase $passphrase --yes --output $package_dir/$package_filename.gpg --detach-sign --armor $package_dir/$package_filename.lrp";
+	system_exec($signcmd,"Signing package failed!");
+	}
 
 #	system_exec("sync;sync;sync");
 #	system_exec("umount $mountpoint","failed to unmount $mountpoint/");
@@ -995,6 +1010,7 @@ Getopt::Long::GetOptions($options,
 					'lrp=s',
 					'packager=s',
 					'verbose',
+					'sign',
 					'all')	or die $Usage;
 
 die $Usage unless exists($options->{'package'});
@@ -1005,6 +1021,8 @@ if (!exists($options->{'target'})) {
 }
 
 $verbose = exists($options->{'verbose'}) ? 1 : 0;
+
+$sign = exists($options->{'sign'}) ? 1 : 0;
 
 my $baseDir	= File::Spec->rel2abs(File::Basename::dirname($0));
 
@@ -1023,6 +1041,10 @@ my $btConfig= new Config::General(
 
 $lrp_owner = $btConfig->value('lrpowner') if $btConfig->exists('lrpowner');
 $lrp_group = $btConfig->value('lrpgroup') if $btConfig->exists('lrpgroup');
+
+$passphrase = $btConfig->value('passphrase') if $btConfig->exists('passphrase');
+$localuser = $btConfig->value('packager') if $btConfig->exists('packager');
+
 $options->{'mountpoint'} = "/mnt/loop";
 $options->{'mountpoint'} = $btConfig->value('mountpoint') if $btConfig->exists('mountpoint');
 $options->{'mkminixfs'} = "tools/busybox mkfs.minix";
