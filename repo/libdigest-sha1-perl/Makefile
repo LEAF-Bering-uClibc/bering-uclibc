@@ -206,7 +206,7 @@ AUTOSPLITFILE = $(ABSPERLRUN)  -e 'use AutoSplit;  autosplit($$ARGV[0], $$ARGV[1
 
 #XSUBPPDIR = /usr/lib64/perl5/vendor_perl/5.12.4/ExtUtils
 XSUBPP = xsubpp
-XSUBPPRUN = $(PERLRUN) $(XSUBPP)
+XSUBPPRUN = $(XSUBPP)
 XSPROTOARG = 
 XSUBPPDEPS = 
 XSUBPPARGS = -typemap typemap
