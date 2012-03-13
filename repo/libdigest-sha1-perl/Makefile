@@ -208,7 +208,7 @@ XSUBPPDIR = /usr/lib64/perl5/vendor_perl/5.12.4/ExtUtils
 XSUBPP = $(XSUBPPDIR)$(DFSEP)xsubpp
 XSUBPPRUN = $(PERLRUN) $(XSUBPP)
 XSPROTOARG = 
-XSUBPPDEPS = /usr/lib64/perl5/5.12.4/ExtUtils/typemap typemap $(XSUBPP)
+XSUBPPDEPS = 
 XSUBPPARGS = -typemap /usr/lib64/perl5/5.12.4/ExtUtils/typemap -typemap typemap
 XSUBPP_EXTRA_ARGS = 
 
