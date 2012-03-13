@@ -204,12 +204,12 @@ AUTOSPLITFILE = $(ABSPERLRUN)  -e 'use AutoSplit;  autosplit($$ARGV[0], $$ARGV[1
 
 # --- MakeMaker tool_xsubpp section:
 
-XSUBPPDIR = /usr/lib64/perl5/vendor_perl/5.12.4/ExtUtils
-XSUBPP = $(XSUBPPDIR)$(DFSEP)xsubpp
+#XSUBPPDIR = /usr/lib64/perl5/vendor_perl/5.12.4/ExtUtils
+XSUBPP = xsubpp
 XSUBPPRUN = $(PERLRUN) $(XSUBPP)
 XSPROTOARG = 
 XSUBPPDEPS = 
-XSUBPPARGS = -typemap /usr/lib64/perl5/5.12.4/ExtUtils/typemap -typemap typemap
+XSUBPPARGS = -typemap typemap
 XSUBPP_EXTRA_ARGS = 
 
 
