@@ -11,6 +11,7 @@ export CC=$(TARGET_CC)
 
 $(LIBDIGEST-SHA1-PERL_DIR)/.source: 
 	zcat $(LIBDIGEST-SHA1-PERL_SOURCE) | tar -xvf -
+	cp -aL Makefile $(LIBDIGEST-SHA1-PERL_DIR)
 	touch $(LIBDIGEST-SHA1-PERL_DIR)/.source
 
 source: $(LIBDIGEST-SHA1-PERL_DIR)/.source
@@ -18,8 +19,7 @@ source: $(LIBDIGEST-SHA1-PERL_DIR)/.source
 $(LIBDIGEST-SHA1-PERL_DIR)/.build: $(LIBDIGEST-SHA1-PERL_DIR)/.source
 	mkdir -p $(LIBDIGEST-SHA1-PERL_TARGET_DIR)
 	mkdir -p $(LIBDIGEST-SHA1-PERL_TARGET_DIR)/usr/lib/perl5/5.14.2
-	cd $(LIBDIGEST-SHA1-PERL_DIR); perl Makefile.PL; \
-	$(MAKE);
+	$(MAKE) $(MAKEOPTS) -C $(LIBDIGEST-SHA1-PERL_DIR)
 	cp $(LIBDIGEST-SHA1-PERL_DIR)/SHA1.pm $(LIBDIGEST-SHA1-PERL_TARGET_DIR)/usr/lib/perl5/5.14.2
 	cp $(LIBDIGEST-SHA1-PERL_DIR)/blib/arch/auto/Digest/SHA1/SHA1.so $(LIBDIGEST-SHA1-PERL_TARGET_DIR)/usr/lib/perl5/5.14.2
 	

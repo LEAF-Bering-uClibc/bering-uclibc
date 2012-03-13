@@ -28,6 +28,7 @@ $(PERL_DIR)/.configured: $(PERL_DIR)/.source
 $(PERL_DIR)/.build: $(PERL_DIR)/.configured
 	mkdir -p $(PERL_TARGET_DIR)
 	mkdir -p $(PERL_TARGET_DIR)/usr/bin
+	mkdir -p $(PERL_TARGET_DIR)/usr/include/perl5/CORE
 	mkdir -p $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
 
 # Build in single thread - -jN failed
@@ -35,6 +36,7 @@ $(PERL_DIR)/.build: $(PERL_DIR)/.configured
 	cp -a $(PERL_DIR)/perl $(PERL_TARGET_DIR)/usr/bin
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PERL_TARGET_DIR)/usr/bin/*
 	cp -a $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
+	cp -a $(PERL_DIR)/*.h $(PERL_TARGET_DIR)/usr/include/perl5/CORE
 	cp -aL Socket6.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
 	cp -aL Temp.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/File
 	cp -a $(PERL_TARGET_DIR)/* $(BT_STAGING_DIR)
