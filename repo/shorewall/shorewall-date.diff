@@ -58,15 +58,3 @@ diff -urN shorewall-4.4.15.3.orig/Perl/prog.header6 shorewall-4.4.15.3/Perl/prog
          echo "${timestamp}$@" >> $STARTUP_LOG
      fi
  }
-diff -urN shorewall-4.4.15.3.orig/lib.cli shorewall-4.4.15.3/lib.cli
---- shorewall-4.4.15.3.orig/lib.cli	2010-12-28 17:58:22.000000000 +0100
-+++ shorewall-4.4.15.3/lib.cli	2011-02-13 11:20:41.655163983 +0100
-@@ -1403,7 +1403,7 @@
- 			    option=
- 			    ;;
- 			t*)
--			    today=$(date +'^%b %_d.*')
-+			    today=$(date +'^%b %d.*')
- 			    option=${option#t}
- 			    ;;
- 			*)
