@@ -1,0 +1,200 @@
+diff -urN shorewall-init-4.5.0.3.orig/init.debian.sh shorewall-init-4.5.0.3/init.debian.sh
+--- shorewall-init-4.5.0.3.orig/init.debian.sh	2012-03-06 00:55:25.000000000 +0100
++++ shorewall-init-4.5.0.3/init.debian.sh	2012-03-10 20:25:51.711686930 +0100
+@@ -1,131 +1,69 @@
+ #!/bin/sh
+-#
+-#     The Shoreline Firewall (Shorewall) Packet Filtering Firewall - V4.4
+-#
+-#     This program is under GPL [http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt]
+-#
+-#     (c) 2010 - Tom Eastep (teastep@shorewall.net)
+-#
+-#       On most distributions, this file should be called /etc/init.d/shorewall.
+-#
+-#       Complete documentation is available at http://shorewall.net
+-#
+-#       This program is free software; you can redistribute it and/or modify
+-#       it under the terms of Version 2 of the GNU General Public License
+-#       as published by the Free Software Foundation.
+-#
+-#       This program is distributed in the hope that it will be useful,
+-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+-#       GNU General Public License for more details.
+-#
+-#       You should have received a copy of the GNU General Public License
+-#       along with this program; if not, write to the Free Software
+-#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-#
+-### BEGIN INIT INFO
+-# Provides:          shorewall-init
+-# Required-Start:    $local_fs
+-# X-Start-Before:    $network
+-# Required-Stop:     $local_fs
+-# X-Stop-After:      $network
+-# Default-Start:     S
+-# Default-Stop:      0 6
+-# Short-Description: Initialize the firewall at boot time
+-# Description:       Place the firewall in a safe state at boot time prior to
+-#                    bringing up the network
+-### END INIT INFO
+ 
+-export VERBOSITY=0
+ 
+-if [ "$(id -u)" != "0" ]
++RCDLINKS="2,S19 3,S19 4,S19 5,S19 0,K91 6,K91"
++SRWL=/sbin/shorewall
++WAIT_FOR_IFUP=/usr/share/shorewall/wait4ifup
++
++# parse the shorewall params file in order to use params in
++# /etc/default/shorewall
++
++if [ -f "/etc/default/shorewall" ]
+ then
+-  echo "You must be root to start, stop or restart \"Shorewall \"."
+-  exit 1
++	. /etc/default/shorewall
+ fi
+ 
+-echo_notdone () {
+-  echo "not done."
+-  exit 1
+-}
++[ "$INITLOG" = "/dev/null" ] && SHOREWALL_INIT_SCRIPT=1 || SHOREWALL_INIT_SCRIPT=0
+ 
+-not_configured () {
+-	echo "#### WARNING ####"
+-	echo "the firewall won't be initialized unless it is configured"
+-	if [ "$1" != "stop" ]
+-	then
+-		echo ""
+-		echo "Please read about Debian specific customization in"
+-		echo "/usr/share/doc/shorewall-init/README.Debian.gz."
+-	fi
+-	echo "#################"
+-	exit 0
+-}
++export SHOREWALL_INIT_SCRIPT
+ 
+-# check if shorewall-init is configured or not
+-if [ -f "/etc/default/shorewall-init" ]
+-then
+-	. /etc/default/shorewall-init
+-	if [ -z "$PRODUCTS" ]
++# wait for an unconfigured interface 
++wait_for_pppd () {
++	if [ "$wait_interface" != "" ]
+ 	then
+-		not_configured
++           if [ -f $WAIT_FOR_IFUP ]
++           then
++		for i in $wait_interface
++		do
++			$WAIT_FOR_IFUP $i 60
++		done
++           else
++               echo "$WAIT_FOR_IFUP: File not found"
++               exit 2
++           fi
+ 	fi
+-else
+-	not_configured
+-fi
++}
+ 
+-# Initialize the firewall
++# start the firewall
+ shorewall_start () {
+-  local product
+-  local VARDIR
+-
+-  echo -n "Initializing \"Shorewall-based firewalls\": "
+-  for product in $PRODUCTS; do
+-      VARDIR=/var/lib/$product
+-      [ -f /etc/$product/vardir ] && . /etc/$product/vardir
+-      if [ -x ${VARDIR}/firewall ]; then
+-	  #
+-	  # Run in a sub-shell to avoid name collisions
+-	  #
+-	  ( 
+-	      . /usr/share/$product/lib.base
+-	      #
+-	      # Get mutex so the firewall state is stable
+-	      #
+-	      mutex_on
+-	      if ! ${VARDIR}/firewall status > /dev/null 2>&1; then
+-		  ${VARDIR}/firewall stop || echo_notdone
+-	      fi
+-	      mutex_off
+-	  )
+-      fi
+-  done
+-
+-  echo "done."
+-
++  echo -n "Starting \"Shorewall firewall\": "
++  wait_for_pppd
++  $SRWL $OPTIONS start 2>&1 && echo "done."
+   return 0
+ }
+ 
+-# Clear the firewall
++# stop the firewall
+ shorewall_stop () {
+-  local product
+-  local VARDIR
+-
+-  echo -n "Clearing \"Shorewall-based firewalls\": "
+-  for product in $PRODUCTS; do
+-      VARDIR=/var/lib/$product
+-      [ -f /etc/$product/vardir ] && . /etc/$product/vardir
+-      if [ -x ${VARDIR}/firewall ]; then
+-	  ( . /usr/share/$product/lib.base
+-	    mutex_on
+-	    ${VARDIR}/firewall clear || echo_notdone
+-	    mutex_off
+-	  )
+-      fi
+-  done
++  echo -n "Stopping \"Shorewall firewall\": "
++  if [ "$SAFESTOP" = 1 ]; then
++  $SRWL $OPTIONS stop 2>&1 && echo "done."
++  else
++  $SRWL $OPTIONS clear 2>&1 && echo "done."
++  fi      
++  return 0
++}
+ 
+-  echo "done."
++# restart the firewall
++shorewall_restart () {
++  echo -n "Restarting \"Shorewall firewall\": "
++  $SRWL $OPTIONS start 2>&1 && echo "done."
++  return 0
++}
+ 
++# refresh the firewall
++shorewall_refresh () {
++  echo -n "Refreshing \"Shorewall firewall\": "
++  $SRWL refresh 2>&1 && echo "done."
+   return 0
+ }
+ 
+@@ -136,10 +74,14 @@
+   stop)
+      shorewall_stop
+      ;;
+-  reload|force-reload)
++  refresh)
++     shorewall_refresh
++     ;;
++  force-reload|restart)
++     shorewall_restart
+      ;;
+   *)
+-     echo "Usage: /etc/init.d/shorewall-init {start|stop|reload|force-reload}"
++     echo "Usage: /etc/init.d/shorewall {start|stop|refresh|restart|force-reload}"
+      exit 1
+ esac
+ 

@@ -1,6 +1,6 @@
 ######################################
 #
-# buildtool makefile for Shoreline Firewall (IPv6)
+# buildtool makefile for Shorewall Firewall (IPv6)
 #
 ######################################
 
@@ -8,23 +8,20 @@ include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/shorewall6
 
-SHOREWALL_DIR:=shorewall6-4.4.27.3
+SHOREWALL_DIR:=shorewall6-4.5.0.3
 
 $(SHOREWALL_DIR)/.source:
 	zcat $(SHOREWALL_SOURCE) | tar -xvf -
 	cat $(SHOREWALL_LRP_DIFF)	| patch -d $(SHOREWALL_DIR) -p1
-#	cat $(SHOREWALL_DATE_DIFF)	| patch -d $(SHOREWALL_DIR) -p1
 	touch $(SHOREWALL_DIR)/.source
 
 #errata
-#	cp compiler $(SHOREWALL_DIR)
 
 $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
-	cp $(SHOREWALL_DIR)/init.debian.sh $(SHOREWALL_DIR)/init.sh
+	cp init.sh $(SHOREWALL_DIR)/init.sh
 	mkdir -p $(TARGET_DIR)
 	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
-
-#	chmod 755 $(TARGET_DIR)/usr/share/shorewall/firewall
+	
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL_DEFAULT) $(TARGET_DIR)/etc/default/shorewall6
 
@@ -36,7 +33,7 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 
 source: $(SHOREWALL_DIR)/.source
 
-build:  $(SHOREWALL_DIR)/.build
+build:  $(SHOREWALL_DIR)/.build                                                                                                   
 	cp -afv $(TARGET_DIR)/* $(BT_STAGING_DIR)
 
 clean:	stageclean
