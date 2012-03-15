@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-OPENSSL_DIR:=openssl-1.0.0g
+OPENSSL_DIR:=openssl-1.0.0h
 OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
 $(OPENSSL_DIR)/.source:
@@ -67,6 +67,7 @@ clean:
 	-rm -f $(BT_STAGING_DIR)/bin/openssl
 	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so*
 	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so*
+	-rm -f $(BT_STAGING_DIR)/usr/lib/engines/*
 	-rm -rf $(BT_STAGING_DIR)/usr/ssl
 	-rm -rf $(OPENSSL_BUILD_DIR)
 	-$(MAKE) -C $(OPENSSL_DIR) clean
