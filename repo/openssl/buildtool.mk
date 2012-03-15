@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-OPENSSL_DIR:=openssl-1.0.0g
+OPENSSL_DIR:=openssl-1.0.0h
 OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
 PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5) 
