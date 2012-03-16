@@ -7,7 +7,8 @@ unexport CFLAGS CPPFLAGS
 
 $(ATM_DIR)/.source:
 	zcat $(ATM_SOURCE) | tar -xvf -
-#	zcat $(ATM_PATCH1) | patch -d $(ATM_DIR) -p1
+#	Fix qgen Makefile to match other Makefiles, for cross-compiling
+	perl -i -p -e "s,CC = \@CC_FOR_BUILD\@,CC = \@CC\@," $(ATM_DIR)/src/qgen/Makefile.in
 	touch $(ATM_DIR)/.source
 
 source: $(ATM_DIR)/.source
