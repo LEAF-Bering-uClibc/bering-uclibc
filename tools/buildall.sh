@@ -13,7 +13,7 @@
 EXPORTDIR=/tmp
 
 #########################################################
-DATE=$(date "+%d.%m.%Y")
+DATE=$(date "+%Y-%m-%dT%H:%M")
 STARTDATE=$(date)
 MYDIR=$EXPORTDIR/$DATE
 HTMLFILE=$MYDIR/build.html
@@ -138,7 +138,7 @@ for name in $PKGLIST; do
 		EXITVALUE=1
 	fi
 	echo "</td></tr>" >> $HTMLFILE		
-	# copy lofile
+	# copy logfile
 	cp $BTLOGFILE $MYDIR/$name.build.txt
 
 done
