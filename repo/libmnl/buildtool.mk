@@ -23,7 +23,7 @@ $(LIBMNL_DIR)/.build: $(LIBMNL_DIR)/.configured
 	make $(MAKEOPTS) -C $(LIBMNL_DIR) all
 	make DESTDIR=$(LIBMNL_TARGET_DIR) -C $(LIBMNL_DIR) install
 	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBMNL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
-	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBNL_TARGET_DIR)/usr/lib/*.la
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBMNL_TARGET_DIR)/usr/lib/*.la
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBMNL_TARGET_DIR)/usr/lib/*
 	cp -a -f $(LIBMNL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LIBMNL_DIR)/.build

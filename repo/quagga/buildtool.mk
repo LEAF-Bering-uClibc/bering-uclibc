@@ -36,6 +36,7 @@ $(QUAGGA_DIR)/.build: $(QUAGGA_DIR)/.configured
 	make $(MAKEOPTS) DESTDIR=$(QUAGGA_TARGET_DIR) -C $(QUAGGA_DIR) install
 	-$(BT_STRIP) $(B_STRIP_BINOPTS) $(QUAGGA_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(B_STRIP_LIBOPTS) $(QUAGGA_TARGET_DIR)/usr/lib/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(QUAGGA_TARGET_DIR)/usr/lib/*.la
 	cp -aL bgpd.init $(QUAGGA_TARGET_DIR)/etc/init.d/bgpd
 	cp -aL bgpd.conf $(QUAGGA_TARGET_DIR)/etc/zebra
 	cp -aL isisd.init $(QUAGGA_TARGET_DIR)/etc/init.d/isisd

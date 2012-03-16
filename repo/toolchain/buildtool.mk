@@ -107,6 +107,7 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include configure-host && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
 	 install-libiberty install-intl install-bfd install-binutils install-opcodes) || exit 1
+	 perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(BINUTILS_BUILD_DIR2)-built/usr/lib/*.la
 	touch $(BINUTILS_BUILD_DIR2)/.build
 
 #depmod

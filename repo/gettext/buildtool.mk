@@ -34,6 +34,7 @@ $(DIR)/.build: $(DIR)/.configured
 	$(MAKE) DESTDIR=$(TARGET_DIR) \
 		-C $(DIR)/gettext-runtime/intl install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(TARGET_DIR)/usr/lib/*.la
 	cp -a $(TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
 	cp -a $(TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include/
 	touch $(DIR)/.build

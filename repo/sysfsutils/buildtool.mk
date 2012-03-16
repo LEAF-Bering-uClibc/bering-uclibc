@@ -26,6 +26,7 @@ $(DIR)/.build: $(DIR)/.source
 	make $(MAKEOPTS) DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(TARGET_DIR)/usr/lib/*.la
 	-rm -rf $(TARGET_DIR)/usr/share
 	-rm -rf $(TARGET_DIR)/usr/man
 	cp -R $(TARGET_DIR)/* $(BT_STAGING_DIR)

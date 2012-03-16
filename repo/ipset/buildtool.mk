@@ -52,6 +52,7 @@ $(DIR)/.build: $(DIR)/Makefile
 #	cp -a $(DIR)/kernel/include $(TARGET_DIR)/
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/ipset/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(TARGET_DIR)/usr/lib/*.la
 	rm -rf $(TARGET_DIR)/usr/lib/pkgconfig $(TARGET_DIR)/usr/share
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build

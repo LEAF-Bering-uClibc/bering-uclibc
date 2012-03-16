@@ -29,6 +29,7 @@ build: $(LIBDNET_DIR)/Makefile
 	$(MAKE) DESTDIR=$(LIBDNET_TARGET_DIR) -C $(LIBDNET_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBDNET_TARGET_DIR)/usr/lib/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LIBDNET_TARGET_DIR)/usr/sbin/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBDNET_TARGET_DIR)/usr/lib/*.la
 	rm -rf $(LIBDNET_TARGET_DIR)/usr/man
 	cp -a $(LIBDNET_TARGET_DIR)/* $(BT_STAGING_DIR)
 
