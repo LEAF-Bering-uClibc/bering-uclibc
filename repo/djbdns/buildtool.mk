@@ -43,7 +43,8 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/tinydns-public/log
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/tinydns-public/root
 
-	make $(MAKEOPTS) -C $(DJBDNS_DIR)
+#multithreaded build fails - build in single thread
+	make -C $(DJBDNS_DIR)
 
 	cp $(DJBDNS_DIR)/dnscache-conf $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/tinydns-conf $(DJBDNS_TARGET_DIR)/usr/bin/
