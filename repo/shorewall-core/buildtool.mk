@@ -33,12 +33,7 @@ clean:	stageclean
 	rm -f  $(SHOREWALL-CORE_DIR)/.build
 
 stageclean:
-	rm -f $(BT_STAGING_DIR)/usr/share/shorewall/functions
-	rm -f $(BT_STAGING_DIR)/usr/share/shorewall/lib.cli
-	rm -f $(BT_STAGING_DIR)/usr/share/shorewall/lib.common
-	rm -f $(BT_STAGING_DIR)/usr/share/shorewall/lib.base
-	rm -f $(BT_STAGING_DIR)/usr/share/shorewall/coreversion
-	rm -f $(BT_STAGING_DIR)/usr/share/shorewall/wait4ifup
+	rm -rf $(BT_STAGING_DIR)/usr/share/shorewall
 
 srcclean: clean
 	rm -rf $(SHOREWALL-CORE_DIR)
