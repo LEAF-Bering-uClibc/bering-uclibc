@@ -25,7 +25,7 @@ CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--disable-qt3 --disable-qt4 --disable-gtk --disable-gtk3 \
 	--disable-dbus --disable-gdbm --disable-python \
 	--disable-mono --disable-monodoc --disable-doxygen-doc \
-	--disable-ssp --disable-stack-protector
+	--host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
 # Next line is required to locate the .pc file for libdaemon
 export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
@@ -42,7 +42,7 @@ export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 	#    case "$am__api_version
 	# Last line to delete is #19285:
 	#    # Substitute ALL_LINGUAS so we can use it in po/Makefile
-	( cd $(AVAHI_DIR); sed -i '18787,19285d' configure )
+#	( cd $(AVAHI_DIR); sed -i '18787,19285d' configure )
 	# Run edited configure script
 	( cd $(AVAHI_DIR); ./configure $(CONFOPTS) );
 	touch .configure
@@ -52,12 +52,13 @@ source: .source
 
 .build: .configure
 	# Need to remove "po/" from list of SUBDIRS to build
-	( cd $(AVAHI_DIR) ; perl -i -p -e 's/	po/ /' Makefile )
+	#( cd $(AVAHI_DIR) ; perl -i -p -e 's/	po/ /' Makefile )
 	mkdir -p $(AVAHI_TARGET_DIR)
 	$(MAKE) -C $(AVAHI_DIR)
 	$(MAKE) DESTDIR=$(AVAHI_TARGET_DIR) -C $(AVAHI_DIR) install
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(AVAHI_TARGET_DIR)/usr/sbin/*
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(AVAHI_TARGET_DIR)/usr/lib/*.so
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(AVAHI_TARGET_DIR)/usr/lib/*.la
 	cp -a $(AVAHI_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin
 	cp -ar $(AVAHI_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib
 	cp -ar $(AVAHI_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include
