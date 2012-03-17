@@ -8,11 +8,10 @@ include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/shorewall6-lite
 
-SHOREWALL_DIR:=shorewall6-lite-4.4.27.3
+SHOREWALL_DIR:=shorewall6-lite-4.5.0.3
 
 $(SHOREWALL_DIR)/.source:
 	zcat $(SHOREWALL_SOURCE) | tar -xvf -
-#	cat $(SHOREWALL_DATE_DIFF)      | patch -d $(SHOREWALL_DIR) -p1
 	touch $(SHOREWALL_DIR)/.source
 
 
@@ -41,11 +40,6 @@ clean:	stageclean
 stageclean:
 	rm -f  $(BT_STAGING_DIR)/etc/init.d/shorewall6-lite
 	rm -f  $(BT_STAGING_DIR)/etc/default/shorewall6-lite
-#	rm -f  $(BT_STAGING_DIR)/sbin/shorewall
-#	rm -rf $(BT_STAGING_DIR)/etc/shorewall
-#	rm -rf $(BT_STAGING_DIR)/usr/share/shorewall
-#	rm -rf $(BT_STAGING_DIR)/var/lib/shorewall
-#	rm -rf $(BT_STAGING_DIR)/var/state/shorewall
 
 srcclean: clean
 	rm -rf $(SHOREWALL_DIR)
