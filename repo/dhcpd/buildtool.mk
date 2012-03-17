@@ -14,20 +14,20 @@ DHCPD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpd
 
 # Option settings for 'configure':
 #   Move default install from /usr/local to /
-#   Disable included BIND (we really need it? If yes - add it into deps)
-CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --without-libbind --build=$(GNU_BUILD_NAME)
+CONFOPTS:= --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) --prefix=/
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
 	echo $(DHCPD_DIR) > DIRNAME
-	#hack to compile included BIND for target platform
-	perl -i -p -e 's,\s./configure\s, ./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) ,' $(DHCPD_DIR)/bind/Makefile
+	# Force use of local bind include files before staging include files
+	for dir in common omapip client relay; do perl -i -p -e 's,^DEFAULT_INCLUDES = ,DEFAULT_INCLUDES = -I../bind/include ,' $(DHCPD_DIR)/$$dir/Makefile.in; done
 	touch .source
 
 source: .source
 
 .configure: .source
-	( cd $(DHCPD_DIR); ./configure $(CONFOPTS) );
+	# Need to force setting of CC for included copy of bind - see README
+	( cd $(DHCPD_DIR); CC=$(BT_TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc ./configure $(CONFOPTS) );
 	touch .configure
 
 .build: .configure
@@ -39,9 +39,8 @@ source: .source
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d/
 	mkdir -p $(BT_STAGING_DIR)/etc/default/
 #
-	make $(MAKEOPTS) -C $(DHCPD_DIR)/server
-	make $(MAKEOPTS) -C $(DHCPD_DIR)/omapip
-	exit
+	# Need to force setting of CC for included copy of bind - see README
+	CC=$(BT_TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc make -C $(DHCPD_DIR)
 	make DESTDIR=$(DHCPD_TARGET_DIR) -C $(DHCPD_DIR) install
 #
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPD_TARGET_DIR)/bin/*
