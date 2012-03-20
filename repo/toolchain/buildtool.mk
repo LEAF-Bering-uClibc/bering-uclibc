@@ -1,4 +1,4 @@
-# makefile for elvis-tiny
+# makefile for toolchain
 include $(MASTERMAKEFILE)
 
 CUR_DIR=$(shell pwd)
@@ -29,7 +29,8 @@ unexport LDFLAGS
 
 $(UCLIBC_DIR)/.source:
 	bzcat $(UCLIBC_SOURCE) | tar xvf -
-	patch $(UC_CONFIG_$(ARCH)) $(UC_CONFIG_PATCH) -o $(UC_CONFIG_$(ARCH))_headers
+	# create config.$(GNU_TARGET_NAME)_headers file
+	perl -p -e 's,^CROSS_COMPILER_PREFIX=.*$$,CROSS_COMPILER_PREFIX="",' config.$(GNU_TARGET_NAME) > config.$(GNU_TARGET_NAME)_headers
 	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH3) | patch -p1 -d $(UCLIBC_DIR)
@@ -54,7 +55,7 @@ source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source $(DEPMO
 ###############################
 
 $(UCLIBC_DIR)/.headers: $(UCLIBC_DIR)/.source
-	cp -aL $(UC_CONFIG_$(ARCH))_headers $(UCLIBC_DIR)/.config
+	cp -aL config.$(GNU_TARGET_NAME)_headers $(UCLIBC_DIR)/.config
 	make $(MAKEOPTS) -C $(UCLIBC_DIR) install_headers KERNEL_HEADERS=$(TARGET_DIR)/usr/include
 	touch $(UCLIBC_DIR)/.headers
 
@@ -64,7 +65,7 @@ $(BINUTILS_BUILD_DIR)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.headers
 	 $(BINUTILS_DIR)/configure --target=$(GNU_TARGET_NAME) --prefix=$(TOOLCHAIN_DIR) \
 	  --includedir=$(TOOLCHAIN_DIR)/usr/include  --with-sysroot=$(TOOLCHAIN_DIR) \
 	  --with-build-sysroot=$(TOOLCHAIN_DIR) && \
-	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include &&  make install) || exit 1
+	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include &&  make install) || exit 1
 	touch $(BINUTILS_BUILD_DIR)/.build
 
 $(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source $(BINUTILS_BUILD_DIR)/.build
@@ -89,9 +90,9 @@ $(GCC_STAGE2_BUILD_DIR)/.build: $(GCC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.buil
 	touch $(GCC_STAGE2_BUILD_DIR)/.build
 
 $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
-	cp -aL $(UC_CONFIG_$(ARCH)) $(UCLIBC_DIR)/.config
-	(cd $(UCLIBC_DIR) && make $(MAKEOPTS) oldconfig && make $(MAKEOPTS) all utils && \
-	 make $(MAKEOPTS) install)
+	cp -aL config.$(GNU_TARGET_NAME) $(UCLIBC_DIR)/.config
+	(cd $(UCLIBC_DIR) && make $(MAKEOPTS) oldconfig && make KERNEL_HEADERS=$(TARGET_DIR)/usr/include $(MAKEOPTS) all utils && \
+	make $(MAKEOPTS) install)
 	mkdir -p $(BT_STAGING_DIR)/usr/bin
 	cp -a $(UCLIBC_DIR)/utils/ldd $(BT_STAGING_DIR)/usr/bin
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BT_STAGING_DIR)/usr/bin/ldd
@@ -104,8 +105,8 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	 $(BINUTILS_DIR)/configure --host=$(GNU_TARGET_NAME) --prefix=/usr \
 	  --build=$(GNU_BUILD_NAME) \
 	  --with-build-sysroot=$(BT_STAGING_DIR) && \
-	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include configure-host && \
-	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
+	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include configure-host && \
+	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
 	 install-libiberty install-intl install-bfd install-binutils install-opcodes) || exit 1
 	 perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(BINUTILS_BUILD_DIR2)-built/usr/lib/*.la
 	touch $(BINUTILS_BUILD_DIR2)/.build

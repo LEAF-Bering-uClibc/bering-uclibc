@@ -86,6 +86,8 @@ sub make_absolute_path {
 # checks the build environment (dirs and...)
 sub check_env {
       logme("checking build environment");
+  debug("setting \$GNU_TARGET_NAME to toolchain name ($globConf{'toolchain'})");
+  $ENV{GNU_TARGET_NAME} = $globConf{'toolchain'};
   my @dirs = @{$globConf{'buildenv_dir'}};
   foreach my $dir (@dirs) {
     my $dir1 = strip_slashes(make_absolute_path($dir));

@@ -27,7 +27,7 @@ source: .source
 
 .configure: .source
 	# Need to force setting of CC for included copy of bind - see README
-	( cd $(DHCPD_DIR); CC=$(BT_TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc ./configure $(CONFOPTS) );
+	( cd $(DHCPD_DIR); CC=$(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc ./configure $(CONFOPTS) );
 	touch .configure
 
 .build: .configure
@@ -40,7 +40,7 @@ source: .source
 	mkdir -p $(BT_STAGING_DIR)/etc/default/
 #
 	# Need to force setting of CC for included copy of bind - see README
-	CC=$(BT_TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc make -C $(DHCPD_DIR)
+	CC=$(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc make -C $(DHCPD_DIR)
 	make DESTDIR=$(DHCPD_TARGET_DIR) -C $(DHCPD_DIR) install
 #
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPD_TARGET_DIR)/bin/*

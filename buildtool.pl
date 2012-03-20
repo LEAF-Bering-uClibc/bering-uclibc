@@ -1,8 +1,8 @@
 #! /usr/bin/perl -w
 
-# $Id: buildtool.pl,v 1.1.1.1 2010/04/26 09:03:14 nitr0man Exp $
 # main program buildtool2 for uclibc-bering
-# (C) 2003 Arne Bernin
+# Copyright (C) 2003 Arne Bernin
+# Changes for Bering-uClibc 5.x Copyright (C) 2012 David M Brooke
 # This software is distributed under the GNU General Public Licence,
 # please see the file COPYING
 
@@ -99,6 +99,9 @@ options:
 -D                         \t Download nothing, use files in Source dir (useful for devel)		
 -d                         \t Only to be used in conjunction with the "source" target. 
                            \t Only download files, don't invoke the source action on buildtool.mk
+-t toolchain               \t Build using the specified toolchain
+                           \t (or actually build that toolchain if srcname = "toolchain")
+                           \t Value of "toolchain" is e.g. i486-unknown-linux-uclibc
 MYEOF
 ;
 exit(1);
@@ -146,6 +149,9 @@ while ( $ARGV[0] and $ARGV[0] =~ /^-.*/ ) {
 		$globConf{'noserveroverride'} = 1;
 	} elsif ($option eq "d") {
 		$globConf{'downloadonly'} = 1;
+	} elsif ($option eq "t") {
+		$globConf{'toolchain'} = $ARGV[0];
+		shift;
 	} else {
 
 		print buildtool::Common::Object::make_text_red('',"Error:" ) . " Unknown Option -" . $option . "\n\n";

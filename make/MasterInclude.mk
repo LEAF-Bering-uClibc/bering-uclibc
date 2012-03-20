@@ -1,9 +1,6 @@
 # this is the Master make file that should be included by all the makefiles
 # used for buildroot...
 
-# set arch here - temporary
-export ARCH:=i386
-
 #export vars only if this is not a toolchain building
 ifndef GCC_SOURCE
 #cross-compile fix
@@ -15,15 +12,14 @@ export ac_cv_func_setpgrp_void=yes
 export ac_cv_file__dev_random=yes
 endif
 
+# we assume that we have the target root dir as environment var
+# and also GNU_TARGET_NAME which is set by buildtool.pl
 # where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
 # where the buildstuff goes into
 export BT_BUILD_DIR=$(BT_BUILDROOT)/build
 export BT_BUILDDIR=$(BT_BUILDROOT)/build
-# we assume that we have the target root dir as environment var
-export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging/$(ARCH)
-# we assume that we have the toolchain dir as environment var
-export BT_TOOLCHAIN_DIR:=$(BT_BUILDROOT)/toolchain/$(ARCH)
+export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging/$(GNU_TARGET_NAME)
 # where are the linux sources
 export BT_LINUX_DIR:=$(BT_SOURCE_DIR)/linux/linux
 # where to put finished packages
@@ -39,7 +35,9 @@ export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
 
 ########################################
 
-ifeq ($(ARCH),i386)
+ifeq ($(GNU_TARGET_NAME),i486-unknown-linux-uclibc)
+# primary kernel arch
+export ARCH:=i386
 # available kernel archs
 export KARCHS:=i686 i486 geode
 # available kernel archs with pci-express support
@@ -62,7 +60,9 @@ export ac_cv_sizeof_short=2
 endif
 
 # === sample for second arch ====
-else ifeq ($(ARCH),x86_64)
+else ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
+# primary kernel arch
+export ARCH:=x86_64
 # available kernel archs
 export KARCHS:=x86_64
 # set target subarch here
@@ -86,8 +86,8 @@ endif
 
 # arch of build system
 GNU_BUILD_NAME=$(shell LANG=C gcc -v 2>&1|awk '/Target:/ {print $$2}')
-# arch of target system
-export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
+# arch of target system - dMb: now set via buildtool.pl & buildtool.conf
+##export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
 # target gcc
 export TARGET_CC=$(GNU_TARGET_NAME)-gcc
 export TARGET_CXX=$(GNU_TARGET_NAME)-g++
@@ -108,7 +108,7 @@ export BT_RANLIB:=$(GNU_TARGET_NAME)-ranlib
 
 ##########################################
 #Toolchain dir
-export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(ARCH)
+export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(GNU_TARGET_NAME)
 
 #Paths
 export PATH:=$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
