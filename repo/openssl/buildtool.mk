@@ -6,12 +6,11 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-OPENSSL_DIR:=openssl-1.0.0h
+OPENSSL_DIR:=openssl-1.0.1
 OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
 $(OPENSSL_DIR)/.source:
 	zcat $(OPENSSL_SOURCE) | tar -xvf -
-#	zcat $(OPENSSL_PATCH1) | patch -d $(OPENSSL_DIR) -p1
 
 #	# Clean up the configure script
 #	perl -i -p -e 's,tcc=\"cc\";,tcc=\"$(TARGET_CC)\";,' $(OPENSSL_DIR)/Configure
@@ -25,14 +24,10 @@ $(OPENSSL_DIR)/.configured: $(OPENSSL_DIR)/.source
 		--openssldir=/usr/ssl \
 		--install_prefix=$(OPENSSL_TARGET_DIR) \
 		--cross-compile-prefix=$(CROSS_COMPILE) \
-		no-ssl3 no-tls1 no-idea no-mdc2 no-rc5 no-hw no-krb5 shared no-fips no-threads  \
+		no-ssl3 no-idea no-mdc2 no-rc5  no-krb5 shared no-fips no-threads  \
 		-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib \
 		-I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include \
 		 );
-#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/domd
-#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/pl/linux.pl
-#	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/crypto/bn/Makefile
-#	perl -i -p -e 's,AR=ar.*,AR=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ar r,' $(OPENSSL_DIR)/Makefile
 	touch $(OPENSSL_DIR)/.configured
 
 $(OPENSSL_DIR)/.build: $(OPENSSL_DIR)/.configured
