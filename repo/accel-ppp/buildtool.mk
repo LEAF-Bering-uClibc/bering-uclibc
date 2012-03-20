@@ -1,10 +1,8 @@
 # makefile for accel-pptp
 include $(MASTERMAKEFILE)
 
-ACCEL_DIR:=accel-ppp-1.5.0
+ACCEL_DIR:=$(shell echo $(ACCEL_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 ACCEL_TARGET_DIR:=$(BT_BUILD_DIR)/accel-ppp
-
-export PPPD_VER=2.4.5
 
 $(ACCEL_DIR)/.source:
 	bzcat $(ACCEL_SOURCE) | tar -xvf -
