@@ -19,10 +19,14 @@ use vars qw(@ISA);
 #
 sub _initialize() {
   my $self = shift;
-  my $listfile = $self->absoluteFilename($self->{'CONFIG'}{installedfile});
+  my $listfile;
   my %installed = ();
   
   $self->SUPER::_initialize();
+
+  $listfile = $self->absoluteFilename($self->{'CONFIG'}{installedfile});
+  # substitute environment variables like $GNU_TARGET_NAME
+  $listfile =~ s/\$(\w+)/$ENV{$1}/g;
 
   # read in the file if it exists
   if ( -e $listfile) {
@@ -272,7 +276,10 @@ sub _getSourceDir () {
       #    return;
       #  }
 
-      return $self->absoluteFilename($self->{'CONFIG'}{'source_dir'}."/".$pkg);
+      my $source_dir = $self->{'CONFIG'}{'source_dir'};
+      # substitute environment variables like $GNU_TARGET_NAME
+      $source_dir =~ s/\$(\w+)/$ENV{$1}/g;
+      return $self->absoluteFilename($source_dir."/".$pkg);
 }
 
 ###############################################################################

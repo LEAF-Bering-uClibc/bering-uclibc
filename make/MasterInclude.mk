@@ -15,15 +15,15 @@ endif
 # we assume that we have the target root dir as environment var
 # and also GNU_TARGET_NAME which is set by buildtool.pl
 # where the sources are
-export BT_SOURCE_DIR=$(BT_BUILDROOT)/source
+export BT_SOURCE_DIR=$(BT_BUILDROOT)/source/$(GNU_TARGET_NAME)
 # where the buildstuff goes into
-export BT_BUILD_DIR=$(BT_BUILDROOT)/build
-export BT_BUILDDIR=$(BT_BUILDROOT)/build
+export BT_BUILD_DIR=$(BT_BUILDROOT)/build/$(GNU_TARGET_NAME)
+export BT_BUILDDIR=$(BT_BUILDROOT)/build/$(GNU_TARGET_NAME)
 export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging/$(GNU_TARGET_NAME)
 # where are the linux sources
 export BT_LINUX_DIR:=$(BT_SOURCE_DIR)/linux/linux
 # where to put finished packages
-export BT_PACKAGE_DIR:=$(BT_BUILDROOT)/package
+export BT_PACKAGE_DIR:=$(BT_BUILDROOT)/package/$(GNU_TARGET_NAME)
 # toolsdir
 export BT_TOOLS_DIR:=$(BT_BUILDROOT)/tools
 # where to find the patchtool

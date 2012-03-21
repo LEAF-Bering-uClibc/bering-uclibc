@@ -271,7 +271,10 @@ sub _readBtConfig ($$) {
       my $self = shift;
       my $pkgname = shift || confess("no filename given");
 
-      my $configFile = $self->absoluteFilename($self->{'CONFIG'}{'source_dir'}."/". $pkgname . "/". $self->{'CONFIG'}{'buildtool_config'});
+      my $source_dir = $self->{'CONFIG'}{'source_dir'};
+      # substitute environment variables like $GNU_TARGET_NAME
+      $source_dir =~ s/\$(\w+)/$ENV{$1}/g;
+      my $configFile = $self->absoluteFilename($source_dir."/". $pkgname . "/". $self->{'CONFIG'}{'buildtool_config'});
 	# now make a recursive download of all the files in there
       my %flconfig = Config::General::ParseConfig("-ConfigFile" => $configFile, "-LowerCaseNames" => 1);
 

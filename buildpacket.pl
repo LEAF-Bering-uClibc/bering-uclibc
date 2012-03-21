@@ -28,7 +28,7 @@ use Carp;
 # uclibc Version
 my $version = "0.9.32.1";
 # kernel Version
-my $kver = qx(cat source/linux/linux*/.config | awk '/Linux/ {print \$3}' | head -n 1);
+my $kver = qx(cat source/*/linux/linux*/.config | awk '/Linux/ {print \$3}' | head -n 1);
 $kver =~ s/\n//;
 
 # archivers for different package type
@@ -1068,6 +1068,7 @@ if (exists($options->{'toolchain'})) {
 	}
 }
 print "Using toolchain $toolchain\n"  if $verbose;
+$ENV{GNU_TARGET_NAME} = $toolchain;
 
 $sourceDir	= File::Spec->canonpath(
 					File::Spec->catdir(
@@ -1075,26 +1076,32 @@ $sourceDir	= File::Spec->canonpath(
 						$btConfig->value('source_dir'),
 						$options->{'package'})
 			);
+# substitute environment variables like $GNU_TARGET_NAME
+$sourceDir =~ s/\$(\w+)/$ENV{$1}/g;
 
 $stagingDir	= File::Spec->canonpath(
 					File::Spec->catdir(
 						$baseDir,
-						'staging',
-						$toolchain)
+						$btConfig->value('staging_dir'))
 			);
+# substitute environment variables like $GNU_TARGET_NAME
+$stagingDir =~ s/\$(\w+)/$ENV{$1}/g;
 
 $packageDir	= File::Spec->canonpath(
 					File::Spec->catdir(
 						$baseDir,
-						'package',
-						$toolchain)
+						$btConfig->value('package_dir'))
 			);
+# substitute environment variables like $GNU_TARGET_NAME
+$packageDir =~ s/\$(\w+)/$ENV{$1}/g;
 
 my $installedFile = File::Spec->canonpath(
 					File::Spec->catfile(
 						$baseDir,
 						$btConfig->value('installedfile'))
 				);
+# substitute environment variables like $GNU_TARGET_NAME
+$installedFile =~ s/\$(\w+)/$ENV{$1}/g;
 
 
 if (exists($options->{'packager'})) {
