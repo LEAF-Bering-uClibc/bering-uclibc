@@ -2,7 +2,7 @@
 #
 #  Script to create a Bering-uClibc disk image from existing packages
 #
-#  Copyright (C) 2010, 2011 David M Brooke, davidmbrooke@users.sourceforge.net
+#  Copyright (C) 2010, 2011, 2012 David M Brooke, davidmbrooke@users.sourceforge.net
 #  Based on buildpacket.pl by Martin Hejl
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -32,17 +32,21 @@ use Carp;
 my %configHash = ( );
 my $label;
 my $image;
+my $toolchain;
 my $verbose;
 my $keeptmp;
 my $debug;
 my $Usage =
-qq{Usage: $0 --image=ImgDir --relver=VersionLabel [--verbose] [--keeptmp]
-   image    Parent directory for buildimage.cfg, under buildtool/image
-            e.g. Bering-uClibc_i486_isolinux_vga
-   relver   String to append to image name to show release version
-            e.g. 4.0beta1
-   verbose  [Optional] Report progress during execution
-   keeptmp  [Optional] Do not delete temporary directory
+qq{Usage: $0 --image=ImgDir --relver=VersionLabel
+   --toolchain=ToolchainName [--verbose] [--keeptmp]
+   image      Parent directory for buildimage.cfg, under buildtool/image
+              e.g. Bering-uClibc_i486_isolinux_vga
+   relver     String to append to image name to show release version
+              e.g. 4.0beta1
+   toolchain  Name of Toolchain that was used to generate the Packages
+              e.g. i486-unknown-linux-uclibc
+   verbose    [Optional] Report progress during execution
+   keeptmp    [Optional] Do not delete temporary directory
 };
 
 sub createTempDir( );
@@ -52,15 +56,14 @@ sub createDirUnlessItExists( $ );
 sub copyFilesToTempDir( $$ );
 sub copyFilesWithSearchAndReplace( $$@ );
 
-#TODO: move it somewhere in config
-my $arch='i386';
 
 # Process command line arguments
-GetOptions( "verbose!" => \$verbose,
-	    "image=s"  => \$image,
-	    "relver=s" => \$label,
-	    "keeptmp!" => \$keeptmp,
-	    "debug!"   => \$debug ) or die $Usage;
+GetOptions( "verbose!"    => \$verbose,
+	    "image=s"     => \$image,
+	    "relver=s"    => \$label,
+	    "toolchain=s" => \$toolchain,
+	    "keeptmp!"    => \$keeptmp,
+	    "debug!"      => \$debug ) or die $Usage;
 
 die $Usage unless defined( $image );
 die $Usage unless defined( $label );
@@ -98,16 +101,25 @@ my $imConfig = new Config::General(
     "-LowerCaseNames" => 1,
     "-ExtendedAccess" => 1 );
 
+if (!defined( $toolchain )) {
+    $toolchain = $btConfig->value('toolchain');
+}
+print "Toolchain name:\t\t$toolchain\n" if $verbose;
+$ENV{GNU_TARGET_NAME} = $toolchain;
+
 my $sourceDir = File::Spec->canonpath(
     File::Spec->catdir(
         $baseDir,
 	$btConfig->value('source_dir') ) );
+# Substitute environment variables like $GNU_TARGET_NAME
+$sourceDir =~ s/\$(\w+)/$ENV{$1}/g;
 
 my $stagingDir = File::Spec->canonpath(
     File::Spec->catdir(
         $baseDir,
-	$btConfig->value('staging_dir'),
-	$arch ) );
+	$btConfig->value('staging_dir') ) );
+# Substitute environment variables like $GNU_TARGET_NAME
+$stagingDir =~ s/\$(\w+)/$ENV{$1}/g;
 
 # Generate date label
 $configHash{ '{DATE}' } = time2str( "%Y-%m-%d", time );
@@ -331,6 +343,8 @@ sub copyFilesToTempDir( $$ )
     my ( $source, $target ) = @_;
     my $absSource = File::Spec->catdir( $baseDir, $source );
     my $absTarget = File::Spec->catdir( $tmpDir, $target );
+    # Substitute environment variables like $GNU_TARGET_NAME in absSource
+    $absSource =~ s/\$(\w+)/$ENV{$1}/g;
     # Check for '*' in Source
     if ( $absSource =~ /\*/ )
     {
@@ -394,20 +408,23 @@ buildimage.pl - create a Bering-uClibc disk image
 
 =head1 SYNOPSIS
 
-B<buildimage.pl> --image=ImgDir --relver=VersionLabel [--verbose] [--keeptmp]
+B<buildimage.pl> --image=ImgDir --relver=VersionLabel --toolchain=ToolchainName
+[--verbose] [--keeptmp]
 
-   image    Parent directory for buildimage.cfg, under buildtool/image
-            e.g. Bering-uClibc-isolinux-std
-   relver   String to append to image name to show release version
-            e.g. 4.0beta1
-   verbose  [Optional] Report progress during execution
-   keeptmp  [Optional] Do not delete temporary directory
+   image      Parent directory for buildimage.cfg, under buildtool/image
+              e.g. Bering-uClibc-isolinux-std
+   relver     String to append to image name to show release version
+              e.g. 4.0beta1
+   toolchain  Name of Toolchain that was used to generate the Packages
+              e.g. i486-unknown-linux-uclibc
+   verbose    [Optional] Report progress during execution
+   keeptmp    [Optional] Do not delete temporary directory
 
 =head1 DESCRIPTION
 
 B<buildimage.pl> creates a Bering-uClibc disk image based on parameter
 settings defined in a configuration file (buildimage.cfg) located within a
-sub-directory of buildtool/image/. The name of this sub-directory is specified
+sub-directory of $BT_ROOT/image/. The name of this sub-directory is specified
 with the "--image" command-line argument.
 
 The disk image can be for SYSLINUX (suitable for writing to a flash drive),
