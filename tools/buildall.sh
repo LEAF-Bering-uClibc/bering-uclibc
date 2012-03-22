@@ -1,5 +1,4 @@
 #! /bin/sh
-# $Id: buildall.sh,v 1.1.1.1 2010/04/26 09:03:15 nitr0man Exp $
 #set -x
 # call this from the 
 #
@@ -20,7 +19,8 @@ HTMLFILE=$MYDIR/build.html
 BTROOTDIR=.
 BTBIN=$BTROOTDIR/buildtool.pl
 BPBIN=$BTROOTDIR/buildpacket.pl
-BTSOURCEDIR=$BTROOTDIR/source
+TOOLCHAIN=`grep -i ^Toolchain= $BTROOTDIR/conf/buildtool.conf | cut -d= -f2`
+BTSOURCEDIR=${BTROOTDIR}/source/${TOOLCHAIN}
 BTLOGFILE="${BTROOTDIR}/log/buildtoollog"
 EXITVALUE=0
 
