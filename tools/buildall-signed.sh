@@ -1,4 +1,4 @@
-# $Id: buildall.sh,v 1.1.1.1 2010/04/26 09:03:15 nitr0man Exp $
+#! /bin/sh
 #set -x
 # call this from the 
 #
