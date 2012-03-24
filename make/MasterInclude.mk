@@ -57,6 +57,8 @@ export gnupg_cv_c_endian=little
 export ac_cv_sizeof_int=4
 export ac_cv_sizeof_long=4
 export ac_cv_sizeof_short=2
+# Persuade radius' configure that libldap_r does in fact have ldap_init()
+export ac_cv_lib_ldap_r_ldap_init=yes
 endif
 
 # === sample for second arch ====
