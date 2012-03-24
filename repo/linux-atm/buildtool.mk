@@ -1,31 +1,46 @@
-# makefile for linux-atm
+################################################################################
+#
+# buildtool makefile for linux-atm
+#
+# Cross-compiling notes  2012-03-24  dMb:
+#   The build process creates a program called qgen which is executed as 
+#   part of the build. This needs to be built using the *build* platform
+#   compiler rather than the *target* platform compiler. As a result
+#   src/qgen/Makefile.in specifies the use of BUILD_CC rather than CC.
+#   The ld command line for qgen specifies -lfl so this (flex) library must
+#   be present on the build host. On x86_64 Fedora this required the
+#   installation of RPM flex-static (yum install flex-static)
+#
+################################################################################
+
 include $(MASTERMAKEFILE)
 
-ATM_DIR:=linux-atm-2.5.1
+ATM_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
+ifeq ($(ATM_DIR),)
+ATM_DIR:=$(shell cat DIRNAME)
+endif
 ATM_TARGET_DIR:=$(BT_BUILD_DIR)/linuxatm
-unexport CFLAGS CPPFLAGS
 
-$(ATM_DIR)/.source:
-	zcat $(ATM_SOURCE) | tar -xvf -
-#	Fix qgen Makefile to match other Makefiles, for cross-compiling
-	perl -i -p -e "s,CC = \@CC_FOR_BUILD\@,CC = \@CC\@," $(ATM_DIR)/src/qgen/Makefile.in
-	touch $(ATM_DIR)/.source
+.source:
+	zcat $(SOURCE) | tar -xvf -
+	echo $(ATM_DIR) > DIRNAME
+	touch .source
 
-source: $(ATM_DIR)/.source
+source: .source
 
-$(ATM_DIR)/.configured: $(ATM_DIR)/.source
-	#perl -i -p -e 's,/usr/include/asm/errno.h,$(BT_STAGING_DIR)/include/asm/errno.h,g' $(ATM_DIR)/src/test/Makefile.in
+.configure: .source
 	(cd $(ATM_DIR) ; CFLAGS="$(CFLAGS)" \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
-	--sysconfdir=/etc --oldincludedir=$(BT_STAGING_DIR)/include )
-	touch $(ATM_DIR)/.configured
+	--sysconfdir=/etc \
+	--oldincludedir=$(BT_STAGING_DIR)/include )
+	touch .configure
 
-$(ATM_DIR)/.build: $(ATM_DIR)/.configured
+.build: .configure
 	mkdir -p $(ATM_TARGET_DIR)
 	mkdir -p $(ATM_TARGET_DIR)/etc/init.d
-#multithreaded build fails - build in single thread
+	# Multi-threaded make fails so don't specify $(MAKEOPTS)
 	make -C $(ATM_DIR)
 	make -C $(ATM_DIR) DESTDIR=$(ATM_TARGET_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ATM_TARGET_DIR)/usr/sbin/*
@@ -36,15 +51,17 @@ $(ATM_DIR)/.build: $(ATM_DIR)/.configured
 	cp -aL atmsigd.conf $(ATM_TARGET_DIR)/etc
 	cp -aL atm.init $(ATM_TARGET_DIR)/etc/init.d/atm
 	cp -a $(ATM_TARGET_DIR)/* $(BT_STAGING_DIR)
-	touch $(ATM_DIR)/.build
+	touch .build
 
-build: $(ATM_DIR)/.build
+build: .build
 
 clean:
+	(cd $(ATM_DIR); make clean)
 	rm -rf $(ATM_TARGET_DIR)
-	(cd $(ATM_DIR); make distclean)
-	rm -f $(ATM_DIR)/.build
-	rm -f $(ATM_DIR)/.configured
+	rm -f .build
+	rm -f .configure
 
 srcclean: clean
 	rm -rf $(ATM_DIR)
+	rm DIRNAME
+	rm -f .source
