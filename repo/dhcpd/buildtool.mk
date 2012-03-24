@@ -1,8 +1,20 @@
-#############################################################
+################################################################################
 #
 # buildtool makefile for dhcpd
 #
-#############################################################
+#  Cross-compiling notes  2012-03-24  dMb:
+#    The included copy of 'bind' is not cross-compile friendly.
+#    This is acknowldged in the README (section for SOLARIS):
+#     > makefiles for the Bind libraries.  Currently we don't pass all
+#     > environment variables between the DHCP configure and the Bind configure.
+#    As a result it is necessary to force CC to be the *target* CC so that the
+#    included copy of bind is built for the target platform.
+#    The problem then is that it doesn't spot that it is being cross-compiled
+#    so we need to force the specification of --host for bind's configure.
+#    And *then* the problem is that the "gen" utility needs to run on the
+#    build host, so it needs to be compiled with BUILD_CC rather than CC.
+#
+################################################################################
 
 include $(MASTERMAKEFILE)
 
@@ -21,13 +33,18 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) --prefix=/
 	echo $(DHCPD_DIR) > DIRNAME
 	# Force use of local bind include files before staging include files
 	for dir in common omapip client relay; do perl -i -p -e 's,^DEFAULT_INCLUDES = ,DEFAULT_INCLUDES = -I../bind/include ,' $(DHCPD_DIR)/$$dir/Makefile.in; done
+	# Force cross-compile for local copy of bind
+	perl -i -p -e 's, ./configure , ./configure --host=$(GNU_TARGET_NAME) ,' $(DHCPD_DIR)/bind/Makefile
+	# Force early unpacking of bind.tar.gz so we can hack it
+	( cd $(DHCPD_DIR)/bind ; zcat bind.tar.gz | tar -xvf - )
+	# Force use of BUILD_CC for "gen" utility which runs on build host
+	( cd $(DHCPD_DIR)/bind ; perl -i -p -e 's,CC}.*srcdir}/gen.c,BUILD_CC} -I\$$\{srcdir\}/../isc/include -o \$$\@ \$$\{srcdir\}/gen.c,' bind-*/lib/export/dns/Makefile.in )
 	touch .source
 
 source: .source
 
 .configure: .source
-	# Need to force setting of CC for included copy of bind - see README
-	( cd $(DHCPD_DIR); CC=$(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc ./configure $(CONFOPTS) );
+	( cd $(DHCPD_DIR); ./configure $(CONFOPTS) );
 	touch .configure
 
 .build: .configure
@@ -40,7 +57,7 @@ source: .source
 	mkdir -p $(BT_STAGING_DIR)/etc/default/
 #
 	# Need to force setting of CC for included copy of bind - see README
-	CC=$(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc make -C $(DHCPD_DIR)
+	CC=$(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc BUILD_CC=gcc make -C $(DHCPD_DIR)
 	make DESTDIR=$(DHCPD_TARGET_DIR) -C $(DHCPD_DIR) install
 #
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPD_TARGET_DIR)/bin/*
