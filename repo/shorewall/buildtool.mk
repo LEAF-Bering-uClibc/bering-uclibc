@@ -8,7 +8,7 @@ include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/shorewall
 
-SHOREWALL_DIR:=shorewall-4.5.0.3
+SHOREWALL_DIR:=shorewall-4.5.1.1
 
 $(SHOREWALL_DIR)/.source:
 	zcat $(SHOREWALL_SOURCE) | tar -xvf -
@@ -21,7 +21,7 @@ $(SHOREWALL_DIR)/.source:
 #	cp compiler $(SHOREWALL_DIR)	
 
 $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
-	cp $(SHOREWALL_DIR)/init.debian.sh $(SHOREWALL_DIR)/init.sh
+	cp init.sh $(SHOREWALL_DIR)/init.sh
 	mkdir -p $(TARGET_DIR)
 	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
 	

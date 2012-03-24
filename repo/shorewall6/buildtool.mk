@@ -8,7 +8,7 @@ include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/shorewall6
 
-SHOREWALL_DIR:=shorewall6-4.5.0.3
+SHOREWALL_DIR:=shorewall6-4.5.1.1
 
 $(SHOREWALL_DIR)/.source:
 	zcat $(SHOREWALL_SOURCE) | tar -xvf -
@@ -25,7 +25,7 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL_DEFAULT) $(TARGET_DIR)/etc/default/shorewall6
 
-	rm -rf $(TARGET_DIR)/usr/share/shorewall6/configfiles
+#	rm -rf $(TARGET_DIR)/usr/share/shorewall6/configfiles
 	rm -rf $(TARGET_DIR)/etc/logrotate.d
 	rm -rf $(TARGET_DIR)/usr/share/man
 	cp -afv $(TARGET_DIR)/* $(BT_STAGING_DIR)
@@ -48,6 +48,7 @@ stageclean:
 	rm -rf $(BT_STAGING_DIR)/usr/share/shorewall6
 	rm -rf $(BT_STAGING_DIR)/var/lib/shorewall6
 	rm -rf $(BT_STAGING_DIR)/var/state/shorewall6
+	rm -rf $(BT_STAGING_DIR)/usr/share/shorewall6/configfiles
 
 srcclean: clean
 	rm -rf $(SHOREWALL_DIR)
