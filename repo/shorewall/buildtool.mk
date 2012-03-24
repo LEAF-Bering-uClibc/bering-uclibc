@@ -23,7 +23,7 @@ $(SHOREWALL_DIR)/.source:
 $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 	cp init.sh $(SHOREWALL_DIR)/init.sh
 	mkdir -p $(TARGET_DIR)
-	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
+	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) HOST=linux ./install.sh)
 	
 #	chmod 755 $(TARGET_DIR)/usr/share/shorewall/firewall
 	mkdir -p $(TARGET_DIR)/etc/default

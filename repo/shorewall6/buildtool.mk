@@ -20,7 +20,7 @@ $(SHOREWALL_DIR)/.source:
 $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 	cp init.sh $(SHOREWALL_DIR)/init.sh
 	mkdir -p $(TARGET_DIR)
-	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
+	(cd $(SHOREWALL_DIR); env PREFIX=$(TARGET_DIR) HOST=linux ./install.sh)
 	
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL_DEFAULT) $(TARGET_DIR)/etc/default/shorewall6
