@@ -21,7 +21,8 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL_DEFAULT) $(TARGET_DIR)/etc/default/shorewall-lite
-	install -c $(SHOREWALL_INIT) $(TARGET_DIR)/etc/init.d/shorewall-lite
+	rm -f $(TARGET_DIR)/etc/init.d/shorewall-lite
+	cp $(SHOREWALL_INIT) $(TARGET_DIR)/etc/init.d/shorewall-lite
 
 	rm -rf $(TARGET_DIR)/etc/shorewall/Makefile
 	cp -afv $(TARGET_DIR)/* $(BT_STAGING_DIR)
