@@ -1,54 +1,61 @@
-# this is the Master make file that should be included by all the makefiles
-# used for buildroot...
+###############################################################################
+#
+# Master make file that must be included by all the other buildtool.mk files
+#
+###############################################################################
 
-#export vars only if this is not a toolchain building
+# Set variables to "prime" the configure scripts' cache for cross-compiling
+# These are Generic settings - Toolchain-specific settings go later in the file
+# Export vars only if this is not a toolchain building
 ifndef GCC_SOURCE
-#cross-compile fix
 export ac_cv_func_malloc_0_nonnull=yes
 export ac_cv_func_realloc_0_nonnull=yes
 export ac_cv_va_copy=C99
 export ac_cv_sys_restartable_syscalls=yes
 export ac_cv_func_setpgrp_void=yes
 export ac_cv_file__dev_random=yes
+# Persuade radius' configure that libldap_r does in fact have ldap_init()
+export ac_cv_lib_ldap_r_ldap_init=yes
 endif
 
-# we assume that we have the target root dir as environment var
-# and also GNU_TARGET_NAME which is set by buildtool.pl
-# where the sources are
+# We assume we have the target root dir (BT_BUILDROOT) and the target platform
+# name (GNU_TARGET_NAME) as environment variables, both set by buildtool.pl
+#
+# Where the sources are
 export BT_SOURCE_DIR=$(BT_BUILDROOT)/source/$(GNU_TARGET_NAME)
-# where the buildstuff goes into
+# Where the buildstuff goes into
 export BT_BUILD_DIR=$(BT_BUILDROOT)/build/$(GNU_TARGET_NAME)
 export BT_BUILDDIR=$(BT_BUILDROOT)/build/$(GNU_TARGET_NAME)
 export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging/$(GNU_TARGET_NAME)
-# where are the linux sources
+# Where the linux sources are
 export BT_LINUX_DIR:=$(BT_SOURCE_DIR)/linux/linux
-# where to put finished packages
+# Where to put finished packages
 export BT_PACKAGE_DIR:=$(BT_BUILDROOT)/package/$(GNU_TARGET_NAME)
-# toolsdir
+# Where the tools are
 export BT_TOOLS_DIR:=$(BT_BUILDROOT)/tools
-# where to find the patchtool
+# Where to find the patchtool
 export BT_PATCHTOOL:=$(BT_TOOLS_DIR)/make-patches.sh
-#  where is dpatch
+# Where to find dpatch
 export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch 
-# getdirname tool
+# Where to find the getdirname tool
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
 
-########################################
+
+# Default toolchain configuration
 
 ifeq ($(GNU_TARGET_NAME),i486-unknown-linux-uclibc)
-# primary kernel arch
+# Primary kernel architecture
 export ARCH:=i386
-# available kernel archs
+# Space-separated list of kernel sub-archs to generate
 export KARCHS:=i686 i486 geode
-# available kernel archs with pci-express support
+# Available kernel archs with pci-express support
 export KARCHS_PCIE:=i686
-# set target subarch here
-export GNU_ARCH:=i486
-# set target optimization here
-export GNU_TUNE:=pentiumpro
+# Arch-specific CFLAGS
+export ARCH_CFLAGS=-march=i486 -mtune=pentiumpro
 
-# Export cross-compile arch-dependent vars
-# only if this is not a toolchain building
+# Set variables to "prime" the configure scripts' cache for cross-compiling
+# These are toolchain-specific settings - generic settings go above
+# Export vars only if this is not a toolchain building
 ifndef GCC_SOURCE
 export ac_cv_libnet_endianess=lil
 export ac_cv_c_bigendian=no
@@ -57,23 +64,31 @@ export gnupg_cv_c_endian=little
 export ac_cv_sizeof_int=4
 export ac_cv_sizeof_long=4
 export ac_cv_sizeof_short=2
-# Persuade radius' configure that libldap_r does in fact have ldap_init()
-export ac_cv_lib_ldap_r_ldap_init=yes
 endif
 
-# === sample for second arch ====
-else ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
-# primary kernel arch
-export ARCH:=x86_64
-# available kernel archs
-export KARCHS:=x86_64
-# set target subarch here
-export GNU_ARCH:=generic
-# set target optimization here
-export GNU_TUNE:=generic
+# Alternate toolchain configuration
 
-# Export cross-compile arch-dependent vars
-# only if this is not a toolchain building
+else ifeq ($(GNU_TARGET_NAME),armv6-unknown-linux-uclibc)
+# Primary kernel architecture
+export ARCH:=arm
+# Space-separated list of kernel sub-archs to generate
+export KARCHS:=bcmring
+# Arch-specific CFLAGS
+export ARCH_CFLAGS=-march=armv6 -mtune=arm1176jzf-s
+
+# Alternate toolchain configuration
+
+else ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
+# Primary kernel architecture
+export ARCH:=x86_64
+# Space-separated list of kernel sub-archs to generate
+export KARCHS:=x86_64
+# Arch-specific CFLAGS
+export ARCH_CFLAGS=-march=generic -mtune=generic
+
+# Set variables to "prime" the configure scripts' cache for cross-compiling
+# These are toolchain-specific settings - generic settings go above
+# Export vars only if this is not a toolchain building
 ifndef GCC_SOURCE
 export ac_cv_libnet_endianess=lil
 export ac_cv_c_bigendian=no
@@ -86,62 +101,57 @@ endif
 
 endif
 
-# arch of build system
+# Arch of build system
 GNU_BUILD_NAME=$(shell LANG=C gcc -v 2>&1|awk '/Target:/ {print $$2}')
-# arch of target system - dMb: now set via buildtool.pl & buildtool.conf
+# Arch of target system is now set via buildtool.pl & buildtool.conf
 ##export GNU_TARGET_NAME=$(GNU_ARCH)-pc-linux-uclibc
-# target gcc
+# Target gcc
 export TARGET_CC=$(GNU_TARGET_NAME)-gcc
 export TARGET_CXX=$(GNU_TARGET_NAME)-g++
-# target ld
+# Target ld
 export TARGET_LD=$(GNU_TARGET_NAME)-ld
-
+# Target ar
 export TARGET_AR=$(GNU_TARGET_NAME)-ar
+# Target ranlib
 export TARGET_RANLIB=$(GNU_TARGET_NAME)-ranlib
-# for dpatch (debian patch)
+export BT_RANLIB:=$(GNU_TARGET_NAME)-ranlib
+# For dpatch (debian patch)
 export DEB_BUILD_ARCH=$(ARCH)
-# strip
+# Strip variables
 export BT_STRIP:=$(GNU_TARGET_NAME)-strip
 export BT_STRIP_LIBOPTS:=--strip-unneeded 
 export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
 
-#ranlib
-export BT_RANLIB:=$(GNU_TARGET_NAME)-ranlib
-
-##########################################
-#Toolchain dir
+# Toolchain dir
 export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(GNU_TARGET_NAME)
 
-#Paths
+# Paths
 export PATH:=$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
 export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 export PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 
-#Cross-compile target
+# Cross-compile target
 export CROSS_COMPILE=$(GNU_TARGET_NAME)-
 
-#make options
+# Make options
 CPUCOUNT=$(shell cat /proc/cpuinfo | grep processor | wc -l)
 export MAKEOPTS:=-j$(shell echo $$(($(CPUCOUNT)+1)))
 
-# hack for RH 9 systems - perl seems to have a problem with UTF8
+# Hack for RH 9 systems - perl seems to have a problem with UTF8
 export LANG=en_US
 
-# default optimization settings for compiling code 
-export CFLAGS=-O2 -march=$(GNU_ARCH) -mtune=$(GNU_TUNE) -I$(BT_STAGING_DIR)/usr/include
+# Default settings for compiling code 
+export CFLAGS=-O2 $(ARCH_CFLAGS) -I$(BT_STAGING_DIR)/usr/include
 export CPPFLAGS=-I$(BT_STAGING_DIR)/usr/include
 
-# default ld flags
+# Default ld flags
 export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib
 EXTCCLDFLAGS=-Wl,-rpath,$(BT_STAGING_DIR)/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib
 EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib
 
-# check for linux version
-
+# Check for linux version
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
 BT_KERNEL_RELEASE1=$(shell cat $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH)/.config | awk '/Linux.*Kernel Configuration/ {print $$3}')
 export BT_KERNEL_RELEASE=$(shell echo ${BT_KERNEL_RELEASE1})
 export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
-
-#BT_DEPMOD=$(BT_STAGING_DIR)/sbin/depmod
 
