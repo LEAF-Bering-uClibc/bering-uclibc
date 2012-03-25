@@ -32,19 +32,15 @@ use Carp;
 my %configHash = ( );
 my $label;
 my $image;
-my $toolchain;
 my $verbose;
 my $keeptmp;
 my $debug;
 my $Usage =
-qq{Usage: $0 --image=ImgDir --relver=VersionLabel
-   --toolchain=ToolchainName [--verbose] [--keeptmp]
+qq{Usage: $0 --image=ImgDir --relver=VersionLabel [--verbose] [--keeptmp]
    image      Parent directory for buildimage.cfg, under buildtool/image
               e.g. Bering-uClibc_i486_isolinux_vga
    relver     String to append to image name to show release version
               e.g. 4.0beta1
-   toolchain  Name of Toolchain that was used to generate the Packages
-              e.g. i486-unknown-linux-uclibc
    verbose    [Optional] Report progress during execution
    keeptmp    [Optional] Do not delete temporary directory
 };
@@ -61,7 +57,6 @@ sub copyFilesWithSearchAndReplace( $$@ );
 GetOptions( "verbose!"    => \$verbose,
 	    "image=s"     => \$image,
 	    "relver=s"    => \$label,
-	    "toolchain=s" => \$toolchain,
 	    "keeptmp!"    => \$keeptmp,
 	    "debug!"      => \$debug ) or die $Usage;
 
@@ -83,7 +78,7 @@ my $btConfig = new Config::General(
     "-LowerCaseNames" => 1,
     "-ExtendedAccess" => 1 );
 
-# Fetch the global config (e.g. conf/sources.cfg)
+# Fetch the global config (conf/sources.cfg)
 my $glConfig = new Config::General(
     "-ConfigFile" => File::Spec->catfile(
         $baseDir,
@@ -91,7 +86,7 @@ my $glConfig = new Config::General(
     "-LowerCaseNames" => 1,
     "-ExtendedAccess" => 1 );
 
-# Fetch the image specific config
+# Fetch the image specific config (${image_dir}/buildimage.cfg)
 my $imConfig = new Config::General(
     "-ConfigFile" => File::Spec->catfile(
         $baseDir,
@@ -101,25 +96,19 @@ my $imConfig = new Config::General(
     "-LowerCaseNames" => 1,
     "-ExtendedAccess" => 1 );
 
-if (!defined( $toolchain )) {
-    $toolchain = $btConfig->value('toolchain');
-}
-print "Toolchain name:\t\t$toolchain\n" if $verbose;
-$ENV{GNU_TARGET_NAME} = $toolchain;
-
+# Fetch the name of the source directory
+# Need to substitute variables like $GNU_TARGET_NAME before using this!
 my $sourceDir = File::Spec->canonpath(
     File::Spec->catdir(
         $baseDir,
 	$btConfig->value('source_dir') ) );
-# Substitute environment variables like $GNU_TARGET_NAME
-$sourceDir =~ s/\$(\w+)/$ENV{$1}/g;
 
+# Fetch the name of the staging directory
+# Need to substitute variables like $GNU_TARGET_NAME before using this!
 my $stagingDir = File::Spec->canonpath(
     File::Spec->catdir(
         $baseDir,
 	$btConfig->value('staging_dir') ) );
-# Substitute environment variables like $GNU_TARGET_NAME
-$stagingDir =~ s/\$(\w+)/$ENV{$1}/g;
 
 # Generate date label
 $configHash{ '{DATE}' } = time2str( "%Y-%m-%d", time );
@@ -128,7 +117,7 @@ print "Build Date is:\t\t$configHash{ '{DATE}' }\n" if $verbose;
 # Create directory to hold image contents
 my $tmpDir = createTempDir( );
 
-# Extract name, type of image, kernel arch and suffix from config file
+# Extract image name, type, kernel arch, suffix and toolchain from config file
 my $imageStruc = $imConfig->value( 'image' );
 my $imgName = $imageStruc->{ 'imagename' };
 die "ERROR: ImageName is not specified in config file" unless defined $imgName;
@@ -142,6 +131,15 @@ print "Image type:\t\t$imgType\n" if $verbose;
 my $imgSuffix = $imageStruc->{ 'imagesuffix' };
 die "ERROR: ImageSuffix is not specified in config file" unless defined $imgSuffix;
 print "Image Suffix:\t\t$imgSuffix\n" if $verbose;
+my $toolchain = $imageStruc->{ 'toolchain' };
+die "ERROR: Toolchain is not specified in config file" unless defined $toolchain;
+print "Toolchain name:\t\t$toolchain\n" if $verbose;
+
+# Set $GNU_TARGET_NAME the same as "toolchain" and substitute references to
+# environment variables in source and staging directory names
+$ENV{GNU_TARGET_NAME} = $toolchain;
+$sourceDir =~ s/\$(\w+)/$ENV{$1}/g;
+$stagingDir =~ s/\$(\w+)/$ENV{$1}/g;
 
 # Check if the config file specifies a path for modules.tgz & firmware.tgz files
 my $modTgzPath = $imageStruc->{ 'modtgzpath' };
@@ -408,15 +406,12 @@ buildimage.pl - create a Bering-uClibc disk image
 
 =head1 SYNOPSIS
 
-B<buildimage.pl> --image=ImgDir --relver=VersionLabel --toolchain=ToolchainName
-[--verbose] [--keeptmp]
+B<buildimage.pl> --image=ImgDir --relver=VersionLabel [--verbose] [--keeptmp]
 
    image      Parent directory for buildimage.cfg, under buildtool/image
               e.g. Bering-uClibc-isolinux-std
    relver     String to append to image name to show release version
               e.g. 4.0beta1
-   toolchain  Name of Toolchain that was used to generate the Packages
-              e.g. i486-unknown-linux-uclibc
    verbose    [Optional] Report progress during execution
    keeptmp    [Optional] Do not delete temporary directory
 
