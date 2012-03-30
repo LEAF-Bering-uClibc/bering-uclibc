@@ -3,10 +3,13 @@ sha1_generic arc4 ecb
 pppoe pptp l2tp_ppp l2tp_eth ppp_mppe ppp_async ppp_deflate ppp_synctty
 softdog
 e100 e1000 r8169 skge sky2 8139too via-rhine
-ts_*
+# string matchers
+ts_.*
+# shaper-related modules
 sch_htb sch_tbf sch_sfq sch_hfsc sch_ingress sch_esfq cls_u32 cls_fw cls_flow act_mirred act_police
-processor hwmon thermal_sys
 # kernel/net/netfilter, kernel/net/ipv*/netfilter modules
-ip_set_* xt_* ipt_* iptable_* ip6t_* ip6table_* arptable_* arpt_* nf_defrag_* nf_conntrack_ipv* nf_nat_pptp nf_nat_ftp
+ip_set_.* (arp|ip6?|x)t(able)?_.* nf_defrag_.* nf_conntrack_ipv[46] nf_nat_pptp nf_nat_ftp
 # kernel/net/ipv* modules
-tcp_* xfrm4_* xfrm6_* ipcomp ipcomp6 ah4 esp4 ah6 esp6 mip6 sit
+ipv[46]/[^/]*
+# cpufreq drivers
+cpufreq/[^/]*

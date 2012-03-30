@@ -50,12 +50,12 @@
 #			Type		= binary
 #			Permissions	= 644
 #		</File>
-		<File>
-			Source		= lib/modules/__KVER__-##KARCH##/kernel/drivers/cpufreq/*.ko.gz
-			Filename	= lib/modules/
-			Type		= binary
-			Permissions	= 644
-		</File>
+#		<File>
+#			Source		= lib/modules/__KVER__-##KARCH##/kernel/drivers/cpufreq/*.ko.gz
+#			Filename	= lib/modules/
+#			Type		= binary
+#			Permissions	= 644
+#		</File>
 		<File>
 			Source		= lib/firmware/e100/*.bin
 			Filename	= lib/firmware/e100/

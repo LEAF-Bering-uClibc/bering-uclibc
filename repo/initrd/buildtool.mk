@@ -21,7 +21,7 @@ $(INITRD_DIR)/.build:
 		    ohci-hcd usb-storage sd_mod sr_mod isofs vfat floppy usbhid >mod ; \
 	[ -f files.$$a ] && rm -f files.$$a ; \
 	for m in `cat mod`; do echo $(ESCKEY) "<File>\n\tSource\t\t= lib/modules/__KVER__-$$a/$$m \n\t\
-	Filename\t= lib/modules/$$(echo $$m|sed 's/[a-z]*\/[a-z_/-]*\///g')\n\t\
+	Filename\t= lib/modules/$$(echo $$m|sed 's,\([a-z0-9]*/\)\+,,')\n\t\
 	Type\t\t= binary\n\tType\t\t= module\n\tPermissions\t= 644\n</File>">>files.$$a; done; \
 	echo $(ESCKEY) "#include <common.$$a>" >>package.cfg; \
 	perl -p -e "s,##ARCH##,$$a,g" common.tpl >common.$$a ; \
