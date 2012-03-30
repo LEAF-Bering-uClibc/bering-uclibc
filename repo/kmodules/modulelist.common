@@ -1,0 +1,8 @@
+sha1_generic arc4 ecb
+8021q ifb
+pppoe pptp l2tp_ppp l2tp_eth ppp_mppe ppp_async ppp_deflate ppp_synctty
+softdog
+e100 e1000 r8169 skge sky2 8139too via-rhine
+ts_*
+sch_htb sch_tbf sch_sfq sch_hfsc sch_ingress sch_esfq cls_u32 cls_fw cls_flow act_mirred act_police
+processor hwmon thermal_sys
