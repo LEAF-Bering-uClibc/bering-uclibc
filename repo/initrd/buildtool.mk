@@ -14,6 +14,7 @@ $(INITRD_DIR)/.build:
 	mkdir -p $(INITRD_TARGET_DIR)/sbin
 
 	echo $(ESCKEY) "isofs\nvfat">$(INITRD_TARGET_DIR)/boot/etc/modules
+	-rm -f package.cfg
 	(for a in $(KARCHS); do \
 	BT_STAGING_DIR=$(BT_STAGING_DIR) BT_KERNEL_RELEASE=$(BT_KERNEL_RELEASE)-$$a \
 		    sh $(BT_TOOLS_DIR)/getdep.sh "ata_.*" ahci ehci-hcd uhci-hcd \
@@ -21,7 +22,10 @@ $(INITRD_DIR)/.build:
 	[ -f files.$$a ] && rm -f files.$$a ; \
 	for m in `cat mod`; do echo $(ESCKEY) "<File>\n\tSource\t\t= lib/modules/__KVER__-$$a/$$m \n\t\
 	Filename\t= lib/modules/$$(echo $$m|sed 's/[a-z]*\/[a-z_/-]*\///g')\n\t\
-	Type\t\t= binary\n\tType\t\t= module\n\tPermissions\t= 644\n</File>">>files.$$a; done; done)
+	Type\t\t= binary\n\tType\t\t= module\n\tPermissions\t= 644\n</File>">>files.$$a; done; \
+	echo $(ESCKEY) "#include <common.$$a>" >>package.cfg; \
+	perl -p -e "s,##ARCH##,$$a,g" common.tpl >common.$$a ; \
+	done)
 
 	cp -aL README $(INITRD_TARGET_DIR)/boot/etc
 	cp -aL root.linuxrc $(INITRD_TARGET_DIR)/var/lib/lrpkg
