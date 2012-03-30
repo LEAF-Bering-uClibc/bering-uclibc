@@ -14,10 +14,10 @@ source:
 build:
 	-rm -f package.cfg
 	(for i in $(KARCHS); do \
-	cat modulelist.common >modulelist.$$i ; \
+	sed 's,#.*,,' modulelist.common >modulelist.$$i ; \
 	[ "`echo $(KARCHS_PCIE) | awk '/(^|\W)'"$$i"'(\W|$$)/ {print "yes"}'`" = yes ] && \
-		cat modulelist.pcie >>modulelist.$$i ; \
-	[ -f specific.$$i ] && cat specific.$$i >>modulelist.$$i ; \
+		sed 's,#.*,,' modulelist.pcie >>modulelist.$$i ; \
+	[ -f specific.$$i ] && sed 's,#.*,,' specific.$$i >>modulelist.$$i ; \
 	BT_STAGING_DIR=$(BT_STAGING_DIR) BT_KERNEL_RELEASE=$(BT_KERNEL_RELEASE)-$$i \
 		sh $(BT_TOOLS_DIR)/getdep.sh `cat modulelist.$$i` >mod ; \
 	[ -f files.$$i ] && rm -f files.$$i ; \
