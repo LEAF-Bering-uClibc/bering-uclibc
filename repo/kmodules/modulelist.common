@@ -8,7 +8,7 @@ ts_.*
 # shaper-related modules
 sch_htb sch_tbf sch_sfq sch_hfsc sch_ingress sch_esfq cls_u32 cls_fw cls_flow act_mirred act_police
 # kernel/net/netfilter, kernel/net/ipv*/netfilter modules
-ipset/[^/]* (arp|ip6?|x)t(able)?_.* nf_defrag_.* nf_conntrack_ipv[46] nf_nat_pptp nf_nat_ftp
+ipset/[^/]* ipvs/[^/]* (arp|ip6?|x)t(able)?_.* nf_defrag_.* nf_conntrack_ipv[46] nf_nat_pptp nf_nat_ftp
 # kernel/net/ipv* modules
 ipv[46]/[^/]*
 # cpufreq drivers
