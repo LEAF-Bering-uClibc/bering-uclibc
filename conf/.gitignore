@@ -1,4 +1,4 @@
 # Exclude buildtool lockfile
 lockfile
 sources.local
-*-unknown-linux-uclibc
+*-unknown-linux-*

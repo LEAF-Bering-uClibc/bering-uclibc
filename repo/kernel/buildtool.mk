@@ -32,8 +32,8 @@ $(LINUX_BUILDDIR):
 	(for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
 	cd $(BT_LINUX_DIR)-$$i && \
 	make $(MAKEOPTS) bzImage && make $(MAKEOPTS) modules && \
-	cp $(BT_LINUX_DIR)-$$i/arch/x86/boot/bzImage $(LINUX_BUILDDIR)/$(KIMAGE)-$$i && \
-	cp $(LINUX_BUILDDIR)/$(KIMAGE)-$$i $(BT_STAGING_DIR)/boot/linux-$$i &&\
+	cp $(BT_LINUX_DIR)-$$i/arch/*/boot/bzImage $(LINUX_BUILDDIR)/$(KIMAGE)-$$i && \
+	cp $(LINUX_BUILDDIR)/$(KIMAGE)-$$i $(BT_STAGING_DIR)/boot/linux-$$i && \
 	cp $(BT_LINUX_DIR)-$$i/System.map $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i && \
 	make  ARCH=$(ARCH) INSTALL_MOD_PATH=$(LINUX_BUILDDIR) GENKSYMS="$(BT_STAGING_DIR)/sbin/genksyms" modules_install && \
 	find $(LINUX_BUILDDIR)/lib/modules/$(KVERSION)-$$i -name '*.ko' | xargs gzip -9 -f && \

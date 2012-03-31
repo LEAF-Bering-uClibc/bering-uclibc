@@ -68,11 +68,11 @@ endif
 
 # Alternate toolchain configuration
 
-else ifeq ($(GNU_TARGET_NAME),armv6-unknown-linux-uclibc)
+else ifeq ($(GNU_TARGET_NAME),armv6-unknown-linux-uclibcgnueabi)
 # Primary kernel architecture
 export ARCH:=arm
 # Space-separated list of kernel sub-archs to generate
-export KARCHS:=bcmring
+export KARCHS:=bcmrpi
 # Arch-specific CFLAGS
 export ARCH_CFLAGS=-march=armv6 -mtune=arm1176jzf-s
 

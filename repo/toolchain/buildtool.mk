@@ -29,7 +29,7 @@ unexport LDFLAGS
 
 $(UCLIBC_DIR)/.source:
 	bzcat $(UCLIBC_SOURCE) | tar xvf -
-	# create config.$(GNU_TARGET_NAME)_headers file
+	# create config.$(GNU_TARGET_NAME)_headers with no CROSS_COMPILER_PREFIX
 	perl -p -e 's,^CROSS_COMPILER_PREFIX=.*$$,CROSS_COMPILER_PREFIX="",' config.$(GNU_TARGET_NAME) > config.$(GNU_TARGET_NAME)_headers
 	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
@@ -91,8 +91,10 @@ $(GCC_STAGE2_BUILD_DIR)/.build: $(GCC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.buil
 
 $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
 	cp -aL config.$(GNU_TARGET_NAME) $(UCLIBC_DIR)/.config
-	(cd $(UCLIBC_DIR) && make $(MAKEOPTS) oldconfig && make KERNEL_HEADERS=$(TARGET_DIR)/usr/include $(MAKEOPTS) all utils && \
-	make $(MAKEOPTS) install)
+	# force full path to KERNEL_HEADERS into uClibc .config
+	# since command-line override doesn't always work
+	perl -i -p -e "s,^KERNEL_HEADERS=.*,KERNEL_HEADERS=\"$(TARGET_DIR)/usr/include\"," $(UCLIBC_DIR)/.config
+	(cd $(UCLIBC_DIR) && make oldconfig && make all utils && make install)
 	mkdir -p $(BT_STAGING_DIR)/usr/bin
 	cp -a $(UCLIBC_DIR)/utils/ldd $(BT_STAGING_DIR)/usr/bin
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BT_STAGING_DIR)/usr/bin/ldd
