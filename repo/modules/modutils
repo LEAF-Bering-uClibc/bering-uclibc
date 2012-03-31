@@ -37,15 +37,7 @@ do
 	logger modutils module $module could not be loaded
 done
 
-#autodetection of hardware
-MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
-TMODALIAS=""
-while [ `echo "$MODALIAS"|wc -l` -gt `echo "$TMODALIAS"|wc -l` ]; do
-	for i in $MODALIAS; do
-		/sbin/modprobe $i 2>/dev/null
-	done
-	[ "$VERBOSE" ] && echo Loaded `echo "$MODALIAS"|wc -l` modaliases
-	[ "$DRV_WAIT" -gt 0 ] && sleep $DRV_WAIT
-	TMODALIAS="$MODALIAS"
-	MODALIAS=`find /sys/devices -iname modalias -exec cat {} \;`
+# touch uevent for load all required modules for cold-plugged devices
+find /sys -type f -name 'uevent' | while read dev_event; do
+	echo 'add' > $dev_event
 done
