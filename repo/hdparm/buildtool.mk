@@ -24,8 +24,8 @@ source: $(HDPARM_DIR)/.source
 
 $(HDPARM_DIR)/.build: $(HDPARM_DIR)/.source
 	mkdir -p $(HDPARM_TARGET_DIR)
-	$(MAKE) $(MAKEOPTS) binprefix=/ -C $(HDPARM_DIR)
-	$(MAKE) binprefix=/ DESTDIR=$(HDPARM_TARGET_DIR) -C $(HDPARM_DIR) install
+	$(MAKE) $(MAKEOPTS) binprefix=/ STRIP=$(GNU_TARGET_NAME)-strip -C $(HDPARM_DIR)
+	$(MAKE) binprefix=/ DESTDIR=$(HDPARM_TARGET_DIR) STRIP=$(GNU_TARGET_NAME)-strip -C $(HDPARM_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(HDPARM_TARGET_DIR)/sbin/*
 	-rm -rf $(HDPARM_TARGET_DIR)/usr
 	cp -r $(HDPARM_TARGET_DIR)/* $(BT_STAGING_DIR)/

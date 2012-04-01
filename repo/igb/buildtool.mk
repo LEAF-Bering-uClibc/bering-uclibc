@@ -21,7 +21,7 @@ $(DIR)/.build:
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) igb.ko && gzip -9 -f igb.ko && \
 	cp -a igb.ko.gz $(TARGET_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/$(MODULE_PATH) ||\
 	exit 1 ; done)
-	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
+	-cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build
 
 build: $(DIR)/.build

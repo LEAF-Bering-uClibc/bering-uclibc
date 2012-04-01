@@ -19,7 +19,7 @@ $(OPENSSL_DIR)/.source:
 $(OPENSSL_DIR)/.configured: $(OPENSSL_DIR)/.source
 
 	(cd $(OPENSSL_DIR); \
-	./Configure linux-elf  \
+	./Configure $(OPENSSL_TARGET)  \
 		--prefix=/usr \
 		--openssldir=/usr/ssl \
 		--install_prefix=$(OPENSSL_TARGET_DIR) \

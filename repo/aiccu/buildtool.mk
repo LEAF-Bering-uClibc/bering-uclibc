@@ -18,6 +18,8 @@ $(AICCU_DIR)/.configured: $(AICCU_DIR)/.source
 	touch $(AICCU_DIR)/.configured
 
 $(AICCU_DIR)/.build: $(AICCU_DIR)/.configured
+	# specify use of target (rather than host) strip program in Makefile
+	perl -i -p -e "s,strip,$(GNU_TARGET_NAME)-strip," $(AICCU_DIR)/unix-console/Makefile
 	CC=$(TARGET_CC) make $(MAKEOPTS) -C $(AICCU_DIR) all
 	mkdir -p "$(AICCU_TARGET_DIR)"
 	cd "$(AICCU_TARGET_DIR)" && mkdir -p usr/sbin etc etc/init.d

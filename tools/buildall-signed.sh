@@ -98,7 +98,8 @@ cat <<EOF >$HTMLFILE
 <TITLE>build report for $DATE</TITLE>
 </HEAD>
 <BODY>
-<H2>Number of total packages:$PKGSIZE</H2>
+<H3>Number of total packages:$PKGSIZE</H3>
+<H3>Building using toolchain: $TOOLCHAIN</H3>
 <p>
 <TABLE cellpadding=10 border=1>
 <tr>
@@ -144,7 +145,7 @@ for name in $PKGLIST; do
 done
 
 echo "</TABLE>" >> $HTMLFILE
-echo "<h2>build started: $STARTDATE<p>build ended: $(date)" >>$HTMLFILE
+echo "<H3>build started: $STARTDATE<p>build ended: $(date)</H3>" >>$HTMLFILE
 echo "</BODY>" >>$HTMLFILE
 echo "</HTML>" >>$HTMLFILE
 

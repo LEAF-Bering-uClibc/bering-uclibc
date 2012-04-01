@@ -17,6 +17,8 @@ KERNELSOURCE = $(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)
 $(IPVSADM_DIR)/.source:
 	tar xvzf $(IPVSADM_SOURCE)
 	echo $(IPVSADM_DIR) > DIRNAME
+	# specify use of target (rather than host) strip program for "install"
+	perl -i -p -e "s, -s ipvsadm , -s --strip-program=$(GNU_TARGET_NAME)-strip ipvsadm ," $(IPVSADM_DIR)/Makefile
 	touch $(IPVSADM_DIR)/.source
 
 source: $(IPVSADM_DIR)/.source

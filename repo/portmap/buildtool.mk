@@ -17,6 +17,8 @@ $(PORTMAP_DIR)/.source:
 # omit "-o root -g root" arguments from "install", so can run "make install"
 # without being "root"; will get corrected as part of LRP installation
 	( cd $(PORTMAP_DIR) ; sed -i -e "/-o root -g root /s///" Makefile )
+# specify use of target (rather than host) strip program for "install"
+	( cd $(PORTMAP_DIR) ; sed -i -e "/-s /s//-s --strip-program=$(GNU_TARGET_NAME)-strip /" Makefile )
 	perl -i -p -e 's,^.*\s0644\s.*share/man.*$$,,g' $(PORTMAP_DIR)/Makefile
 	echo $(PORTMAP_DIR) > DIRNAME
 	touch $(PORTMAP_DIR)/.source
@@ -28,7 +30,8 @@ build: source
 	$(MAKE) $(MAKEOPTS) CC=$(TARGET_CC) LD=$(TARGET_LD) -C $(PORTMAP_DIR)
 	$(MAKE) -C $(PORTMAP_DIR) BASEDIR=$(PORTMAP_TARGET_DIR) install
 #
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PORTMAP_TARGET_DIR)/sbin/*
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PORTMAP_TARGET_DIR)/sbin/*
+	mkdir -p $(BT_STAGING_DIR)/sbin
 	cp -af $(PORTMAP_TARGET_DIR)/sbin/* $(BT_STAGING_DIR)/sbin/
 	mkdir -p $(BT_STAGING_DIR)/etc/default/
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d/

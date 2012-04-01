@@ -19,6 +19,8 @@ $(DIR)/.configured: $(DIR)/.source
 	--build=$(GNU_BUILD_NAME) \
 	--with-iproutedir="$(BT_STAGING_DIR)/etc/iproute2" \
 	--enable-ipv6)
+	# specify use of target (rather than host) strip program for "install"
+	perl -i -p -e "s, -s , -s --strip-program=$(GNU_TARGET_NAME)-strip ," $(DIR)/obj/Makefile
 	touch $(DIR)/.configured
 #	--disable-client \
 #	--with-sysinclude="$(BT_STAGING_DIR)/include" \
