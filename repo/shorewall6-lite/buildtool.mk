@@ -23,6 +23,7 @@ $(SHOREWALL_DIR)/.build: $(SHOREWALL_DIR)/.source
 	mkdir -p $(TARGET_DIR)/etc/default
 	install -c $(SHOREWALL6_DEFAULT) $(TARGET_DIR)/etc/default/shorewall6-lite
 	rm -f $(TARGET_DIR)/etc/init.d/shorewall6-lite
+	mkdir -p $(TARGET_DIR)/etc/init.d
 	cp $(SHOREWALL6_INIT) $(TARGET_DIR)/etc/init.d/shorewall6-lite
 
 	rm -rf $(TARGET_DIR)/etc/shorewall6/Makefile
