@@ -4,10 +4,11 @@
 # If necessary it adds the files with owner and permissions to a tarfile and then gzip's the tarfile
 
 ROOT=`pwd`
-PKGDIR=package/i386
+TOOLCHAIN=`grep -i ^Toolchain= $ROOT/conf/buildtool.conf | cut -d= -f2`
+PKGDIR=package/$TOOLCHAIN
 
 # change to lwp dir
-cd source/lwp
+cd source/$TOOLCHAIN/lwp
 
 #
 # webconf.lwp
