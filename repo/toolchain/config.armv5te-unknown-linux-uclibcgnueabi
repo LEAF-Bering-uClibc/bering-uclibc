@@ -44,11 +44,11 @@ CONFIG_ARM_EABI=y
 # CONFIG_ARM720T is not set
 # CONFIG_ARM920T is not set
 # CONFIG_ARM922T is not set
-# CONFIG_ARM926T is not set
+CONFIG_ARM926T=y
 # CONFIG_ARM10T is not set
 # CONFIG_ARM1136JF_S is not set
 # CONFIG_ARM1176JZ_S is not set
-CONFIG_ARM1176JZF_S=y
+# CONFIG_ARM1176JZF_S is not set
 # CONFIG_ARM_CORTEX_M3 is not set
 # CONFIG_ARM_CORTEX_M1 is not set
 # CONFIG_ARM_SA110 is not set
@@ -252,7 +252,7 @@ UCLIBC_BUILD_NOEXECSTACK=y
 #
 # uClibc development/debugging options
 #
-CROSS_COMPILER_PREFIX="armv6-unknown-linux-uclibcgnueabi-"
+CROSS_COMPILER_PREFIX="armv5te-unknown-linux-uclibcgnueabi-"
 UCLIBC_EXTRA_CFLAGS=""
 # DODEBUG is not set
 DOSTRIP=y

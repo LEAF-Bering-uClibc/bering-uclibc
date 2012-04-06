@@ -31,7 +31,7 @@ $(LINUX_BUILDDIR):
 	mkdir -p $(BT_STAGING_DIR)/boot
 	(for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
 	cd $(BT_LINUX_DIR)-$$i && \
-	make $(MAKEOPTS) bzImage && make $(MAKEOPTS) modules && \
+	make $(MAKEOPTS) $(KERN_IMAGE) && make $(MAKEOPTS) modules && \
 	cp $(BT_LINUX_DIR)-$$i/arch/$(ARCH)/boot/$(KERN_IMAGE) $(LINUX_BUILDDIR)/$(KIMAGE)-$$i && \
 	cp $(LINUX_BUILDDIR)/$(KIMAGE)-$$i $(BT_STAGING_DIR)/boot/linux-$$i && \
 	cp $(BT_LINUX_DIR)-$$i/System.map $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i && \

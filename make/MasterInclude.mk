@@ -76,13 +76,13 @@ endif
 
 # Alternate toolchain configuration #1
 
-else ifeq ($(GNU_TARGET_NAME),armv6-unknown-linux-uclibcgnueabi)
+else ifeq ($(GNU_TARGET_NAME),armv5te-unknown-linux-uclibcgnueabi)
 # Primary kernel architecture
 export ARCH:=arm
 # Space-separated list of kernel sub-archs to generate
-export KARCHS:=bcmrpi
+export KARCHS:=versatile
 # Arch-specific CFLAGS
-export ARCH_CFLAGS:=-march=armv6 -mtune=arm1176jzf-s
+export ARCH_CFLAGS:=-march=armv5te -mtune=arm926ej-s
 # Name of kernel image
 export KERN_IMAGE:=zImage
 # Name of OpenSSL target
