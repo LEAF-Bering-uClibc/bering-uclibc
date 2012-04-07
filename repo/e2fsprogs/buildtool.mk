@@ -27,6 +27,7 @@ $(E2FSPROGS_DIR)/.configured: $(E2FSPROGS_DIR)/.source
 	--disable-resizer \
 	--disable-uuidd \
 	--disable-nls \
+	--disable-tls \
 	--disable-rpath)
 	touch $(E2FSPROGS_DIR)/.configured
 

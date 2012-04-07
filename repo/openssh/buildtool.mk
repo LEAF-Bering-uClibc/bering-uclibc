@@ -26,6 +26,7 @@ $(OPENSSH_DIR)/.configured: $(OPENSSH_DIR)/.source
 		--disable-utmpx \
 		--disable-wtmpx  \
 		--disable-largefile \
+		--disable-strip \
 		--sysconfdir=/etc/ssh \
 		--without-rpath \
 		--without-pam \
