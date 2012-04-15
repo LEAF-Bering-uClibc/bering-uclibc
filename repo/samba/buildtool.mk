@@ -1,77 +1,106 @@
 #############################################################
 #
-# SAMBA 
+# buildtool makefile for samba 
 #
 #############################################################
 
 include $(MASTERMAKEFILE)
 
-SAMBA_DIR:=samba-2.0.10
+SAMBA_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SAMBA_SOURCE) 2>/dev/null )
+ifeq ($(SAMBA_DIR),)
+SAMBA_DIR:=$(shell cat DIRNAME)
+endif
 SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba
-export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
 
+# Variable definitions for 'configure'
+CONFDEFS = samba_cv_CC_NEGATIVE_ENUM_VALUES=yes \
+	ac_cv_file__proc_sys_kernel_core_pattern=no \
+	libreplace_cv_HAVE_GETADDRINFO=no
 
-BVARS = BASEDIR=/usr \
-	LIBDIR=/etc/samba \
-	SMB_PASSWD_FILE=/etc/samba/smbpasswd \
-	SMBLOGFILE=/var/log/smb NMBLOGFILE=/var/log/nmb
+# Option settings for 'configure'
+CONFOPTS = --host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
+	--with-fhs \
+	--prefix=/usr \
+	--with-cachedir=/var/run/samba \
+	--with-configdir=/etc/samba \
+	--with-lockdir=/var/lock/samba \
+	--with-logfilebase=/var/log \
+	--with-ncalrpcdir=/var/run/samba \
+	--with-nmbdsocketdir=/var/run/samba \
+	--with-piddir=/var/run \
+	--with-statedir=/etc/samba \
+	--with-libsmbclient \
+	--with-utmp \
+	--disable-cups \
+	--disable-avahi \
+	--without-ldap \
+	--without-ads \
+	--without-winbind \
+	--without-readline
 
-$(SAMBA_DIR)/.source:
+.source:
 	zcat $(SAMBA_SOURCE) | tar -xvf -
-	zcat $(SAMBA_PATCH1) | patch -d $(SAMBA_DIR) -p1
-	zcat $(SAMBA_PATCH2) | patch -d $(SAMBA_DIR) -p1
-	touch $(SAMBA_DIR)/.source
-	
-$(SAMBA_DIR)/.configured: $(SAMBA_DIR)/.source
-	(cd $(SAMBA_DIR)/source ; $(AUTOCONF) ; CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) \
-		./configure \
-		--host=$(ARCH)-linux \
-		--build=$(ARCH)-linux \
-		--target=$(ARCH)-linux \
-		--prefix=/usr \
-		--sysconfdir=/etc \
-		--with-privatedir=/etc/samba \
-		--localstatedir=/var \
-		--with-lockdir=/var/run \
-		--without-smbmount );
-	touch $(SAMBA_DIR)/.configured
+	echo $(SAMBA_DIR) > DIRNAME
+	touch .source
 
-	
-source: $(SAMBA_DIR)/.source
+source: .source
 
-build: $(SAMBA_DIR)/.configured
-	-mkdir -p $(SAMBA_TARGET_DIR)
-	-mkdir -p $(SAMBA_TARGET_DIR)/etc/cron.weekly
-	-mkdir -p $(SAMBA_TARGET_DIR)/etc/init.d
-	-mkdir -p $(SAMBA_TARGET_DIR)/usr/sbin
+.configured: .source
+	( cd $(SAMBA_DIR)/source3 ; $(CONFDEFS) ./configure $(CONFOPTS) )
+	touch .configured
 
-	make -C $(SAMBA_DIR)/source $(BVARS) all
+build: .configured
+	mkdir -p $(SAMBA_TARGET_DIR)
+	mkdir -p $(BT_STAGING_DIR)/etc/cron.weekly
+	mkdir -p $(BT_STAGING_DIR)/etc/init.d
+	mkdir -p $(BT_STAGING_DIR)/etc/samba
+	mkdir -p $(BT_STAGING_DIR)/usr/bin
+	mkdir -p $(BT_STAGING_DIR)/usr/lib
+	mkdir -p $(BT_STAGING_DIR)/usr/sbin
+	mkdir -p $(BT_STAGING_DIR)/usr/share
 
-	$(SAMBA_DIR)/source/script/installcp.sh \
-	$(SAMBA_DIR)/source \
-	$(SAMBA_TARGET_DIR)/etc/samba \
-	$(SAMBA_TARGET_DIR)/etc/samba/codepages \
-	$(SAMBA_DIR)/source/bin \
-	850
+	make -C $(SAMBA_DIR)/source3
+	make -C $(SAMBA_DIR)/source3 DESTDIR=$(SAMBA_TARGET_DIR) install
 
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/smbd
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/nmbd
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_DIR)/source/bin/smbpasswd
-	cp -aL samba.init $(SAMBA_TARGET_DIR)/etc/init.d/samba
-	cp -aL samba.cron $(SAMBA_TARGET_DIR)/etc/cron.weekly/samba
-	cp -aL smb.conf $(SAMBA_TARGET_DIR)/etc/samba
-	cp -a $(SAMBA_DIR)/source/bin/smbd $(SAMBA_TARGET_DIR)/usr/sbin 
-	cp -a $(SAMBA_DIR)/source/bin/nmbd $(SAMBA_TARGET_DIR)/usr/sbin 
-	cp -a $(SAMBA_DIR)/source/bin/smbpasswd $(SAMBA_TARGET_DIR)/usr/sbin 
-	cp -a $(SAMBA_TARGET_DIR)/* $(BT_STAGING_DIR)	
-	touch $(SAMBA_DIR)/.build	
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/sbin/nmbd
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/sbin/smbd
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/sbin/swat
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/testparm
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbpasswd
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbstatus
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/tdbbackup
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/nmblookup
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/rpcclient
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/sharesec
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbcacls
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbclient
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbget
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbprint
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbspool
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/smbtree
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/tdbdump
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/tdbrestore
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/pdbedit
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SAMBA_TARGET_DIR)/usr/bin/tdbtool
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(SAMBA_TARGET_DIR)/usr/lib/*.so
+	cp -a $(SAMBA_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin/
+	cp -a $(SAMBA_TARGET_DIR)/usr/bin/* $(BT_STAGING_DIR)/usr/bin/
+	cp -a $(SAMBA_TARGET_DIR)/usr/lib/*.so* $(BT_STAGING_DIR)/usr/lib/
+	cp -a $(SAMBA_TARGET_DIR)/usr/lib/samba/ $(BT_STAGING_DIR)/usr/lib/
+	cp -a $(SAMBA_TARGET_DIR)/usr/share/samba/ $(BT_STAGING_DIR)/usr/share/
+	cp -aL samba.init $(BT_STAGING_DIR)/etc/init.d/samba
+	cp -aL samba.cron $(BT_STAGING_DIR)/etc/cron.weekly/samba
+	cp -aL smb.conf $(BT_STAGING_DIR)/etc/samba/
+	touch .build	
 
 clean:
-	-make -C $(SAMBA_DIR) clean
+	-make -C $(SAMBA_DIR)/source3 clean
 	rm -rf $(SAMBA_TARGET_DIR)
-	rm -f $(SAMBA_DIR)/.build
-	rm -f $(SAMBA_DIR)/.configured
+	rm -f .build
+	rm -f .configured
 	
 srcclean:
 	rm -rf $(SAMBA_DIR)
-	
+	rm .source
+	rm DIRNAME
