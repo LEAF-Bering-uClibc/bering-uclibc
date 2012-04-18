@@ -28,15 +28,27 @@ PACKAGE=$1;		test $PACKAGE != "configdb" -a $PACKAGE != "moddb" && usage
 DIR="/tmp"
 
 echo -n "Creating $PACKAGE.lrp Please wait: "
-ticker &
-	cd /
-        if [ $PACKAGE = configdb ] ; then 
-	    /usr/sbin/apkg -o $DIR > /dev/null 2>&1
-        fi
-	if [ $PACKAGE = moddb ] ; then
-	    /usr/sbin/apkg -d $DIR > /dev/null 2>&1
-	fi
-killall ticker >/dev/null 2>&1
+ticker & 2>/dev/null
+cd /
+case "$PACKAGE" in
+	configdb)
+		/usr/sbin/apkg -o $DIR > /dev/null 2>&1
+		retval=$?
+		;;
+	moddb)
+		/usr/sbin/apkg -d $DIR > /dev/null 2>&1
+		retval=$?
+		;;
+	*)
+		retval=1
+		;;
+esac
+killall ticker >/dev/null 2>/dev/null
+if [ "$retval" -ne 0 ]; then
+	echo "Failed, exiting...";
+	rm -f $DIR/$PACKAGE.lrp 2>/dev/null
+	exit 1
+fi
 echo -n \
 
 if [ "$CWRT" = "on" ]; then 
@@ -58,18 +70,20 @@ if [ "$CWRT" = "on" ]; then
 		exit 1
 	fi
 fi
-		
+
 echo -n "Copying $PACKAGE.lrp Please wait: "
-ticker & 
+ticker & 2>/dev/null
 if ! cp $DIR/$PACKAGE.lrp $MNT/$PACKAGE.lrp >/dev/null 2>&1; then
 	echo "Could not move $DIR/$PACKAGE.lrp to $MNT/$PACKAGE.lrp"
 	sleep 2
-	killall ticker >/dev/null 2>&1
+	killall ticker >/dev/null 2>/dev/null
 	exit 1
 fi
-killall ticker >/dev/null 2>&1
+sync
+sleep 1
+killall ticker >/dev/null 2>/dev/null
 echo -n \
-		
+
 rm $DIR/$PACKAGE.lrp
 
 exit 0
