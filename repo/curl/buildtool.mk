@@ -17,8 +17,9 @@ CURL_TARGET_DIR:=$(BT_BUILD_DIR)/curl
 #   Include support for SSH2 protocol
 #   Disable inclusion of full man page text
 #   Disable use of OpenLDAP client library, if present
+#   Disable generation of C code
 CONFOPTS:= --build=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) \
-	--prefix=/usr --with-libssh2 --disable-manual --disable-ldap
+	--prefix=/usr --with-libssh2 --disable-manual --disable-ldap --disable-libcurl-option
 
 .source:
 	zcat $(CURL_SOURCE) | tar -xvf -
