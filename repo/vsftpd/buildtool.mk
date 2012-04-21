@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-VSFTPD_DIR:=vsftpd-2.3.4
+VSFTPD_DIR:=vsftpd-3.0.0
 VSFTPD_TARGET_DIR:=$(BT_BUILD_DIR)/vsftpd
 
 
