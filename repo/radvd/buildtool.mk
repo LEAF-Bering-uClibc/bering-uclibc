@@ -1,7 +1,7 @@
 # makefile for radvd
 include $(MASTERMAKEFILE)
 
-RADVD_DIR:=radvd-1.8.3
+RADVD_DIR:=radvd-1.8.5
 RADVD_TARGET_DIR:=$(BT_BUILD_DIR)/radvd
 
 $(RADVD_DIR)/.source:

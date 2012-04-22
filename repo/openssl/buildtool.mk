@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-OPENSSL_DIR:=openssl-1.0.1
+OPENSSL_DIR:=openssl-1.0.1a
 OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
 $(OPENSSL_DIR)/.source:
