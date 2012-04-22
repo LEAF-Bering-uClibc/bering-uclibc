@@ -14,6 +14,15 @@ export ac_cv_va_copy=C99
 export ac_cv_sys_restartable_syscalls=yes
 export ac_cv_func_setpgrp_void=yes
 export ac_cv_file__dev_random=yes
+export ac_cv_func_regcomp=yes
+export ac_cv_printf_positional=yes
+# Persuade krb5's configure that libldap does in fact have ldap_init() and ldap_initialize()
+export ac_cv_lib_ext_ldap_ldap_init=yes
+export ac_cv_func_ldap_initialize=yes
+# Persuade samba's configure that libldap does in fact have ldap_init() and ldap_initialize()
+export ac_cv_lib_ldap_ldap_init=yes
+export ac_cv_func_ext_ldap_initialize=yes
+export ac_cv_func_ext_ldap_add_result_entry=yes
 # Persuade radius' configure that libldap_r does in fact have ldap_init()
 export ac_cv_lib_ldap_r_ldap_init=yes
 endif
@@ -40,100 +49,8 @@ export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch
 # Where to find the getdirname tool
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
 
-
-# Default toolchain configuration
-
-ifeq ($(GNU_TARGET_NAME),i486-unknown-linux-uclibc)
-# Primary kernel architecture
-export ARCH:=i386
-# Space-separated list of kernel sub-archs to generate
-export KARCHS:=i686 i486 geode
-# Available kernel archs with pci-express support
-export KARCHS_PCIE:=i686
-# Arch-specific CFLAGS
-export ARCH_CFLAGS:=-march=i486 -mtune=pentiumpro
-# Name of kernel image
-export KERN_IMAGE:=bzImage
-# Name of OpenSSL target
-export OPENSSL_TARGET:=linux-elf
-
-# Set variables to "prime" the configure scripts' cache for cross-compiling
-# These are toolchain-specific settings - generic settings go above
-# Export vars only if this is not a toolchain building
-ifndef GCC_SOURCE
-# Generic endianness setting used by many applications
-export ac_cv_c_bigendian=no
-# Fix ../include/libnet.h:117:10: error: macro names must be identifiers
-export ac_cv_libnet_endianess=lil
-# Fix "checking packing order of bit fields... no defaults for cross-compiling"
-export rpppoe_cv_pack_bitfields=rev
-# Fix "WARNING: cross compiling; assuming big endianess"
-export gnupg_cv_c_endian=little
-export ac_cv_sizeof_int=4
-export ac_cv_sizeof_long=4
-export ac_cv_sizeof_short=2
-endif
-
-# Alternate toolchain configuration #1
-
-else ifeq ($(GNU_TARGET_NAME),armv5te-unknown-linux-uclibcgnueabi)
-# Primary kernel architecture
-export ARCH:=arm
-# Space-separated list of kernel sub-archs to generate
-export KARCHS:=versatile
-# Arch-specific CFLAGS
-export ARCH_CFLAGS:=-march=armv5te -mtune=arm926ej-s
-# Name of kernel image
-export KERN_IMAGE:=zImage
-# Name of OpenSSL target
-export OPENSSL_TARGET:=linux-armv4
-
-# Set variables to "prime" the configure scripts' cache for cross-compiling
-# These are toolchain-specific settings - generic settings go above
-# Export vars only if this is not a toolchain building
-ifndef GCC_SOURCE
-# Generic endianness setting used by many applications
-export ac_cv_c_bigendian=no
-# Fix "../include/libnet.h:117:10: error: macro names must be identifiers"
-export ac_cv_libnet_endianess=lil
-# Fix "checking packing order of bit fields... no defaults for cross-compiling"
-export rpppoe_cv_pack_bitfields=rev
-# Fix "WARNING: cross compiling; assuming big endianess"
-export gnupg_cv_c_endian=little
-endif
-
-# Alternate toolchain configuration #2
-
-else ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
-# Primary kernel architecture
-export ARCH:=x86_64
-# Space-separated list of kernel sub-archs to generate
-export KARCHS:=x86_64
-# Arch-specific CFLAGS
-export ARCH_CFLAGS:=-march=generic -mtune=generic
-# Name of kernel image
-export KERN_IMAGE:=bzImage
-# Name of OpenSSL target
-export OPENSSL_TARGET:=linux-elf
-
-# Set variables to "prime" the configure scripts' cache for cross-compiling
-# These are toolchain-specific settings - generic settings go above
-# Export vars only if this is not a toolchain building
-ifndef GCC_SOURCE
-# Generic endianness setting used by many applications
-export ac_cv_c_bigendian=no
-# Fix ../include/libnet.h:117:10: error: macro names must be identifiers
-export ac_cv_libnet_endianess=lil
-# Fix "checking packing order of bit fields... no defaults for cross-compiling"
-export rpppoe_cv_pack_bitfields=rev
-# Fix "WARNING: cross compiling; assuming big endianess"
-export gnupg_cv_c_endian=little
-export ac_cv_sizeof_int=4
-export ac_cv_sizeof_long=8
-export ac_cv_sizeof_short=2
-endif
-
-endif
+# Include per-toolchain Makefiles
+include $(BT_BUILDROOT)/make/toolchain/*.mk
 
 # Arch of build system
 GNU_BUILD_NAME=$(shell LANG=C gcc -v 2>&1|awk '/Target:/ {print $$2}')
