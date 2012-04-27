@@ -56,7 +56,6 @@ success=$?
 
 if [ -z "$readonly" ]; then
     sync
-    sleep 2
 fi
 
 for mp in $mount_points ; do
