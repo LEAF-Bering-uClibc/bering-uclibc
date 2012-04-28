@@ -1,37 +1,40 @@
 #############################################################
 #
-# openssl
+# buildtool makefile for openssl
 #
-# $Id: buildtool.mk,v 1.6 2010/12/08 20:58:13 kapeka Exp $
 #############################################################
 
 include $(MASTERMAKEFILE)
-OPENSSL_DIR:=openssl-1.0.1a
-OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
-$(OPENSSL_DIR)/.source:
-	zcat $(OPENSSL_SOURCE) | tar -xvf -
+SOURCE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE_TGZ) 2>/dev/null )
+ifeq ($(SOURCE_DIR),)
+SOURCE_DIR:=$(shell cat DIRNAME)
+endif
+TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
-#	# Clean up the configure script
-#	perl -i -p -e 's,tcc=\"cc\";,tcc=\"$(TARGET_CC)\";,' $(OPENSSL_DIR)/Configure
-	touch $(OPENSSL_DIR)/.source
+.source:
+	zcat $(SOURCE_TGZ) | tar -xvf -
+	echo $(SOURCE_DIR) > DIRNAME
+	touch .source
 
-$(OPENSSL_DIR)/.configured: $(OPENSSL_DIR)/.source
+source: .source
 
-	(cd $(OPENSSL_DIR); \
+.configured: .source
+	# $(OPENSSL_TARGET) is set in make/toolchain/*.mk
+	(cd $(SOURCE_DIR); \
 	./Configure $(OPENSSL_TARGET)  \
 		--prefix=/usr \
 		--openssldir=/usr/ssl \
-		--install_prefix=$(OPENSSL_TARGET_DIR) \
+		--install_prefix=$(TARGET_DIR) \
 		--cross-compile-prefix=$(CROSS_COMPILE) \
 		no-ssl3 no-idea no-mdc2 no-rc5  no-krb5 shared no-fips no-threads  \
 		-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib \
 		-I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include \
 		 );
-	touch $(OPENSSL_DIR)/.configured
+	touch .configured
 
-$(OPENSSL_DIR)/.build: $(OPENSSL_DIR)/.configured
-	-mkdir -p $(OPENSSL_TARGET_DIR)
+.build: .configured
+	-mkdir -p $(TARGET_DIR)
 	-mkdir -p $(BT_STAGING_DIR)/usr/lib
 	-mkdir -p $(BT_STAGING_DIR)/usr/include
 	-mkdir -p $(BT_STAGING_DIR)/usr/share/ssl
@@ -41,36 +44,36 @@ $(OPENSSL_DIR)/.build: $(OPENSSL_DIR)/.configured
 	-mkdir -p $(BT_STAGING_DIR)/usr/ssl/misc
 
 #Use building in 1 thread due to buggy makefile
-	make -C $(OPENSSL_DIR) depend
-	make -C $(OPENSSL_DIR)
-	make -C $(OPENSSL_DIR) INSTALL_PREFIX=$(OPENSSL_TARGET_DIR) install_sw
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENSSL_TARGET_DIR)/usr/lib/* $(OPENSSL_TARGET_DIR)/usr/lib/engines/*
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENSSL_TARGET_DIR)/usr/bin/*
-	rm -rf $(OPENSSL_TARGET_DIR)/usr/ssl/man
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(OPENSSL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
-	cp -a $(OPENSSL_TARGET_DIR)/* $(BT_STAGING_DIR)
-	# workaround for strange behaviour of install, dir is not readable and so not removable
-	-chmod 755 $(OPENSSL_TARGET_DIR)/usr/lib/pkgconfig
-	touch $(OPENSSL_DIR)/.build
+	make -C $(SOURCE_DIR) depend
+	make -C $(SOURCE_DIR)
+	make -C $(SOURCE_DIR) INSTALL_PREFIX=$(TARGET_DIR) install_sw
+	# workaround for strange behaviour of install, on permissions
+	-chmod -R 755 $(TARGET_DIR)/usr/lib/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*.so
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/engines/*.so
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
+	rm -rf $(TARGET_DIR)/usr/ssl/man
+	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(TARGET_DIR)/usr/lib/pkgconfig/*.pc
+	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
+	touch .build
 
-source: $(OPENSSL_DIR)/.source
-
-build: $(OPENSSL_DIR)/.build
+build: .build
 
 clean:
-	-rm $(OPENSSL_DIR)/.build
+	-rm .configured
+	-rm .build
 	-rm -f $(BT_STAGING_DIR)/bin/openssl
 	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so*
 	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so*
 	-rm -f $(BT_STAGING_DIR)/usr/lib/engines/*
 	-rm -rf $(BT_STAGING_DIR)/usr/ssl
-	-rm -rf $(OPENSSL_BUILD_DIR)
-	-$(MAKE) -C $(OPENSSL_DIR) clean
+	-$(MAKE) -C $(SOURCE_DIR) clean
 
 srcclean:
 	-rm -f $(BT_STAGING_DIR)/bin/openssl
 	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so*
 	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so*
 	-rm -rf $(BT_STAGING_DIR)/usr/ssl
-	-rm -rf $(OPENSSL_BUILD_DIR)
-	-rm -rf $(OPENSSL_DIR)
+	-rm -rf $(SOURCE_DIR)
+	-rm .source
+	-rm DIRNAME
