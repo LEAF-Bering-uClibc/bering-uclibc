@@ -45,7 +45,7 @@ call_buildtool() {
 	if [ $ret -eq 0 ] ; then
 		echo -n "<font color=green>OK</font>"
 	else
-		echo -n "<font color=red>FAILED</font>"
+		echo -n "<font color=red><b>FAILED</b></font>"
 		EXITVALUE=1
 	fi		
 }
@@ -62,7 +62,7 @@ call_buildpacket() {
 		if [ $ret -eq 0 ] ; then
 			echo -n "<font color=green>OK</font>"
 		else
-			echo -n "<font color=red>FAILED</font>"
+			echo -n "<font color=red><b>FAILED</b></font>"
 			EXITVALUE=1
 		fi		
 
@@ -127,15 +127,15 @@ for name in $PKGLIST; do
 			call_buildpacket $name >> $HTMLFILE		
 			EXITVALUE=$OLDEXITVALUE	
 		else
-			echo -n "<font color=red>FAILED</font>" >> $HTMLFILE
+			echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 			EXITVALUE=1
 		fi
 			
 
 	else
-		echo -n "<font color=red>FAILED</font>" >> $HTMLFILE
+		echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 		echo -n "</td><td>" >> $HTMLFILE
-		echo -n "<font color=red>FAILED</font>" >> $HTMLFILE
+		echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 		EXITVALUE=1
 	fi
 	echo "</td></tr>" >> $HTMLFILE		
