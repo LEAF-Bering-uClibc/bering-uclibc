@@ -1,5 +1,4 @@
 # buildtool make file for kernel (pseudo package)
-# $Id: buildtool.mk,v 1.8 2011/01/15 14:51:50 davidmbrooke Exp $
 #
 # Note that this is some kind of a hack the linux source
 # does not build the kernel, but only unpacks it as the headers
@@ -10,6 +9,8 @@
 ifneq ($(strip $(MASTERMAKEFILE)),)
 	include $(MASTERMAKEFILE)
 endif
+
+ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 
 LINUX_BUILDDIR=$(BT_BUILD_DIR)/kernel
 
@@ -40,6 +41,12 @@ $(LINUX_BUILDDIR):
 	depmod -ae -b $(LINUX_BUILDDIR) -F $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i $(KVERSION)-$$i || exit 1; \
 	done)
 	(cp -R $(LINUX_BUILDDIR)/lib $(BT_STAGING_DIR))
+	#
+	-rm -f package.cfg
+	( for i in $(KARCHS); do \
+	    echo $(ESCKEY) "#include <common.$$i>" >>package.cfg; \
+	    sed 's,##KARCH##,'"$$i"',g' common.tpl >common.$$i ; \
+	done )
 	touch .build
 
 $(BT_TOOLS_DIR)/.upxunpack:
