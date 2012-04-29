@@ -32,6 +32,8 @@ source: .source
 	( cd $(ASTERISK_DIR) ; CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)" \
 	    ./configure $(CONFOPTS) --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	( cd $(ASTERISK_DIR)/menuselect ; ./configure $(CONFOPTS) )
+	# Force linking of asterisk executable against -lpthread
+	perl -i -p -e 's,GMIMELDFLAGS\),GMIMELDFLAGS\) -lpthread,' $(ASTERISK_DIR)/main/Makefile
 	touch .configure
 
 build: .configure
