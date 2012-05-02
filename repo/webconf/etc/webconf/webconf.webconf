@@ -2,6 +2,7 @@ displayname:70General
 all:50Log Files:/logfiles.cgi
 all:72General Health:/general-info.cgi
 all:75:Active Connections:/connection-info.cgi
+all:75:Active IPv6 Connections:/connection6-info.cgi
 all:Webconf Password:/wc-passwd.cgi
 #
 displayname:80Save To Disk
