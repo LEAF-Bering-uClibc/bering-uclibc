@@ -1,0 +1,8 @@
+This package is based on the following sources and their respective licenses:
+(see /var/lib/lrpkg/licenses)
+uClibc - LGPL-2.1
+e3 - GPL-2.0 
+cron - CRON 
+syslog-ng - GPL-2.0
+iproute - GPL-2.0
+tcp_wrappers - TCPWRAPPER
