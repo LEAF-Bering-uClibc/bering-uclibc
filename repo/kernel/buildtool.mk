@@ -49,10 +49,6 @@ $(LINUX_BUILDDIR):
 	done )
 	touch .build
 
-$(BT_TOOLS_DIR)/.upxunpack:
-	(cd $(BT_TOOLS_DIR); tar xvzf upx-3.04-i386_linux.tar.gz)
-	touch $(BT_TOOLS_DIR)/.upxunpack
-
 build: .build
 
 chklinuxdir:
