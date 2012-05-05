@@ -30,8 +30,12 @@ $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 #	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/disk-utils mkswap
 	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/fdisk fdisk
 	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/mount losetup
+	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/misc-utils blkid
+	$(MAKE) CC=$(TARGET_CC)  OPT="$(BT_COPT_FLAGS)" -C $(UTIL_LINUX_DIR)/misc-utils findfs
 	cp -a $(UTIL_LINUX_DIR)/fdisk/.libs/fdisk $(UTIL_LINUX_TARGET_DIR)/sbin/
 	cp -a $(UTIL_LINUX_DIR)/mount/losetup $(UTIL_LINUX_TARGET_DIR)/sbin/
+	cp -a $(UTIL_LINUX_DIR)/misc-utils/.libs/findfs $(UTIL_LINUX_TARGET_DIR)/sbin/
+	cp -a $(UTIL_LINUX_DIR)/misc-utils/.libs/blkid $(UTIL_LINUX_TARGET_DIR)/sbin/
 	cp -a $(UTIL_LINUX_DIR)/shlibs/blkid/src/.libs/libblkid.* $(UTIL_LINUX_TARGET_DIR)/lib/
 	rm -f $(UTIL_LINUX_TARGET_DIR)/lib/libblkid.la
 	cp -a $(UTIL_LINUX_DIR)/shlibs/blkid/src/libblkid.la $(UTIL_LINUX_TARGET_DIR)/lib/
