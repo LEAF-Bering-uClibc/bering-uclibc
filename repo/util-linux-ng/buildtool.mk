@@ -28,8 +28,11 @@ $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 	mkdir -p $(UTIL_LINUX_TARGET_DIR)/lib
 	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/fdisk fdisk
 	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/mount losetup
+	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/misc-utils blkid findfs
 	cp -a $(UTIL_LINUX_DIR)/fdisk/.libs/fdisk $(UTIL_LINUX_TARGET_DIR)/sbin/
 	cp -a $(UTIL_LINUX_DIR)/mount/losetup $(UTIL_LINUX_TARGET_DIR)/sbin/
+	cp -a $(UTIL_LINUX_DIR)/misc-utils/.libs/findfs $(UTIL_LINUX_TARGET_DIR)/sbin/
+	cp -a $(UTIL_LINUX_DIR)/misc-utils/.libs/blkid $(UTIL_LINUX_TARGET_DIR)/sbin/
 	cp -a $(UTIL_LINUX_DIR)/shlibs/blkid/src/.libs/libblkid.* $(UTIL_LINUX_TARGET_DIR)/lib/
 	rm -f $(UTIL_LINUX_TARGET_DIR)/lib/libblkid.la
 	cp -a $(UTIL_LINUX_DIR)/shlibs/blkid/src/libblkid.la $(UTIL_LINUX_TARGET_DIR)/lib/
