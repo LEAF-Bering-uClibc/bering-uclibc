@@ -36,6 +36,8 @@ $(OPENLDAP_DIR)/.configure: $(OPENLDAP_DIR)/.source
 	touch $(OPENLDAP_DIR)/.configure
 
 build: $(OPENLDAP_DIR)/.configure
+	# Fix rpath to avoid picking up libraries from build host's /usr/lib
+	( cd $(OPENLDAP_DIR) ; find . -name Makefile -exec perl -i -p -e "s,^UNIX_LTFLAGS_LIB = .*,UNIX_LTFLAGS_LIB = \\$$\(LTVERSION) -rpath $(OPENLDAP_TARGET_DIR)/usr/lib," {} \; )
 	$(MAKE) $(MAKEOPTS) -C $(OPENLDAP_DIR)
 	$(MAKE) -C $(OPENLDAP_DIR)/include DESTDIR=$(OPENLDAP_TARGET_DIR) install
 	$(MAKE) -C $(OPENLDAP_DIR)/libraries DESTDIR=$(OPENLDAP_TARGET_DIR) install
