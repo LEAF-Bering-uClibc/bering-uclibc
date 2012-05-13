@@ -5,6 +5,7 @@
 # Changed for modified backup by Eric Spakman 
 # Upgrade code by Cedric Schieli
 # Rundiff code and various improvements by Paul Traina
+# Package dependency loading code by David M Brooke
 #
 # Licensed under the terms of the GPL-2
 
@@ -148,7 +149,15 @@ install () {
 	)
 	echo "$pkg" >> $PKGDB
 	create_sha1 $pkg
-	echo "$pkg installed"
+	echo "$pkg installed."
+
+	# process any package dependencies by recursively calling install()...
+	if [ -f $PKGDIR/$pkg.deplrp ] ; then
+		for deplrp in `cat $PKGDIR/$pkg.deplrp` ; do
+			( cd $STORAGE_MEDIA ; install $deplrp )
+		done
+	fi
+
 	return 0
 	}
 

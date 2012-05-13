@@ -16,6 +16,7 @@
 # Major changes by Charles Steinkuehler, Mar. 2004
 # Major changes due migration to 2.6 kernel by Andrew Denisenko, Mar.-Oct. 2010
 # Switch back to root in tmpfs by Andrew Denisenko, Jan. 2011
+# Package dependency loading and findfs changes by David M Brooke, May. 2012
 #
 
 # Uncomment for more verbose execution.
@@ -39,6 +40,58 @@ else
 fi
 
 Lecho () { echo "LINUXRC: $@"; }
+
+# Recursive function to load LRP packages (and package dependencies)
+# Honours the device search order rules
+Lloadlrp () {
+	IFS=':'
+	set -- $1
+	f=$1
+	usedevlist=$rdevlist
+	fnd=`cat $PFX/packages 2>/dev/null | grep -e "^$f\$" | wc -l`
+	echo -n "  $f:"
+	IFS=","
+	for devtype in ${usedevlist}; do
+		dev="${devtype%:+*}"
+		mnt="${devtype%:-*}"
+		mnt="${mnt#*:+}"
+		t="${devtype#*:-}"
+		[ "$VERBOSE" ] && echo -n " dev: $dev mnt: $mnt t: $t f: $mnt/$f.lrp"
+		[ "$VERBOSE2" ] && ls -l $dev
+		if [ $fnd -eq 0 ]; then
+			if [ -f $mnt/$f.lrp ]; then
+				echo -n " $dev"
+				gunzip -c $mnt/$f.lrp > /dev/null
+				if [ $? -eq 0 ]; then
+					tar -zxvpf $mnt/$f.lrp > $PFX/$f.list
+					#Update installed packages file
+					echo "$f">>$PFX/packages
+					#Calculate sha1sum
+					if [ -f $PFX/$f.local ] ; then
+					    cat $PFX/$f.local | while read x ; do
+						[ -e "$x" ] && find "$x" -type f | xargs sha1sum >> $PFX/$f.sha1
+					    done
+					fi
+					fnd=1
+					#Recursively load dependencies
+					if [ -f $PFX/$f.deplrp ] ; then
+					    cat $PFX/$f.deplrp | while read y ; do
+						Lloadlrp $y
+					    done
+					fi
+				else
+					echo -n "(cpt!)"
+					[ $fnd -eq 0 ] && fnd=2
+				fi
+			fi
+		else
+			echo -n " $f(dup!)"
+		fi
+	done
+	if [ $fnd -eq 0 ]; then
+		echo -n " $f(nf!)"
+	fi
+}
 
 PFX=/var/lib/lrpkg
 BPFX=/boot
@@ -140,6 +193,7 @@ EOF
 
 # Try to mount configuration device and read any leaf.cfg file
 # $KCMD_LEAFCFG could look like any of the following:
+#     UUID=3290c629-123e-4c44-b79b-1c71e312a079:vfat,LABEL=LEAFBUC:vfat
 #     /dev/fd0:vfat,/dev/sr0:iso9660
 #     /dev/sda1:vfat
 #     /dev/sr0
@@ -149,12 +203,17 @@ for dev in ${KCMD_LEAFCFG}; do
 	IFS=':'
 	set -- ${dev}
 	IFS="$OIFS"
-	if [ -b "$1" ] ; then
+        # Convert any UUID= or LABEL= to device file name
+	case "$1" in
+		UUID=*|LABEL=*) dev=`/sbin/findfs "$1"`;;
+		*) dev="$1";;
+	esac
+	if [ -b "$dev" ] ; then
 		for FS in $2 $FILESYSTEMS; do
-			[ "$VERBOSE" ] && Lecho "Mounting $1 on $MNT as $FS"
-			if qt mount -nrt $FS $1 $MNT ; then 
+			[ "$VERBOSE" ] && Lecho "Mounting $dev on $MNT as $FS"
+			if qt mount -nrt $FS $dev $MNT ; then 
 				if [ -r $MNT/leaf.cfg ] ; then
-					[ "$VERBOSE" ] && Lecho "Sourcing leaf.cfg from $1"
+					[ "$VERBOSE" ] && Lecho "Sourcing leaf.cfg from $dev"
 					source $MNT/leaf.cfg
 					qt umount $MNT
 					break 2
@@ -241,7 +300,11 @@ if [ -n "$PKGPATH" ];  then
 	for dev in ${PKGPATH}; do
 		IFS=':'
 		set -- ${dev}
-		dev=$1
+        	# Convert any UUID= or LABEL= to device file name
+		case "$1" in
+			UUID=*|LABEL=*) dev=`/sbin/findfs "$1"`;;
+			*) dev="$1";;
+		esac
 		qt mkdir /mnt$devcount
 		IFS="$OIFS"
 		for t in $2 ${FILESYSTEMS}; do
@@ -276,47 +339,7 @@ if [ ! "$LRP" = "" ]; then
 	
 	IFS="$IFS,"
 	for f in ${LRP} $CONFIGDB $MODDB; do
-		IFS=':'
-		set -- $f
-		f=$1
-		usedevlist=$rdevlist
-		fnd=`cat $PFX/packages 2>/dev/null | grep -e "^$f\$" | wc -l`
-		echo -n "  $f:"
-		IFS=","
-		for devtype in ${usedevlist}; do
-			dev="${devtype%:+*}"
-			mnt="${devtype%:-*}"
-			mnt="${mnt#*:+}"
-			t="${devtype#*:-}"
-			[ "$VERBOSE" ] && echo -n " dev: $dev mnt: $mnt t: $t f: $mnt/$f.lrp"
-			[ "$VERBOSE2" ] && ls -l $dev
-			if [ $fnd -eq 0 ]; then
-				if [ -f $mnt/$f.lrp ]; then
-					echo -n " $dev"
-					gunzip -c $mnt/$f.lrp > /dev/null
-					if [ $? -eq 0 ]; then
-						tar -zxvpf $mnt/$f.lrp > $PFX/$f.list
-						#Update installed packages file
-						echo "$f">>$PFX/packages
-						#Calculate sha1sum
-						if [ -f $PFX/$f.local ] ; then
-						    cat $PFX/$f.local | while read x ; do
-							[ -e "$x" ] && find "$x" -type f | xargs sha1sum >> $PFX/$f.sha1
-						    done
-						fi
-						fnd=1
-					else
-						echo -n "(cpt!)"
-						[ $fnd -eq 0 ] && fnd=2
-					fi
-				fi
-			else
-				echo -n " $f(dup!)"
-			fi
-		done
-		if [ $fnd -eq 0 ]; then
-			echo -n " $f(nf!)"
-		fi
+		Lloadlrp $f
 	done
 	IFS="$OIFS"
 	echo " - Finished."
