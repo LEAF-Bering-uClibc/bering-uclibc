@@ -10,7 +10,8 @@ $(PERL_DIR)/.source:
 	mv $(PERL_DIR)/Configure $(PERL_DIR)/Configure.orig
 	mv $(PERL_DIR)/hints/linux.sh $(PERL_DIR)/hints/linux.sh.orig
 	sed 's:\([="'\'' ]\+\)\(\$$incpath\)\?\(/usr\|/usr/local\)\?/lib:\1$(BT_STAGING_DIR)\2\3/lib:g;'\
-	's/fstack/fno-stack/g;' \
+	's/fstack/fno-stack/g;'\
+	's/dbm db malloc/dbm malloc/;' \
 	$(PERL_DIR)/Configure.orig >$(PERL_DIR)/Configure
 	sed 's:\([="'\'' ]\+\)\(\$$incpath\)\?\(/usr\|/usr/local\)\?/lib:\1$(BT_STAGING_DIR)\2\3/lib:g;' \
 	$(PERL_DIR)/hints/linux.sh.orig >$(PERL_DIR)/hints/linux.sh
