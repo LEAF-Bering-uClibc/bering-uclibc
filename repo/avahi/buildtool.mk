@@ -19,13 +19,13 @@ AVAHI_TARGET_DIR:=$(BT_BUILD_DIR)/avahi
 #   And keep state files in /var (rather than /usr/var)
 #   Run as User "lrp" and Group "users" (rather than "avahi", or "root")
 #   Disable lots of options not relevant for Bering-uClibc
-CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+CONFOPTS:= \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--with-avahi-user=lrp --with-avahi-group=users --with-distro=debian \
 	--disable-nls --disable-glib --disable-gobject \
 	--disable-qt3 --disable-qt4 --disable-gtk --disable-gtk3 \
-	--disable-dbus --disable-gdbm --disable-python \
-	--disable-mono --disable-monodoc --disable-doxygen-doc \
-	--disable-ssp --disable-stack-protector
+	--disable-gdbm --disable-python --disable-mono --disable-monodoc \
+	--disable-doxygen-doc --disable-stack-protector
 
 # Next line is required to locate the .pc file for libdaemon
 export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
@@ -53,6 +53,8 @@ source: .source
 .build: .configure
 	# Need to remove "po/" from list of SUBDIRS to build
 	( cd $(AVAHI_DIR) ; perl -i -p -e 's/	po/ /' Makefile )
+	# Fix rpath to avoid picking up libraries from build host's /usr/lib
+	( cd $(AVAHI_DIR) ; find . -name Makefile -exec perl -i -p -e "s,-rpath \\$$\(libdir\),-rpath $(AVAHI_TARGET_DIR)/usr/lib," {} \; )
 	mkdir -p $(AVAHI_TARGET_DIR)
 	$(MAKE) -C $(AVAHI_DIR)
 	$(MAKE) DESTDIR=$(AVAHI_TARGET_DIR) -C $(AVAHI_DIR) install
