@@ -25,6 +25,7 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	     --sysconfdir=/etc \
 	     --disable-nls \
 	     --disable-debug \
+	     --disable-iri \
 	     --without-gpg-error \
 	     --without-gcrpyt \
 	     --without-ssl \
@@ -48,6 +49,7 @@ $(WGET_DIR)/.build: $(WGET_DIR)/.source
 	     --sysconfdir=/etc \
 	     --disable-nls \
 	     --disable-debug \
+	     --disable-iri \
 	     --without-gpg-error \
 	     --without-gcrpyt \
 	     --with-ssl=openssl \
