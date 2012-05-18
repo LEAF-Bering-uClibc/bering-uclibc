@@ -16,7 +16,7 @@ source: $(PERL_DIR)/.source
 
 $(PERL_DIR)/.configured: $(PERL_DIR)/.source
 	( cd $(PERL_DIR) ; \
-	./configure --prefix=/usr --target=$(GNU_TARGET_NAME) \
+	./configure --prefix=/usr --target=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) \
 	-Dusethreads \
 	-Dccflags="$(CFLAGS)")
 	touch $(PERL_DIR)/.configured
