@@ -1,0 +1,67 @@
+#############################################################
+#
+# buildtool makefile for dbus 
+#
+#############################################################
+
+include $(MASTERMAKEFILE)
+
+SOURCE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE_TGZ) 2>/dev/null )
+ifeq ($(SOURCE_DIR),)
+SOURCE_DIR:=$(shell cat DIRNAME)
+endif
+TARGET_DIR:=$(BT_BUILD_DIR)/dbus
+
+# Option settings for 'configure'
+#  Move files out from under /usr/local/ but use /etc and /var
+#  Specify location of sysroot
+#  Omit initscripts (no option for Debian, only RedHat etc.)
+#  Don't attempt to use X Window System or SELinux
+#  Don't bother with documentation
+CONFOPTS = \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--with-sysroot=$(BT_STAGING_DIR) \
+	--with-init-scripts=none \
+	--without-x --disable-selinux \
+	--disable-xml-docs --disable-doxygen-docs
+
+.source:
+	zcat $(SOURCE_TGZ) | tar -xvf -
+	echo $(SOURCE_DIR) > DIRNAME
+	touch .source
+
+source: .source
+
+.configured: .source
+	( cd $(SOURCE_DIR) ; ./configure $(CONFOPTS) )
+	touch .configured
+
+build: .configured
+	mkdir -p $(TARGET_DIR)
+	mkdir -p $(BT_STAGING_DIR)/usr/bin
+	mkdir -p $(BT_STAGING_DIR)/usr/lib
+	mkdir -p $(BT_STAGING_DIR)/usr/include
+
+	make -C $(SOURCE_DIR)
+	# Need to tweak pkgconfig paths before "make install"
+	perl -i -p -e "s,^includedir.*,includedir=$(BT_STAGING_DIR)/usr/include," $(SOURCE_DIR)/dbus-1.pc
+	perl -i -p -e "s,^libdir.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(SOURCE_DIR)/dbus-1.pc
+	make -C $(SOURCE_DIR) DESTDIR=$(TARGET_DIR) install
+
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*.so
+	cp -a $(TARGET_DIR)/usr/bin/* $(BT_STAGING_DIR)/usr/bin/
+	cp -a $(TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
+	cp -a $(TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include/
+	touch .build	
+
+clean:
+	-make -C $(SOURCE_DIR) clean
+	rm -rf $(TARGET_DIR)
+	rm -f .build
+	rm -f .configured
+	
+srcclean:
+	rm -rf $(SOURCE_DIR)
+	rm .source
+	rm DIRNAME

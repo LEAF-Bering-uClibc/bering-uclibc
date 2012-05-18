@@ -317,6 +317,40 @@ sub packageConf($) {
 
 }
 
+# packageDependsOnLrp($config)
+#
+# Returns the contents of the .deplrp file of the package
+sub packageDependsOnLrp($) {
+	my ($p_h_packageConfig) = @_;
+	print "Generating package depends-on-lrp file\n" if $verbose;
+
+	my $packageDependsOn = $p_h_packageConfig->{'dependson'};
+	return '' unless defined( $packageDependsOn );
+	my $depLRPs = [];
+
+	# OK, so we have a <DependsOn> block...
+	# Could be 0, 1 or Many "Package = name" entries
+	if ( defined( $packageDependsOn->{'package'} ) )
+	{
+		# Got something, so either 1 or Many entries
+		if ( ref( $packageDependsOn->{'package'} ) eq 'ARRAY' )
+		{
+			# Many...
+			foreach my $LRP ( @{$packageDependsOn->{'package'}} )
+			{
+				push( @{$depLRPs}, $LRP );
+			}
+		}
+		else
+		{
+			# One...
+			push( @{$depLRPs}, $packageDependsOn->{'package'} );
+		}
+	}
+
+	return join( "\n", @{$depLRPs} );
+}
+
 # packageLocal($config)
 #
 # Returns the contents of the .local file of the package
@@ -786,6 +820,11 @@ sub generateLrpkgFiles($$$) {
 
 	$str = packageLicense($p_h_package);
 	system_exec("cd $destDir ; ln -s licenses/$str $p_h_package->{'packagename'}.license"
+		) unless $str eq '';
+
+	$str = packageDependsOnLrp($p_h_package);
+	writeToFile(File::Spec->catfile($destDir, $p_h_package->{'packagename'} . ".deplrp"),
+				$str . "\n"
 		) unless $str eq '';
 
 }

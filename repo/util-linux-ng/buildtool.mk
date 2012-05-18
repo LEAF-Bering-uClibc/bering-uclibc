@@ -5,7 +5,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-UTIL_LINUX_DIR:=util-linux-ng-2.17
+UTIL_LINUX_DIR:=util-linux-ng-2.18
 UTIL_LINUX_TARGET_DIR:=$(BT_BUILD_DIR)/util-linux-ng
 OPT="-pipe -fomit-frame-pointer $(BT_COPT_FLAGS)"
 export $OPT
