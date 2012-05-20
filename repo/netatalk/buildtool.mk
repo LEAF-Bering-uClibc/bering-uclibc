@@ -20,6 +20,7 @@ CONFDEFS = ac_cv_lib_avahi_client_avahi_client_new=yes
 # Option settings for 'configure'
 #  Need to specify location of Berkeley DB installation
 #  Need to specify location of OpenSSL installation
+#  Need to specify location of GnuPG libgcrypt installation
 #  Need to specify location of sysroot
 #  Move files out from under /usr/local/ but use /etc rather than /usr/etc
 #  Enable Zeroconf support (avahi)
@@ -29,6 +30,7 @@ CONFOPTS = \
 	--build=$(GNU_BUILD_NAME) \
 	--with-bdb=$(BT_STAGING_DIR)/usr \
 	--with-ssl-dir=$(BT_STAGING_DIR)/usr \
+	--with-libgcrypt-dir=$(BT_STAGING_DIR)/usr \
 	--with-sysroot=$(BT_STAGING_DIR) \
 	--prefix=/usr --sysconfdir=/etc \
 	--enable-zeroconf \

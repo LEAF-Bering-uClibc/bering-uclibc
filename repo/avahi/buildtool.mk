@@ -57,6 +57,11 @@ source: .source
 	# Fix rpath to avoid picking up libraries from build host's /usr/lib
 	( cd $(AVAHI_DIR) ; find . -name Makefile -exec perl -i -p -e "s,-rpath \\$$\(libdir\),-rpath $(AVAHI_TARGET_DIR)/usr/lib," {} \; )
 	mkdir -p $(AVAHI_TARGET_DIR)
+	mkdir -p $(BT_STAGING_DIR)/usr/sbin
+	mkdir -p $(BT_STAGING_DIR)/usr/lib
+	mkdir -p $(BT_STAGING_DIR)/usr/include
+	mkdir -p $(BT_STAGING_DIR)/etc/init.d/
+	mkdir -p $(BT_STAGING_DIR)/etc/avahi/services
 	$(MAKE) $(MAKEOPTS) -C $(AVAHI_DIR)
 	$(MAKE) DESTDIR=$(AVAHI_TARGET_DIR) -C $(AVAHI_DIR) install
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(AVAHI_TARGET_DIR)/usr/sbin/*
