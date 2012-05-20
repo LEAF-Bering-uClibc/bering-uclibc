@@ -4,8 +4,6 @@
 <!--
   Sample avahi service file for LEAF router
   See e.g. http://avahi.org/download/avahi.service.5.xml for syntax
-
-  $Header: /cvsroot/leaf/devel/davidmbrooke/src/bering-uclibc4/source/avahi/leaf.service,v 1.1 2010/12/04 18:06:16 davidmbrooke Exp $
 -->
 
 <!-- Advertise the local HTTP service -->
