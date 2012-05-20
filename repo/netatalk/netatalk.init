@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# /etc/init.d/netatalk   start / stop the Netatalk daemon
+#
+RCDLINKS="0,K10 2,S90"
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DESC="Netatalk"
+PROG=afpd
+PROGRAM=/usr/sbin/${PROG}
+SCRIPTNAME=/etc/init.d/netatalk
+
+# Check for existence of daemon executables
+test -f $PROGRAM || exit 0
+
+# Set defaults. Please change these options in /etc/default/netatalk
+ATALK_NAME=`/bin/hostname`
+ATALK_UNIX_CHARSET='LOCALE'
+ATALK_MAC_CHARSET='MAC_ROMAN'
+
+CNID_METAD_RUN=yes
+AFPD_RUN=yes
+AFPD_MAX_CLIENTS=10
+AFPD_UAMLIST="-U uams_dhx2.so"
+AFPD_GUEST=nobody
+CNID_CONFIG="-l log_note"
+
+# Read in netatalk configuration.
+if [ -f /etc/default/netatalk ] ; then
+	. /etc/default/netatalk
+fi
+
+ret=0
+
+case "$1" in
+    start)
+	echo -n "Starting $DESC Daemons:"
+	echo -n " cnid_metad"
+	start-stop-daemon --start --quiet --exec /usr/sbin/cnid_metad \
+		-- $CNID_CONFIG || ret=$?
+	echo -n " afpd"
+	start-stop-daemon --start --quiet --exec $PROGRAM \
+		-- $AFPD_UAMLIST -g $AFPD_GUEST -c $AFPD_MAX_CLIENTS \
+		-n "$ATALK_NAME$ATALK_ZONE" || ret=$?
+	echo ""
+	exit $ret
+	;;
+
+    stop)
+	echo -n "Stopping $DESC Daemons:"
+	echo -n " afpd"
+	start-stop-daemon --stop --quiet --oknodo --exec $PROGRAM || ret=$?
+	echo -n " cnid_metad"
+	start-stop-daemon --stop --quiet --oknodo --exec /usr/sbin/cnid_metad || ret=$?
+	echo ""
+	exit $ret
+	;;
+
+    restart)
+	echo "Restarting $DESC."
+	$SCRIPTNAME stop
+	sleep 2
+	$SCRIPTNAME start
+	exit $ret
+	;;
+
+    *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart}"
+	exit 1
+esac
+
+exit 0
