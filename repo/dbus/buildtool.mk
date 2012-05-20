@@ -19,6 +19,8 @@ TARGET_DIR:=$(BT_BUILD_DIR)/dbus
 #  Don't attempt to use X Window System or SELinux
 #  Don't bother with documentation
 CONFOPTS = \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--with-sysroot=$(BT_STAGING_DIR) \
 	--with-init-scripts=none \
