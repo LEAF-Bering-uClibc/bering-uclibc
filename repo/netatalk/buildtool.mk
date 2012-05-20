@@ -25,6 +25,8 @@ CONFDEFS = ac_cv_lib_avahi_client_avahi_client_new=yes
 #  Enable Zeroconf support (avahi)
 #  Select Debian-style target
 CONFOPTS = \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-bdb=$(BT_STAGING_DIR)/usr \
 	--with-ssl-dir=$(BT_STAGING_DIR)/usr \
 	--with-sysroot=$(BT_STAGING_DIR) \
