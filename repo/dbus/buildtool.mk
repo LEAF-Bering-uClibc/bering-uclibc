@@ -15,12 +15,14 @@ TARGET_DIR:=$(BT_BUILD_DIR)/dbus
 # Option settings for 'configure'
 #  Move files out from under /usr/local/ but use /etc and /var
 #  Specify location of sysroot
+#  Use account 'dbus', shorter than the default 'messagebus'
 #  Omit initscripts (no option for Debian, only RedHat etc.)
 #  Don't attempt to use X Window System or SELinux
 #  Don't bother with documentation
 CONFOPTS = \
 	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--with-sysroot=$(BT_STAGING_DIR) \
+	--with-dbus-user=dbus \
 	--with-init-scripts=none \
 	--without-x --disable-selinux \
 	--disable-xml-docs --disable-doxygen-docs
@@ -41,6 +43,8 @@ build: .configured
 	mkdir -p $(BT_STAGING_DIR)/usr/bin
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
 	mkdir -p $(BT_STAGING_DIR)/usr/include
+	mkdir -p $(BT_STAGING_DIR)/etc/dbus-1
+	mkdir -p $(BT_STAGING_DIR)/etc/init.d
 
 	make -C $(SOURCE_DIR)
 	# Need to tweak pkgconfig paths before "make install"
@@ -53,6 +57,10 @@ build: .configured
 	cp -a $(TARGET_DIR)/usr/bin/* $(BT_STAGING_DIR)/usr/bin/
 	cp -a $(TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
 	cp -a $(TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include/
+	cp -a $(TARGET_DIR)/etc/dbus-1/*.conf $(BT_STAGING_DIR)/etc/dbus-1/
+	cp -aL messagebus.init $(BT_STAGING_DIR)/etc/init.d/messagebus
+	rm -f $(BT_STAGING_DIR)/etc/machine-id
+	touch $(BT_STAGING_DIR)/etc/machine-id
 	touch .build	
 
 clean:

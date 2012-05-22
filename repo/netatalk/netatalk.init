@@ -2,7 +2,7 @@
 #
 # /etc/init.d/netatalk   start / stop the Netatalk daemon
 #
-RCDLINKS="0,K10 2,S90"
+RCDLINKS="0,K50 2,S50"
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DESC="Netatalk"
 PROG=afpd
@@ -17,8 +17,6 @@ ATALK_NAME=`/bin/hostname`
 ATALK_UNIX_CHARSET='LOCALE'
 ATALK_MAC_CHARSET='MAC_ROMAN'
 
-CNID_METAD_RUN=yes
-AFPD_RUN=yes
 AFPD_MAX_CLIENTS=10
 AFPD_UAMLIST="-U uams_dhx2.so"
 AFPD_GUEST=nobody
