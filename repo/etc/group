@@ -20,6 +20,8 @@ shadow:x:42:
 ftp:x:50:
 qmail:x:70:
 nut:x:84:
+dbus:x:85:
+avahi:x:86:
 users:x:100:
 oprofile:x:200:
 lrpqmail:x:500:

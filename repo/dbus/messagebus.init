@@ -1,0 +1,55 @@
+#!/bin/sh
+#
+# /etc/init.d/messagebus    start / stop the D-Bus daemon
+#
+RCDLINKS="0,K85 2,S22"
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DESC="D-Bus daemon"
+PROG=dbus-daemon
+PROGRAM=/usr/bin/${PROG}
+SCRIPTNAME=/etc/init.d/messagebus
+
+# Check for existence of daemon executables
+test -f $PROGRAM || exit 0
+
+ret=0
+
+case "$1" in
+    start)
+	echo -n "Starting $DESC: "
+	if [ ! -s /etc/machine-id ] ; then
+	    rm -f /etc/machine-id
+	    if [ -x /usr/bin/dbus-uuidgen ] ; then
+	    	/usr/bin/dbus-uuidgen --ensure=/etc/machine-id
+	    fi
+	fi
+	start-stop-daemon --start --quiet --exec $PROGRAM -- --system || ret=$?
+	echo ""
+	exit $ret
+	;;
+
+    stop)
+	echo -n "Stopping $DESC: "
+	PID=`cat /var/run/dbus/pid`
+	kill -TERM $PID
+	ret=$?
+	echo ""
+	if [ $ret -eq 0 ] ; then
+	    rm -f /var/run/dbus/pid
+	fi
+	exit $ret
+	;;
+
+    restart)
+	echo "Restarting $DESC"
+	$SCRIPTNAME stop
+	sleep 2
+	$SCRIPTNAME start
+	;;
+
+    *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

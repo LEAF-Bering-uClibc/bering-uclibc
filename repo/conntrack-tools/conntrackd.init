@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# /etc/init.d/conntrackd
+RCDLINKS="0,K20 1,K20 2,S20 3,S20 4,S20 5,S20 6,K20"
+
+NAME="conntrackd"
+CONFIG="/etc/conntrack/conntrackd.conf"
+PIDFILE="/var/run/${NAME}.pid"
+
+
+# Check for config file
+if [ ! -f /etc/conntrackd/conntrackd.conf ]; then
+	echo "Error: There is no config file for $NAME" >&2
+	exit 1;
+fi
+
+case "$1" in
+  start)
+        echo -n "Starting $NAME: "
+	start-stop-daemon --start --quiet --make-pidfile --pidfile "/var/run/${NAME}.pid" --background --exec conntrackd  && echo "done." || echo "FAILED!"
+	;;
+  stop)
+        echo -n "Stopping $NAME:"
+	start-stop-daemon --stop --quiet --oknodo --pidfile "/var/run/${NAME}.pid" && echo "done." || echo "FAILED!"
+	;;
+
+  restart)
+	$0 start
+	$0 stop
+	;;
+
+  *)
+	echo "Usage: /etc/init.d/conntrackd {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

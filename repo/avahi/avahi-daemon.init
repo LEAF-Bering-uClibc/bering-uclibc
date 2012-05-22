@@ -1,7 +1,7 @@
 #!/bin/sh
 # Avahi Daemon
 
-RCDLINKS="0,K83 1,K83 2,S17 3,S17 4,S17 5,S17 6,K83"
+RCDLINKS="0,K83 1,K83 2,S24 3,S24 4,S24 5,S24 6,K83"
 
 AVAHI_DAEMON=/usr/sbin/avahi-daemon
 ARGS="--file /etc/avahi/avahi-daemon.conf --daemonize"
