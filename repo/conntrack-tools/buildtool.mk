@@ -21,6 +21,7 @@ $(CONNTRACK-TOOLS_DIR)/.build: $(CONNTRACK-TOOLS_DIR)/.configured
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d
 	$(MAKE) -C $(CONNTRACK-TOOLS_DIR) 	
 	$(MAKE) DESTDIR=$(CONNTRACK-TOOLS_TARGET_DIR) -C $(CONNTRACK-TOOLS_DIR) install
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CONNTRACK-TOOLS_TARGET_DIR)/usr/sbin/conntrack*
 	cp -aL conntrackd.init $(BT_STAGING_DIR)/etc/init.d/conntrackd
 	cp -a $(CONNTRACK-TOOLS_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin
 	cp -a $(CONNTRACK-TOOLS_DIR)/doc/stats/conntrackd.conf $(BT_STAGING_DIR)/etc/conntrackd/conntrackd.conf

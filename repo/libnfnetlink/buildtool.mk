@@ -20,8 +20,9 @@ $(LIBNFNETLINK_DIR)/.build: $(LIBNFNETLINK_DIR)/.configured
 	mkdir -p $(BT_STAGING_DIR)/usr/include/libnfnetlink
 	$(MAKE) -C $(LIBNFNETLINK_DIR) 	
 	$(MAKE) DESTDIR=$(LIBNFNETLINK_TARGET_DIR) -C $(LIBNFNETLINK_DIR) install
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNFNETLINK_TARGET_DIR)/usr/lib/libnfnetlink.so*
 	cp -a $(LIBNFNETLINK_TARGET_DIR)/usr/lib/libnfnetlink.so* $(BT_STAGING_DIR)/usr/lib/
-	cp -ar $(LIBNFNETLINK_TARGET_DIR)/usr/lib/pkgconfig/ $(BT_STAGING_DIR)/usr/lib/pkgconfig/
+	cp -ar $(LIBNFNETLINK_TARGET_DIR)/usr/lib/pkgconfig/* $(BT_STAGING_DIR)/usr/lib/pkgconfig/
 	cp -a $(LIBNFNETLINK_TARGET_DIR)/usr/include/libnfnetlink/libnfnetlink.h $(BT_STAGING_DIR)/usr/include/libnfnetlink
 	cp -a $(LIBNFNETLINK_TARGET_DIR)/usr/include/libnfnetlink/linux_nfnetlink_compat.h $(BT_STAGING_DIR)/usr/include/libnfnetlink
 	cp -a $(LIBNFNETLINK_TARGET_DIR)/usr/include/libnfnetlink/linux_nfnetlink.h $(BT_STAGING_DIR)/usr/include/libnfnetlink
