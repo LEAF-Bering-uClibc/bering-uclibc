@@ -42,16 +42,17 @@ build: $(OPENLDAP_DIR)/.configure
 	$(MAKE) -C $(OPENLDAP_DIR)/include DESTDIR=$(OPENLDAP_TARGET_DIR) install
 	$(MAKE) -C $(OPENLDAP_DIR)/libraries DESTDIR=$(OPENLDAP_TARGET_DIR) install
 #
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENLDAP_TARGET_DIR)/usr/lib/*
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENLDAP_TARGET_DIR)/usr/bin/*
-	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(OPENLDAP_TARGET_DIR)/usr/lib/*.la
-#	Fix up libldap.la / libldap_r dependency list
-	perl -i -p -e 's,/usr/lib/liblber.la,-llber,' $(OPENLDAP_TARGET_DIR)/usr/lib/libldap.la
-	perl -i -p -e 's,/usr/lib/liblber.la,-llber,' $(OPENLDAP_TARGET_DIR)/usr/lib/libldap_r.la
+	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENLDAP_TARGET_DIR)/usr/bin/*
+	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENLDAP_TARGET_DIR)/usr/lib/*.so
+	# Fix libdir path for libtool
+	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(OPENLDAP_TARGET_DIR)/usr/lib/*.la
 	mkdir -p $(BT_STAGING_DIR)/usr/lib/
 	mkdir -p $(BT_STAGING_DIR)/usr/include/
-	cp -af $(OPENLDAP_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
-	cp -af $(OPENLDAP_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include
+	cp -f $(OPENLDAP_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
+	cp -f $(OPENLDAP_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include
+#        Fix up libldap.la / libldap_r dependency list
+	perl -i -p -e 's,/usr/lib/liblber.la,-llber,' $(BT_STAGING_DIR)/usr/lib/libldap.la
+	perl -i -p -e 's,/usr/lib/liblber.la,-llber,' $(BT_STAGING_DIR)/usr/lib/libldap_r.la
 
 clean:
 	rm -rf $(OPENLDAP_TARGET_DIR)

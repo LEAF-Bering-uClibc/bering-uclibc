@@ -17,7 +17,7 @@ AVAHI_TARGET_DIR:=$(BT_BUILD_DIR)/avahi
 #   Move default install from /usr/local to /usr
 #   But keep config files in /etc (rather than /usr/etc)
 #   And keep state files in /var (rather than /usr/var)
-#   Run as User "lrp" and Group "users" (rather than "avahi", or "root")
+#   Run as User "avahi" and Group "avahi"
 #   Disable lots of options not relevant for Bering-uClibc
 CONFOPTS:= \
 	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
@@ -67,7 +67,10 @@ source: .source
 	$(MAKE) DESTDIR=$(AVAHI_TARGET_DIR) -C $(AVAHI_DIR) install
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(AVAHI_TARGET_DIR)/usr/sbin/*
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(AVAHI_TARGET_DIR)/usr/lib/*.so
-	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(AVAHI_TARGET_DIR)/usr/lib/*.la
+	# Fix libdir path for libtool
+	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(AVAHI_TARGET_DIR)/usr/lib/*.la
+	# Fix dependency_libs for libtool
+	perl -i -p -e "s, /usr/lib/, $(BT_STAGING_DIR)/usr/lib/," $(AVAHI_TARGET_DIR)/usr/lib/*.la
 	cp -a $(AVAHI_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin
 	cp -ar $(AVAHI_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib
 	cp -ar $(AVAHI_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include

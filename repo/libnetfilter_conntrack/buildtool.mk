@@ -9,14 +9,8 @@ $(LIBNETFILTER_CONNTRACK_DIR)/.source:
 	touch $(LIBNETFILTER_CONNTRACK_DIR)/.source
 
 $(LIBNETFILTER_CONNTRACK_DIR)/.configured: $(LIBNETFILTER_CONNTRACK_DIR)/.source
-#	(cd $(LIBNETFILTER_CONNTRACK_DIR) ; export LIBNFNETLINK_LIBS=-L$(BT_STAGING_DIR)/usr/lib; \
-#	export LIBNFNETLINK_CFLAGS="-I$(BT_STAGING_DIR)/usr/include"; ./configure --build=i486-pc-linux-gnu --host=i486-pc-linux-gnu --prefix=/usr )
-#	touch $(LIBNETFILTER_CONNTRACK_DIR)/.configured
-
-	(cd $(LIBNETFILTER_CONNTRACK_DIR) ; ./configure --build=$(GNU_BUILD_NAME) --host=$(GNU_TARGET_NAME) --prefix=/usr )
+	(cd $(LIBNETFILTER_CONNTRACK_DIR) ; ./configure --build=i486-pc-linux-gnu --host=i486-pc-linux-gnu --prefix=/usr )
 	touch $(LIBNETFILTER_CONNTRACK_DIR)/.configured
-
-
 
 source: $(LIBNETFILTER_CONNTRACK_DIR)/.source
 
@@ -26,9 +20,11 @@ $(LIBNETFILTER_CONNTRACK_DIR)/.build: $(LIBNETFILTER_CONNTRACK_DIR)/.configured
 	mkdir -p $(BT_STAGING_DIR)/usr/include/libnetfilter_conntrack
 	$(MAKE) -C $(LIBNETFILTER_CONNTRACK_DIR) 	
 	$(MAKE) DESTDIR=$(LIBNETFILTER_CONNTRACK_TARGET_DIR) -C $(LIBNETFILTER_CONNTRACK_DIR) install
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/lib/libnetfilter_conntrack.so*
 	cp -a $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/lib/libnetfilter_conntrack.so* $(BT_STAGING_DIR)/usr/lib/
 	cp -a $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/include/libnetfilter_conntrack/* $(BT_STAGING_DIR)/usr/include/libnetfilter_conntrack
-	cp -a $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/lib/pkgconfig/libnetfilter_conntrack.pc $(BT_STAGING_DIR)/usr/lib/pkgconfig
+	cp -a $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/lib/pkgconfig/libnetfilter_conntrack.pc $(BT_STAGING_DIR)/usr/lib/pkgconfig/
+#	cp -a $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LIBNETFILTER_CONNTRACK_DIR)/.build
 
 build: $(LIBNETFILTER_CONNTRACK_DIR)/.build
@@ -43,4 +39,3 @@ clean:
 	
 srcclean:
 	rm -rf $(LIBNETFILTER_CONNTRACK_DIR)
-

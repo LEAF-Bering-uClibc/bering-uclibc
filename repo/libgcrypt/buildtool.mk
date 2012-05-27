@@ -28,6 +28,8 @@ build: $(LIBGCRYPT_DIR)/Makefile
 	$(MAKE) DESTDIR=$(LIBGCRYPT_TARGET_DIR) -C $(LIBGCRYPT_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBGCRYPT_TARGET_DIR)/usr/lib/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBGCRYPT_TARGET_DIR)/usr/lib/*.la
+	# Fix dependency_libs for libtool
+	perl -i -p -e "s, /usr/lib/, $(BT_STAGING_DIR)/usr/lib/," $(LIBGCRYPT_TARGET_DIR)/usr/lib/*.la
 	rm -rf $(LIBGCRYPT_TARGET_DIR)/usr/man
 	cp -a $(LIBGCRYPT_TARGET_DIR)/* $(BT_STAGING_DIR)
 
