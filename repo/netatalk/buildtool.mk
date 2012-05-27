@@ -45,8 +45,6 @@ source: .source
 
 .configured: .source
 	( cd $(SOURCE_DIR) ; $(CONFDEFS) ./configure $(CONFOPTS) )
-	# Crude hack to tolerate references to build host /usr/lib
-	( cd $(SOURCE_DIR); sed -i '6060s,exit.*,continue,' libtool )
 	touch .configured
 
 build: .configured

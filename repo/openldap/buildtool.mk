@@ -36,6 +36,8 @@ build: $(OPENLDAP_DIR)/.configure
 	$(MAKE) -C $(OPENLDAP_DIR) DESTDIR=$(OPENLDAP_TARGET_DIR) install
 #
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENLDAP_TARGET_DIR)/usr/lib/*.so
+	# Fix libdir path for libtool
+	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(OPENLDAP_TARGET_DIR)/usr/lib/*.la
 	cp -f $(OPENLDAP_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
 	cp -f $(OPENLDAP_TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include
 #        Fix up libldap.la / libldap_r dependency list

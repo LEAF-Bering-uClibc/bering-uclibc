@@ -37,6 +37,8 @@ build: .configured
 	make -C $(SOURCE_DIR) DESTDIR=$(TARGET_DIR) install
 
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*.so
+	# Fix libdir path for libtool
+	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(TARGET_DIR)/usr/lib/*.la
 	cp -a $(TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib/
 	cp -a $(TARGET_DIR)/usr/include/* $(BT_STAGING_DIR)/usr/include/
 	touch .build	

@@ -27,6 +27,8 @@ build: $(LIBGPG-ERROR_DIR)/Makefile
 	$(MAKE) DESTDIR=$(LIBGPG-ERROR_TARGET_DIR) -C $(LIBGPG-ERROR_DIR) install
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBGPG-ERROR_TARGET_DIR)/usr/lib/libgpg-error.so
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LIBGPG-ERROR_TARGET_DIR)/usr/bin/gpg-error
+	# Fix libdir path for libtool
+	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(LIBGPG-ERROR_TARGET_DIR)/usr/lib/libgpg-error.la
 	rm -rf $(LIBGPG-ERROR_TARGET_DIR)/usr/man
 	cp -a $(LIBGPG-ERROR_TARGET_DIR)/* $(BT_STAGING_DIR)
 
