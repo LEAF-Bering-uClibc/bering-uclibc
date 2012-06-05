@@ -7,7 +7,7 @@
 
 include $(MASTERMAKEFILE)
 
-ZLIB_DIR=zlib-1.2.5
+ZLIB_DIR=zlib-1.2.7
 ZLIB_BUILD_DIR=$(BT_BUILD_DIR)/zlib
 
 ZLIB_CFLAGS="-Os -g -fPIC"
