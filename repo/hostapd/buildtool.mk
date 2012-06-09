@@ -7,7 +7,7 @@
 include $(MASTERMAKEFILE)
 
 
-HOSTAPD_DIR:=hostapd-0.7.3/
+HOSTAPD_DIR:=hostapd-1.0/
 HOSTAPD_TARGET_DIR:=$(BT_BUILD_DIR)/hostapd
 
 
@@ -15,7 +15,6 @@ $(HOSTAPD_DIR)/.source:
 	zcat $(HOSTAPD_SOURCE) | tar -xvf -
 #	cat $(HOSTAPD_PATCH1) | patch -d $(HOSTAPD_DIR)/hostapd -p1
 	cat $(HOSTAPD_PATCH2) | patch -d $(HOSTAPD_DIR) -p1
-#	cat $(HOSTAPD_PATCH3) | patch -d $(HOSTAPD_DIR) -p1
 	touch $(HOSTAPD_DIR)/.source
 
 $(HOSTAPD_DIR)/.build: $(HOSTAPD_DIR)/.source
