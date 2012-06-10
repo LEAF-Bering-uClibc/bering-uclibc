@@ -1,0 +1,11 @@
+--- ndppd-0.2.2/src/iface.h.orig	2012-06-10 17:27:36.000000000 +0200
++++ ndppd-0.2.2/src/iface.h	2012-06-10 17:27:46.000000000 +0200
+@@ -23,6 +23,8 @@
+ #include <sys/poll.h>
+ #include <net/ethernet.h>
+ 
++#define ETHERTYPE_IPV6      0x86dd      /* IP protocol version 6 */
++
+ #include "ndppd.h"
+ 
+ NDPPD_NS_BEGIN
