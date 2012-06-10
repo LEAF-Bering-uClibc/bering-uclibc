@@ -1,0 +1,32 @@
+diff -urN shorewall-4.5.4.1.orig/configfiles/rules shorewall-4.5.4.1/configfiles/rules
+--- shorewall-4.5.4.1.orig/configfiles/rules	2012-05-30 23:37:29.000000000 +0200
++++ shorewall-4.5.4.1/configfiles/rules	2012-06-08 15:27:00.667036866 +0200
+@@ -13,3 +13,28 @@
+ #SECTION ESTABLISHED
+ #SECTION RELATED
+ SECTION NEW
++#      Accept DNS connections from the firewall to the network
++#      and from the local network to the firewall (in case dnsmasq is running)
++DNS(ACCEPT)   fw          net
++DNS(ACCEPT)   loc         fw
++
++#      Accept SSH connections from the local network for administration
++#
++SSH(ACCEPT)   loc         fw
++
++#      Allow Ping to Firewall
++#
++Ping(ACCEPT)  net         fw
++Ping(ACCEPT)  loc         fw
++#
++#      Allow all ICMP types (including ping) from firewall
++ACCEPT    fw           loc                     icmp
++ACCEPT    fw           net                     icmp
++#      Allow local network to access weblet/webconf
++#
++HTTP(ACCEPT)   loc        fw
++HTTPS(ACCEPT)   loc        fw
++# timeserver (allow syncing with time servers (default: pool.ntp.org))
++NTP(ACCEPT)         fw       net
++# timeserver (allow LAN clients to sync with the time service on the router)
++# NTP(ACCEPT)         loc    fw

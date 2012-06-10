@@ -1,0 +1,16 @@
+diff -urN shorewall-4.5.4.1.orig/configfiles/policy shorewall-4.5.4.1/configfiles/policy
+--- shorewall-4.5.4.1.orig/configfiles/policy	2012-05-30 23:37:29.000000000 +0200
++++ shorewall-4.5.4.1/configfiles/policy	2012-06-07 17:00:11.221568605 +0200
+@@ -9,3 +9,12 @@
+ ###############################################################################
+ #SOURCE	DEST	POLICY		LOG	LIMIT:		CONNLIMIT:
+ #				LEVEL	BURST		MASK
++loc     net    ACCEPT
++net     all    DROP
++# If you want open access to the Internet from your Firewall
++# remove the comment from the following line.
++#fw             net             ACCEPT
++# THE FOLLOWING POLICY MUST BE LAST
++#
++all           all             REJECT          info
++

@@ -8,7 +8,7 @@ include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/shorewall-core
 
-SHOREWALL-CORE_DIR:=shorewall-core-4.5.1.1
+SHOREWALL-CORE_DIR:=shorewall-core-4.5.5
 
 $(SHOREWALL-CORE_DIR)/.source:
 	zcat $(SHOREWALL-CORE_SOURCE) | tar -xvf -
@@ -16,9 +16,27 @@ $(SHOREWALL-CORE_DIR)/.source:
 
 #errata
 
-$(SHOREWALL-CORE_DIR)/.build: $(SHOREWALL-CORE_DIR)/.source
+$(SHOREWALL-CORE_DIR)/.configured: $(SHOREWALL-CORE_DIR)/.source
+	( cd $(SHOREWALL-CORE_DIR); ./configure \
+	--host=linux \
+	--build=linux \
+	--prefix=/usr \
+	--sharedir=/usr/share \
+	--libexecdir=/usr/share \
+	--perllibdir=/usr/share/shorewall \
+	--confdir=/etc \
+	--sbindir=/sbin \
+	--initdir=/etc/init.d \
+	--initfile=shorewall \
+	--initsource=init.sh \
+	--annotated= \
+	--vardir=/var/lib \
+	--sysconfdir=/etc/default )
+	touch $(SHOREWALL-CORE_DIR)/.configured
+
+$(SHOREWALL-CORE_DIR)/.build: $(SHOREWALL-CORE_DIR)/.configured
 	mkdir -p $(TARGET_DIR)
-	(cd $(SHOREWALL-CORE_DIR); env PREFIX=$(TARGET_DIR) ./install.sh)
+	(cd $(SHOREWALL-CORE_DIR); env PREFIX=$(TARGET_DIR) DESTDIR=$(TARGET_DIR) ./install.sh)
 	
 	cp -afv $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(SHOREWALL-CORE_DIR)/.build
@@ -31,6 +49,7 @@ build:  $(SHOREWALL-CORE_DIR)/.build
 clean:	stageclean
 	rm -rf $(TARGET_DIR)
 	rm -f  $(SHOREWALL-CORE_DIR)/.build
+	rm -f  $(SHOREWALL-CORE_DIR)/.configured
 
 stageclean:
 	rm -rf $(BT_STAGING_DIR)/usr/share/shorewall
