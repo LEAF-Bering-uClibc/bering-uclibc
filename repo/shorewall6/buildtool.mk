@@ -28,7 +28,7 @@ $(SHOREWALL_DIR)/.configured: $(SHOREWALL_DIR)/.source
 	--confdir=/etc \
 	--sbindir=/sbin \
 	--initdir=/etc/init.d \
-	--initfile=shorewall \
+	--initfile=shorewall6 \
 	--initsource=init.sh \
 	--annotated= \
 	--vardir=/var/lib \

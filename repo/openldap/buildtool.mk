@@ -42,8 +42,8 @@ build: $(OPENLDAP_DIR)/.configure
 	$(MAKE) -C $(OPENLDAP_DIR)/include DESTDIR=$(OPENLDAP_TARGET_DIR) install
 	$(MAKE) -C $(OPENLDAP_DIR)/libraries DESTDIR=$(OPENLDAP_TARGET_DIR) install
 #
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENLDAP_TARGET_DIR)/usr/bin/*
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENLDAP_TARGET_DIR)/usr/lib/*.so
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENLDAP_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENLDAP_TARGET_DIR)/usr/lib/*.so
 	# Fix libdir path for libtool
 	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(OPENLDAP_TARGET_DIR)/usr/lib/*.la
 	mkdir -p $(BT_STAGING_DIR)/usr/lib/
