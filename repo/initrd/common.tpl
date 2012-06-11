@@ -3,7 +3,7 @@
 	packagename = initrd
 
 	Version = 5.0-prealpha
-	Revision = 2
+	Revision = 3
 
 	Help <<EOF
 	LEAF Bering-uClibc initial filesystem (floppy + IDE/SATA + USB)
