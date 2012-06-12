@@ -15,6 +15,7 @@ $(SHOREWALL_DIR)/.source:
 	cat $(SHOREWALL_DATE_DIFF)	| patch -d $(SHOREWALL_DIR) -p1
 	cat $(SHOREWALL_LRP_DIFF)	| patch -d $(SHOREWALL_DIR) -p1
 	cat $(SHOREWALL_CONFIG_DIFF)	| patch -d $(SHOREWALL_DIR) -p1
+	cat $(SHOREWALL_ROUTING_NDP_PATCH) | patch -d $(SHOREWALL_DIR) -p2
 	touch $(SHOREWALL_DIR)/.source
 
 #errata
