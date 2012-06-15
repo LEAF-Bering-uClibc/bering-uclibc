@@ -19,13 +19,11 @@ CONFDEFS = ac_cv_lib_avahi_client_avahi_client_new=yes
 # Option settings for 'configure'
 #  Specify location of sysroot
 #  Move files out from under /usr/local
-#  Make "small footprint" version of the library
 CONFOPTS = \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
 	--with-sysroot=$(BT_STAGING_DIR) \
-	--prefix=/usr \
-	--enable-smallbuild
+	--prefix=/usr
 
 .source:
 	zcat $(SOURCE_TGZ) | tar -xvf -

@@ -1,0 +1,50 @@
+#! /bin/sh 
+
+RCDLINKS="2,S12 3,S12 4,S12 5,S12 0,K86 1,K86 6,K86"
+
+DAEMON=/usr/sbin/ndppd
+NAME="ndppd"
+DESC="NDP proxy"
+
+PIDFILE="/var/run/$NAME.pid"
+
+OPTIONS="-d -p $PIDFILE"
+
+test -x $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+    if [ -f "$PIDFILE" ]; then
+		echo "$NAME not starting, $PIDFILE already exists."
+		exit 1
+	fi
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- $OPTIONS
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --oknodo
+    # remove stale PID file
+    [ -f $PIDFILE ] && rm -f $PIDFILE
+	echo "$NAME."
+	;;
+  restart)
+	echo -n "Restarting $DESC: "
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --oknodo
+    # remove stale PID file
+    [ -f $PIDFILE ] && rm -f $PIDFILE
+	sleep 1
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- $OPTIONS	
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

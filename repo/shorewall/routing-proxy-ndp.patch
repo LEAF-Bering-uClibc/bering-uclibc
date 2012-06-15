@@ -1,0 +1,26 @@
+From 7cd05fd874dd0651eff53338db828fa4f4f8ff4f Mon Sep 17 00:00:00 2001
+From: Tom Eastep <teastep@shorewall.net>
+Date: Sat, 21 Jan 2012 19:58:47 -0800
+Subject: [PATCH] Correct routing commands in proxy NDP
+
+Signed-off-by: Tom Eastep <teastep@shorewall.net>
+---
+ Shorewall/Perl/Shorewall/Proxyarp.pm | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Shorewall/Perl/Shorewall/Proxyarp.pm b/Shorewall/Perl/Shorewall/Proxyarp.pm
+index 241bbd1..7803c34 100644
+--- a/Shorewall/Perl/Shorewall/Proxyarp.pm
++++ b/Shorewall/Perl/Shorewall/Proxyarp.pm
+@@ -84,7 +84,7 @@ sub setup_one_proxy_arp( $$$$$$$ ) {
+ 	    emit "[ -n \"\$g_noroutes\" ] || run_ip route replace $address/32 dev $physical";
+ 	} else {
+ 	    emit( 'if [ -z "$g_noroutes" ]; then',
+-		  "    qt \$IP -6 route del $address/128 dev $physical".
++		  "    qt \$IP -6 route del $address/128 dev $physical",
+ 		  "    run_ip route add $address/128 dev $physical",
+ 		  'fi'
+ 		);
+-- 
+1.7.11.rc1.9.gf623ca1
+
