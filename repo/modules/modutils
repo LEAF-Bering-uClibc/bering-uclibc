@@ -41,3 +41,6 @@ done
 find /sys -type f -name 'uevent' | while read dev_event; do
 	echo 'add' > $dev_event
 done
+
+# wait till modules will be initialized
+sleep 1
