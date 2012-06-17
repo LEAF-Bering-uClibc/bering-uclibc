@@ -14,14 +14,13 @@ source: $(DIR)/.source
 $(DIR)/.configured: $(DIR)/.source
 #	(cd $(DIR) ; [ -$(PERLVER) = - ] || export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); 
 	(cd $(DIR) ; \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	CFLAGS="$(BT_COPT_FLAGS)" \
 	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(LDFLAGS)" \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/named \
 	--localstatedir=/var \
-	--target=$(GNU_TARGET_MANE) \
-	--host=$(GNU_HOST_MANE) \
+	--target=$(GNU_TARGET_NAME) \
+	--host=$(GNU_HOST_NAME) \
 	--with-openssl=$(BT_STAGING_DIR)/usr \
 	--enable-linux-caps \
 	--enable-threads \
