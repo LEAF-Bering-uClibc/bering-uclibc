@@ -13,27 +13,25 @@ source: $(DIR)/.source
 $(DIR)/.build: $(DIR)/.source
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	(cd $(DIR) ; \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	CFLAGS="$(BT_COPT_FLAGS)" \
 	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(LDFLAGS)" \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/bird \
 	--localstatedir=/var \
-	--build=$(GNU_HOST_MANE) \
-	--host=$(GNU_TARGET_MANE) \
+	--build=$(GNU_HOST_NAME) \
+	--host=$(GNU_TARGET_NAME) \
 	--with-iproutedir="$(BT_STAGING_DIR)/etc/iproute2")
 	make -C $(DIR) all
 	make DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	make -C $(DIR) clean
 	(cd $(DIR) ; \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) \
 	CFLAGS="$(BT_COPT_FLAGS)" \
 	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(LDFLAGS)" \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/bird \
 	--localstatedir=/var \
-	--build=$(GNU_HOST_MANE) \
-	--host=$(GNU_TARGET_MANE) \
+	--build=$(GNU_HOST_NAME) \
+	--host=$(GNU_TARGET_NAME) \
 	--with-iproutedir="$(BT_STAGING_DIR)/etc/iproute2" \
 	--enable-ipv6)
 	make -C $(DIR) all
