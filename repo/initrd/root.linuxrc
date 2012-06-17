@@ -28,7 +28,7 @@
 #  **** Adjust if needed ****
 DEF_syst_size=40M	#  Size of root partition
 DEF_log_size=3M		#  Size of /var/log partition
-usb_wait=1		#  Wait time in sec. for USB drive
+DEF_usb_wait=1		#  Wait time in sec. for USB drive
 DEF_CONFIGDB=configdb
 DEF_MODDB=moddb
 
@@ -157,7 +157,7 @@ find /sys -type f -name 'uevent' | while read dev_event; do
 done
 
 # wait for module loading
-sleep $usb_wait
+sleep ${KCMD_usb_wait:-$DEF_usb_wait}
 
 if [ -z "$KCMD_NOLEGACY" ]; then
 	ata_cnt=`lsmod|grep '\w*ata_' | wc -l`
@@ -226,7 +226,7 @@ for dev in ${KCMD_LEAFCFG}; do
 done
 
 # Set config variables, falling back to defaults
-for i in LRP PKGPATH CONFIGDB MODDB tmp_size syst_size log_size ; do
+for i in LRP PKGPATH CONFIGDB MODDB tmp_size syst_size log_size; do
 	eval $i=\"\${$i:-\${KCMD_$i:-\$DEF_$i}}\"
 done
 
