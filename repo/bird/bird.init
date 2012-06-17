@@ -7,10 +7,12 @@
 
 RCDLINKS="2,S20 3,S20 4,S20 5,S20 0,K80 1,K80 6,K80"
 
-test -x /usr/sbin/bird6 || exit 0
+BIRD=`echo $0|sed 's,.*/[SK]\?[0-9]*,,'`
+
+test -x /usr/sbin/$BIRD || exit 0
 
 check_config() {
-	/usr/sbin/bird6 -p || return 1
+	/usr/sbin/$BIRD -p || return 1
 	return 0
 }
 
@@ -21,9 +23,9 @@ case "$1" in
 			echo "Error in config!"
 			exit 1
 		}
-		start-stop-daemon --start --exec /usr/sbin/bird6
+		start-stop-daemon --start --exec /usr/sbin/$BIRD
 		if [ $? -eq 0 ]; then
-			echo "bird6."
+			echo "$BIRD."
 		else
 			echo "failed!"
 		fi
@@ -31,8 +33,8 @@ case "$1" in
 	stop)
 		echo -n "Stopping BIRD server: "
 		start-stop-daemon --stop --quiet \
-			--retry 10 --exec /usr/sbin/bird6
-		echo "bird6."
+			--retry 10 --exec /usr/sbin/$BIRD
+		echo "$BIRD."
 		;;
 	restart | force-reload)
 		$0 stop
