@@ -31,10 +31,10 @@ $(UCLIBC_DIR)/.source:
 	bzcat $(UCLIBC_SOURCE) | tar xvf -
 	# create config.$(GNU_TARGET_NAME)_headers with no CROSS_COMPILER_PREFIX
 	perl -p -e 's,^CROSS_COMPILER_PREFIX=.*$$,CROSS_COMPILER_PREFIX="",' config.$(GNU_TARGET_NAME) > config.$(GNU_TARGET_NAME)_headers
-	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
-	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
-	cat $(UC_PATCH3) | patch -p1 -d $(UCLIBC_DIR)
-	cat $(UC_PATCH4) | patch -p1 -d $(UCLIBC_DIR)
+#	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
+#	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
+#	cat $(UC_PATCH3) | patch -p1 -d $(UCLIBC_DIR)
+#	cat $(UC_PATCH4) | patch -p1 -d $(UCLIBC_DIR)
 
 	touch $(UCLIBC_DIR)/.source
 
