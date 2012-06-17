@@ -1,7 +1,7 @@
 # makefile for squid
 include $(MASTERMAKEFILE)
 
-DIR:=bird-1.3.1
+DIR:=bird-1.3.7
 TARGET_DIR:=$(BT_BUILD_DIR)/bird
 
 $(DIR)/.source:
