@@ -28,7 +28,7 @@
 #  **** Adjust if needed ****
 DEF_syst_size=40M	#  Size of root partition
 DEF_log_size=3M		#  Size of /var/log partition
-usb_wait=1		#  Wait time in sec. for USB drive
+DEF_usb_wait=1		#  Wait time in sec. for USB drive
 DEF_CONFIGDB=configdb
 DEF_MODDB=moddb
 
@@ -157,7 +157,7 @@ find /sys -type f -name 'uevent' | while read dev_event; do
 done
 
 # wait for module loading
-sleep $usb_wait
+sleep ${KCMD_usb_wait:-$DEF_usb_wait}
 
 if [ -z "$KCMD_NOLEGACY" ]; then
 	ata_cnt=`lsmod|grep '\w*ata_' | wc -l`
@@ -226,34 +226,9 @@ for dev in ${KCMD_LEAFCFG}; do
 done
 
 # Set config variables, falling back to defaults
-for i in LRP PKGPATH CONFIGDB MODDB tmp_size syst_size log_size ; do
+for i in LRP PKGPATH CONFIGDB MODDB tmp_size syst_size log_size; do
 	eval $i=\"\${$i:-\${KCMD_$i:-\$DEF_$i}}\"
 done
-
-# Added by J. Nilo: Create a dynamic TMPFS
-# Initialize tmpfs_size with default
-#qt mkdir /tmpfs
-#Lecho "Mounting a $syst_size TMPFS filesystem..."
-#qt mount -t tmpfs root /tmpfs -o size=$syst_size
-#qt umount /proc
-#qt umount /sys
-#for ii in /*
-#do
-#	case $ii in
-#		/tmpfs)	;;
-#		*)	qt cp -dpR $ii /tmpfs ;;
-#	esac
-#done
-#cd /tmpfs
-#mkdir initrd
-
-#pivot: unneeded
-#[ "$VERBOSE" ] && Lecho "Pivoting..."
-#pivot_root . initrd
-
-#mount -t proc procfs /proc
-#mount -t sysfs sysfs /sys
-#cd /tmpfs
 
 [ "$VERBOSE" ] && Lecho "Generating default dirs..."
 
@@ -272,10 +247,6 @@ qt ln -s /tmp /usr/tmp
 [ "$VERBOSE" ] && Lecho "Generating /tmp & /var/log partitions ..."
 qt mount -t tmpfs tmpfs /tmp -o defaults${tmp_size:+,size=$tmp_size}
 qt mount -t tmpfs tmpfs /var/log -o size=$log_size
-
-#---------mdev------------
-#[ "$VERBOSE" ] && Lecho "Populating /dev..."
-#source $PFX/root.dev.mk
 
 #Set some permissions
 chmod 1777 /var/lock
@@ -370,8 +341,6 @@ IFS="$OIFS"
 # qt umount /proc
 
 Lecho "Loaded Packages"
-
-#exec /usr/sbin/chroot . sh -c 'umount /initrd; freeramdisk /dev/ram0; exec /sbin/init' <dev/console >dev/console 2>&1
 
 if [ "$syst_size" = 0 ]; then
 	[ "$VERBOSE" ] && Lecho "Moving root to tmpfs disabled! Booting from initramfs..."
