@@ -23,7 +23,7 @@ source:
 
 
 $(LINUX_BUILDDIR):
-	mkdir -p $(LINUX_BUILDDIR)
+	mkdir -p $(LINUX_BUILDDIR)/usr/sbin
 
 
 .build: $(LINUX_BUILDDIR) chklinuxdir
@@ -40,7 +40,10 @@ $(LINUX_BUILDDIR):
 	find $(LINUX_BUILDDIR)/lib/modules/$(KVERSION)-$$i -name '*.ko' | xargs gzip -9 -f && \
 	depmod -ae -b $(LINUX_BUILDDIR) -F $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i $(KVERSION)-$$i || exit 1; \
 	done)
-	(cp -R $(LINUX_BUILDDIR)/lib $(BT_STAGING_DIR))
+# Compile slabinfo tool
+	$(TARGET_CC) $(CFLAGS) -o $(LINUX_BUILDDIR)/usr/sbin/slabinfo $(BT_LINUX_DIR)/tools/slub/slabinfo.c
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LINUX_BUILDDIR)/usr/sbin/*
+	cp -R $(LINUX_BUILDDIR)/lib $(LINUX_BUILDDIR)/usr $(BT_STAGING_DIR)
 	#
 	-rm -f package.cfg
 	( for i in $(KARCHS); do \
