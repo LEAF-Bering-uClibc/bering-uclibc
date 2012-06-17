@@ -34,6 +34,8 @@ source: .source
 	( cd $(ASTERISK_DIR)/menuselect ; ./configure $(CONFOPTS) )
 	# Force linking of asterisk executable against -lpthread
 	perl -i -p -e 's,GMIMELDFLAGS\),GMIMELDFLAGS\) -lpthread,' $(ASTERISK_DIR)/main/Makefile
+	# 
+	perl -i -p -e 's,.*HAVE_RES_NINIT.*,,' $(ASTERISK_DIR)/include/asterisk/autoconfig.h
 	touch .configure
 
 build: .configure
