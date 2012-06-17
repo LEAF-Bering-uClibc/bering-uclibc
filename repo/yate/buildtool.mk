@@ -42,7 +42,8 @@ $(YATE_DIR)/.configured: $(YATE_DIR)/.source
 
 $(YATE_DIR)/.build: $(YATE_DIR)/.configured
 	mkdir -p $(YATE_TARGET_DIR)
-	make $(MAKEOPTS) -C $(YATE_DIR) all
+# Yate 3.2.0-1 should be built in single thread - multi-threaded build causes failure. May be fixed in future
+	make -C $(YATE_DIR) all
 	touch $@
 
 $(YATE_DIR)/.install: $(YATE_DIR)/.build
