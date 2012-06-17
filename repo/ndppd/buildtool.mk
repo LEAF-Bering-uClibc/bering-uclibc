@@ -19,7 +19,7 @@ $(NDPPD_DIR)/.build: $(NDPPD_DIR)/.configured
 	mkdir -p $(NDPPD_TARGET_DIR)/usr/sbin
 	mkdir -p $(NDPPD_TARGET_DIR)/etc/init.d
 	make -C $(NDPPD_DIR) DESTDIR=$(NDPPD_TARGET_DIR) \
-	CXXFLAGS="$(BT_COPT_FLAGS)" CXX=$(BT_STAGING_DIR)/usr/bin/g++ \
+	CXXFLAGS="$(BT_COPT_FLAGS)" CXX=$(TARGET_CXX) \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -DNO_TFTP" all
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(NDPPD_DIR)/ndppd
 	cp -aL ndppd.init $(NDPPD_TARGET_DIR)/etc/init.d/ndppd
