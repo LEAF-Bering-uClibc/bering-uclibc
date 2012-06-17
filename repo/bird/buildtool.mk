@@ -16,8 +16,8 @@ $(DIR)/.build: $(DIR)/.source
 	./configure prefix=/usr \
 	--sysconfdir=/etc/bird \
 	--localstatedir=/var \
-	--build=$(GNU_HOST_MANE) \
-	--host=$(GNU_TARGET_MANE) \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-iproutedir="$(BT_STAGING_DIR)/etc/iproute2")
 	perl -i -p -e "s, -s , -s --strip-program=$(GNU_TARGET_NAME)-strip ," $(DIR)/obj/Makefile
 	make -C $(DIR) all
