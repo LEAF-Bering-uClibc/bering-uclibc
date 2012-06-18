@@ -1,5 +1,5 @@
-*** Bering-3.2.19.config	2012-06-11 16:15:51.000000000 +0300
---- Bering-3.2.19.config-i486	2012-06-11 16:34:48.091199915 +0300
+*** Bering-3.2.19.config	2012-06-19 00:01:29.440613643 +0300
+--- Bering-3.2.19.config-i486	2012-06-19 00:00:40.652609284 +0300
 ***************
 *** 12,24 ****
   CONFIG_GENERIC_CMOS_UPDATE=y
@@ -53,17 +53,17 @@
   CONFIG_HAVE_IRQ_WORK=y
   CONFIG_IRQ_WORK=y
 ***************
-*** 58,63 ****
---- 54,60 ----
-  # General setup
+*** 59,64 ****
+--- 55,61 ----
   #
+  CONFIG_SCHED_BFS=y
   CONFIG_EXPERIMENTAL=y
 + CONFIG_BROKEN_ON_SMP=y
   CONFIG_INIT_ENV_ARG_LIMIT=32
   CONFIG_CROSS_COMPILE=""
   CONFIG_LOCALVERSION=""
 ***************
-*** 69,77 ****
+*** 70,78 ****
   CONFIG_HAVE_KERNEL_LZO=y
   # CONFIG_KERNEL_GZIP is not set
   # CONFIG_KERNEL_BZIP2 is not set
@@ -73,7 +73,7 @@
   CONFIG_DEFAULT_HOSTNAME="(none)"
   # CONFIG_SWAP is not set
   CONFIG_SYSVIPC=y
---- 66,74 ----
+--- 67,75 ----
   CONFIG_HAVE_KERNEL_LZO=y
   # CONFIG_KERNEL_GZIP is not set
   # CONFIG_KERNEL_BZIP2 is not set
@@ -84,7 +84,7 @@
   # CONFIG_SWAP is not set
   CONFIG_SYSVIPC=y
 ***************
-*** 92,114 ****
+*** 93,115 ****
   CONFIG_HAVE_SPARSE_IRQ=y
   CONFIG_GENERIC_IRQ_PROBE=y
   CONFIG_GENERIC_IRQ_SHOW=y
@@ -108,7 +108,7 @@
   CONFIG_HAVE_UNSTABLE_SCHED_CLOCK=y
   # CONFIG_CGROUPS is not set
   CONFIG_NAMESPACES=y
---- 89,106 ----
+--- 90,107 ----
   CONFIG_HAVE_SPARSE_IRQ=y
   CONFIG_GENERIC_IRQ_PROBE=y
   CONFIG_GENERIC_IRQ_SHOW=y
@@ -2259,10 +2259,10 @@
   # CONFIG_DEBUG_HIGHMEM is not set
 --- 3105,3110 ----
 ***************
-*** 3232,3244 ****
+*** 3231,3243 ****
+  CONFIG_ARCH_WANT_FRAME_POINTERS=y
   # CONFIG_FRAME_POINTER is not set
   # CONFIG_BOOT_PRINTK_DELAY is not set
-  # CONFIG_RCU_TORTURE_TEST is not set
 - CONFIG_RCU_CPU_STALL_TIMEOUT=60
   # CONFIG_BACKTRACE_SELF_TEST is not set
   # CONFIG_DEBUG_BLOCK_EXT_DEVT is not set
@@ -2273,9 +2273,9 @@
   # CONFIG_FAULT_INJECTION is not set
   # CONFIG_LATENCYTOP is not set
   # CONFIG_SYSCTL_SYSCALL_CHECK is not set
---- 3123,3131 ----
+--- 3122,3130 ----
 ***************
-*** 3257,3264 ****
+*** 3256,3263 ****
   CONFIG_TRACING_SUPPORT=y
   # CONFIG_FTRACE is not set
   # CONFIG_PROVIDE_OHCI1394_DMA_INIT is not set
@@ -2284,9 +2284,9 @@
   # CONFIG_DMA_API_DEBUG is not set
   # CONFIG_ATOMIC64_SELFTEST is not set
   CONFIG_ASYNC_RAID6_TEST=m
---- 3144,3149 ----
+--- 3143,3148 ----
 ***************
-*** 3266,3272 ****
+*** 3265,3271 ****
   CONFIG_HAVE_ARCH_KGDB=y
   # CONFIG_KGDB is not set
   CONFIG_HAVE_ARCH_KMEMCHECK=y
@@ -2294,9 +2294,9 @@
   # CONFIG_TEST_KSTRTOX is not set
   # CONFIG_STRICT_DEVMEM is not set
   CONFIG_X86_VERBOSE_BOOTUP=y
---- 3151,3156 ----
+--- 3150,3155 ----
 ***************
-*** 3290,3296 ****
+*** 3289,3295 ****
   # CONFIG_IO_DELAY_UDELAY is not set
   # CONFIG_IO_DELAY_NONE is not set
   CONFIG_DEFAULT_IO_DELAY_TYPE=1
@@ -2304,9 +2304,9 @@
   # CONFIG_CPA_DEBUG is not set
   # CONFIG_OPTIMIZE_INLINING is not set
   # CONFIG_DEBUG_STRICT_USER_COPY_CHECKS is not set
---- 3174,3179 ----
+--- 3173,3178 ----
 ***************
-*** 3304,3310 ****
+*** 3303,3309 ****
   # CONFIG_SECURITY_DMESG_RESTRICT is not set
   # CONFIG_SECURITY is not set
   # CONFIG_SECURITYFS is not set
@@ -2314,9 +2314,9 @@
   CONFIG_DEFAULT_SECURITY_DAC=y
   CONFIG_DEFAULT_SECURITY=""
   CONFIG_XOR_BLOCKS=m
---- 3187,3192 ----
+--- 3186,3191 ----
 ***************
-*** 3313,3320 ****
+*** 3312,3319 ****
   CONFIG_ASYNC_XOR=m
   CONFIG_ASYNC_PQ=m
   CONFIG_ASYNC_RAID6_RECOV=m
@@ -2325,9 +2325,9 @@
   CONFIG_CRYPTO=y
   
   #
---- 3195,3200 ----
+--- 3194,3199 ----
 ***************
-*** 3334,3344 ****
+*** 3333,3343 ****
   CONFIG_CRYPTO_PCOMP2=y
   CONFIG_CRYPTO_MANAGER=y
   CONFIG_CRYPTO_MANAGER2=y
@@ -2339,7 +2339,7 @@
   CONFIG_CRYPTO_WORKQUEUE=y
   CONFIG_CRYPTO_CRYPTD=m
   CONFIG_CRYPTO_AUTHENC=m
---- 3214,3223 ----
+--- 3213,3222 ----
   CONFIG_CRYPTO_PCOMP2=y
   CONFIG_CRYPTO_MANAGER=y
   CONFIG_CRYPTO_MANAGER2=y
@@ -2351,7 +2351,7 @@
   CONFIG_CRYPTO_CRYPTD=m
   CONFIG_CRYPTO_AUTHENC=m
 ***************
-*** 3392,3399 ****
+*** 3391,3398 ****
   # Ciphers
   #
   CONFIG_CRYPTO_AES=m
@@ -2360,7 +2360,7 @@
   CONFIG_CRYPTO_ANUBIS=m
   CONFIG_CRYPTO_ARC4=m
   CONFIG_CRYPTO_BLOWFISH=m
---- 3271,3278 ----
+--- 3270,3277 ----
   # Ciphers
   #
   CONFIG_CRYPTO_AES=m
@@ -2370,7 +2370,7 @@
   CONFIG_CRYPTO_ARC4=m
   CONFIG_CRYPTO_BLOWFISH=m
 ***************
-*** 3424,3435 ****
+*** 3423,3434 ****
   # Random Number Generation
   #
   CONFIG_CRYPTO_ANSI_CPRNG=m
@@ -2383,7 +2383,7 @@
   CONFIG_HAVE_KVM=y
   # CONFIG_VIRTUALIZATION is not set
   # CONFIG_BINARY_PRINTF is not set
---- 3303,3314 ----
+--- 3302,3313 ----
   # Random Number Generation
   #
   CONFIG_CRYPTO_ANSI_CPRNG=m
@@ -2397,7 +2397,7 @@
   # CONFIG_VIRTUALIZATION is not set
   # CONFIG_BINARY_PRINTF is not set
 ***************
-*** 3444,3469 ****
+*** 3443,3468 ****
   CONFIG_CRC16=m
   CONFIG_CRC_T10DIF=m
   CONFIG_CRC_ITU_T=m
@@ -2424,7 +2424,7 @@
   CONFIG_TEXTSEARCH=y
   CONFIG_TEXTSEARCH_KMP=m
   CONFIG_TEXTSEARCH_BM=m
---- 3323,3341 ----
+--- 3322,3340 ----
   CONFIG_CRC16=m
   CONFIG_CRC_T10DIF=m
   CONFIG_CRC_ITU_T=m
@@ -2445,7 +2445,7 @@
   CONFIG_TEXTSEARCH_KMP=m
   CONFIG_TEXTSEARCH_BM=m
 ***************
-*** 3472,3478 ****
+*** 3471,3477 ****
   CONFIG_HAS_IOPORT=y
   CONFIG_HAS_DMA=y
   CONFIG_CHECK_SIGNATURE=y
@@ -2453,4 +2453,4 @@
   CONFIG_NLATTR=y
   CONFIG_AVERAGE=y
   # CONFIG_CORDIC is not set
---- 3344,3349 ----
+--- 3343,3348 ----
