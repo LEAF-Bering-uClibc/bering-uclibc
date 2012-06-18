@@ -33,7 +33,7 @@ TARGET_LANGUAGES:=c,c++
 # If you want multilib enabled, enable this...
 MULTILIB:=--enable-multilib
 
-GCC_VERSION:=4.4.5
+GCC_VERSION:=4.4.7
 GMP_VERSION:=4.3.2
 MPFR_VERSION:=2.3.2
 MPC_VERSION:=0.8.2
