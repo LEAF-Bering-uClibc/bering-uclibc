@@ -6,3 +6,5 @@ sd_mod sr_mod isofs vfat
 ehci-hcd uhci-hcd ohci-hcd usb-storage usbhid
 # Floppy driver
 floppy
+# PC speaker driver
+pcspkr
