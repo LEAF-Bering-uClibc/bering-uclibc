@@ -1,7 +1,7 @@
 # makefile for pmacctd
 include $(MASTERMAKEFILE)
 
-PMACCTD_DIR:=pmacct-0.12.5
+PMACCTD_DIR:=pmacct-0.14.0
 PMACCTD_TARGET_DIR:=$(BT_BUILD_DIR)/pmacctd
 
 $(PMACCTD_DIR)/.source:
