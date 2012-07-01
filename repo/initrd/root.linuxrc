@@ -163,7 +163,7 @@ if [ -z "$KCMD_NOLEGACY" ]; then
 	ata_cnt=`lsmod|grep '\w*ata_' | wc -l`
 	if [ "$ata_cnt" -eq 0 ]; then
 		modprobe pata_legacy
-		sleep $usb_wait
+		sleep ${KCMD_usb_wait:-$DEF_usb_wait}
 	fi
 fi
 
