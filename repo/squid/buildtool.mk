@@ -51,6 +51,7 @@ $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
 	--enable-carp \
 	--enable-poll --with-maxfd=4096 \
 	--enable-follow-x-forwarded-for \
+	--without-krb5-config \
 	--without-large-files )
 
 	touch $(SQUID_DIR)/.configured
