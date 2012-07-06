@@ -7,7 +7,7 @@
 
 include $(MASTERMAKEFILE)
 
-BUSYBOX_DIR=busybox-1.19.3
+BUSYBOX_DIR=busybox-1.20.2
 BUSYBOX_BUILD_DIR=$(BT_BUILD_DIR)/busybox
 
 BUSYBOX_CFLAGS="-Os"
@@ -16,8 +16,8 @@ export prefix=$(BUSYBOX_BUILD_DIR)
 $(BUSYBOX_DIR)/.source: 
 	bzcat $(BUSYBOX_SOURCE) | tar -xvf -
 	cat $(BUSYBOX_PATCH1) | patch -d $(BUSYBOX_DIR) -p1
-	cat $(BUSYBOX_PATCH2) | patch -d $(BUSYBOX_DIR) -p1
-	cat $(BUSYBOX_PATCH3) | patch -d $(BUSYBOX_DIR) -p1
+#	cat $(BUSYBOX_PATCH2) | patch -d $(BUSYBOX_DIR) -p1
+#	cat $(BUSYBOX_PATCH3) | patch -d $(BUSYBOX_DIR) -p1
 	touch $(BUSYBOX_DIR)/.source
 	
 $(BUSYBOX_DIR)/.build: $(BUSYBOX_DIR)/.source
