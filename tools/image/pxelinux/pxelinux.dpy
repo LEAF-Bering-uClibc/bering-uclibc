@@ -1,15 +1,15 @@
 07
   м             млм             м
-  ллллллллллллллллллллллллллллллл         Bering-uClibc Firewall
-  л0e   В         07ллл0fллллллллллллл07л         ({VERSION} - {DATE})
-  л0e   В         07ллл0fллллллллллллл07л         (uClibc 0.9.32 Bering-uClibc team)
-  л0e   В         07ллл0fлл74 Bering  0fлл07л         This image brought to you by:
+  ллллллллллллллллллллллллллллллл       Bering-uClibc Firewall
+  л0e   В         07ллл0fллллллллллллл07л       ({VERSION} - {DATE})
+  л0e   В         07ллл0fллллллллллллл07л       (uClibc 0.9.33.2 Bering-uClibc team)
+  л0e   В         07ллл0fлл74 Bering  0fлл07л       This image brought to you by:
   л0e   В         07ллл0fллллллллллллл07л           
-  л0e   ВВВВВ     07ллл0fллллллллллллл07л         The LEAF project:
-  л0e             07ллл0fллллллллллллл07л         http://leaf.sourceforge.net
+  л0e   ВВВВВ     07ллл0fллллллллллллл07л       The LEAF project:
+  л0e             07ллл0fллллллллллллл07л       http://leaf.sourceforge.net
   ллллллллллллллллллллллллллллллл           
-  л0fллллллллллллл07ллл0e   ВВВВВ     07л         The Shorewall project:
-   л0fлллллллллллл07ллл0e   В   В    07л          http://www.shorewall.net
+  л0fллллллллллллл07ллл0e   ВВВВВ     07л       The Shorewall project:
+   л0fлллллллллллл07ллл0e   В   В    07л        http://www.shorewall.net
    л0fлллллллллллл07ллл0e   ВВВВВ    07л            
     л0fллллллллллл07ллл0e   В       07л             
      лл0fллллллллл07ллл0e   В     07лл              
