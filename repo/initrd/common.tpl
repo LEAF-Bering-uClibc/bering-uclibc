@@ -4,6 +4,7 @@
 
 	Version = 5.0-prealpha
 	Revision = 4
+	License = LEAF-INITRD
 
 	Help <<EOF
 	LEAF Bering-uClibc modules for initial filesystem (floppy + IDE/SATA + USB)
