@@ -161,7 +161,7 @@ system_exec( "mkdir -p ${tmpDir}/${modTgzPath}", "ERROR: Failed to mkdir ${tmpDi
 
 # Always create full modules.tgz
 print "Creating modules.tgz...\n" if $verbose;
-system_exec( "cd ${stagingDir}/lib/modules/${kver}-${kernelArch} ; tar -czf ${tmpDir}/${modTgzPath}/modules.tgz * --exclude=build --exclude=source", "ERROR: Failed to build modules.tgz" );
+system_exec( "cd ${stagingDir}/lib/modules/${kver}-${kernelArch} ; tar -czf ${tmpDir}/${modTgzPath}/modules.tgz * --exclude=build --exclude=source --exclude=modules.*", "ERROR: Failed to build modules.tgz" );
 
 # Always create full firmware.tgz
 print "Creating firmware.tgz...\n" if $verbose;
