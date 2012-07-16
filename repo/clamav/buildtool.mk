@@ -56,7 +56,7 @@ $(CLAMAV_DIR)/.build: $(CLAMAV_DIR)/.configured
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CLAMAV_TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CLAMAV_TARGET_DIR)/usr/sbin/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(CLAMAV_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(CLAMAV_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(CLAMAV_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	cp -a $(CLAMAV_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(CLAMAV_DIR)/.build
 

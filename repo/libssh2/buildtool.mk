@@ -40,7 +40,7 @@ build: $(LIBSSH2_DIR)/.configure
 #
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBSSH2_TARGET_DIR)/usr/lib/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBSSH2_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBSSH2_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBSSH2_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(LIBSSH2_TARGET_DIR)/usr/share
 	cp -a -f $(LIBSSH2_TARGET_DIR)/* $(BT_STAGING_DIR)/
 

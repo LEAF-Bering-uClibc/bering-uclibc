@@ -27,7 +27,7 @@ $(LIBNL_DIR)/.build: $(LIBNL_DIR)/.configured
 	cp -a $(LIBNL_DIR)/lib/*.so* $(LIBNL_TARGET_DIR)/usr/lib
 	cp -ar $(LIBNL_DIR)/include $(LIBNL_TARGET_DIR)/usr
 	cp -a $(LIBNL_DIR)/libnl-1.pc $(LIBNL_TARGET_DIR)/usr/lib/pkgconfig
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBNL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBNL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNL_TARGET_DIR)/usr/lib/*
 	cp -a -f $(LIBNL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LIBNL_DIR)/.build

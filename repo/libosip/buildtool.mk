@@ -28,7 +28,7 @@ $(LIBOSIP2_DIR)/.build: $(LIBOSIP2_DIR)/.configured
 	$(MAKE) -C $(LIBOSIP2_DIR) DESTDIR=$(LIBOSIP2_TARGET_DIR) install
 	-rm -rf $(LIBOSIP2_TARGET_DIR)/usr/man
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBOSIP2_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBOSIP2_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBOSIP2_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBOSIP2_TARGET_DIR)/usr/lib/*
 	cp -a $(LIBOSIP2_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LIBOSIP2_DIR)/.build

@@ -25,7 +25,7 @@ $(LIBNL_DIR)/.build: $(LIBNL_DIR)/.configured
 	make DESTDIR=$(LIBNL_TARGET_DIR) -C $(LIBNL_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNL_TARGET_DIR)/usr/lib/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBNL_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBNL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBNL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(LIBNL_TARGET_DIR)/usr/share
 	cp -a -f $(LIBNL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LIBNL_DIR)/.build

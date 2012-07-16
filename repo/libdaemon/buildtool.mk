@@ -27,7 +27,7 @@ build: $(LIBDAEMON_DIR)/Makefile
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBDAEMON_TARGET_DIR)/usr/lib/*.la
 	# Fix libdir path for libtool
 	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(LIBDAEMON_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBDAEMON_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBDAEMON_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(LIBDAEMON_TARGET_DIR)/usr/man
 	cp -a $(LIBDAEMON_TARGET_DIR)/* $(BT_STAGING_DIR)
 

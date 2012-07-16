@@ -36,7 +36,7 @@ build: $(LIBNFSIDMAP_DIR)/.configure
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNFSIDMAP_TARGET_DIR)/usr/lib/libnfsidmap/*
 	perl -i -p -e "s,(/usr/lib),$(BT_STAGING_DIR)\1," $(LIBNFSIDMAP_TARGET_DIR)/usr/lib/*.la
 	perl -i -p -e "s,(/usr/lib),$(BT_STAGING_DIR)\1," $(LIBNFSIDMAP_TARGET_DIR)/usr/lib/libnfsidmap/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBNFSIDMAP_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBNFSIDMAP_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	-rm -rf $(LIBNFSIDMAP_TARGET_DIR)/usr/share
 	cp -ap $(LIBNFSIDMAP_TARGET_DIR)/* $(BT_STAGING_DIR)/
 

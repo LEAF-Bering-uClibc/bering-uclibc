@@ -31,7 +31,7 @@ $(LIBUPNP_DIR)/.build: $(LIBUPNP_DIR)/.configured
 	mkdir -p $(TARGET_DIR)
 	make $(MAKEOPTS) -C $(LIBUPNP_DIR)
 	make -C $(LIBUPNP_DIR) DESTDIR=$(TARGET_DIR) install
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(TARGET_DIR)/usr/lib/*.la
 	touch $(LIBUPNP_DIR)/.build
 

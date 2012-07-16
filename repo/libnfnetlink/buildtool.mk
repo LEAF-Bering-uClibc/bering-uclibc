@@ -1,11 +1,10 @@
 include $(MASTERMAKEFILE)
 LIBNFNETLINK_DIR:=libnfnetlink-1.0.0
 LIBNFNETLINK_TARGET_DIR:=$(BT_BUILD_DIR)/libnfnetlink
-export CC=$(TARGET_CC)
-STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment 
+#export CC=$(TARGET_CC)
 
-$(LIBNFNETLINK_DIR)/.source: 		
-	bzcat $(LIBNFNETLINK_SOURCE) |  tar -xvf - 	
+$(LIBNFNETLINK_DIR)/.source:
+	bzcat $(LIBNFNETLINK_SOURCE) |  tar -xvf -
 	touch $(LIBNFNETLINK_DIR)/.source
 
 $(LIBNFNETLINK_DIR)/.configured: $(LIBNFNETLINK_DIR)/.source
@@ -18,7 +17,7 @@ $(LIBNFNETLINK_DIR)/.build: $(LIBNFNETLINK_DIR)/.configured
 	mkdir -p $(LIBNFNETLINK_TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
 	mkdir -p $(BT_STAGING_DIR)/usr/include/libnfnetlink
-	$(MAKE) -C $(LIBNFNETLINK_DIR) 	
+	$(MAKE) $(MAKEOPTS) -C $(LIBNFNETLINK_DIR)
 	$(MAKE) DESTDIR=$(LIBNFNETLINK_TARGET_DIR) -C $(LIBNFNETLINK_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNFNETLINK_TARGET_DIR)/usr/lib/libnfnetlink.so*
 	cp -ar $(LIBNFNETLINK_TARGET_DIR)/usr/lib/* $(BT_STAGING_DIR)/usr/lib

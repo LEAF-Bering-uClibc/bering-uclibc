@@ -43,7 +43,7 @@ build: .configure
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(CURL_TARGET_DIR)/usr/lib/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CURL_TARGET_DIR)/usr/bin/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(CURL_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(CURL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(CURL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(CURL_TARGET_DIR)/usr/share
 	cp -a -f $(CURL_TARGET_DIR)/* $(BT_STAGING_DIR)/
 

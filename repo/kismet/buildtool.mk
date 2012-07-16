@@ -15,9 +15,6 @@ KISMET_TARGET_DIR:=$(BT_BUILD_DIR)/kismet
 #   And keep state files in /var (rather than /usr/var)
 CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
-# Next line is required to locate the .pc file for libnl
-export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
-
 $(KISMET_DIR)/.source:
 	zcat $(KISMET_SOURCE) | tar -xvf -
 	# Change hard-coded setting of CPPFLAGS for ncurses' panel.h

@@ -28,11 +28,8 @@ CONFOPTS:= \
 	--disable-doxygen-doc \
 	--host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
-# Next line is required to locate the .pc file for libdaemon
-export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
-
 .source:
-	zcat $(SOURCE) | tar -xvf - 	
+	zcat $(SOURCE) | tar -xvf -
 	echo $(AVAHI_DIR) > DIRNAME
 	touch .source
 

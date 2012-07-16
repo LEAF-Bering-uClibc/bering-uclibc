@@ -23,7 +23,7 @@ build: $(LIBECAP_DIR)/Makefile
 	$(MAKE) DESTDIR=$(LIBECAP_TARGET_DIR) -C $(LIBECAP_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBECAP_TARGET_DIR)/usr/lib/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBECAP_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBECAP_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBECAP_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(LIBECAP_TARGET_DIR)/usr/man
 	cp -a $(LIBECAP_TARGET_DIR)/* $(BT_STAGING_DIR)
 

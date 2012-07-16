@@ -53,7 +53,7 @@ source: .source
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/engines/*.so
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	rm -rf $(TARGET_DIR)/usr/ssl/man
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch .build
 

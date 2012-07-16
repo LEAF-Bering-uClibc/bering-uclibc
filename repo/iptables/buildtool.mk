@@ -61,9 +61,9 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/lib\'," $(IPTABLES_TARGET_DIR)/lib/*.la
 	mv -f $(IPTABLES_TARGET_DIR)/lib/pkgconfig $(IPTABLES_TARGET_DIR)/usr/lib
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
-	perl -i -p -e "s,=/lib,=$(BT_STAGING_DIR)/lib," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
-	perl -i -p -e "s,prefix=/$$,prefix=$(BT_STAGING_DIR)," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/lib,=$(BT_STAGING_DIR)/lib," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,prefix=/$$,prefix=$(BT_STAGING_DIR)," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(IPTABLES_TARGET_DIR)/share
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/iptables
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/ip6tables

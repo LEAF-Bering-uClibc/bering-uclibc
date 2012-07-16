@@ -39,7 +39,7 @@ $(PCRE_DIR)/.build: $(PCRE_DIR)/.configured
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PCRE_TARGET_DIR)/usr/lib/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PCRE_TARGET_DIR)/usr/bin/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(PCRE_TARGET_DIR)/usr/lib/*.la
-	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(PCRE_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(PCRE_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	-rm -rf $(PCRE_TARGET_DIR)/usr/share
 	cp -a -f $(PCRE_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(PCRE_DIR)/.build
