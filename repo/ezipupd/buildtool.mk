@@ -5,15 +5,15 @@ EZ_IPUPDATE_DIR:=ez-ipupdate-3.0.11b8
 EZ_IPUPDATE_TARGET_DIR:=$(BT_BUILD_DIR)/ez-ipupdate
 PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
-$(EZ_IPUPDATE_DIR)/.source:
+.source:
 	zcat $(EZ_IPUPDATE_SOURCE) | tar -xvf -
 	zcat $(EZ_IPUPDATE_PATCH1) | patch -d $(EZ_IPUPDATE_DIR) -p1
 	perl -i -p -e 's,^DESTDIR\s*=.*,DESTDIR = $(EZ_IPUPDATE_TARGET_DIR),g' $(EZ_IPUPDATE_DIR)/Makefile.in
-	touch $(EZ_IPUPDATE_DIR)/.source
+	touch .source
 
-source: $(EZ_IPUPDATE_DIR)/.source
+source: .source
                         
-$(EZ_IPUPDATE_DIR)/.configured: $(EZ_IPUPDATE_DIR)/.source
+$(EZ_IPUPDATE_DIR)/.configured: .source
 	(cd $(EZ_IPUPDATE_DIR) ; export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER); \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" ./configure --prefix=/usr/ )
 	touch $(EZ_IPUPDATE_DIR)/.configured
@@ -34,9 +34,9 @@ build: $(EZ_IPUPDATE_DIR)/.build
 clean:
 	make -C $(EZ_IPUPDATE_DIR) clean
 	rm -rf $(EZ_IPUPDATE_TARGET_DIR)
-	rm $(EZ_IPUPDATE_DIR)/.build
-	rm $(EZ_IPUPDATE_DIR)/.configured
+	rm -f $(EZ_IPUPDATE_DIR)/.build
+	rm -f $(EZ_IPUPDATE_DIR)/.configured
                                                                                                                  
 srcclean: clean
 	rm -rf $(EZ_IPUPDATE_DIR) 
-	rm $(EZ_IPUPDATE_DIR)/.source
+	rm .source
