@@ -4,15 +4,15 @@ include $(MASTERMAKEFILE)
 EZ_IPUPDATE_DIR:=ez-ipupdate-3.0.11b8
 EZ_IPUPDATE_TARGET_DIR:=$(BT_BUILD_DIR)/ez-ipupdate
 
-$(EZ_IPUPDATE_DIR)/.source:
+.source:
 	zcat $(EZ_IPUPDATE_SOURCE) | tar -xvf -
 	zcat $(EZ_IPUPDATE_PATCH1) | patch -d $(EZ_IPUPDATE_DIR) -p1
 	cat $(EZ_IPUPDATE_PATCH2) | patch -d $(EZ_IPUPDATE_DIR) -p1
-	touch $(EZ_IPUPDATE_DIR)/.source
+	touch .source
 
-source: $(EZ_IPUPDATE_DIR)/.source
+source: .source
 
-$(EZ_IPUPDATE_DIR)/.configured: $(EZ_IPUPDATE_DIR)/.source
+$(EZ_IPUPDATE_DIR)/.configured: .source
 	(cd $(EZ_IPUPDATE_DIR) ; autoreconf -i -f && \
 	./configure --prefix=/usr/ \
 	--build=$(GNU_BUILD_NAME) \
@@ -34,9 +34,9 @@ build: $(EZ_IPUPDATE_DIR)/.build
 clean:
 	make -C $(EZ_IPUPDATE_DIR) clean
 	rm -rf $(EZ_IPUPDATE_TARGET_DIR)
-	rm $(EZ_IPUPDATE_DIR)/.build
-	rm $(EZ_IPUPDATE_DIR)/.configured
+	rm -f $(EZ_IPUPDATE_DIR)/.build
+	rm -f $(EZ_IPUPDATE_DIR)/.configured
 
 srcclean: clean
 	rm -rf $(EZ_IPUPDATE_DIR)
-	rm $(EZ_IPUPDATE_DIR)/.source
+	rm -f .source
