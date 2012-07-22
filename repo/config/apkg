@@ -154,7 +154,7 @@ install () {
 	# process any package dependencies by recursively calling install()...
 	if [ -f $PKGDIR/$pkg.deplrp ] ; then
 		for deplrp in `cat $PKGDIR/$pkg.deplrp` ; do
-			( cd $STORAGE_MEDIA ; install $deplrp )
+			[ -f "$PKGDIR/$deplrp.list" ] || ( cd $STORAGE_MEDIA ; install $deplrp )
 		done
 	fi
 
@@ -257,6 +257,14 @@ upgrade () {
 	)
 	if [ $? -eq 0 ]; then
 		echo "$pkg upgraded"
+		# process any package dependencies by recursively calling install()...
+		$deplist=""
+		if [ -f $PKGDIR/$pkg.deplrp ] ; then
+			for deplrp in `cat $PKGDIR/$pkg.deplrp` ; do
+				[ -f "$PKGDIR/$deplrp.list" ] || $deplist="$deplist $deplrp"
+			done
+		fi
+		[ -z "$deppkg" ] && echo "Required packages that are misssed: $deplist"
 		return 0
 	else
 	    return $?

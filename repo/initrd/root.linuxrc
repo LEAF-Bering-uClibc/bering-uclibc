@@ -76,7 +76,7 @@ Lloadlrp () {
 					#Recursively load dependencies
 					if [ -f $PFX/$f.deplrp ] ; then
 					    cat $PFX/$f.deplrp | while read y ; do
-						Lloadlrp $y
+						[ -f "$PFX/$y.list" ] || Lloadlrp $y
 					    done
 					fi
 				else
