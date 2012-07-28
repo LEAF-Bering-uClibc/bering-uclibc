@@ -1,7 +1,7 @@
 # makefile for libnl
 include $(MASTERMAKEFILE)
 
-LIBMNL_DIR:=libmnl-1.0.2
+LIBMNL_DIR:=libmnl-1.0.3
 LIBMNL_TARGET_DIR:=$(BT_BUILD_DIR)/libmnl
 
 $(LIBMNL_DIR)/.source:
