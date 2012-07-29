@@ -1,0 +1,21 @@
+diff -ur bind-9.8.1-P1.old/lib/dns/include/dns/Makefile.in bind-9.8.1-P1/lib/dns/include/dns/Makefile.in
+--- bind-9.8.1-P1.old/lib/dns/include/dns/Makefile.in	2011-11-25 14:20:34.293440910 +0200
++++ bind-9.8.1-P1/lib/dns/include/dns/Makefile.in	2011-11-25 14:20:14.429209720 +0200
+@@ -21,7 +21,7 @@
+ 
+ @BIND9_VERSION@
+ 
+-HEADERS =	acl.h adb.h byaddr.h cache.h callbacks.h cert.h compress.h \
++HEADERS =	acl.h adb.h byaddr.h cache.h callbacks.h cert.h client.h compress.h \
+ 		db.h dbiterator.h dbtable.h diff.h dispatch.h dlz.h \
+ 		dnssec.h ds.h events.h fixedname.h iptable.h journal.h \
+ 		keyflags.h keytable.h keyvalues.h lib.h log.h \
+@@ -30,7 +30,7 @@
+ 		rdata.h rdataclass.h rdatalist.h rdataset.h rdatasetiter.h \
+ 		rdataslab.h rdatatype.h request.h resolver.h result.h \
+ 		rootns.h rpz.h sdb.h sdlz.h secalg.h secproto.h soa.h ssu.h \
+-		tcpmsg.h time.h tkey.h tsig.h ttl.h types.h \
++		tcpmsg.h time.h tkey.h tsec.h tsig.h ttl.h types.h \
+ 		validator.h version.h view.h xfrin.h zone.h zonekey.h zt.h
+ 
+ GENHEADERS =	enumclass.h enumtype.h rdatastruct.h

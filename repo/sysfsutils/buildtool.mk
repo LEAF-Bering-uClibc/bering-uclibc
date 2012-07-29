@@ -9,33 +9,33 @@ TARGET_DIR:=$(BT_BUILD_DIR)/sysfsutils
 
 
 $(DIR)/.source:
-	zcat $(SOURCE) | tar -xvf -  
+	zcat $(SOURCE) | tar -xvf -
 	touch $(DIR)/.source
 
 source:	$(DIR)/.source
 
 $(DIR)/.build: $(DIR)/.source
 	mkdir -p $(BT_BUILD_DIR)/module-init-tools
-	(cd $(DIR); \
-		rm -rf config.cache; \
-		CFLAGS="$(BT_COPT_FLAGS)" \
-		CC=$(TARGET_CC) \
-		LD=$(TARGET_LD) \
-		./configure --prefix=/);
+	(cd $(DIR); rm -rf config.cache; \
+		libtoolize -if && aclocal -I m4 && autoheader && \
+		automake --add-missing --copy --foreign && autoconf && \
+		./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME));
 #	cat defs.patch|patch -p1 -d $(DIR)
-	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) HOSTCC=$(TARGET_CC) HOSTCFLAGS="$(BT_COPT_FLAGS)" LD=$(TARGET_LD) -C $(DIR)
-	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) HOSTCC=$(TARGET_CC) HOSTCFLAGS="$(BT_COPT_FLAGS)" LD=$(TARGET_LD) DESTDIR=$(TARGET_DIR) -C $(DIR) install
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/bin/*
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/lib/*
-	-rm -rf $(TARGET_DIR)/share
-	-rm -rf $(TARGET_DIR)/man
+	make $(MAKEOPTS) -C $(DIR)
+	make $(MAKEOPTS) DESTDIR=$(TARGET_DIR) -C $(DIR) install
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(TARGET_DIR)/usr/lib/*.la
+	-rm -rf $(TARGET_DIR)/usr/share
+	-rm -rf $(TARGET_DIR)/usr/man
 	cp -R $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(DIR)/.build
 
 build:	$(DIR)/.build
 
 clean:
-	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) DESTDIR=$(BT_STAGING_DIR) -C $(DIR) clean 
+	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) DESTDIR=$(BT_STAGING_DIR) -C $(DIR) clean
 	rm -f $(DIR)/.build
 	rm -rf $(BT_BUILD_DIR)/modutils
-  
+

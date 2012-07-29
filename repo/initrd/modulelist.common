@@ -1,0 +1,10 @@
+# common
+sd_mod sr_mod isofs vfat
+# ATA-related
+(p|s)?ata_.* ahci
+# USB-related
+ehci-hcd uhci-hcd ohci-hcd usb-storage usbhid
+# Floppy driver
+floppy
+# PC speaker driver
+pcspkr

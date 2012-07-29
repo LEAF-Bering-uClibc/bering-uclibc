@@ -20,6 +20,8 @@ TARGET_DIR:=$(BT_BUILD_DIR)/dbus
 #  Don't attempt to use X Window System or SELinux
 #  Don't bother with documentation
 CONFOPTS = \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--with-sysroot=$(BT_STAGING_DIR) \
 	--with-dbus-user=dbus \
@@ -48,8 +50,8 @@ build: .configured
 
 	make -C $(SOURCE_DIR)
 	# Need to tweak pkgconfig paths before "make install"
-	perl -i -p -e "s,^includedir.*,includedir=$(BT_STAGING_DIR)/usr/include," $(SOURCE_DIR)/dbus-1.pc
-	perl -i -p -e "s,^libdir.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(SOURCE_DIR)/dbus-1.pc
+#	perl -i -p -e "s,^includedir.*,includedir=$(BT_STAGING_DIR)/usr/include," $(SOURCE_DIR)/dbus-1.pc
+#	perl -i -p -e "s,^libdir.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(SOURCE_DIR)/dbus-1.pc
 	make -C $(SOURCE_DIR) DESTDIR=$(TARGET_DIR) install
 	# Fix libdir path for libtool
 	perl -i -p -e "s,^libdir=.*,libdir=$(BT_STAGING_DIR)/usr/lib," $(TARGET_DIR)/usr/lib/libdbus-1.la

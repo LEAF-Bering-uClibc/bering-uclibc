@@ -12,22 +12,18 @@ NCURSES_BUILD_DIR=$(BT_BUILD_DIR)/ncurses
 
 NCURSES_CFLAGS="-Os"
 
-$(NCURSES_DIR)/.source: 
+$(NCURSES_DIR)/.source:
 	zcat $(NCURSES_SOURCE) | tar -xvf -
 #	zcat $(NCURSES_PATCH1) | patch -d $(NCURSES_DIR) -p1
 	touch $(NCURSES_DIR)/.source
-	
+
+#		--with-build-libs="$(BT_STAGING_DIR)/lib" \
 $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 	(cd $(NCURSES_DIR); \
 		DESTDIR=$(NCURSES_BUILD_DIR) \
-		CC=$(TARGET_CC) \
-		AR=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ar \
-		LD=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ld \
-		RANLIB=$(BT_STAGING_DIR)/bin/$(GNU_TARGET_NAME)-ranlib \
-		CFLAGS=$(NCURSES_CFLAGS)  \
 		./configure --prefix=/usr \
-		--target=i386-pc-linux-gnu \
-		--with-build-libs="$(BT_STAGING_DIR)/lib" \
+		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--with-shared \
 		--mandir='$${datadir}/man' \
 		--without-profile \
@@ -48,12 +44,11 @@ $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 
 $(NCURSES_DIR)/.build: $(NCURSES_DIR)/.configured
 	mkdir -p $(NCURSES_BUILD_DIR)
-	make -C $(NCURSES_DIR) CC=$(TARGET_CC)
+#build in single thread
+	make -C $(NCURSES_DIR) sources
+	make $(MAKEOPTS) -C $(NCURSES_DIR) all
 	make -C $(NCURSES_DIR) install
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libform.so.5.5
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libmenu.so.5.5
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libncurses.so.5.5
-	$(BT_STRIP) --strip-unneeded $(NCURSES_BUILD_DIR)/usr/lib/libpanel.so.5.5
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(NCURSES_BUILD_DIR)/usr/lib/*
 	cp -a $(NCURSES_BUILD_DIR)/* $(BT_STAGING_DIR)
 	touch $(NCURSES_DIR)/.build
 
@@ -62,12 +57,12 @@ source: $(NCURSES_DIR)/.source
 
 build: $(NCURSES_DIR)/.build
 
-clean:  
+clean:
 	-rm $(NCURSES_DIR)/.build
 	-rm -r $(NCURSES_BUILD_DIR)
 	-make -C $(NCURSES_DIR) clean
 
 srcclean:
-	rm -rf $(NCURSES_DIR)	
+	rm -rf $(NCURSES_DIR)
 
 

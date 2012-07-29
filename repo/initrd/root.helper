@@ -9,6 +9,7 @@ mkdir /proc
 mount -nt proc /proc /proc
 mkdir /sys 
 mount -nt sysfs sysfs /sys
+[ -d /sys/kernel/debug/ ] && mount -t debugfs debugfs /sys/kernel/debug/
 
 exec /sbin/init
 

@@ -8,13 +8,14 @@ $(SETSERIAL_DIR)/.source:
 	touch $(SETSERIAL_DIR)/.source
 
 $(SETSERIAL_DIR)/.configured: $(SETSERIAL_DIR)/.source
-	cd $(SETSERIAL_DIR); CFLAGS="$(BT_COPT_FLAGS)" ./configure \
-		--host=$(GNU_HOST_NAME) \
+	cd $(SETSERIAL_DIR); CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure \
+		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_BUILD_NAME) \
 		--prefix=/usr
 	touch $(SETSERIAL_DIR)/.configured
 
 $(SETSERIAL_DIR)/.build: $(SETSERIAL_DIR)/.configured
-	$(MAKE) -C $(SETSERIAL_DIR)
+	$(MAKE) $(MAKEOPTS) -C $(SETSERIAL_DIR)
 	mkdir -p $(BT_STAGING_DIR)/bin
 	mkdir -p $(BT_STAGING_DIR)/etc
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d

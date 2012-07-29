@@ -10,3 +10,15 @@ diff -urN ulogd-1.24.orig/Rules.make.in ulogd-1.24/Rules.make.in
  #CFLAGS+=@DEFS@
  #CFLAGS+=-g -DDEBUG -DDEBUG_MYSQL -DDEBUG_PGSQL
  
+diff -aur ulogd-1.24/pcap/Makefile.in ulogd-1.24.new/pcap/Makefile.in
+--- ulogd-1.24/pcap/Makefile.in	2005-11-25 21:58:25.000000000 +0200
++++ ulogd-1.24.new/pcap/Makefile.in	2011-11-23 22:04:18.179199165 +0200
+@@ -14,7 +14,7 @@
+ distrib:
+ 
+ $(SHARED_LIBS): %.so: %_sh.o
+-	$(LD) -shared -o $@ $< -lc -lpcap
++	$(LD) $(LDFLAGS) -shared -o $@ $< -lc -lpcap
+ 
+ %_sh.o: %.c
+ 	$(CC) $(SH_CFLAGS) -o $@ -c $<

@@ -6,17 +6,22 @@ DJBDNS_TARGET_DIR:=$(BT_BUILD_DIR)/djbdns
 
 $(DJBDNS_DIR)/.source:
 	zcat $(DJBDNS_SOURCE) | tar -xvf -
-	bzcat $(DJBDNS_PATCH1) | patch -d $(DJBDNS_DIR) -p1 
-	perl -i -p -e 's,-O2,$(BT_COPT_FLAGS) -I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include,g' $(DJBDNS_DIR)/conf-cc 
-	perl -i -p -e 's,gcc\s+,$(TARGET_CC) ,g' $(DJBDNS_DIR)/conf-cc 
-	perl -i -p -e 's,gcc\s*-s,$(TARGET_CC) -s -L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib,g' $(DJBDNS_DIR)/conf-ld
+	bzcat $(DJBDNS_PATCH1) | patch -d $(DJBDNS_DIR) -p1
+	cat $(DJBDNS_PATCH2) | patch -d $(DJBDNS_DIR) -p1
+	perl -i -p -e 's,-O2,$(CFLAGS),g' $(DJBDNS_DIR)/conf-cc
+	perl -i -p -e 's,gcc\s+,$(TARGET_CC) ,g' $(DJBDNS_DIR)/conf-cc
+	perl -i -p -e 's;gcc\s*-s;$(TARGET_CC) -s $(LDFLAGS);g' $(DJBDNS_DIR)/conf-ld
 	perl -i -p -e 's,/usr/local,/usr,g' $(DJBDNS_DIR)/conf-home
-	
+	echo "#include <stdint.h>" >$(DJBDNS_DIR)/uint32.h
+	echo "#include <stdint.h>" >$(DJBDNS_DIR)/uint64.h
+	perl -p -e 's,unsigned int,uint32_t,g' $(DJBDNS_DIR)/uint32.h1 >>$(DJBDNS_DIR)/uint32.h
+	perl -p -e 's,unsigned long long,uint64_t,g' $(DJBDNS_DIR)/uint64.h1 >>$(DJBDNS_DIR)/uint64.h
+	cp $(DJBDNS_DIR)/iopause.h2 $(DJBDNS_DIR)/iopause.h
+	cp $(DJBDNS_DIR)/hasshsgr.h2 $(DJBDNS_DIR)/hasshsgr.h
 	touch $(DJBDNS_DIR)/.source
 
 source: $(DJBDNS_DIR)/.source
-                        
-                                                                 
+
 $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	cd $(DJBDNS_DIR)
 	mkdir -p $(DJBDNS_TARGET_DIR)/usr/bin
@@ -24,7 +29,7 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/dnscache/env
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/dnscache/log
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/init.d
-	
+
 	mkdir -p $(BT_STAGING_DIR)/usr/bin
 	mkdir -p $(BT_STAGING_DIR)/usr/sbin
 	mkdir -p $(BT_STAGING_DIR)/etc/dnscache/env
@@ -37,10 +42,11 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/tinydns-private/root
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/tinydns-public/log
 	mkdir -p $(DJBDNS_TARGET_DIR)/etc/tinydns-public/root
-	
+
+#multithreaded build fails - build in single thread
 	make -C $(DJBDNS_DIR)
-	
-	cp $(DJBDNS_DIR)/dnscache-conf $(DJBDNS_TARGET_DIR)/usr/bin/ 
+
+	cp $(DJBDNS_DIR)/dnscache-conf $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/tinydns-conf $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/walldns-conf $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/rbldns-conf $(DJBDNS_TARGET_DIR)/usr/bin/
@@ -70,12 +76,12 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	cp $(DJBDNS_DIR)/dnsqr $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/dnsq $(DJBDNS_TARGET_DIR)/usr/bin/
 	cp $(DJBDNS_DIR)/dnstrace $(DJBDNS_TARGET_DIR)/usr/bin/
-		
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DJBDNS_TARGET_DIR)/usr/bin/*
-	
+
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DJBDNS_TARGET_DIR)/usr/bin/*
+
 	cp $(DJBDNS_DIR)/dnstracesort $(DJBDNS_TARGET_DIR)/usr/bin/
-	cp $(DJBDNS_DIR)/dnsroots.global $(DJBDNS_TARGET_DIR)/etc/	
-	
+	cp $(DJBDNS_DIR)/dnsroots.global $(DJBDNS_TARGET_DIR)/etc/
+
 	# don't keep empty files in CVS
 	touch $(DJBDNS_TARGET_DIR)/etc/dnscache/env/DNS1
 	cp -aL dnscache.env.FORWARDONLY $(DJBDNS_TARGET_DIR)/etc/dnscache/env/FORWARDONLY
@@ -100,32 +106,32 @@ $(DJBDNS_DIR)/.build: $(DJBDNS_DIR)/.source
 	cp -aL tinydns.private.env.DNSTYPE $(DJBDNS_TARGET_DIR)/etc/tinydns-private/env/DNSTYPE
 	cp -aL tinydns.private.env.QUERYLOG $(DJBDNS_TARGET_DIR)/etc/tinydns-private/env/QUERYLOG
 	cp -aL tinydns.private.run $(DJBDNS_TARGET_DIR)/etc/tinydns-private/run
-	
+
 	cp -aL tinydns.public.log.run $(DJBDNS_TARGET_DIR)/etc/tinydns-public/log/run
-	cp -aL tinydns.public.env.ROOT $(DJBDNS_TARGET_DIR)/etc/tinydns-public/env/ROOT	
+	cp -aL tinydns.public.env.ROOT $(DJBDNS_TARGET_DIR)/etc/tinydns-public/env/ROOT
 	cp -aL tinydns.public.env.QUERYLOG $(DJBDNS_TARGET_DIR)/etc/tinydns-public/env/QUERYLOG
 	cp -aL tinydns.public.run $(DJBDNS_TARGET_DIR)/etc/tinydns-public/run
-	
+
 	cp -aL tinydns $(DJBDNS_TARGET_DIR)/etc/init.d/tinydns
 	# don't keep empty files in CVS
 	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-public/env/IP
-	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/root/data	
+	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/root/data
 	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-public/log/status
-	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/log/status	
+	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-private/log/status
 	touch $(DJBDNS_TARGET_DIR)/etc/tinydns-public/root/data
-	
+
 	cp -a $(DJBDNS_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(DJBDNS_DIR)/.build
 
 build: $(DJBDNS_DIR)/.build
-                                                                                         
+
 clean:
 	-make -C $(DJBDNS_DIR) clean
 	rm -rf $(DJBDNS_TARGET_DIR)
 	-rm $(DJBDNS_DIR)/.build
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(DJBDNS_DIR) 
+	rm -rf $(DJBDNS_DIR)
 	-rm $(DJBDNS_DIR)/.source
 
 

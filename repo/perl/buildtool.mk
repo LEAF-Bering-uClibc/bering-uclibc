@@ -1,57 +1,58 @@
 # makefile for perl
 include $(MASTERMAKEFILE)
 
-PERL_DIR:=perl-5.12.1
+PERL_VER:=5.14.2
+PERL_DIR:=perl-$(PERL_VER)
 PERL_TARGET_DIR:=$(BT_BUILD_DIR)/perl
-#PREG_STAGING_DIR=$(shell echo $(BT_STAGING_DIR)|sed 's/\//\\\//g')
+
+unexport LDFLAGS
 
 $(PERL_DIR)/.source:
-	bzcat $(PERL_SOURCE) | tar -xvf -
-	mv $(PERL_DIR)/Configure $(PERL_DIR)/Configure.orig
-	mv $(PERL_DIR)/hints/linux.sh $(PERL_DIR)/hints/linux.sh.orig
-	sed 's:\([="'\'' ]\+\)\(\$$incpath\)\?\(/usr\|/usr/local\)\?/lib:\1$(BT_STAGING_DIR)\2\3/lib:g;'\
-	's/fstack/fno-stack/g;'\
-	's/dbm db malloc/dbm malloc/;' \
-	$(PERL_DIR)/Configure.orig >$(PERL_DIR)/Configure
-	sed 's:\([="'\'' ]\+\)\(\$$incpath\)\?\(/usr\|/usr/local\)\?/lib:\1$(BT_STAGING_DIR)\2\3/lib:g;' \
-	$(PERL_DIR)/hints/linux.sh.orig >$(PERL_DIR)/hints/linux.sh
-	chmod +x $(PERL_DIR)/Configure
+	zcat $(PERL_SOURCE) | tar -xvf -
+	zcat $(PERL_CROSS_SOURCE) | tar -xvf -
 	touch $(PERL_DIR)/.source
 
 source: $(PERL_DIR)/.source
 
 $(PERL_DIR)/.configured: $(PERL_DIR)/.source
-	( cd $(PERL_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) \
-	CFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(BT_COPT_FLAGS) \
-	-g -Wall" ./Configure -de -Dprefix=/usr -Dlibc="$(BT_STAGING_DIR)/lib/libc.so.0" \
-	-Ud_eaccess -Ucc=$$CC)
+	( cd $(PERL_DIR) ; \
+	./configure --prefix=/usr --target=$(GNU_TARGET_NAME) --host=$(GNU_HOST_NAME) \
+	-Dusethreads \
+	-Dccflags="$(CFLAGS)")
 	touch $(PERL_DIR)/.configured
+#	--sysroot=$(BT_STAGING_DIR) \
+#	-Ud_eaccess \
+#	-Dlibc="$(BT_STAGING_DIR)/lib/libc.so.0" \
+#	-Dcc=$(TARGET_CC) \
 
 $(PERL_DIR)/.build: $(PERL_DIR)/.configured
 	mkdir -p $(PERL_TARGET_DIR)
 	mkdir -p $(PERL_TARGET_DIR)/usr/bin
-	mkdir -p $(PERL_TARGET_DIR)/usr/lib/perl5/5.12.1
+	mkdir -p $(PERL_TARGET_DIR)/usr/include/perl5/CORE
+	mkdir -p $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
 
-	$(MAKE) CC=$(TARGET_CC) -C $(PERL_DIR)
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PERL_DIR)/perl
+# Build in single thread - -jN failed
+	$(MAKE) -C $(PERL_DIR)
 	cp -a $(PERL_DIR)/perl $(PERL_TARGET_DIR)/usr/bin
-	cp -a $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/5.12.1
-	cp -a $(PERL_DIR)/../Socket6.pm $(PERL_TARGET_DIR)/usr/lib/perl5/5.12.1
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PERL_TARGET_DIR)/usr/bin/*
+	cp -a $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
+	cp -a $(PERL_DIR)/*.h $(PERL_TARGET_DIR)/usr/include/perl5/CORE
+	cp -aL Socket6.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
+	cp -aL Temp.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/File
 	cp -a $(PERL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(PERL_DIR)/.build
 
 build: $(PERL_DIR)/.build
-                                                                                         
+
 clean:
 	-$(MAKE) -C $(PERL_DIR) clean
 	rm -rf $(PERL_TARGET_DIR)
 	rm -f $(PERL_DIR)/.build
-	rm -rf $(BT_STAGING_DIR)/usr/lib/perl5/5.12.1
-	rm -rf $(PERL_TARGET_DIR)/usr/lib/perl5/5.12.1
-# this is probably not enough?	
+	rm -rf $(BT_STAGING_DIR)/usr/lib/perl5/$(PERL_VER)
+	rm -rf $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
+# this is probably not enough?
 	rm -f $(PERL_DIR)/.configured
 
-                                                                                                                 
 srcclean: clean
 	rm -f $(PERL_DIR)/.source
-	rm -rf $(PERL_DIR) 
+	rm -rf $(PERL_DIR)

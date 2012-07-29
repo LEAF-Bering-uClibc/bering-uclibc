@@ -9,10 +9,14 @@ $(QUAGGA_DIR)/.source:
 	touch $(QUAGGA_DIR)/.source
 
 source: $(QUAGGA_DIR)/.source
-                        
+
 $(QUAGGA_DIR)/.configured: $(QUAGGA_DIR)/.source
-	(cd $(QUAGGA_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -g -Wall" ./configure --prefix=/usr \
+	(cd $(QUAGGA_DIR) ; ./configure --prefix=/usr \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--sysconfdir=/etc/zebra \
+	--disable-doc \
+	--disable-ospfapi \
 	--enable-isisd \
 	--enable-ipv6 \
 	--enable-netlink \
@@ -23,24 +27,16 @@ $(QUAGGA_DIR)/.configured: $(QUAGGA_DIR)/.source
 	--localstatedir=/var/run \
 	$(NULL))
 	touch $(QUAGGA_DIR)/.configured
-                                                                 
+
 $(QUAGGA_DIR)/.build: $(QUAGGA_DIR)/.configured
 	mkdir -p $(QUAGGA_TARGET_DIR)
 	mkdir -p $(QUAGGA_TARGET_DIR)/etc/zebra
 	mkdir -p $(QUAGGA_TARGET_DIR)/etc/init.d
-	mkdir -p $(QUAGGA_TARGET_DIR)/usr/sbin	
-	mkdir -p $(QUAGGA_TARGET_DIR)/lib
-	make -C $(QUAGGA_DIR)
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(QUAGGA_DIR)/zebra/.libs/zebra
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(QUAGGA_DIR)/ripd/.libs/ripd
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(QUAGGA_DIR)/ripngd/.libs/ripngd
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(QUAGGA_DIR)/ospfd/.libs/ospfd
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(QUAGGA_DIR)/ospf6d/.libs/ospf6d
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(QUAGGA_DIR)/bgpd/.libs/bgpd
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(QUAGGA_DIR)/isisd/.libs/isisd		
-	-$(BT_STRIP) --strip-unneeded $(QUAGGA_DIR)/lib/.libs/libzebra.so.0.0.0
-	-$(BT_STRIP) --strip-unneeded $(QUAGGA_DIR)/ospfd/.libs/libospf.so.0.0.0
-
+	make $(MAKEOPTS) -C $(QUAGGA_DIR)
+	make $(MAKEOPTS) DESTDIR=$(QUAGGA_TARGET_DIR) -C $(QUAGGA_DIR) install
+	-$(BT_STRIP) $(B_STRIP_BINOPTS) $(QUAGGA_TARGET_DIR)/usr/sbin/*
+	-$(BT_STRIP) $(B_STRIP_LIBOPTS) $(QUAGGA_TARGET_DIR)/usr/lib/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(QUAGGA_TARGET_DIR)/usr/lib/*.la
 	cp -aL bgpd.init $(QUAGGA_TARGET_DIR)/etc/init.d/bgpd
 	cp -aL bgpd.conf $(QUAGGA_TARGET_DIR)/etc/zebra
 	cp -aL isisd.init $(QUAGGA_TARGET_DIR)/etc/init.d/isisd
@@ -55,26 +51,16 @@ $(QUAGGA_DIR)/.build: $(QUAGGA_DIR)/.configured
 	cp -aL ripngd.conf $(QUAGGA_TARGET_DIR)/etc/zebra
 	cp -aL zebra.init $(QUAGGA_TARGET_DIR)/etc/init.d/zebra
 	cp -aL zebra.conf $(QUAGGA_TARGET_DIR)/etc/zebra
-	cp -a $(QUAGGA_DIR)/zebra/.libs/zebra $(QUAGGA_TARGET_DIR)/usr/sbin
-	cp -a $(QUAGGA_DIR)/ripd/.libs/ripd $(QUAGGA_TARGET_DIR)/usr/sbin	
-	cp -a $(QUAGGA_DIR)/ripngd/.libs/ripngd $(QUAGGA_TARGET_DIR)/usr/sbin	
-	cp -a $(QUAGGA_DIR)/ospfd/.libs/ospfd $(QUAGGA_TARGET_DIR)/usr/sbin
-	cp -a $(QUAGGA_DIR)/ospf6d/.libs/ospf6d $(QUAGGA_TARGET_DIR)/usr/sbin
-	cp -a $(QUAGGA_DIR)/bgpd/.libs/bgpd $(QUAGGA_TARGET_DIR)/usr/sbin
-	cp -a $(QUAGGA_DIR)/isisd/.libs/isisd $(QUAGGA_TARGET_DIR)/usr/sbin	
-	cp -a $(QUAGGA_DIR)/lib/.libs/libzebra.so.0.0.0 $(QUAGGA_TARGET_DIR)/lib
-	cp -a $(QUAGGA_DIR)/ospfd/.libs/libospf.so.0.0.0 $(QUAGGA_TARGET_DIR)/lib	
 	cp -a $(QUAGGA_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(QUAGGA_DIR)/.build
 
 build: $(QUAGGA_DIR)/.build
-                                                                                         
+
 clean:
-	make -C $(QUAGGA_DIR) clean
-	rm -rf $(QUAGGA_TARGET_DIR)
-	rm -rf $(QUAGGA_DIR)/.build
-	rm -rf $(QUAGGA_DIR)/.configured
-                                                                                                                 
+	-make -C $(QUAGGA_DIR) clean
+	-rm -rf $(QUAGGA_TARGET_DIR)
+	-rm -rf $(QUAGGA_DIR)/.build
+	-rm -rf $(QUAGGA_DIR)/.configured
+
 srcclean: clean
-	rm -rf $(QUAGGA_DIR) 
-	rm -rf $(QUAGGA_DIR)/.source
+	-rm -rf $(QUAGGA_DIR)

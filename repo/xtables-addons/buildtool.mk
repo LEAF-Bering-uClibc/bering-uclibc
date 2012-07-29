@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-DIR:=xtables-addons-1.40
+DIR:=xtables-addons-1.41
 TARGET_DIR:=$(BT_BUILD_DIR)/xtables-addons
 
 #IPhash settings
@@ -17,7 +17,7 @@ IP_NF_SET_HASHSIZE=4096
 
 $(DIR)/.source:
 	xzcat $(SOURCE) |  tar -xvf -
-	perl -i -p -e 's,build_CHECKSUM=.*,build_CHECKSUM=m,;s,build_ipset6=.*,build_ipset6=,' $(DIR)/mconfig
+	perl -i -p -e 's,build_ipset6=.*,build_ipset6=,' $(DIR)/mconfig
 	touch $(DIR)/.source
 
 $(DIR)/.build: $(DIR)/.source
@@ -25,14 +25,15 @@ $(DIR)/.build: $(DIR)/.source
 	(cd $(DIR) && for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
 	export KERNEL_DIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) ; \
 	export KBUILD_OUTPUT=$(BT_LINUX_DIR)-$$i ; \
-	CFLAGS="$(BT_COPT_FLAGS)" ./configure --host=$(GNU_TARGET_NAME) \
-	--prefix=/ \
-	--with-kbuild=$$KERNEL_DIR --with-xtlibdir=/lib/xtables &&\
+	./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) \
+	--prefix=/ --with-kbuild=$$KERNEL_DIR --with-xtlibdir=/lib/xtables &&\
 	$(MAKE) -C extensions clean && \
 	$(MAKE) $(MAKEOPTS) -C extensions modules && \
 	find extensions -name '*.ko' -exec $(BT_STRIP) $(BT_STRIP_LIBOPTS) {} + && \
-	$(MAKE) -C extensions DEPMOD="$(BT_DEPMOD)" DESTDIR=$(BT_STAGING_DIR) modules_install || \
-	exit 1 ; done; \
+	find extensions -name '*.ko' -exec gzip -9 -f {} + && \
+	find extensions -name '*.ko' -exec mv {} $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/extra \; && \
+	depmod -ae -b $(BT_STAGING_DIR) -F $(BT_BUILD_DIR)/kernel/System.map-$(BT_KERNEL_RELEASE)-$$i \
+	$(BT_KERNEL_RELEASE)-$$i || exit 1 ; done; \
 	$(MAKE) $(MAKEOPTS) -C extensions user-all-local && \
 	$(MAKE) -C extensions DESTDIR=$(TARGET_DIR) user-install-local)
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/lib/xtables/*

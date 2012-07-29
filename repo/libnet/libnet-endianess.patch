@@ -1,0 +1,20 @@
+--- aclocal.m4.orig	2004-03-01 22:26:11.000000000 +0200
++++ aclocal.m4	2011-11-30 22:17:30.935031375 +0200
+@@ -294,6 +294,8 @@
+ AC_DEFUN(AC_LIBNET_ENDIAN_CHECK,
+     [AC_MSG_CHECKING(machine endianess)
+ 
++    if test ! ${ac_cv_libnet_endianess+@}; then
++
+     cat > conftest.c << EOF
+ #       include <stdio.h>
+ #       include <stdlib.h>
+@@ -346,6 +348,8 @@
+         fi
+         rm -f conftest* core core.conftest
+ 
++        fi
++
+         AC_MSG_RESULT($ac_cv_libnet_endianess)
+ 
+         if test $ac_cv_libnet_endianess = big ; then

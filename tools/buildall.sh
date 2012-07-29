@@ -1,5 +1,4 @@
 #! /bin/sh
-# $Id: buildall.sh,v 1.1.1.1 2010/04/26 09:03:15 nitr0man Exp $
 #set -x
 # call this from the 
 #
@@ -13,14 +12,15 @@
 EXPORTDIR=/tmp
 
 #########################################################
-DATE=$(date "+%d.%m.%Y")
+DATE=$(date "+%Y-%m-%dT%H:%M")
 STARTDATE=$(date)
 MYDIR=$EXPORTDIR/$DATE
 HTMLFILE=$MYDIR/build.html
 BTROOTDIR=.
 BTBIN=$BTROOTDIR/buildtool.pl
 BPBIN=$BTROOTDIR/buildpacket.pl
-BTSOURCEDIR=$BTROOTDIR/source
+TOOLCHAIN=`grep -i ^Toolchain= $BTROOTDIR/conf/buildtool.conf | cut -d= -f2`
+BTSOURCEDIR=${BTROOTDIR}/source/${TOOLCHAIN}
 BTLOGFILE="${BTROOTDIR}/log/buildtoollog"
 EXITVALUE=0
 
@@ -45,7 +45,7 @@ call_buildtool() {
 	if [ $ret -eq 0 ] ; then
 		echo -n "<font color=green>OK</font>"
 	else
-		echo -n "<font color=red>FAILED</font>"
+		echo -n "<font color=red><b>FAILED</b></font>"
 		EXITVALUE=1
 	fi		
 }
@@ -62,7 +62,7 @@ call_buildpacket() {
 		if [ $ret -eq 0 ] ; then
 			echo -n "<font color=green>OK</font>"
 		else
-			echo -n "<font color=red>FAILED</font>"
+			echo -n "<font color=red><b>FAILED<b></font>"
 			EXITVALUE=1
 		fi		
 
@@ -98,7 +98,8 @@ cat <<EOF >$HTMLFILE
 <TITLE>build report for $DATE</TITLE>
 </HEAD>
 <BODY>
-<H2>Number of total packages:$PKGSIZE</H2>
+<H3>Number of total packages: $PKGSIZE</H3>
+<H3>Building using toolchain: $TOOLCHAIN</H3>
 <p>
 <TABLE cellpadding=10 border=1>
 <tr>
@@ -126,25 +127,25 @@ for name in $PKGLIST; do
 			call_buildpacket $name >> $HTMLFILE		
 			EXITVALUE=$OLDEXITVALUE	
 		else
-			echo -n "<font color=red>FAILED</font>" >> $HTMLFILE
+			echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 			EXITVALUE=1
 		fi
 			
 
 	else
-		echo -n "<font color=red>FAILED</font>" >> $HTMLFILE
+		echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 		echo -n "</td><td>" >> $HTMLFILE
-		echo -n "<font color=red>FAILED</font>" >> $HTMLFILE
+		echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 		EXITVALUE=1
 	fi
 	echo "</td></tr>" >> $HTMLFILE		
-	# copy lofile
+	# copy logfile
 	cp $BTLOGFILE $MYDIR/$name.build.txt
 
 done
 
 echo "</TABLE>" >> $HTMLFILE
-echo "<h2>build started: $STARTDATE<p>build ended: $(date)" >>$HTMLFILE
+echo "<H3>build started: $STARTDATE<p>build ended: $(date)</H3>" >>$HTMLFILE
 echo "</BODY>" >>$HTMLFILE
 echo "</HTML>" >>$HTMLFILE
 

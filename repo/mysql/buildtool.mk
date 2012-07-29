@@ -6,12 +6,16 @@
 
 include $(MASTERMAKEFILE)
 
-MYSQL_DIR:=mysql-5.0.91
+MYSQL_DIR:=mysql-5.1.60
 MYSQL_TARGET_DIR:=$(BT_BUILD_DIR)/mysql
 
 
 CONFFLAGS:= --prefix=/usr \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--without-server \
+	--without-ssl \
+	--with-libwrap=$(BT_STAGING_DIR)/usr/lib \
 	--without-extra-tools \
 	--without-docs \
 	--without-bench \
@@ -21,29 +25,28 @@ CONFFLAGS:= --prefix=/usr \
 
 $(MYSQL_DIR)/.source:
 	zcat $(MYSQL_SOURCE) | tar -xvf -
-#	cat $(MYSQL_PATCH1) | patch -d $(MYSQL_DIR) -p1
-	touch $(MYSQL_DIR)/.source	
+	cat $(MYSQL_PATCH1) | patch -d $(MYSQL_DIR) -p1
+	touch $(MYSQL_DIR)/.source
 
 source: $(MYSQL_DIR)/.source
 
 
 $(MYSQL_DIR)/.configured: $(MYSQL_DIR)/.source
-	(cd $(MYSQL_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure $(CONFFLAGS) )
+#	(cd $(MYSQL_DIR) ; find . -name Makefile.in -o -name aclocal.m4 -delete && \
+#	 autoreconf -i -f && ./configure $(CONFFLAGS) )
+	(cd $(MYSQL_DIR) ; ./configure $(CONFFLAGS) )
 	touch $(MYSQL_DIR)/.configured
 
 
 $(MYSQL_DIR)/.build: $(MYSQL_DIR)/.configured
 	mkdir -p $(MYSQL_TARGET_DIR)
-	mkdir -p $(BT_STAGING_DIR)/usr/include/mysql
-	make -C $(MYSQL_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="-Os" 
-	make -C $(MYSQL_DIR) DESTDIR=$(MYSQL_TARGET_DIR) install  
-	$(BT_STRIP) $(BT_STRIP_LIB) $(MYSQL_TARGET_DIR)/usr/lib/mysql/libmysqlclient.so.15.0.0
-	$(BT_STRIP) $(BT_STRIP_LIB) $(MYSQL_TARGET_DIR)/usr/lib/mysql/libmysqlclient_r.so.15.0.0
-	-$(BT_STRIP) $(BT_STRIP_BIN) $(MYSQL_TARGET_DIR)/usr/bin/*
-	perl -i -p -e 's,/usr/lib/mysql,$(BT_STAGING_DIR)/usr/lib/,g' $(MYSQL_TARGET_DIR)/usr/lib/mysql/*.la
-	cp -a -f $(MYSQL_TARGET_DIR)/usr/lib/mysql/* $(BT_STAGING_DIR)/usr/lib/
-	cp -a -f $(MYSQL_TARGET_DIR)/usr/bin/* $(BT_STAGING_DIR)/usr/bin/
-	cp -a -f $(MYSQL_TARGET_DIR)/usr/include/mysql/* $(BT_STAGING_DIR)/usr/include/mysql
+	make $(MAKEOPTS) -C $(MYSQL_DIR)
+	make -C $(MYSQL_DIR) DESTDIR=$(MYSQL_TARGET_DIR) install
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(MYSQL_TARGET_DIR)/usr/lib/mysql/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(MYSQL_TARGET_DIR)/usr/bin/*
+	perl -i -p -e 's,/usr/lib/mysql,$(BT_STAGING_DIR)/usr/lib/mysql,g' $(MYSQL_TARGET_DIR)/usr/lib/mysql/*.la
+	rm -rf $(MYSQL_TARGET_DIR)/usr/share $(MYSQL_TARGET_DIR)/usr/mysql-test
+	cp -a -f $(MYSQL_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(MYSQL_DIR)/.build
 
 

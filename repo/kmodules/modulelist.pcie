@@ -1,0 +1,2 @@
+# network drivers for widely-used devices that are available only on archs with PCI-E bus
+e1000e igb forcedeth atl1 atl1c atl1e atl2

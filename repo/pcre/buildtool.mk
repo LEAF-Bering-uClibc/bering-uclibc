@@ -18,25 +18,30 @@ CONFFLAGS:= --prefix=/usr --disable-cpp
 $(PCRE_DIR)/.source:
 	zcat $(PCRE_SOURCE) | tar -xvf -
 	echo $(PCRE_DIR) > DIRNAME
-	touch $(PCRE_DIR)/.source	
+	touch $(PCRE_DIR)/.source
 
 source: $(PCRE_DIR)/.source
 
 
 $(PCRE_DIR)/.configured: $(PCRE_DIR)/.source
-	(cd $(PCRE_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure $(CONFFLAGS) --prefix=$(PCRE_TARGET_DIR)/usr )
+	(cd $(PCRE_DIR) ; \
+	./configure \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
+	--prefix=/usr )
 	touch $(PCRE_DIR)/.configured
 
 
 $(PCRE_DIR)/.build: $(PCRE_DIR)/.configured
 	mkdir -p $(PCRE_TARGET_DIR)
-	make -C $(PCRE_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)"  
-	make -C $(PCRE_DIR) install
-#	make -C $(PCRE_DIR) DESTDIR=$(PCRE_TARGET_DIR) install
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PCRE_TARGET_DIR)/usr/lib/libpcre.so.0.0.1
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PCRE_TARGET_DIR)/usr/lib/libpcreposix.so.0.0.0
-	cp -a -f $(PCRE_TARGET_DIR)/usr/lib/libpcre.* $(BT_STAGING_DIR)/usr/lib/
-	cp -a -f $(PCRE_TARGET_DIR)/usr/include/pcre.* $(BT_STAGING_DIR)/usr/include/
+	make $(MAKEOPTS) -C $(PCRE_DIR)
+	make -C $(PCRE_DIR) DESTDIR=$(PCRE_TARGET_DIR) install
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PCRE_TARGET_DIR)/usr/lib/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PCRE_TARGET_DIR)/usr/bin/*
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(PCRE_TARGET_DIR)/usr/lib/*.la
+#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(PCRE_TARGET_DIR)/usr/lib/pkgconfig/*.pc
+	-rm -rf $(PCRE_TARGET_DIR)/usr/share
+	cp -a -f $(PCRE_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(PCRE_DIR)/.build
 
 

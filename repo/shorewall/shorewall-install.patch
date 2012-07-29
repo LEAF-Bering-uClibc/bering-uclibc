@@ -1,0 +1,18 @@
+diff -urN shorewall-4.5.5.orig/install.sh shorewall-4.5.5/install.sh
+--- shorewall-4.5.5.orig/install.sh	2012-06-09 18:34:49.000000000 +0200
++++ shorewall-4.5.5/install.sh	2012-06-10 01:08:17.962767748 +0200
+@@ -344,10 +344,10 @@
+     first_install="Yes"
+ fi
+ 
+-if [ -z "${DESTDIR}" -a $PRODUCT = shorewall -a ! -f ${SHAREDIR}/$PRODUCT/coreversion ]; then
+-    echo "Shorewall $VERSION requires Shorewall Core which does not appear to be installed"
+-    exit 1
+-fi
++#if [ -z "${DESTDIR}" -a $PRODUCT = shorewall -a ! -f ${SHAREDIR}/$PRODUCT/coreversion ]; then
++#    echo "Shorewall $VERSION requires Shorewall Core which does not appear to be installed"
++#    exit 1
++#fi
+ 
+ install_file $PRODUCT ${DESTDIR}${SBINDIR}/$PRODUCT 0755
+ [ $SHAREDIR = /usr/share ] || eval sed -i \'s\|/usr/share/\|${SHAREDIR}/\|\' ${DESTDIR}/${SBINDIR}/${PRODUCT}

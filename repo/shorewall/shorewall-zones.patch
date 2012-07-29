@@ -1,0 +1,10 @@
+diff -urN shorewall-4.5.4.1.orig/configfiles/zones shorewall-4.5.4.1/configfiles/zones
+--- shorewall-4.5.4.1.orig/configfiles/zones	2012-05-30 23:37:29.000000000 +0200
++++ shorewall-4.5.4.1/configfiles/zones	2012-06-07 21:07:16.920550512 +0200
+@@ -10,3 +10,6 @@
+ #ZONE	TYPE		OPTIONS		IN			OUT
+ #					OPTIONS			OPTIONS
+ fw	firewall
++net     ipv4
++loc     ipv4
++#dmz     ipv4

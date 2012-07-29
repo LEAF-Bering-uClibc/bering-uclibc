@@ -16,11 +16,11 @@ $(NDPPD_DIR)/.configured: $(NDPPD_DIR)/.source
 
 $(NDPPD_DIR)/.build: $(NDPPD_DIR)/.configured
 	mkdir -p $(NDPPD_TARGET_DIR)
-	mkdir -p $(NDPPD_TARGET_DIR)/usr/sbin	
-	mkdir -p $(NDPPD_TARGET_DIR)/etc/init.d	
+	mkdir -p $(NDPPD_TARGET_DIR)/usr/sbin
+	mkdir -p $(NDPPD_TARGET_DIR)/etc/init.d
 	make -C $(NDPPD_DIR) DESTDIR=$(NDPPD_TARGET_DIR) \
-	CXXFLAGS="$(BT_COPT_FLAGS)" CXX=$(BT_STAGING_DIR)/usr/bin/g++ \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -DNO_TFTP" all  
+	CXXFLAGS="$(BT_COPT_FLAGS)" CXX=$(TARGET_CXX) \
+	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -DNO_TFTP" all
 	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(NDPPD_DIR)/ndppd
 	cp -aL ndppd.init $(NDPPD_TARGET_DIR)/etc/init.d/ndppd
 	cp -a $(NDPPD_DIR)/ndppd $(NDPPD_TARGET_DIR)/usr/sbin
@@ -37,4 +37,4 @@ clean:
 	rm -rf $(NDPPD_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(NDPPD_DIR) 
+	rm -rf $(NDPPD_DIR)

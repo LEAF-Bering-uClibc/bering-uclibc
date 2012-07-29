@@ -10,10 +10,10 @@ $(QOS-HTB_DIR)/.source:
 	touch $(QOS-HTB_DIR)/.source
 
 source: $(QOS-HTB_DIR)/.source
-                        
+
 $(QOS-HTB_DIR)/.build:
 	mkdir -p $(QOS-HTB_TARGET_DIR)
-	mkdir -p $(QOS-HTB_TARGET_DIR)/sbin	
+	mkdir -p $(QOS-HTB_TARGET_DIR)/sbin
 	mkdir -p $(QOS-HTB_TARGET_DIR)/etc/init.d
 	cp -aL htb.init-v0.8.5 $(QOS-HTB_TARGET_DIR)/sbin/htb.init
 	cp -aL htb.sysconfig $(QOS-HTB_TARGET_DIR)/sbin
@@ -22,12 +22,12 @@ $(QOS-HTB_DIR)/.build:
 	touch $(QOS-HTB_DIR)/.build
 
 build: $(QOS-HTB_DIR)/.build
-                                                                                         
+
 clean:
 	rm -rf $(QOS-HTB_TARGET_DIR)
 	rm $(QOS-HTB_DIR)/.build
 	rm $(QOS-HTB_DIR)/.configured
-                                                                                                                 
+
 srcclean: clean
-	rm -rf $(QOS-HTB_DIR) 
+	rm -rf $(QOS-HTB_DIR)
 	rm $(QOS-HTB_DIR)/.source

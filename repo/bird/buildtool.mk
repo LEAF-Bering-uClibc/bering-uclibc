@@ -13,27 +13,25 @@ source: $(DIR)/.source
 $(DIR)/.build: $(DIR)/.source
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	(cd $(DIR) ; \
-	CFLAGS="$(BT_COPT_FLAGS)" \
-	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(LDFLAGS)" \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/bird \
 	--localstatedir=/var \
-	--build=$(GNU_HOST_NAME) \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-iproutedir="$(BT_STAGING_DIR)/etc/iproute2")
+	perl -i -p -e "s, -s , -s --strip-program=$(GNU_TARGET_NAME)-strip ," $(DIR)/obj/Makefile
 	make -C $(DIR) all
 	make DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	make -C $(DIR) clean
 	(cd $(DIR) ; \
-	CFLAGS="$(BT_COPT_FLAGS)" \
-	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(LDFLAGS)" \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/bird \
 	--localstatedir=/var \
-	--build=$(GNU_HOST_NAME) \
 	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-iproutedir="$(BT_STAGING_DIR)/etc/iproute2" \
 	--enable-ipv6)
+	perl -i -p -e "s, -s , -s --strip-program=$(GNU_TARGET_NAME)-strip ," $(DIR)/obj/Makefile
 	make -C $(DIR) all
 	make DESTDIR=$(TARGET_DIR) -C $(DIR) install
 	make -C $(DIR) clean

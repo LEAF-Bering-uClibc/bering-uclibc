@@ -1,7 +1,7 @@
 #####################################################
-# 
+#
 # haserl setup
-# 
+#
 #####################################################
 include $(MASTERMAKEFILE)
 
@@ -17,18 +17,18 @@ HASERL_TARGET_DIR:=$(BT_BUILD_DIR)/haserl
 	zcat $(SOURCE_TARBALL) | tar -xvf -
 	echo $(SOURCE_DIR) > .source
 
-source: .source 
-                        
+source: .source
+
 .configured: .source
-	(cd $(SOURCE_DIR); CC=$(TARGET_CC) LD=$(TARGET_LD) ./configure --prefix=/usr)
+	(cd $(SOURCE_DIR);  ./configure --prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME))
 	touch .configured
-                                                                 
+
 .build: .configured
 	mkdir -p $(HASERL_TARGET_DIR)
-	mkdir -p $(HASERL_TARGET_DIR)/usr/bin	
-	make -C $(SOURCE_DIR) all
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(SOURCE_DIR)/src/haserl
+	mkdir -p $(HASERL_TARGET_DIR)/usr/bin
+	make $(MAKEOPTS) -C $(SOURCE_DIR) all
 	cp -a $(SOURCE_DIR)/src/haserl $(HASERL_TARGET_DIR)/usr/bin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(HASERL_TARGET_DIR)/usr/bin/*
 	cp -a $(HASERL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch .build
 

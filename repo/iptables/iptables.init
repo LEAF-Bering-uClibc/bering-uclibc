@@ -232,8 +232,7 @@ save() {
     [ "x$IPTABLES_SAVE_COUNTER" = "xyes" ] && OPT="-c"
 
     ret=0
-    TMP_FILE=/tmp/$IPTABLES.$(cat /proc/interrupts | awk '/LOC/ {print $2}') \
-	&& touch "$TMP_FILE" \
+    TMP_FILE=`/bin/mktemp -q /tmp/$IPTABLES.XXXXXX` \
 	&& chmod 600 "$TMP_FILE" \
 	&& $IPTABLES-save $OPT > $TMP_FILE 2>/dev/null \
 	&& size=$(ls -l $TMP_FILE | awk '{print $5}') && [ "$size" -gt 0 ] \

@@ -19,8 +19,12 @@ RADIUS_TARGET_DIR:=$(BT_BUILD_DIR)/radius
 #   Use the repo/libtool/ version of libtool and libltdl.so
 #   Explicitly enable the modules referenced in the Package
 #   Disable a whole raft of modules which require extra libraries
+
+#	--with-system-libtool --with-system-libltdl \
+
 CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
-	--with-system-libtool --with-system-libltdl \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
 	--with-rlm_acctlog --with-rlm_acct_unique --with-rlm_always \
 	--with-rlm_attr_filter --with-rlm_attr_rewrite --with-rlm_chap \
 	--with-rlm_checkval --with-rlm_copy_packet --with-rlm_detail \
@@ -42,7 +46,9 @@ CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 	--without-rlm_sql_iodbc --without-rlm_python \
 	--without-rlm_sql_oracle --without-rlm_sql_postgresql \
 	--with-dhcp \
-	--with-mysql-dir="$(BT_STAGING_DIR)"/usr 
+	--with-mysql-dir="$(BT_STAGING_DIR)"/usr
+
+export LDFLAGS += $(EXTCCLDFLAGS) -L$(BT_STAGING_DIR)/usr/lib/mysql
 
 .source:
 	bzcat $(RADIUS_SOURCE) | tar -xvf -
@@ -52,9 +58,7 @@ CONFOPTS:=--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
 source: .source
 
 .configure: .source
-	( cd $(RADIUS_DIR) ; CFLAGS="$(BT_COPT_FLAGS)" \
-	LDFLAGS='-L"$(BT_STAGING_DIR)"/lib -L"$(BT_STAGING_DIR)"/usr/lib' \
-	./configure $(CONFOPTS) )
+	( cd $(RADIUS_DIR) ; ./configure $(CONFOPTS) )
 	touch .configure
 
 build: .configure
@@ -69,18 +73,19 @@ build: .configure
 	mkdir -p $(BT_STAGING_DIR)/etc/cron.daily
 	mkdir -p $(BT_STAGING_DIR)/etc/cron.weekly
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d
-#
-	$(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) -C $(RADIUS_DIR)
+#rlm_eap sensitive to multithreaded building?
+	$(MAKE) $(MAKEOPTS) -C $(RADIUS_DIR)/libltdl
+	$(MAKE) $(MAKEOPTS) -C $(RADIUS_DIR)/src freeradius-devel lib
+	$(MAKE) $(MAKEOPTS) -C $(RADIUS_DIR)/src/modules libs
+	$(MAKE) -C $(RADIUS_DIR)/src/modules/rlm_eap
+	$(MAKE) $(MAKEOPTS) -C $(RADIUS_DIR)
 	$(MAKE) -C $(RADIUS_DIR) R="$(RADIUS_TARGET_DIR)" install
 #
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/sbin/radiusd
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/sbin/radmin
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/sbin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) "$(RADIUS_TARGET_DIR)"/usr/lib/*
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/sbin/radiusd "$(BT_STAGING_DIR)"/usr/sbin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/sbin/radmin "$(BT_STAGING_DIR)"/usr/sbin/
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radclient
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radeapclient
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radsniff
-	$(BT_STRIP) $(BT_STRIP_BINOPTS) "$(RADIUS_TARGET_DIR)"/usr/bin/radwho
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radclient "$(BT_STAGING_DIR)"/usr/bin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radeapclient "$(BT_STAGING_DIR)"/usr/bin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radlast "$(BT_STAGING_DIR)"/usr/bin/
@@ -88,7 +93,6 @@ build: .configure
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radtest "$(BT_STAGING_DIR)"/usr/bin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radwho "$(BT_STAGING_DIR)"/usr/bin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radzap "$(BT_STAGING_DIR)"/usr/bin/
-	$(BT_STRIP) $(BT_STRIP_LIBOPTS) "$(RADIUS_TARGET_DIR)"/usr/lib/*.so
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/*.so "$(BT_STAGING_DIR)"/usr/lib/
 	cp -a "$(RADIUS_TARGET_DIR)"/usr/include/* "$(BT_STAGING_DIR)"/usr/include/
 	cp -a "$(RADIUS_TARGET_DIR)"/usr/share/freeradius/* "$(BT_STAGING_DIR)"/usr/share/freeradius/
@@ -103,7 +107,7 @@ clean:
 	$(MAKE) -C $(RADIUS_DIR) clean
 
 srcclean: clean
-	rm -rf $(RADIUS_DIR) 
+	rm -rf $(RADIUS_DIR)
 	-rm .source
 	-rm DIRNAME
 

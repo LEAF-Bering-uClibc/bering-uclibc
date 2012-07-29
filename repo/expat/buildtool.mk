@@ -15,10 +15,10 @@ EXPAT_TARGET_DIR:=$(BT_BUILD_DIR)/expat
 
 # Option settings for 'configure':
 #   Move default install from /usr/local to /usr
-CONFOPTS:=--prefix=/usr
+CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
 .source:
-	zcat $(SOURCE) | tar -xvf - 	
+	zcat $(SOURCE) | tar -xvf -
 	echo $(EXPAT_DIR) > DIRNAME
 	touch .source
 
@@ -30,7 +30,7 @@ source: .source
 
 .build: .configure
 	mkdir -p $(EXPAT_TARGET_DIR)
-	$(MAKE) -C $(EXPAT_DIR)
+	$(MAKE) $(MAKEOPTS) -C $(EXPAT_DIR)
 	$(MAKE) DESTDIR=$(EXPAT_TARGET_DIR) -C $(EXPAT_DIR) install
 	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(EXPAT_TARGET_DIR)/usr/lib/*.so
 	# Fix libdir path for libtool

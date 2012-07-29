@@ -1,3 +1,4 @@
 # Exclude buildtool lockfile
 lockfile
 sources.local
+*-unknown-linux-*

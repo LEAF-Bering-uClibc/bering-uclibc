@@ -11,39 +11,34 @@ DIR2:=$(DIR)/libol-0.3.18
 TARGET_DIR:=$(BT_BUILD_DIR)/syslog-ng
 
 
-$(DIR)/.source: 
-	zcat $(SOURCE) |  tar -xvf - 
+$(DIR)/.source:
+	zcat $(SOURCE) |  tar -xvf -
 	cat $(PATCH1) | patch -d $(DIR) -p1
 	touch $(DIR)/.source
 
 $(DIR2)/Makefile: $(DIR2)
-	(cd $(DIR2) ;  CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure)
+	(cd $(DIR2) ; ./configure \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME))
 
 $(DIR2)/.build: $(DIR2)/Makefile
-	$(MAKE) -C $(DIR2) \
-		CC=$(TARGET_CC) LD=$(TARGET_LD)  \
-		CFLAGS="$(BT_COPT_FLAGS) -Wall -DSYSV -fomit-frame-pointer \
-		-fno-strength-reduce -I$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/include" \
-		LDFLAGS="" 
+	$(MAKE) -C $(DIR2)
 	touch $(DIR2)/.build
 
 $(DIR)/Makefile: $(DIR)/.source $(DIR2)/.build
-	(cd $(DIR) ;  CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS)" \
-	./configure --with-libol=../$(DIR2) --prefix=/ )
+	(cd $(DIR) ; ./configure --with-libol=../$(DIR2) --prefix=/ \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME))
 
 $(DIR)/.build: $(DIR)/Makefile
 	mkdir -p $(TARGET_DIR)/sbin
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	cp $(DIR2)/src/*.h $(DIR)/src/
 	cp $(DIR2)/src/*.h.x $(DIR)/src/
-	$(MAKE) -C $(DIR) \
-		CC=$(TARGET_CC) LD=$(TARGET_LD)  \
-		CFLAGS="$(BT_COPT_FLAGS) -Wall -DSYSV -fomit-frame-pointer -fno-strength-reduce \
-		-I$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/include" LDFLAGS="" 
+	$(MAKE) $(MAKEOPTS) -C $(DIR)
 	cp -a  $(DIR)/src/syslog-ng  $(TARGET_DIR)/sbin
 	cp -a  $(DIR)/debian/syslog-ng.conf  $(TARGET_DIR)/etc
-	-$(BT_STRIP) -s --remove-section=.note --remove-section=.comment $(DIR)/src/syslog-ng 
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/sbin/*
 	cp -a  $(TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(DIR)/.build
 
@@ -54,6 +49,6 @@ build: $(DIR)/Makefile $(DIR)/.build
 clean:
 	-rm $(DIR)/.build
 	-$(MAKE) -C $(DIR) clean
-  
+
 srcclean:
 	rm -rf $(DIR)

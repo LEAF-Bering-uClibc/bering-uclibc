@@ -1,36 +1,30 @@
 #############################################################
 #
-# libpcap
+# libnet for syslog-ng
 #
 #############################################################
 
 include $(MASTERMAKEFILE)
 LIBNET_DIR:=libnet
 LIBNET_TARGET_DIR:=$(BT_BUILD_DIR)/libnet
-export CC=$(TARGET_CC)
 
 source:
-	zcat $(LIBNET_SOURCE) | tar -xvf - 	
-#	cat $(LIBPCAP_PATCH1) | patch -d $(LIBPCAP_DIR) -p1  
+	zcat $(LIBNET_SOURCE) | tar -xvf -
+	zcat $(BT_TOOLS_DIR)/config.sub.gz > $(LIBNET_DIR)/config.sub
+	cat $(LIBNET_PATCH1) | patch -d $(LIBNET_DIR) -p0
 
 $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
-	(cd $(LIBNET_DIR); ac_cv_linux_vers=2  \
+	(cd $(LIBNET_DIR); autoconf && \
 		./configure \
-			--build=i686-pc-linux-gnu \
-			--target=i686-pc-linux-gnu \
+			--host=$(GNU_TARGET_NAME) \
+			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr );
-	
-#source: $(LIBPCAP_DIR)/.source
-
 
 build: $(LIBNET_DIR)/Makefile
 	mkdir -p $(LIBNET_TARGET_DIR)
-	$(MAKE) CCOPT="$(BT_COPT_FLAGS)" -C $(LIBNET_DIR) 
-	$(MAKE) DESTDIR=$(LIBNET_TARGET_DIR) -C $(LIBNET_DIR) install
-#	$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNET_TARGET_DIR)/usr/lib/libnet
-#	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LIBNET_TARGET_DIR)/usr/sbin/dnet
-#	rm -rf $(LIBNET_TARGET_DIR)/usr/man
-	cp -a $(LIBNET_TARGET_DIR)/* $(BT_STAGING_DIR)
+	$(MAKE) $(MAKEOPTS) -C $(LIBNET_DIR)
+	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBNET_TARGET_DIR) -C $(LIBNET_DIR) install
+	cp -a $(LIBNET_TARGET_DIR)/* $(BT_STAGING_DIR)/
 
 #build: $(LIBPCAP_DIR)/.build
 
@@ -42,6 +36,6 @@ clean:
 	rm -f $(BT_STAGING_DIR)/usr/lib/libnet.a
 	rm -f $(BT_STAGING_DIR)/usr/include/libnet.h
 	rm -rf $(BT_STAGING_DIR)/usr/include/libnet/*
-	
+
 srcclean:
 	rm -rf $(LIBNET_DIR)

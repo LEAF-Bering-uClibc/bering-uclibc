@@ -42,7 +42,7 @@ clean:
 	rm -f .build
 
 srcclean: clean
-	rm -rf $(SSHBLACK_DIR) 
+	rm -rf $(SSHBLACK_DIR)
 	rm -f .source
 	rm -f DIRNAME
 
