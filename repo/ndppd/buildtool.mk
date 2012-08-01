@@ -6,7 +6,6 @@ NDPPD_TARGET_DIR:=$(BT_BUILD_DIR)/ndppd
 
 $(NDPPD_DIR)/.source:
 	zcat $(NDPPD_SOURCE) | tar -xvf -
-	cat $(PATCH1) | patch -p1 -d $(NDPPD_DIR)
 	touch $(NDPPD_DIR)/.source
 
 source: $(NDPPD_DIR)/.source
