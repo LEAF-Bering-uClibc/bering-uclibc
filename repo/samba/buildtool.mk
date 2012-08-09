@@ -30,6 +30,7 @@ CONFOPTS = --host=$(GNU_TARGET_NAME) \
 	--with-nmbdsocketdir=/var/run/samba \
 	--with-piddir=/var/run \
 	--with-statedir=/etc/samba \
+	--with-libiconv=$(BT_STAGING_DIR)/usr \
 	--with-libsmbclient \
 	--with-utmp \
 	--disable-cups \

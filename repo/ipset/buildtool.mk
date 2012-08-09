@@ -6,7 +6,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-DIR:=ipset-6.11
+DIR:=ipset-6.13
 TARGET_DIR:=$(BT_BUILD_DIR)/ipset
 LINUX_BUILDDIR:=$(BT_BUILD_DIR)/kernel
 

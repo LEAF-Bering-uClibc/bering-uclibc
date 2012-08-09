@@ -5,7 +5,7 @@
 #############################################################
 
 include $(MASTERMAKEFILE)
-LIBGMP_DIR:=gmp-5.0.2
+LIBGMP_DIR:=gmp-5.0.5
 LIBGMP_TARGET_DIR:=$(BT_BUILD_DIR)/libgmp
 
 $(LIBGMP_DIR)/.source:
