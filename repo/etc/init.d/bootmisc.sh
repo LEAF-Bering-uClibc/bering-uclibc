@@ -36,11 +36,11 @@ dmesg -s 524288 > /var/log/dmesg
 if [ "$EDITMOTD" != no ]
 then
 	kern=$(uname -srv)
-	n1=$(cat /proc/sys/kernel/hostname;\
-	cat /proc/sys/kernel/osrelease; \
-	cat /proc/sys/kernel/version)
-	echo -e "$kern\nLEAF Bering-uClibc" $n1 >>/etc/motd
+	initrd=$(cat /var/lib/lrpkg/initrd.version)
+	host=$(cat /proc/sys/kernel/hostname)
+	echo -e "LEAF Bering-uClibc $initrd at $(cat /proc/sys/kernel/hostname)\n$kern">/etc/motd
 
-	echo "LEAF Bering-uClibc $(cat /var/lib/lrpkg/initrd.version) \n \l" >/etc/issue
-	echo "LEAF Bering-uClibc $(cat /var/lib/lrpkg/initrd.version) %h" >/etc/issue.net
+	echo "$kern" >/etc/issue
+	echo "LEAF Bering-uClibc $initrd \n \l" >>/etc/issue
+	echo -e "$kern\nLEAF Bering-uClibc $initrd %h" >/etc/issue.net
 fi
