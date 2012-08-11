@@ -169,19 +169,6 @@ fi
 
 [ "$VERBOSE2" ] && (echo "Modules loaded:"; lsmod)
 
-# Skip remaining LRP stuff if we're not booting into a ramdisk
-[ "$VERBOSE" ] && Lecho "Root: $KCMD_root"
-case "${KCMD_root#/dev/}" in
-	ram*)	;;
-	*)	
-		Lecho "Rootfs isn't on ramdisk! Root: $KCMD_root"
-		Lecho "Failsafe boot directly from initramfs..."
-		echo 1 >/proc/sys/kernel/panic
-		[ ! $VERBOSE ] && rm /linuxrc.err
-		exec /bin/sh
-		exit 0	;;
-esac
-
 MNT="$PFX/mnt"
 qt mkdir $MNT
 
