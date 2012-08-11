@@ -3,7 +3,7 @@
 #
 RCDLINKS="S,S55"
 
-. /etc/default/rcS 
+. /etc/default/rcS
 #
 # Put a nologin file in /etc to prevent people from logging in before
 # system startup is complete.
@@ -35,10 +35,11 @@ dmesg -s 524288 > /var/log/dmesg
 #
 if [ "$EDITMOTD" != no ]
 then
+	kern=$(uname -srv)
 	n1=$(cat /proc/sys/kernel/hostname;\
 	cat /proc/sys/kernel/osrelease; \
 	cat /proc/sys/kernel/version)
-	echo "LEAF Bering-uClibc" $n1 >/etc/motd
+	echo -e "$kern\nLEAF Bering-uClibc" $n1 >>/etc/motd
 
 	echo "LEAF Bering-uClibc $(cat /var/lib/lrpkg/initrd.version) \n \l" >/etc/issue
 	echo "LEAF Bering-uClibc $(cat /var/lib/lrpkg/initrd.version) %h" >/etc/issue.net
