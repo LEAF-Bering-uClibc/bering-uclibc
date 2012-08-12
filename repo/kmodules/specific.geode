@@ -1,5 +1,6 @@
 #modules for geode platform
 ath5k
-cs5535-mfgpt geodewdt
+cs5535-mfgpt cs5535-mfd mfd-core geodewdt
 aes-i586 geode-aes
 eeprom_93cx6
+rng-core geode-rng
