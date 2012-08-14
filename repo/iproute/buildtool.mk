@@ -14,6 +14,7 @@ $(IPROUTE_DIR)/.source:
 	bzcat $(IPROUTE_SOURCE) |  tar -xvf - 
 	cat $(IPROUTE_PATCH1) | patch -d $(IPROUTE_DIR) -p1
 	zcat $(IPROUTE_PATCH2) | patch -d $(IPROUTE_DIR) -p1
+	cat $(IPROUTE_PATCH3) | patch -d $(IPROUTE_DIR) -p1
 	touch $(IPROUTE_DIR)/.source
 
 $(IPROUTE_DIR)/.configured: 
