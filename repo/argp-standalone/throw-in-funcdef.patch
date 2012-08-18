@@ -1,0 +1,61 @@
+diff -urN argp-standalone-1.4-test2.orig/argp.h argp-standalone-1.4-test2/argp.h
+--- argp-standalone-1.4-test2.orig/argp.h	2003-05-20 17:54:24.000000000 +0200
++++ argp-standalone-1.4-test2/argp.h	2012-08-18 12:37:25.215414686 +0200
+@@ -560,17 +560,17 @@
+ # endif
+ 
+ # ifndef ARGP_EI
+-#  define ARGP_EI extern __inline__
++#  define ARGP_EI extern inline
+ # endif
+ 
+ ARGP_EI void
+-__argp_usage (__const struct argp_state *__state) __THROW
++__argp_usage (__const struct argp_state *__state)
+ {
+   __argp_state_help (__state, stderr, ARGP_HELP_STD_USAGE);
+ }
+ 
+ ARGP_EI int
+-__option_is_short (__const struct argp_option *__opt) __THROW
++__option_is_short (__const struct argp_option *__opt)
+ {
+   if (__opt->flags & OPTION_DOC)
+     return 0;
+@@ -582,7 +582,7 @@
+ }
+ 
+ ARGP_EI int
+-__option_is_end (__const struct argp_option *__opt) __THROW
++__option_is_end (__const struct argp_option *__opt)
+ {
+   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
+ }
+diff -urN argp-standalone-1.4-test2.orig/argp-parse.c argp-standalone-1.4-test2/argp-parse.c
+--- argp-standalone-1.4-test2.orig/argp-parse.c	2004-03-04 15:05:50.000000000 +0100
++++ argp-standalone-1.4-test2/argp-parse.c	2012-08-18 12:38:03.000319627 +0200
+@@ -1290,13 +1290,13 @@
+ /* Defined here, in case a user is not inlining the definitions in
+  * argp.h */
+ void
+-__argp_usage (__const struct argp_state *__state) __THROW
++__argp_usage (__const struct argp_state *__state) 
+ {
+   __argp_state_help (__state, stderr, ARGP_HELP_STD_USAGE);
+ }
+ 
+ int
+-__option_is_short (__const struct argp_option *__opt) __THROW
++__option_is_short (__const struct argp_option *__opt)
+ {
+   if (__opt->flags & OPTION_DOC)
+     return 0;
+@@ -1310,7 +1310,7 @@
+ }
+ 
+ int
+-__option_is_end (__const struct argp_option *__opt) __THROW
++__option_is_end (__const struct argp_option *__opt)
+ {
+   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
+ }

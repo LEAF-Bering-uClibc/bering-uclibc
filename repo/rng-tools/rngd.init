@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+
+RCDLINKS="2,S60 3,S60 6,K60"
+
+DAEMON=/usr/bin/rngd
+DEVICE=/dev/hw_random
+VARRUN=/var/run/rngd.pid
+
+case "$1" in
+	start)
+		[ -r $VARRUN ] && error "already running"
+		echo "Starting $DAEMON..."
+		$DAEMON -r $DEVICE -p $VARRUN
+	;;
+	stop)
+		[ -r $VARRUN ] || error "already stopped"
+		kill -QUIT `cat $VARRUN`
+		rm $VARRUN
+	;;
+	restart|force-reload)
+		$0 stop
+		sleep 1
+		$0 start
+	;;
+	*)
+	echo "Usage: $0 {start|stop|restart|force-reload}"
+	exit 1
+	;;
+esac
+exit 0
