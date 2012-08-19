@@ -1180,13 +1180,14 @@ $gzipOptions = '-9' unless defined($gzipOptions) && $gzipOptions;
 
 
 # fetch the global config
-my $globalConfig= new Config::General(
-			"-ConfigFile" => File::Spec->catfile(
-						$baseDir,
-						$btConfig->value('globalconffile')),
-			"-LowerCaseNames" => 1,
-			"-ExtendedAccess"=> 1
-		);
+my $globalConfig = new Config::General(
+          "-ConfigFile" =>
+            File::Spec->catfile( $baseDir, $btConfig->value('globalconffile') ),
+          '-IncludeRelative' => 1,
+          '-IncludeGlob'     => 1,
+          "-LowerCaseNames"  => 1,
+          "-ExtendedAccess"  => 1
+);
 
 # fetch the package specific config
 
