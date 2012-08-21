@@ -76,7 +76,7 @@ usage: $0 [option] command [pkgname|srcname] [...]
 
 commands:
 describe [pkgname|srcname]\t shows descriptionlines of package
-list \t\t\t\t shows a list of built/sourced packages and sources 
+list [sourced|built]\t\t shows a list of built/sourced packages and sources
 source [pkgname|srcname]  \t downloads, unpacks and patches
                           \t the wanted package/source
 build [pkgname|srcname]     \t the same as source, but builds
@@ -176,7 +176,17 @@ if ($ARGV[0] eq "describe") {
   # show descriptions
   shift;
   my $list = buildtool::Common::InstalledFile->new(\%globConf);
-  $list->showList();
+  my $what = exists $ARGV[0] ? $ARGV[0] : 'all';
+  if ($what eq 'all') {
+      $list->showList();
+  } elsif ($what eq 'sourced') {
+      $list->showSourcedList();
+  } elsif ($what eq 'built') {
+      $list->showBuiltList();
+  } else {
+      print STDERR "\nunknown parameter '" . $ARGV[0] . "' for the list command!\n\n";
+      usage();
+  }
 } elsif ($ARGV[0] eq "source") {
   # source packages/sources
   shift;

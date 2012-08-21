@@ -297,10 +297,20 @@ sub showList ($) {
     print @built ? join( $/, @built ) . $/ : "Nothing built yet\n\n";
 }
 
-      foreach my $pkg (@pkgs) {
-	    print $pkg . "\n";
-      }
+###############################################################################
+# show a list of sourced packages/sources
+sub showSourcedList {
+    my ($self)  = @_;
+    my @sourced = $self->getEntries("source");
+    print join( $/, @sourced ), $/;
 }
 
+###############################################################################
+# show a list of built packages/sources
+sub showBuiltList {
+    my ($self)  = @_;
+    my @built   = $self->getEntries("build");
+    print join( $/, @built ), $/;
+}
 
 1;
