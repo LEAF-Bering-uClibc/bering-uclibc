@@ -285,20 +285,17 @@ sub _getSourceDir () {
 ###############################################################################
 # show a list of installed packages/sources
 sub showList ($) {
-      my $self = shift;
-      my @sources = $self->getEntries("source");
-      my @pkgs = $self->getEntries("source");
-      print "\nsourced sources or packages : \n";
-      print "-----------------------------------------------\n";
-      print "Nothing sourced yet\n\n" if (scalar(@sources) == 0);
+    my ($self)  = @_;
+    my @sourced = $self->getEntries("source");
+    my @built   = $self->getEntries("build");
+    print "\nsourced sources or packages : \n";
+    print '-' x 32, $/;
+    print @sourced ? join( $/, @sourced ) . $/ : "Nothing sourced yet\n\n";
 
-      foreach my $source (@sources) {
-	    print $source . "\n";
-      }
-
-      print "\nbuild sources or packages : \n";
-      print "-----------------------------------------------\n";
-      print "Nothing build yet\n\n" if (scalar(@sources) == 0);
+    print "\nbuilt sources or packages : \n";
+    print '-' x 32, $/;
+    print @built ? join( $/, @built ) . $/ : "Nothing built yet\n\n";
+}
 
       foreach my $pkg (@pkgs) {
 	    print $pkg . "\n";
