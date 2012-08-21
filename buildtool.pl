@@ -6,7 +6,9 @@
 # This software is distributed under the GNU General Public Licence,
 # please see the file COPYING
 
-use File::Basename;
+use FindBin qw($Bin);       # where was script installed?
+use lib $FindBin::Bin;      # use that dir for libs, too
+
 use File::Spec;
 
 use buildtool::buildtool;
@@ -23,7 +25,7 @@ use vars ('%globConf');;
 
 ####################################################################################################################
 BEGIN {
-      my $lockfile = "conf/lockfile";
+      my $lockfile = File::Spec->catfile( $FindBin::Bin, 'conf', 'lockfile');
       # check for lockfile:
       if (-f $lockfile){
 	    die("\nIt seems you are already running another instance of buildtool, please wait until it finished!\n".
@@ -35,22 +37,25 @@ BEGIN {
 };
 
 END {
-      my $errvar=$?;
-      my $lockfile = "conf/lockfile";
-      # whatever happens, remove lockfile
-      die("removing lockfile failed:".$!) if (system("rm -f $lockfile") != 0);
-      exit($errvar);
+    my $errvar = $?;
+    my $lockfile = File::Spec->catfile( $FindBin::Bin, 'conf', 'lockfile' );
+    # whatever happens, remove lockfile
+    unlink $lockfile or die("removing lockfile '$lockfile' failed: $!");
+    exit($errvar);
 }
 
 #####################################################################################################################
 
+
 # load my conf
-%globConf = Config::General::ParseConfig("-ConfigFile" => "conf/buildtool.conf", "-LowerCaseNames" => 1);
+%globConf = Config::General::ParseConfig(
+               "-ConfigFile" =>
+                 File::Spec->catfile( $FindBin::Bin, 'conf', 'buildtool.conf' ),
+               "-LowerCaseNames" => 1
+);
 
 # find out what our root-dir is and inject it into the config
-$globConf{'root_dir'}	= File::Spec->rel2abs(
-							File::Basename::dirname($0)
-					);
+$globConf{'root_dir'} = File::Spec->rel2abs( $FindBin::Bin );
 
 # make sure, log dir is there:
 log_dir_make();					
