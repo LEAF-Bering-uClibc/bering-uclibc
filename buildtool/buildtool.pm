@@ -1,6 +1,7 @@
 # $Id: buildtool.pm,v 1.1.1.1 2010/04/26 09:03:17 nitr0man Exp $
 # functions for buildtool2 for uclibc-bering
 # (C) 2003 Arne Bernin
+# (C) 2012 Yves Blusseau
 # This software is distributed under the GNU General Public Licence,
 # please see the file COPYING
 
@@ -17,13 +18,15 @@ use vars  qw(@EXPORT);
 
 
 use strict;
+
+use File::Spec::Functions qw(:ALL);
+use File::Path qw(make_path);
+
 use buildtool::Download;
 use buildtool::Common::InstalledFile;
 use buildtool::Common::Object;
 
-use vars  ('%globConf');;
-
-
+use vars  ('%globConf');
 
 
 ######################################################################
@@ -34,22 +37,22 @@ sub debug {
     print join("",@_) . "\n" ;
   }
   if ($globConf{'debugtologfile'}) {
-    my $logfile = &make_absolute_path($globConf{'logfile'});
-    open LOGFILE , ">> $logfile";
+    open LOGFILE , ">> $globConf{'logfile'}";
     print LOGFILE join("",@_) . "\n" ;
   }
-
 }
+
 ######################################################################
 # print something to the logfile
 #
 sub logme {
-  if ($globConf{'debugtologfile'}) {
-     # open log
-    open LOGFILE , ">> $globConf{'logfile'}" or die "cannot open logfile" . $globConf{'logfile'};
-    print LOGFILE join("",@_) . "\n" ;
-  }
-
+    if ( $globConf{'debugtologfile'} ) {
+        my $logfile = $globConf{'logfile'};
+        # open log
+        open LOGFILE, ">> $logfile"
+          or die "cannot open logfile '$logfile'";
+        print LOGFILE join( "", @_ ) . "\n";
+    }
 }
 
 
@@ -57,15 +60,24 @@ sub logme {
 # make the log directory if needed
 
 sub log_dir_make {
-  # check if logfile is there
-  #( ! -e $globConf{'logfile'}) or die $globConf{'logfile'} ." is there, seems to be another problem with it";
-
-  # if not, get the dirname:
-  my $dirname = $globConf{'logfile'};
-  $dirname =~ s,^(.*)/.*,$1,;
-  # create the dir
-  system ("mkdir -p $dirname") == 0
-    or die "mkdir $dirname failed!";
+    my $logfile = $globConf{'logfile'};
+    # Get the dirname:
+    my ($volume, $directory, $file) = splitpath( $logfile );
+    my $dirname = File::Spec->catdir( $volume, $directory );
+    if ( ! -d $dirname ) {
+        # create the dir
+        make_path( $dirname, { error => \my $err } );
+        if (@$err) {
+            for my $diag (@$err) {
+                my ( $dir, $message ) = %$diag;
+                if ( $dir eq '' ) {
+                    die "error: $message\n";
+                } else {
+                    die "can't create directory '$dir': $message\n";
+                }
+            }
+        }
+    }
 }
 
 ########################################################

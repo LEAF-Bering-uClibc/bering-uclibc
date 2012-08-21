@@ -9,7 +9,7 @@
 use FindBin qw($Bin);       # where was script installed?
 use lib $FindBin::Bin;      # use that dir for libs, too
 
-use File::Spec;
+use File::Spec::Functions qw(:ALL);
 
 use buildtool::buildtool;
 use buildtool::Clean;
@@ -25,7 +25,7 @@ use vars ('%globConf');;
 
 ####################################################################################################################
 BEGIN {
-      my $lockfile = File::Spec->catfile( $FindBin::Bin, 'conf', 'lockfile');
+      my $lockfile = catfile( $FindBin::Bin, 'conf', 'lockfile');
       # check for lockfile:
       if (-f $lockfile){
 	    die("\nIt seems you are already running another instance of buildtool, please wait until it finished!\n".
@@ -38,7 +38,7 @@ BEGIN {
 
 END {
     my $errvar = $?;
-    my $lockfile = File::Spec->catfile( $FindBin::Bin, 'conf', 'lockfile' );
+    my $lockfile = catfile( $FindBin::Bin, 'conf', 'lockfile' );
     # whatever happens, remove lockfile
     unlink $lockfile or die("removing lockfile '$lockfile' failed: $!");
     exit($errvar);
@@ -49,13 +49,15 @@ END {
 
 # load my conf
 %globConf = Config::General::ParseConfig(
-               "-ConfigFile" =>
-                 File::Spec->catfile( $FindBin::Bin, 'conf', 'buildtool.conf' ),
-               "-LowerCaseNames" => 1
-);
+        "-ConfigFile"     => catfile( $FindBin::Bin, 'conf', 'buildtool.conf' ),
+        "-LowerCaseNames" => 1 );
 
 # find out what our root-dir is and inject it into the config
-$globConf{'root_dir'} = File::Spec->rel2abs( $FindBin::Bin );
+$globConf{'root_dir'} = rel2abs($FindBin::Bin);
+
+# make the logfile absolute
+$globConf{'logfile'} =
+  File::Spec->rel2abs( $globConf{'logfile'}, $globConf{'root_dir'} );
 
 # make sure, log dir is there:
 log_dir_make();					
