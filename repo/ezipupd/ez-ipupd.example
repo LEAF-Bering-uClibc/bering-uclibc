@@ -1,12 +1,12 @@
-service-type=zoneedit
-user=mypassword
-interface=eth0
-host=myhost.com
-notify-email=myemailadress
+service-type=dyndns
+user=login:password
+interface=eth1
+host=myhostname.dyndns.tv
+notify-email=user@domain.com
 # other options:
 #address=<ip address>
-cache-file=/tmp/ez-ipup
-#daemon
+#cache-file=/tmp/ez-ipup
+daemon
 #debug
 #foreground
 #host=<host>
@@ -17,7 +17,7 @@ cache-file=/tmp/ez-ipup
 #run-as-euser=<user>
 #server=<server name>
 #timeout=<sec.millisec>
-#max-interval=<time in seconds>
+max-interval=86400
 #notify-email=<email address>
 #period=<time between update attempts>
 #url=<url>
