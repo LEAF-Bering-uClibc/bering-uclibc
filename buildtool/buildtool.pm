@@ -84,14 +84,9 @@ sub log_dir_make {
 # adds the buildroot path to a given path if path is not
 # absolute
 sub make_absolute_path {
-  my $path = shift;
-  $path = strip_slashes($path);
-  if ($path =~ /^\//) {
-    # starts with slash so absolute
-    return $path;
-  }
-  # else
-  return strip_slashes($globConf{'root_dir'} . "/" . $path);
+  my ($path) = @_;
+  die "root_dir must not be empty" unless $globConf{'root_dir'};
+  return File::Spec->rel2abs( $path, $globConf{'root_dir'} );
 }
 
 ################################################
