@@ -80,11 +80,13 @@ my $btConfig = new Config::General(
 
 # Fetch the global config (conf/sources.cfg)
 my $glConfig = new Config::General(
-    "-ConfigFile" => File::Spec->catfile(
-        $baseDir,
-        $btConfig->value( 'globalconffile' ) ),
-    "-LowerCaseNames" => 1,
-    "-ExtendedAccess" => 1 );
+          "-ConfigFile" =>
+            File::Spec->catfile( $baseDir, $btConfig->value('globalconffile') ),
+          '-IncludeRelative' => 1,
+          '-IncludeGlob'     => 1,
+          "-LowerCaseNames"  => 1,
+          "-ExtendedAccess"  => 1
+);
 
 # Fetch the image specific config (${image_dir}/buildimage.cfg)
 my $imConfig = new Config::General(

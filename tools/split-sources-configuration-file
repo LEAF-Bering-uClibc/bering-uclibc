@@ -1,0 +1,41 @@
+#!/usr//bin/perl
+#
+# Bering-uClibc 5.x Copyright (C) 2012 Yves Blusseau
+#
+# This script split one configuration file (containing <Package> or <Source>
+# blocks) into individual configuration files.
+#
+# Input is STDIN by default but you can specify a filename on the command line
+#
+# If you want to make a big change in ALL source configuration files ceate a big
+# one file with cat *.cfg > all.conf
+# then make your all modifications in all.conf, and finish by splitting the big
+# file into dedicated configuration files with this script
+#
+
+use strict;
+
+my $in_section = 0;
+my $fd=undef;
+
+while (<>) {
+	if (/^\s*<\s*(?:Package|Source)\s*(.+)>/) {
+		$in_section = 1;
+		my $new_file = "$1.cfg";
+		die "File $new_file alreay exists !",$/ if -f $new_file;
+		open ($fd,">$new_file") or die $@;
+		print $fd $_;
+		next;
+	} elsif (/^\s*<\/(Package|Source)\s*>/) {
+		$in_section = 0;
+		print $fd $_;
+		close $fd;
+		$fd = undef;
+		next;
+	}
+	if ($in_section) {
+		print $fd $_;
+	} else {
+		print STDERR "Unknown line:$_";
+	}
+}

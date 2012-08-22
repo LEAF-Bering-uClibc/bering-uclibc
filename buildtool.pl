@@ -2,7 +2,7 @@
 
 # main program buildtool2 for uclibc-bering
 # Copyright (C) 2003 Arne Bernin
-# Changes for Bering-uClibc 5.x Copyright (C) 2012 David M Brooke
+# Changes for Bering-uClibc 5.x Copyright (C) 2012 David M Brooke & Yves Blusseau
 # This software is distributed under the GNU General Public Licence,
 # please see the file COPYING
 
@@ -23,7 +23,7 @@ use strict;
 
 use vars ('%globConf');;
 
-####################################################################################################################
+################################################################################
 BEGIN {
       my $lockfile = catfile( $FindBin::Bin, 'conf', 'lockfile');
       # check for lockfile:
@@ -44,7 +44,19 @@ END {
     exit($errvar);
 }
 
-#####################################################################################################################
+################################################################################
+
+sub load_global_configfile {
+    my ($global_config_file) = @_;
+    return
+      Config::General::ParseConfig(
+                     "-ConfigFile" =>
+                       make_absolute_path($global_config_file),
+                     '-IncludeRelative' => 1,
+                     '-IncludeGlob'     => 1,
+                     "-LowerCaseNames"  => 1
+      );
+}
 
 
 # load my conf
@@ -64,21 +76,16 @@ log_dir_make();
 # read in global file-config
 my %sourcesConfig;
 eval {
-    %sourcesConfig =
-      Config::General::ParseConfig(
-             "-ConfigFile" => make_absolute_path( $globConf{'globalconffile'} ),
-             "-LowerCaseNames" => 1 );
-	1;
-} or do {
-	my $path = $@;
-	$path =~ s,^.*\"([^\"]*)\".*not exist.*ConfigPath: ([^!]*)!.*\n,$2/$1,;
-	open TFILE, ">", $path or die "Can't create file \"$path\"!";
-	close TFILE;
-    %sourcesConfig =
-      Config::General::ParseConfig(
-             "-ConfigFile" => make_absolute_path( $globConf{'globalconffile'} ),
-             "-LowerCaseNames" => 1 );
-	print STDERR "Created missing file \"$path\"...\n"
+    %sourcesConfig = load_global_configfile( $globConf{globalconffile} );
+}
+or do {
+    my $path = $@;
+    die $@,$/ if $path =~ /\*/; # Don't try to create a file with a wildcard in is name
+    $path =~ s,^.*\"([^\"]*)\".*not exist.*ConfigPath: ([^!]*)!.*\n,$2/$1,;
+    print STDERR "Created missing file \"$path\"...\n";
+    open TFILE, ">", $path or die "Can't create file \"$path\"!";
+    close TFILE;
+    %sourcesConfig = load_global_configfile( $globConf{globalconffile} );
 };
 
 sub usage {

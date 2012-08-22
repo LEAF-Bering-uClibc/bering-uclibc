@@ -5,3 +5,13 @@
 </Server>
 
 # Here placed packages that aren't in maintree
+# Just define the name in the opening tag
+# and the Revision and Description
+# nothing else supported right now
+
+# default definition, is used as base to all Sources
+#<Source default>
+#	<Requires>
+#		Name  = buildenv
+#	</Requires>
+#</Source>
