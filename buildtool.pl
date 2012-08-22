@@ -56,24 +56,28 @@ END {
 $globConf{'root_dir'} = rel2abs($FindBin::Bin);
 
 # make the logfile absolute
-$globConf{'logfile'} =
-  File::Spec->rel2abs( $globConf{'logfile'}, $globConf{'root_dir'} );
+$globConf{'logfile'} = make_absolute_path( $globConf{'logfile'} );
 
 # make sure, log dir is there:
 log_dir_make();					
-					
 
 # read in global file-config
 my %sourcesConfig;
 eval {
-	%sourcesConfig = Config::General::ParseConfig("-ConfigFile" => strip_slashes(make_absolute_path($globConf{globalconffile})), "-LowerCaseNames" => 1);
+    %sourcesConfig =
+      Config::General::ParseConfig(
+             "-ConfigFile" => make_absolute_path( $globConf{'globalconffile'} ),
+             "-LowerCaseNames" => 1 );
 	1;
 } or do {
 	my $path = $@;
 	$path =~ s,^.*\"([^\"]*)\".*not exist.*ConfigPath: ([^!]*)!.*\n,$2/$1,;
 	open TFILE, ">", $path or die "Can't create file \"$path\"!";
 	close TFILE;
-	%sourcesConfig = Config::General::ParseConfig("-ConfigFile" => strip_slashes(make_absolute_path($globConf{globalconffile})), "-LowerCaseNames" => 1);
+    %sourcesConfig =
+      Config::General::ParseConfig(
+             "-ConfigFile" => make_absolute_path( $globConf{'globalconffile'} ),
+             "-LowerCaseNames" => 1 );
 	print STDERR "Created missing file \"$path\"...\n"
 };
 
