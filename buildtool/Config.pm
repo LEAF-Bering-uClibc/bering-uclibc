@@ -62,7 +62,7 @@ sub adjustFileConfig {
   if (exists $cfg->{'package'} and ref($cfg->{'package'}) eq "HASH") {
     %list = %{$cfg->{'package'}};
   } else {
-    logme("check_confignames:something wrong with config hash...");
+    $self->logme("check_confignames:something wrong with config hash...");
   }
 
   foreach my $name (keys(%list)) {
