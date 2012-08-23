@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Tools Wrappers for Leaf Bering-uClibc
+#
+# Copyright (C) 2012 Yves Blusseau
+
+function buildtool {
+    local root_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -n "$root_dir" ]]; then
+        local buildtool_script="$root_dir/buildtool.pl"
+        if [[ -x "$buildtool_script" ]];then
+            "$buildtool_script" $@
+            return $?
+        fi
+    fi
+    echo "No buildtool script in this repository !" >&2
+}
+
+function buildpacket {
+    local root_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -n "$root_dir" ]]; then
+        local buildpacket_script="$root_dir/buildpacket.pl"
+        if [[ -x "$buildpacket_script" ]];then
+            if [[ "${#@}" -gt 0 ]]; then
+                sudo "$buildpacket_script" $@
+            else
+                "$buildpacket_script"
+            fi
+            return $?
+        fi
+    fi
+    echo "No buildpacket script in this repository !" >&2
+}
+
+function _tools_wrappers_add_completion {
+    local completion
+
+    # Add completion to buildtool if exists
+    completion=$(complete -p buildtool.pl)
+    if [[ -n "$completion" ]];then
+        eval ${completion/buildtool.pl/buildtool}
+    fi
+
+    # Add completion to buildpacket if exists
+    local completion=$(complete -p buildpacket.pl)
+    if [[ -n "$completion" ]];then
+        eval ${completion/buildpacket.pl/buildpacket}
+    fi
+}
+
+# add completion to tools wrappers functions
+_tools_wrappers_add_completion
+
+# the function is no more usefull
+unset -f _tools_wrappers_add_completion
