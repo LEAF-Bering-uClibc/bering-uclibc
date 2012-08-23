@@ -11,6 +11,9 @@
 use strict;
 use warnings;
 
+use FindBin qw($Bin);       # where was script installed?
+use lib $FindBin::Bin;      # use that dir for libs, too
+
 # INCLUDES
 use Getopt::Long;
 use Config::General;
@@ -28,7 +31,7 @@ use Carp;
 # uclibc Version
 my $version = "0.9.33.2";
 # kernel Version
-my $kver = qx(cat source/*/linux/linux*/.config | awk '/Linux/ {print \$3}' | head -n 1);
+my $kver = qx(cat $Bin/source/*/linux/linux*/.config | awk '/Linux/ {print \$3}' | head -n 1);
 $kver =~ s/\n//;
 
 # archivers for different package type
@@ -1031,7 +1034,6 @@ sub readFile($) {
 
 sub readConfig($) {
 	my ($filename) = @_;
-	
 	my $config = readFile($filename);
 	my $p_h_pkgcfg = new Config::General(
 			"-String" => $config,
@@ -1067,8 +1069,7 @@ $verbose = exists($options->{'verbose'}) ? 1 : 0;
 
 $sign = exists($options->{'sign'}) ? 1 : 0;
 
-my $baseDir	= File::Spec->rel2abs(File::Basename::dirname($0));
-
+my $baseDir	= File::Spec->rel2abs($FindBin::Bin);
 
 
 #fetch the buildtool config
