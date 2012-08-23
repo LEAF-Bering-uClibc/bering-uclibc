@@ -77,3 +77,38 @@ _buildtool () {
 }
 
 complete -F _buildtool buildtool.pl
+
+
+#
+# buildpacket.pl
+#
+_buildpacket () {
+    local cur prev split=false
+
+    COMPREPLY=()
+    cur=`_get_cword`
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    _split_longopt && split=true
+
+    case "$prev" in
+        --packager|--target|--lrp|--toolchain)
+            # option need a value
+            return
+            ;;
+        --package)
+            local prog=${COMP_WORDS[0]}
+            # buildtool.pl must be in the same directory that buildpacket.pl
+             __buccomp "$(LC_ALL=C ${prog/buildpacket/buildtool} list built)"
+            return
+            ;;
+    esac
+
+    $split && return 0
+
+    if [[ "$cur" == -* ]]; then
+        __buccomp "--package --packager --target --lrp --verbose --sign --toolchain"
+    fi
+}
+
+complete -F _buildpacket buildpacket.pl
