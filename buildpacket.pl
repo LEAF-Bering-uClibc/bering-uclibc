@@ -1043,9 +1043,6 @@ sub readConfig($) {
 }
 # MAIN
 
-# only root (or fakeroot) may use this (we need to do chown...)
-die "$0 can only be run as root" unless $>==0;
-
 Getopt::Long::GetOptions($options,
 					'package=s',
 					'target=s',
@@ -1057,6 +1054,9 @@ Getopt::Long::GetOptions($options,
 					'all')	or die $Usage;
 
 die $Usage unless exists($options->{'package'});
+
+# only root (or fakeroot) may use this (we need to do chown...)
+die "$0 can only be run as root!\n" unless $>==0;
 
 if (!exists($options->{'target'})) {
 	$options->{'target'} = $options->{'package'} unless exists($options->{'target'});
