@@ -41,11 +41,10 @@ sub _checkParams ($$) {
 sub _getURL($) {
   my ($self) = @_;
 
-  return $self->stripSlashes($self->{'PROTOCOL'} .
-			     $self->{'SERVER'} .
-			     "/" . $self->{'SERVERPATH'} .
-			     '/' . $self->{'DIR'} .
-			     '/' . $self->{'FILENAME'});
+  return $self->{'PROTOCOL'} . $self->stripSlashes(   $self->{'SERVER'} . "/"
+                                                    . $self->{'SERVERPATH'} . '/'
+                                                    . $self->{'DIR'} . '/'
+                                                    . $self->{'FILENAME'} );
 
 }
 
@@ -68,10 +67,10 @@ sub _initialize ($$) {
 
 sub download($) {
       my ($self) = @_;
-      
+
       # build url
       my $url =$self->_getURL();
-      
+
       my $log = $self->getLogfile();
       my @wget = ("wget", "-O", $self->{'FULLPATH'}, "-a", $log);
       # check if we want the -c flag to be set
@@ -98,9 +97,9 @@ sub download($) {
 		  $self->_setErrorMsg("wget failed with: " . $! . " used:" . join(" ", @wget));
 		  return 0;
 	    }
-	    
+
       }
-      
+
       # if we get here, everything went ok
       return 1;
 }

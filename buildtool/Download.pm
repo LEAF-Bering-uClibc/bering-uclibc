@@ -1,10 +1,12 @@
-# $Id: Download.pm,v 1.1.1.1 2010/04/26 09:03:17 nitr0man Exp $
+# Bering-uClibc 5.x
+# Copyright (C) 2012 nitr0man
 
 package buildtool::Download;
 
 use buildtool::DownloadTypes::ViewCVS;
 use buildtool::DownloadTypes::Gitweb;
 use buildtool::DownloadTypes::Http;
+use buildtool::DownloadTypes::Https;
 use buildtool::DownloadTypes::Ftp;
 use buildtool::DownloadTypes::File;
 use buildtool::DownloadTypes::FileSymlink;
@@ -132,16 +134,24 @@ sub download () {
 								     'server' => $server->{$dlserver}->{'name'},
 								    )
 							  );
-       	  
       $self->die("download failed", $object->getErrorMsg() . " \n") if  ($object->download()== 0);
 
-    } elsif ($dltype eq "ftp") {
+    }
+    elsif ( $dltype eq "https" ) {
+
+      # download via https
+        my $object = buildtool::DownloadTypes::Https->new( %allconf,
+                                                           'server' => $server->{$dlserver}->{'name'} );
+        $self->die( "download failed", $object->getErrorMsg() . " \n" )
+          if ( $object->download() == 0 );
+
+    }
+    elsif ($dltype eq "ftp") {
       # download via ftp
       my $object = buildtool::DownloadTypes::Ftp->new(%allconf,(
 								 'server' => $server->{$dlserver}->{'name'},
 										  )
 						      );
-       
       $self->die("download failed", $object->getErrorMsg() . " \n") if  ($object->download()== 0);
 
     } elsif ($dltype eq "file") {
