@@ -316,7 +316,6 @@ fi
 
 #Can't hurt
 sync
-sleep 1
 
 IFS=","
 for devtype in ${devlist}; do
@@ -335,6 +334,10 @@ Lecho "Loaded Packages"
 
 if [ "$syst_size" = 0 ]; then
 	[ "$VERBOSE" ] && Lecho "Moving root to tmpfs disabled! Booting from initramfs..."
+	qt mount -t tmpfs tmpfs /tmp -o defaults${tmp_size:+,size=$tmp_size}
+	qt mount -t tmpfs tmpfs /var/log -o size=$log_size
+	[ -d /sys/kernel/debug/ ] && mount -t debugfs debugfs /sys/kernel/debug/
+	[ -d /sys/kernel/config/ ] && mount -t configfs configfs /sys/kernel/config/
 	exec /sbin/init
 	exit 0
 fi
