@@ -2,6 +2,15 @@ Index: linuxigd-1.0/Makefile
 ===================================================================
 --- linuxigd-1.0.orig/Makefile	2008-02-27 10:45:26.000000000 +0100
 +++ linuxigd-1.0/Makefile	2008-02-27 10:45:54.000000000 +0100
+@@ -15,7 +15,7 @@
+ INCLUDES += -I$(LIBIPTC_PREFIX)/include
+ endif
+ 
+-LIBS += -liptc
++LIBS += -liptc -lip4tc
+ INCLUDES += -DHAVE_LIBIPTC
+ FILES += iptc.o
+ endif
 @@ -27,7 +27,7 @@
  	@echo "make $@ finished on `date`"
  
