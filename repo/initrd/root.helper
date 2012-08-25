@@ -5,12 +5,14 @@
 #
 # Copyright Andrew Denisenko - LRP  GPL2
 
-mkdir /proc 
+mkdir /proc
 mount -nt proc /proc /proc
-mkdir /sys 
+mkdir /sys
 mount -nt sysfs sysfs /sys
 [ -d /sys/kernel/debug/ ] && mount -t debugfs debugfs /sys/kernel/debug/
 [ -d /sys/kernel/config/ ] && mount -t configfs configfs /sys/kernel/config/
+
+[ "$(cat /sys/block/zram0/size)" -gt 0 ] && swapon /dev/zram0
 
 exec /sbin/init
 
