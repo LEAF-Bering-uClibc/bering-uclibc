@@ -91,7 +91,7 @@ do
     echo "$self (${PACKAGE_NAME} ${PACKAGE_VERSION})"
     exit 0 ;;
     --create-dir)
-    top_level_dir="$(argument $option "$@")"; shift;;                  
+    top_level_dir="$(argument $option "$@")"; shift ;;
     --create-dir=*)
     top_level_dir=$(echo "$option" | sed 's/--create-dir=//') ;;
     -v | --verbose)
@@ -144,14 +144,14 @@ case ${filetype,,} in # convert to lowercase
        ;;
 esac
 
-# Check that the dd binary exists    
+# Check that the dd binary exists
 check_binary 'dd'
 
 if [[ -z "$top_level_dir" ]]; then
     # Get the root directory from the tarfile
     first_line=$(dd if="$tarfile" bs=1024 count=10 2>/dev/null | tar t $tar_filter_option -f "$tarfile" 2>/dev/null | head -1)
-    top_level_dir=${first_line%/*}        # keep only the directory
-    top_level_dir=${top_level_dir##[.]*/} # remove leading . or ..
+    top_level_dir=${first_line#./}      # remove leading ./
+    top_level_dir=${top_level_dir%%/*}  # keep only the top level directory
 else
     createdir=yes
 fi
@@ -182,4 +182,4 @@ fi
 [[  x"$verbose" = xyes ]] && tar_option_verbose="--verbose"
 
 tar x "$tar_option_verbose" "$tar_filter_option" "$tar_option_changedir" \
- -f "$tarfile" 
+ -f "$tarfile"
