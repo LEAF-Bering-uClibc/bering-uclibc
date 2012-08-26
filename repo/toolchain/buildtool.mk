@@ -1,11 +1,10 @@
 # makefile for toolchain
 include $(MASTERMAKEFILE)
 
-CUR_DIR=$(shell pwd)
-GCC_DIR=$(CUR_DIR)/$(shell echo $(GCC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
-UCLIBC_DIR=$(CUR_DIR)/$(shell echo $(UCLIBC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
-BINUTILS_DIR=$(CUR_DIR)/binutils-2.22
-DEPMOD_DIR=$(CUR_DIR)/module-init-tools-3.15
+GCC_DIR=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(GCC_SOURCE) 2>/dev/null )
+UCLIBC_DIR=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(UCLIBC_SOURCE) 2>/dev/null )
+BINUTILS_DIR=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(BINUTILS_SOURCE) 2>/dev/null )
+DEPMOD_DIR=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(DEPMOD_SOURCE) 2>/dev/null )
 
 BUILD_DIR=$(BT_BUILD_DIR)/toolchain
 GCC_STAGE1_BUILD_DIR=$(BUILD_DIR)/gcc-stage1
@@ -28,7 +27,7 @@ unexport CPPFLAGS
 unexport LDFLAGS
 
 $(UCLIBC_DIR)/.source:
-	bzcat $(UCLIBC_SOURCE) | tar xvf -
+	$(BT_SETUP_BUILDDIR) -v $(UCLIBC_SOURCE)
 	# create config.$(GNU_TARGET_NAME)_headers with no CROSS_COMPILER_PREFIX
 	perl -p -e 's,^CROSS_COMPILER_PREFIX=.*$$,CROSS_COMPILER_PREFIX="",' config.$(GNU_TARGET_NAME) > config.$(GNU_TARGET_NAME)_headers
 #	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
@@ -39,15 +38,15 @@ $(UCLIBC_DIR)/.source:
 	touch $(UCLIBC_DIR)/.source
 
 $(BINUTILS_DIR)/.source:
-	bzcat $(BINUTILS_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(BINUTILS_SOURCE)
 	touch $(BINUTILS_DIR)/.source
 
 $(GCC_DIR)/.source:
-	bzcat $(GCC_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(GCC_SOURCE)
 	touch $(GCC_DIR)/.source
 	
 $(DEPMOD_DIR)/.source:
-	bzcat $(DEPMOD_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(DEPMOD_SOURCE)
 	touch $(DEPMOD_DIR)/.source
 
 source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source $(DEPMOD_DIR)/.source
