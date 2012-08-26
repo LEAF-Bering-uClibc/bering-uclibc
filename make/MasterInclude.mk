@@ -48,6 +48,8 @@ export BT_PATCHTOOL:=$(BT_TOOLS_DIR)/make-patches.sh
 export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch 
 # Where to find the getdirname tool
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
+# Where to find the setup-builddir tool
+export BT_SETUP_BUILDDIR=$(BT_TOOLS_DIR)/setup-builddir
 
 # Include per-toolchain Makefiles
 include $(BT_BUILDROOT)/make/toolchain/*.mk
