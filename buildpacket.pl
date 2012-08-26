@@ -1056,6 +1056,10 @@ Getopt::Long::GetOptions($options,
 					'all')	or die $Usage;
 
 die $Usage unless exists($options->{'package'});
+my $buildtoolconf = File::Spec->catfile( $FindBin::Bin, 'conf', 'buildtool.conf');
+if (! -f $buildtoolconf){
+	system("cp $buildtoolconf.sample $buildtoolconf");
+}
 
 # only root (or fakeroot) may use this (we need to do chown...)
 die "$0 can only be run as root!\n" unless $>==0;

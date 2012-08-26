@@ -33,6 +33,10 @@ BEGIN {
       }
       # else touch lockfile
       die("making lockfile failed:".$!) if (system("touch $lockfile") != 0);
+      my $buildtoolconf = catfile( $FindBin::Bin, 'conf', 'buildtool.conf');
+      if (! -f $buildtoolconf){
+	    system("cp $buildtoolconf.sample $buildtoolconf");
+      }
 
 };
 

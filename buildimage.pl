@@ -28,6 +28,8 @@ use File::Spec;
 use File::Temp;
 use File::Copy;
 use Carp;
+use FindBin qw($Bin);       # where was script installed?
+use lib $FindBin::Bin;      # use that dir for libs, too
 
 my %configHash = ( );
 my $label;
@@ -59,6 +61,11 @@ GetOptions( "verbose!"    => \$verbose,
 	    "relver=s"    => \$label,
 	    "keeptmp!"    => \$keeptmp,
 	    "debug!"      => \$debug ) or die $Usage;
+
+my $buildtoolconf = File::Spec->catfile( $FindBin::Bin, 'conf', 'buildtool.conf');
+if (! -f $buildtoolconf){
+	system("cp $buildtoolconf.sample $buildtoolconf");
+}
 
 die $Usage unless defined( $image );
 die $Usage unless defined( $label );
