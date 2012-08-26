@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use File::Spec::Functions qw(:ALL);
+
 sub usage() {
 	print STDERR<<EOF;
 	usage: $0 tarfile
@@ -55,19 +57,21 @@ my $line=<DIRNAME>;
 
 close DIRNAME;
 
-die "unable to read dirs" if ($line eq "");
+# Split path
+my ( undef, $path, $file ) = splitpath($line);
 
-# else
-if ($line =~ /^.*\/$/) {
-	# ending with / , is a directory
-	$line =~ s/^(.*)\/$/$1/;	
-} else {
-	$line =~ s/^(.*)\/[^\/]+$/$1/;	
-}
+# Split directories
+my @directories = splitdir($path);
 
-if ($line =~ /^.\/(.*)$/) {
-	$line =~ s/^.\/(.*)$/$1/;
-}
+# Remove . and .. directories
+shift @directories while exists $directories[0] && $directories[0] =~ /^\.\.?/;
 
-print $line . "\n";
+# Get the top level directory
+my $top_level_dir = shift @directories;
+
+# Check is defined and not empty
+die "unable to read dirs!\n" if not defined $top_level_dir or $top_level_dir eq "";
+
+print $top_level_dir . "\n";
+
 exit(0);
