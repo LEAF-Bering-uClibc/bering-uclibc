@@ -1,0 +1,185 @@
+#!/bin/bash
+
+set -u
+
+self=$(basename $0)
+PACKAGE_NAME="Bering uClibC"
+PACKAGE_VERSION="5.x"
+
+tarfile=""
+verbose=no
+createdir=no
+rmdir=yes
+top_level_dir=""
+
+tar_filter_option=""
+tar_option_verbose=""
+tar_option_changedir=""
+
+check_binary () {
+    local binary=$(type "$1")
+    if [[ -z $binary ]]; then
+        echo "binary '$1' not found. Can't continue!" >&2
+    exit 1
+fi
+
+}
+
+print_option_help () {
+    print_option_help_lead="  $1"
+    print_option_help_lspace="$(echo "$print_option_help_lead" | wc -L)"
+    print_option_help_fill="$((26 - print_option_help_lspace))"
+    printf "%s" "$print_option_help_lead"
+    if test $print_option_help_fill -le 0; then
+        print_option_help_nl=y
+        echo
+    else
+        print_option_help_i=0;
+        while test $print_option_help_i -lt $print_option_help_fill; do
+            printf " "
+            print_option_help_i=$((print_option_help_i + 1))
+        done
+        print_option_help_nl=n
+    fi
+    print_option_help_split="$(echo "$2" | fmt -w 50)"
+    if test x$print_option_help_nl = xy; then
+        echo "$print_option_help_split" | \
+            awk '{ print "                          " $0; }'
+    else
+        echo "$print_option_help_split" | awk 'BEGIN   { n = 0 }
+            { if (n == 1) print "                          " $0; else print $0; n = 1 ; }'
+    fi
+}
+
+# Usage: usage
+# Print the usage.
+usage () {
+    printf "Usage: %s [OPTION] tarfile\n" "$self"
+    echo
+    echo "Setup buildir (uncompress the source tarball)"
+    echo
+    print_option_help "-h, --help"       "print this message and exit"
+    print_option_help "-V, --version"    "print the version information and exit"
+    print_option_help "-v, --verbose"    "make the script more verbose"
+    print_option_help "-R, --no-rmdir"   "do not delete directory before unpacking sources"
+    print_option_help "--create-dir=DIR" "create a directory and unpacking source inside it"
+}
+
+
+argument () {
+  opt=$1
+  shift
+
+  if test $# -eq 0; then
+      printf "%s: option requires an argument -- \`%s'\n" "$0" "$opt" 1>&2
+      exit 1
+  fi
+  echo $1
+}
+
+# Check the arguments.
+while test $# -gt 0
+do
+    option=$1
+    shift
+
+    case "$option" in
+    -h | --help)
+    usage
+    exit 0 ;;
+    -V | --version)
+    echo "$self (${PACKAGE_NAME} ${PACKAGE_VERSION})"
+    exit 0 ;;
+    --create-dir)
+    top_level_dir="$(argument $option "$@")"; shift;;                  
+    --create-dir=*)
+    top_level_dir=$(echo "$option" | sed 's/--create-dir=//') ;;
+    -v | --verbose)
+    verbose=yes ;;
+    -R|--no-rmdir)
+    rmdir=no ;;
+    -*)
+    printf "Unrecognized option \`%s'\n" "$option" 1>&2
+    usage
+    exit 1
+    ;;
+    *)
+    if [[ "x$tarfile" != 'x' ]]; then
+        echo "Only one tarfile allowed" >&2
+        echo >&2
+        usage
+        exit 1
+    fi
+    tarfile="${option}" ;;
+    esac
+done
+
+if [[ -z "$tarfile" ]]; then
+    echo "You must specified a tarfile to uncompress!" >&2
+    echo >&2
+    usage
+    exit 1
+fi
+
+if [[ ! -r "$tarfile" ]]; then
+    echo "Error: can't read '$tarfile'!" >&2
+    exit 1
+fi
+
+# Check that the file binary exists    
+check_binary 'file'
+
+filetype=$(file -L --brief "$tarfile")
+
+case ${filetype,,} in # convert to lowercase
+    gzip\ *)  check_binary 'gzip'  && tar_filter_option='--gzip' ;;
+    bzip2\ *) check_binary 'bzip2' && tar_filter_option='--bzip2';;
+    lzip\ *)  check_binary 'lzip'  && tar_filter_option='--lzip' ;;
+    lzop\ *)  check_binary 'lzop'  && tar_filter_option='--lzop' ;;
+    lzma\ *)  check_binary 'lzma'  && tar_filter_option='--lzma' ;;
+    xz\ *)    check_binary 'xz'    && tar_filter_option='--xz'   ;;
+    *tar\ archive*) tar_filter_option='';;
+    *) echo "Unrecognized file format of '$tarfile'" >&2
+       exit 1
+       ;;
+esac
+
+# Check that the dd binary exists    
+check_binary 'dd'
+
+if [[ -z "$top_level_dir" ]]; then
+    # Get the root directory from the tarfile
+    first_line=$(dd if="$tarfile" bs=1024 count=10 2>/dev/null | tar t $tar_filter_option -f "$tarfile" 2>/dev/null | head -1)
+    top_level_dir=${first_line%/*}        # keep only the directory
+    top_level_dir=${top_level_dir##[.]*/} # remove leading . or ..
+else
+    createdir=yes
+fi
+
+if [[ -z "$top_level_dir" ]]; then
+    echo "Error: unable to read the top-level directory of '$tarfile'" >&2
+    exit 1
+fi
+
+# For security reason, check that the top level directory don't start with /
+if [[ "${top_level_dir:0:1}" = '/' ]]; then
+    echo "Can't use '$top_level_dir' as a top-level directory" >&2
+    exit 1
+fi
+
+if [[ x"$rmdir" = xyes ]]; then
+    [[ x"$verbose" = xyes ]] && echo "Removing directory ${top_level_dir}"
+    rm -rf "$top_level_dir"
+fi
+
+if [[ x"$createdir" = xyes ]]; then
+    [[ x"$verbose" = xyes ]] && echo "Creating directory ${top_level_dir}"
+    mkdir -p "$top_level_dir" || exit 1
+    tar_option_changedir=-C"$top_level_dir"
+fi
+
+# uncompress the source
+[[  x"$verbose" = xyes ]] && tar_option_verbose="--verbose"
+
+tar x "$tar_option_verbose" "$tar_filter_option" "$tar_option_changedir" \
+ -f "$tarfile" 
