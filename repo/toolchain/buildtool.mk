@@ -4,7 +4,7 @@ include $(MASTERMAKEFILE)
 CUR_DIR=$(shell pwd)
 GCC_DIR=$(CUR_DIR)/$(shell echo $(GCC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 UCLIBC_DIR=$(CUR_DIR)/$(shell echo $(UCLIBC_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
-BINUTILS_DIR=$(CUR_DIR)/binutils-2.21.1
+BINUTILS_DIR=$(CUR_DIR)/binutils-2.22
 DEPMOD_DIR=$(CUR_DIR)/module-init-tools-3.15
 
 BUILD_DIR=$(BT_BUILD_DIR)/toolchain
