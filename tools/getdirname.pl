@@ -29,22 +29,26 @@ my $filename=$ARGV[0];
 
 my $filetype=`file -L --brief $filename`;
 #print STDERR "file command says file is: $filetype\n";
-if ( ! defined( $filetype ) ) {
-	printf STDERR "warning: file(1) not found; guessing file format gzip\n";
-	$filetype = "gzip";
-}
 
-my $tarcmd = "";
-if ( $filetype =~ /^bzip2/ ) {
-	$tarcmd = "tar -tjf";
-} elsif ( $filetype =~ /^gzip/ ) {
-	$tarcmd = "tar -tzf";
+my $filter_option = "";
+if ( $filetype =~ /^bzip2/i ) {
+	$filter_option = "--bzip2";
+} elsif ( $filetype =~ /^gzip/i ) {
+	$filter_option = "--gzip";
+} elsif ( $filetype =~ /^lzip/i ) {
+	$filter_option = "--lzip";
+} elsif ( $filetype =~ /^lzop/i ) {
+	$filter_option = "--lzop";
+} elsif ( $filetype =~ /^LZMA/i ) {
+	$filter_option = "--lzma";
+} elsif ( $filetype =~ /^XZ/i ) {
+	$filter_option = "--xz";
 } else {
 	die ( "unsupported file type $filetype" );
 }
 
 #print STDERR "trying to open $filename\n";
-open DIRNAME, "$tarcmd $filename | head -1 |" or die("unable to open tarfile $filename ");
+open DIRNAME, "tar t $filter_option -f $filename | head -1 |" or die("unable to open tarfile $filename ");
 	
 my $line=<DIRNAME>;
 	chop $line;
@@ -63,8 +67,7 @@ if ($line =~ /^.*\/$/) {
 
 if ($line =~ /^.\/(.*)$/) {
 	$line =~ s/^.\/(.*)$/$1/;
-} 
+}
 
 print $line . "\n";
 exit(0);
-
