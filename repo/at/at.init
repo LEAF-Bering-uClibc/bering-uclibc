@@ -12,13 +12,7 @@ case "$1" in
 
 		start-stop-daemon --start --quiet --pidfile $ATDPID \
 			--exec /usr/sbin/atd
-		sleep 2
-
-		if [ -f "$ATDPID" ] && ps h `cat "$ATDPID"` >/dev/null; then
-			echo "atd."
-		else
-			echo "atd failed to start - check syslog for diagnostics."
-		fi
+		echo "atd."
 		;;
 	stop)
 		echo -n "Stopping at daemon: atd"
@@ -32,7 +26,7 @@ case "$1" in
 		;;
 	*)
 		echo "Usage: $0 {start|stop|restart|force-reload}"
-		exit 1 
+		exit 1
 esac
 
 exit 0
