@@ -1,3 +1,6 @@
+#
+# Disabled configuration. awk is now activated in BusyBox
+#
 <Package mawk>
 	Server = localrepo
 	Revision = HEAD
