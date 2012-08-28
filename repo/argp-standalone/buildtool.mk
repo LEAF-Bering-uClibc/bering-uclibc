@@ -12,7 +12,8 @@ ARGP-STANDALONE_TARGET_DIR:=$(BT_BUILD_DIR)/argp-standalone
 source: .source
 
 $(ARGP-STANDALONE_DIR)/.configured: .source
-	(cd $(ARGP-STANDALONE_DIR) ; autoreconf -i -f && \
+	(cd $(ARGP-STANDALONE_DIR) ; rm aclocal.m4 Makefile.in ; \
+	autoreconf -i -f && \
 	./configure --prefix=/usr/ \
 	--build=$(GNU_BUILD_NAME) \
 	--host=$(GNU_TARGET_NAME) )
