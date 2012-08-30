@@ -20,42 +20,6 @@
 	</Owner>
 	<Contents>
 		#include <files.##KARCH##>
-#		<File>
-#			Source		= lib/modules/__KVER__-##KARCH##/kernel/net/ipv4/*.ko.gz
-#			Filename	= lib/modules/
-#			Type		= binary
-#			Permissions	= 644
-#		</File>
-#		<File>
-#			Source		= lib/modules/__KVER__-##KARCH##/kernel/net/ipv6/*.ko.gz
-#			Filename	= lib/modules/
-#			Type		= binary
-#			Permissions	= 644
-#		</File>
-#		<File>
-#			Source		= lib/modules/__KVER__-##KARCH##/kernel/net/netfilter/*.ko.gz
-#			Filename	= lib/modules/
-#			Type		= binary
-#			Permissions	= 644
-#		</File>
-#		<File>
-#			Source		= lib/modules/__KVER__-##KARCH##/kernel/net/ipv4/netfilter/*.ko.gz
-#			Filename	= lib/modules/
-#			Type		= binary
-#			Permissions	= 644
-#		</File>
-#		<File>
-#			Source		= lib/modules/__KVER__-##KARCH##/kernel/net/ipv6/netfilter/*.ko.gz
-#			Filename	= lib/modules/
-#			Type		= binary
-#			Permissions	= 644
-#		</File>
-#		<File>
-#			Source		= lib/modules/__KVER__-##KARCH##/kernel/drivers/cpufreq/*.ko.gz
-#			Filename	= lib/modules/
-#			Type		= binary
-#			Permissions	= 644
-#		</File>
 		<File>
 			Source		= lib/firmware/e100/*.bin
 			Filename	= lib/firmware/e100/
