@@ -258,7 +258,7 @@ upgrade () {
 	if [ $? -eq 0 ]; then
 		echo "$pkg upgraded"
 		# process any package dependencies by recursively calling install()...
-		$deplist=""
+		deplist=""
 		if [ -f $PKGDIR/$pkg.deplrp ] ; then
 			for deplrp in `cat $PKGDIR/$pkg.deplrp` ; do
 				[ -f "$PKGDIR/$deplrp.list" ] || $deplist="$deplist $deplrp"
