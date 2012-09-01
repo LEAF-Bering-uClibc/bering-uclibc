@@ -236,18 +236,18 @@ if ($ARGV[0] eq "describe") {
 } elsif ($ARGV[0] eq "buildclean") {
   # buildclean package/source
   shift;
-  my $clean = buildtool::Clean::Buildclean->new(\%globConf);
+  my $clean = buildtool::Clean::Buildclean->new(\%globConf, \%sourcesConfig);
   $clean->clean(@ARGV);
 } elsif ($ARGV[0] eq "srcclean") {
   # srcclean package/source
   shift;
-  my $clean = buildtool::Clean::Srcclean->new(\%globConf);
+  my $clean = buildtool::Clean::Srcclean->new(\%globConf, \%sourcesConfig);
   $clean->clean(@ARGV);
 
 } elsif ($ARGV[0] eq "remove") {
   # remove package/source
   shift;
-  my $clean = buildtool::Clean::Remove->new(\%globConf);
+  my $clean = buildtool::Clean::Remove->new(\%globConf, \%sourcesConfig);
   $clean->clean(@ARGV);
 
 } elsif ($ARGV[0] eq "maketar") {
