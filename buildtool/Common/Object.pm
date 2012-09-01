@@ -341,7 +341,7 @@ sub dumpIt {
       my $count = shift || 0;
 
       use Data::Dumper;
-      my $dumper = Data::Dumper->new([ref]);
+      my $dumper = Data::Dumper->new([$ref]);
       $dumper->Indent(1);
 
       $self->debug($dumper->Dumpxs() . "\n");
