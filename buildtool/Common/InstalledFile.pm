@@ -1,4 +1,3 @@
-# $Id: InstalledFile.pm,v 1.1.1.1 2010/04/26 09:03:17 nitr0man Exp $
 # This file is should be used whenever you need the installedFile Stuff
 #
 
@@ -21,7 +20,7 @@ sub _initialize() {
   my $self = shift;
   my $listfile;
   my %installed = ();
-  
+
   $self->SUPER::_initialize();
 
   $listfile = $self->absoluteFilename($self->{'CONFIG'}{installedfile});
@@ -39,7 +38,6 @@ sub _initialize() {
   # what type we have
   $self->{'TYPES'} = [ "source", "build"];
   $self->{'FILENAME'} = $listfile;
-
 }
 
 
@@ -86,75 +84,64 @@ sub checkType() {
   confess "unknown type $type";
 }
 
-
-
-
 ##########################################################
 # search in the installed package list for actual package
 sub searchInstalled4Pkg {
-      my $self = shift;
-      my $type = shift || die "no type given";
-      my $entry = shift || die "no entry given";
-      
-      
-      $self->debug("starting");
+    my $self  = shift;
+    my $type  = shift || die "no type given";
+    my $entry = shift || die "no entry given";
 
-      # make sure the type is valid!
-      $self->checkType($type);
-      
-      my %list = %{$self->{'INSTALLED'}};
-      if (exists $list{$type}) {
-	    my @typelist = ();
-	    if (ref($list{$type}) eq "ARRAY") {
-		  @typelist = @{$list{$type}};
-	    } else {
-		  @typelist = ($list{$type})
-	    }
-	    if ($self->isInList($entry, @typelist)) {
-		  # already in list
-		  $self->debug("entry $entry found in $type list ");
-		  return 1;
-	    }
-      }
-      # failed, return 0;
-      $self->debug("entry $entry not in $type list");
-      return 0;
+    $self->debug("starting with args '$type','$entry'");
+
+    # make sure the type is valid!
+    $self->checkType($type);
+
+    my @list =
+      exists $self->{'INSTALLED'}->{$type} # check if the list exists
+      ? @{ $self->{'INSTALLED'}->{$type} } # if yes return the list
+      : ();                                # or an empty list
+
+    if ( $self->isInList( $entry, @list ) ) {
+        $self->debug("entry $entry found in $type list");
+        return 1;
+    }
+    # failed, return 0;
+    $self->debug("entry $entry not in $type list");
+    return 0;
 }
 
-######### !!!!!!!!!!!!!!!
-
+##########################################################
 sub deleteEntry {
       my $self = shift;
       my $type = shift || die "no type given";
       my $entry = shift || die "no entry given";
       my $length;
-      
+
       # make sure the type is valid!
       $self->checkType($type);
-      
+
       my %list = %{$self->{'INSTALLED'}};
 
-      
       my $off = -1;
       #make path to file
-      
+
       $self->debug("starting, entry=$entry, type=$type");
-      
+
       # show a message:
       print "deleting $entry type $type from installed list ";
-      
+
       # now search for entry
       # check if entry is already in type...
       if ($self->searchInstalled4Pkg($type, $entry)) {
-	    
+
 	    # look if we have an array or just one entry:
-	    
+
 	    if (ref($list{$type}) eq "ARRAY") {
 		  # yes, we are an array, splice it off.
-		  
+
 		  # get the position:
 		  $off = $self->getArrayPosition($entry,@{$list{$type}}); 
-		  
+
 		  # now cut it from array
 		  if ($off >=0) {
 			$self->debug("splicing element $off from list");
@@ -170,31 +157,31 @@ sub deleteEntry {
 		  # not an array, but is in list, so must be a single entry
 		  # just one entry, delete it:
 		  delete $list{$type};
-	    } 
+	    }
 
 	    #################### end of searchInstalled4Pkg
       } else {
 	    # we have not found the entry we should delete...
 	    # search if force is enabled:
 	    $self->debug("type $type not in list");
-	    
+
 	    if (!$self->{'CONFIG'}->{'force'}) {
 		  # force is not enabled!
 		  print "$entry is not installed ";
 		  $self->print_failed();
 		  print "\n";
 		  return 0;
-		  
+
 	    }
       }
       $self->print_ok();
       print "\n";
-      
+
       #put back to myself:
       $self->{'INSTALLED'} = \%list;
       # do not automatically save it.
       return 1;
-      
+
 }
 
 
@@ -206,9 +193,9 @@ sub deleteEntry {
 sub writeToFile {
       my $self = shift;
       $self->debug("starting");
-      
+
       my %list = %{$self->{'INSTALLED'}};
-      
+
       ## now save it back
       $self->debug("saving installedfile");
       Config::General::SaveConfig($self->{'FILENAME'}, \%list);
@@ -225,11 +212,11 @@ sub writeToFile {
 
 sub addEntry () {
       my $self = shift;
-      
+
       my %list = %{$self->{'INSTALLED'}};
       my $type = shift || die "no type given";
       my $entry = shift || die "no entry given";
-      
+
       # make sure the type is valid!
       $self->checkType($type);
 
@@ -238,7 +225,7 @@ sub addEntry () {
 	    $self->debug("entry $entry is already in list $type, not adding");
 	    return 1;
       }
-      
+
       # else
       # check what type we need to add:
       # if the given type exists and is not
@@ -259,10 +246,10 @@ sub addEntry () {
 	    $self->debug("adding new single entry $entry to $type");
 	    $list{$type} = $entry;
       }
-      
+
       # put back the list:
       %{$self->{'INSTALLED'}} = %list;
-      
+
       return 1;
 }
 
@@ -271,7 +258,7 @@ sub addEntry () {
 sub _getSourceDir () {
       my $self = shift;
       my $pkg = shift || confess("no pkg given");
-      
+
       #  if ($pkg eq "") {
       #    return;
       #  }
