@@ -7,15 +7,11 @@
 include $(MASTERMAKEFILE)
 
 LIBPCAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBPCAP_SOURCE) 2>/dev/null )
-ifeq ($(LIBPCAP_DIR),)
-LIBPCAP_DIR:=$(shell cat DIRNAME)
-endif
 LIBPCAP_TARGET_DIR:=$(BT_BUILD_DIR)/libpcap
 export CC=$(TARGET_CC)
 
 $(LIBPCAP_DIR)/.source:
 	zcat $(LIBPCAP_SOURCE) | tar -xvf -
-	echo $(LIBPCAP_DIR) > DIRNAME
 	touch $(LIBPCAP_DIR)/.source
 
 $(LIBPCAP_DIR)/.configured: $(LIBPCAP_DIR)/.source
@@ -60,5 +56,3 @@ clean:
 
 srcclean:
 	-rm -rf $(LIBPCAP_DIR)
-	-rm DIRNAME
-

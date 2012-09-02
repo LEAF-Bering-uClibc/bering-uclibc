@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 LIBNFSIDMAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBNFSIDMAP_SOURCE) 2>/dev/null )
-ifeq ($(LIBNFSIDMAP_DIR),)
-LIBNFSIDMAP_DIR:=$(shell cat DIRNAME)
-endif
 LIBNFSIDMAP_TARGET_DIR:=$(BT_BUILD_DIR)/libnfsidmap
 
 # Option settings for 'configure':
@@ -18,7 +15,6 @@ CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME) --disable-ldap --build=$(GNU_B
 
 $(LIBNFSIDMAP_DIR)/.source:
 	zcat $(LIBNFSIDMAP_SOURCE) | tar -xvf -
-	echo $(LIBNFSIDMAP_DIR) > DIRNAME
 	touch $(LIBNFSIDMAP_DIR)/.source
 
 source: $(LIBNFSIDMAP_DIR)/.source
@@ -47,5 +43,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(LIBNFSIDMAP_DIR)
-	-rm DIRNAME
-

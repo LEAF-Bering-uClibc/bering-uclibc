@@ -16,14 +16,10 @@
 include $(MASTERMAKEFILE)
 
 ATM_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
-ifeq ($(ATM_DIR),)
-ATM_DIR:=$(shell cat DIRNAME)
-endif
 ATM_TARGET_DIR:=$(BT_BUILD_DIR)/linuxatm
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
-	echo $(ATM_DIR) > DIRNAME
 	touch .source
 
 source: .source
@@ -63,5 +59,4 @@ clean:
 
 srcclean: clean
 	rm -rf $(ATM_DIR)
-	rm DIRNAME
 	rm -f .source

@@ -7,16 +7,12 @@
 include $(MASTERMAKEFILE)
 
 LMSENSORS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LMSENSORS_SOURCE) 2>/dev/null )
-ifeq ($(LMSENSORS_DIR),)
-LMSENSORS_DIR:=$(shell cat DIRNAME)
-endif
 LMSENSORS_TARGET_DIR:=$(BT_BUILD_DIR)/lmsensors
 
 EXT_OPT := CC=$(TARGET_CC) DESTDIR=$(LMSENSORS_TARGET_DIR) PREFIX=/usr MACHINE=i686
 
 $(LMSENSORS_DIR)/.source:
 	bzcat $(LMSENSORS_SOURCE) | tar -xvf -
-	echo $(LMSENSORS_DIR) > DIRNAME
 	touch $(LMSENSORS_DIR)/.source
 
 source: $(LMSENSORS_DIR)/.source
@@ -49,5 +45,3 @@ clean:
 srcclean:
 	rm -rf $(LMSENSORS_DIR)
 	rm -rf $(LMSENSORS_TARGET_DIR)
-	rm DIRNAME
-

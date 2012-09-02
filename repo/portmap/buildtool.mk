@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 PORTMAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(PORTMAP_SOURCE) 2>/dev/null )
-ifeq ($(PORTMAP_DIR),)
-PORTMAP_DIR:=$(shell cat DIRNAME)
-endif
 PORTMAP_TARGET_DIR:=$(BT_BUILD_DIR)/portmap
 
 $(PORTMAP_DIR)/.source:
@@ -20,7 +17,6 @@ $(PORTMAP_DIR)/.source:
 # specify use of target (rather than host) strip program for "install"
 	( cd $(PORTMAP_DIR) ; sed -i -e "/-s /s//-s --strip-program=$(GNU_TARGET_NAME)-strip /" Makefile )
 	perl -i -p -e 's,^.*\s0644\s.*share/man.*$$,,g' $(PORTMAP_DIR)/Makefile
-	echo $(PORTMAP_DIR) > DIRNAME
 	touch $(PORTMAP_DIR)/.source
 
 source: $(PORTMAP_DIR)/.source
@@ -44,5 +40,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(PORTMAP_DIR)
-	-rm DIRNAME
-

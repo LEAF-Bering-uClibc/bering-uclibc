@@ -7,16 +7,12 @@
 include $(MASTERMAKEFILE)
 
 SPEEDTOUCH_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SPEEDTOUCH_SOURCE) 2>/dev/null )
-ifeq ($(SPEEDTOUCH_DIR),)
-SPEEDTOUCH_DIR:=$(shell cat DIRNAME)
-endif
 SPEEDTOUCH_TARGET_DIR:=$(BT_BUILD_DIR)/speedtouch
 
 $(SPEEDTOUCH_DIR)/.source:
 	zcat $(SPEEDTOUCH_SOURCE) | tar -xvf -
 	# Fix syntax error for Bering-uClibc 4.x
 	perl -i -p -e 's,extern int verbose;,,' $(SPEEDTOUCH_DIR)/src/modem.h
-	echo $(SPEEDTOUCH_DIR) > DIRNAME
 	touch $(SPEEDTOUCH_DIR)/.source
 
 source: $(SPEEDTOUCH_DIR)/.source

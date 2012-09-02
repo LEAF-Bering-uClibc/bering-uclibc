@@ -7,10 +7,6 @@
 include $(MASTERMAKEFILE)
 
 STRACE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(STRACE_SOURCE) 2>/dev/null )
-ifeq ($(STRACE_DIR),)
-STRACE_DIR:=$(shell cat DIRNAME)
-endif
-
 STRACE_TARGET_DIR:=$(BT_BUILD_DIR)/strace
 
 # Option settings for 'configure':
@@ -19,7 +15,6 @@ CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
 $(STRACE_DIR)/.source:
 	bzcat $(STRACE_SOURCE) | tar -xvf -
-	echo $(STRACE_DIR) > DIRNAME
 	touch $(STRACE_DIR)/.source
 
 source: $(STRACE_DIR)/.source
@@ -46,5 +41,3 @@ clean:
 
 srcclean:
 	rm -rf $(STRACE_DIR)
-	-rm DIRNAME
-

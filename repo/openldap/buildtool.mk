@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 OPENLDAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(OPENLDAP_SOURCE) 2>/dev/null )
-ifeq ($(OPENLDAP_DIR),)
-OPENLDAP_DIR:=$(shell cat DIRNAME)
-endif
 OPENLDAP_TARGET_DIR:=$(BT_BUILD_DIR)/openldap
 
 # Option settings for 'configure':
@@ -25,7 +22,6 @@ export AR=$(TARGET_AR)
 
 $(OPENLDAP_DIR)/.source:
 	zcat $(OPENLDAP_SOURCE) | tar -xvf -
-	echo $(OPENLDAP_DIR) > DIRNAME
 	touch $(OPENLDAP_DIR)/.source
 
 source: $(OPENLDAP_DIR)/.source
@@ -61,5 +57,4 @@ clean:
 
 srcclean: clean
 	rm -rf $(OPENLDAP_DIR)
-	-rm DIRNAME
 

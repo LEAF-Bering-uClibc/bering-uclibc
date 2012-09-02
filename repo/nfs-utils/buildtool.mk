@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 NFSUTILS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(NFSUTILS_SOURCE) 2>/dev/null )
-ifeq ($(NFSUTILS_DIR),)
-NFSUTILS_DIR:=$(shell cat DIRNAME)
-endif
 NFSUTILS_TARGET_DIR:=$(BT_BUILD_DIR)/nfs-utils
 
 # Option settings for 'configure':
@@ -22,7 +19,6 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) \
 
 $(NFSUTILS_DIR)/.source:
 	bzcat $(NFSUTILS_SOURCE) | tar -xvf -
-	echo $(NFSUTILS_DIR) > DIRNAME
 	# Patch support/include/sockaddr.h to avoid attempt to #include <libio.h>
 	( cd $(NFSUTILS_DIR) ; perl -i -p -e 's,#include <libio.h>,,' support/include/sockaddr.h )
 	touch $(NFSUTILS_DIR)/.source
@@ -60,5 +56,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(NFSUTILS_DIR)
-	-rm DIRNAME
-

@@ -7,10 +7,6 @@
 include $(MASTERMAKEFILE)
 
 DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
-ifeq ($(DIR),)
-DIR:=$(shell cat DIRNAME)
-endif
-
 TARGET_DIR:=$(BT_BUILD_DIR)/sysstat
 
 # Option settings for 'configure':
@@ -20,7 +16,6 @@ export CFLAGS += $(LDFLAGS)
 
 $(DIR)/.source:
 	bzcat $(SOURCE) | tar -xvf -
-	echo $(DIR) > DIRNAME
 	touch $(DIR)/.source
 
 source: $(DIR)/.source
@@ -48,5 +43,3 @@ clean:
 
 srcclean:
 	rm -rf $(DIR)
-	-rm DIRNAME
-

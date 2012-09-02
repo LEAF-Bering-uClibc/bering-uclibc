@@ -2,16 +2,11 @@
 include $(MASTERMAKEFILE)
 
 PUMP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(PUMP_SOURCE) 2>/dev/null )
-ifeq ($(PUMP_DIR),)
-PUMP_DIR:=$(shell cat DIRNAME)
-endif
 PUMP_TARGET_DIR:=$(BT_BUILD_DIR)/pump
-
 
 $(PUMP_DIR)/.source:
 	tar xvzf $(PUMP_SOURCE)
 	zcat $(PUMP_PATCH1) | patch -d $(PUMP_DIR) -p1
-	echo $(PUMP_DIR) > DIRNAME
 	touch $(PUMP_DIR)/.source
 
 source: $(PUMP_DIR)/.source

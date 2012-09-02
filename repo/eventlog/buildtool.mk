@@ -7,14 +7,10 @@
 include $(MASTERMAKEFILE)
 
 EVENTLOG_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(EVENTLOG_SOURCE) 2>/dev/null )
-ifeq ($(EVENTLOG_DIR),)
-EVENTLOG_DIR:=$(shell cat DIRNAME)
-endif
 EVENTLOG_TARGET_DIR:=$(BT_BUILD_DIR)/eventlog
 
 $(EVENTLOG_DIR)/.source:
 	zcat $(EVENTLOG_SOURCE) | tar -xvf -
-	echo $(EVENTLOG_DIR) > DIRNAME
 	touch $(EVENTLOG_DIR)/.source
 
 source: $(EVENTLOG_DIR)/.source
@@ -45,4 +41,3 @@ clean:
 srcclean: clean
 	rm -rf $(EVENTLOG_DIR)
 	rm -rf $(EVENTLOG_DIR)/.source
-	-rm DIRNAME

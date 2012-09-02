@@ -2,14 +2,10 @@
 include $(MASTERMAKEFILE)
 
 KNOCKD_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(KNOCKD_SOURCE) 2>/dev/null )
-ifeq ($(KNOCKD_DIR),)
-KNOCKD_DIR:=$(shell cat DIRNAME)
-endif
 KNOCKD_TARGET_DIR:=$(BT_BUILD_DIR)/knockd
 
 $(KNOCKD_DIR)/.source:
 	zcat $(KNOCKD_SOURCE) | tar -xvf -
-	echo $(KNOCKD_DIR) > DIRNAME
 	zcat $(BT_TOOLS_DIR)/config.sub.gz >$(KNOCKD_DIR)/config.sub
 	touch $(KNOCKD_DIR)/.source
 

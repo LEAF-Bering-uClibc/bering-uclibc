@@ -7,10 +7,6 @@
 include $(MASTERMAKEFILE)
 
 EXPAT_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
-ifeq ($(EXPAT_DIR),)
-EXPAT_DIR:=$(shell cat DIRNAME)
-endif
-
 EXPAT_TARGET_DIR:=$(BT_BUILD_DIR)/expat
 
 # Option settings for 'configure':
@@ -19,7 +15,6 @@ CONFOPTS:=--prefix=/usr --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME)
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
-	echo $(EXPAT_DIR) > DIRNAME
 	touch .source
 
 .configure: .source
@@ -49,6 +44,4 @@ clean:
 	
 srcclean:
 	-rm -rf $(EXPAT_DIR)
-	-rm DIRNAME
 	-rm .source
-

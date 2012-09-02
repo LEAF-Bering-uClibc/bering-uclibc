@@ -2,14 +2,10 @@
 include $(MASTERMAKEFILE)
 
 DHCPRELAY_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(DHCPRELAY_SOURCE) 2>/dev/null )
-ifeq ($(DHCPRELAY_DIR),)
-DHCPRELAY_DIR:=$(shell cat DIRNAME)
-endif
 DHCPRELAY_TARGET_DIR:=$(BT_BUILD_DIR)/dhcprelay
 
 $(DHCPRELAY_DIR)/.source:
 	zcat $(DHCPRELAY_SOURCE) | tar -xvf -
-	echo $(DHCPRELAY_DIR) > DIRNAME
 	touch $(DHCPRELAY_DIR)/.source
 
 source: $(DHCPRELAY_DIR)/.source

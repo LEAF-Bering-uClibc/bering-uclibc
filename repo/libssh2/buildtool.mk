@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 LIBSSH2_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBSSH2_SOURCE) 2>/dev/null )
-ifeq ($(LIBSSH2_DIR),)
-LIBSSH2_DIR:=$(shell cat DIRNAME)
-endif
 LIBSSH2_TARGET_DIR:=$(BT_BUILD_DIR)/libssh2
 
 export LDFLAGS += $(EXTCCLDFLAGS)
@@ -24,7 +21,6 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) \
 
 $(LIBSSH2_DIR)/.source:
 	zcat $(LIBSSH2_SOURCE) | tar -xvf -
-	echo $(LIBSSH2_DIR) > DIRNAME
 	touch $(LIBSSH2_DIR)/.source
 
 source: $(LIBSSH2_DIR)/.source
@@ -51,5 +47,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(LIBSSH2_DIR)
-	-rm DIRNAME
-

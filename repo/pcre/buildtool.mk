@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 PCRE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(PCRE_SOURCE) 2>/dev/null )
-ifeq ($(PCRE_DIR),)
-PCRE_DIR:=$(shell cat DIRNAME)
-endif
 PCRE_TARGET_DIR:=$(BT_BUILD_DIR)/pcre
 
 CONFFLAGS:= --prefix=/usr --disable-cpp
@@ -17,11 +14,9 @@ CONFFLAGS:= --prefix=/usr --disable-cpp
 
 $(PCRE_DIR)/.source:
 	zcat $(PCRE_SOURCE) | tar -xvf -
-	echo $(PCRE_DIR) > DIRNAME
 	touch $(PCRE_DIR)/.source
 
 source: $(PCRE_DIR)/.source
-
 
 $(PCRE_DIR)/.configured: $(PCRE_DIR)/.source
 	(cd $(PCRE_DIR) ; \
@@ -30,7 +25,6 @@ $(PCRE_DIR)/.configured: $(PCRE_DIR)/.source
 	--build=$(GNU_BUILD_NAME) \
 	--prefix=/usr )
 	touch $(PCRE_DIR)/.configured
-
 
 $(PCRE_DIR)/.build: $(PCRE_DIR)/.configured
 	mkdir -p $(PCRE_TARGET_DIR)
@@ -47,7 +41,6 @@ $(PCRE_DIR)/.build: $(PCRE_DIR)/.configured
 
 build: $(PCRE_DIR)/.build
 
-
 clean:
 	make -C $(PCRE_DIR) clean
 	rm -rf $(PCRE_TARGET_DIR)
@@ -56,9 +49,6 @@ clean:
 	rm -f $(PCRE_DIR)/.build
 	rm -f $(PCRE_DIR)/.configured
 
-
 srcclean: clean
 	rm -rf $(PCRE_DIR)
 	rm -f $(PCRE_DIR)/.source
-	-rm DIRNAME
-

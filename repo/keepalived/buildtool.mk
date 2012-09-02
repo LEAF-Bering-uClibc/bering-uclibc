@@ -8,16 +8,12 @@
 include $(MASTERMAKEFILE)
 
 KEEPALIVED_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(KEEPALIVED_SOURCE) 2>/dev/null )
-ifeq ($(KEEPALIVED_DIR),)
-KEEPALIVED_DIR:=$(shell cat DIRNAME)
-endif
 KEEPALIVED_TARGET_DIR:=$(BT_BUILD_DIR)/keepalived
 
 
 $(KEEPALIVED_DIR)/.source:
 	zcat $(KEEPALIVED_SOURCE) | tar -xvf -
 #	(cd $(KEEPALIVED_DIR); zcat ../$(KEEPALIVED_PATCH1) | patch -p1)
-	echo $(KEEPALIVED_DIR) > DIRNAME
 	touch $(KEEPALIVED_DIR)/.source
 
 $(KEEPALIVED_DIR)/.configured: $(KEEPALIVED_DIR)/.source
@@ -56,5 +52,3 @@ clean:
 
 srcclean:
 	-rm -rf $(KEEPALIVED_DIR)
-
-
