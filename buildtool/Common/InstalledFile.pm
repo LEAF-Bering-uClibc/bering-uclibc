@@ -17,31 +17,36 @@ use vars qw(@ISA);
 # init function
 #
 sub _initialize() {
-  my $self = shift;
-  my $listfile;
-  my %installed = ();
+    my $self      = shift;
+    my %installed = ();
 
-  $self->SUPER::_initialize();
+    $self->SUPER::_initialize();
 
-  $listfile = $self->absoluteFilename($self->{'CONFIG'}{installedfile});
-  # substitute environment variables like $GNU_TARGET_NAME
-  $listfile =~ s/\$(\w+)/$ENV{$1}/g;
+    my $listfile = $self->absoluteFilename( $self->{'CONFIG'}{installedfile} );
 
-  # read in the file if it exists
-  if ( -e $listfile) {
-    %installed = Config::General::ParseConfig($listfile);
-    $self->debug("reading in installedfile $listfile");
-  } else {
-    $self->debug("starting with empty installedfile $listfile");
-  }
-  $self->{'INSTALLED'} = \%installed;
-  # what type we have
-  $self->{'TYPES'} = [ "source", "build"];
-  $self->{'FILENAME'} = $listfile;
+    # substitute environment variables like $GNU_TARGET_NAME
+    $listfile =~ s/\$(\w+)/$ENV{$1}/g;
+
+    # what type we have
+    $self->{'TYPES'} = [ "source", "build" ];
+    $self->{'FILENAME'} = $listfile;
+
+    # Default config (empty list)
+    my $default_config = {};
+    map { $default_config->{$_} = [] } @{ $self->{'TYPES'} };
+
+    # read in the file if it exists
+    if ( -e $listfile ) {
+        %installed =
+          Config::General::ParseConfig( "-ConfigFile"    => $listfile,
+                                        "-DefaultConfig" => $default_config );
+        $self->debug("reading in installedfile $listfile");
+    } else {
+        $self->debug("starting with empty installedfile $listfile");
+        %installed = %{$default_config};
+    }
+    $self->{'INSTALLED'} = \%installed;
 }
-
-
-
 
 ##########################################################
 # gets a list back for the given type, returns an array
