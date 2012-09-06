@@ -4,12 +4,11 @@
 
 include $(MASTERMAKEFILE)
 
-DIR:=sysfsutils-2.1.0
+DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/sysfsutils
 
-
 $(DIR)/.source:
-	zcat $(SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(SOURCE)
 	touch $(DIR)/.source
 
 source:	$(DIR)/.source
@@ -38,4 +37,3 @@ clean:
 	make CFLAGS="$(BT_COPT_FLAGS)" CC=$(TARGET_CC) LD=$(TARGET_LD) DESTDIR=$(BT_STAGING_DIR) -C $(DIR) clean
 	rm -f $(DIR)/.build
 	rm -rf $(BT_BUILD_DIR)/modutils
-

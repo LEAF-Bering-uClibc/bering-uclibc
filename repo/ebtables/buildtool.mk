@@ -2,15 +2,11 @@
 include $(MASTERMAKEFILE)
 
 EBTABLES_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(EBTABLES_SOURCE) 2>/dev/null )
-ifeq ($(EBTABLES_DIR),)
-EBTABLES_DIR:=$(shell cat DIRNAME)
-endif
 EBTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/ebtables
 
 $(EBTABLES_DIR)/.source:
 	tar xvzf $(EBTABLES_SOURCE)
 #	zcat $(EBTABLES_PATCH) | patch -d $(EBTABLES_DIR) -p1
-	echo $(EBTABLES_DIR) > DIRNAME
 	touch $(EBTABLES_DIR)/.source
 
 source: $(EBTABLES_DIR)/.source

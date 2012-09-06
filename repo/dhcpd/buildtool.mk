@@ -19,9 +19,6 @@
 include $(MASTERMAKEFILE)
 
 DHCPD_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
-ifeq ($(DHCPD_DIR),)
-DHCPD_DIR:=$(shell cat DIRNAME)
-endif
 DHCPD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpd
 
 # Option settings for 'configure':
@@ -30,7 +27,6 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) --prefix=/
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
-	echo $(DHCPD_DIR) > DIRNAME
 	# Force use of local bind include files before staging include files
 	for dir in common omapip client relay; do perl -i -p -e 's,^DEFAULT_INCLUDES = ,DEFAULT_INCLUDES = -I../bind/include ,' $(DHCPD_DIR)/$$dir/Makefile.in; done
 	# Force cross-compile for local copy of bind
@@ -82,6 +78,5 @@ clean:
 
 srcclean: clean
 	rm -rf $(DHCPD_DIR)
-	rm DIRNAME
 	rm .source
 

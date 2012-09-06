@@ -7,10 +7,6 @@
 include $(MASTERMAKEFILE)
 
 AVAHI_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
-ifeq ($(AVAHI_DIR),)
-AVAHI_DIR:=$(shell cat DIRNAME)
-endif
-
 AVAHI_TARGET_DIR:=$(BT_BUILD_DIR)/avahi
 
 # Option settings for 'configure':
@@ -30,7 +26,6 @@ CONFOPTS:= \
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
-	echo $(AVAHI_DIR) > DIRNAME
 	touch .source
 
 .configure: .source
@@ -88,6 +83,3 @@ srcclean:
 	-rm -rf $(AVAHI_DIR)
 	-rm -rf .source
 	-rm -rf .configure
-
-	rm DIRNAME
-

@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 SAMBA_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SAMBA_SOURCE) 2>/dev/null )
-ifeq ($(SAMBA_DIR),)
-SAMBA_DIR:=$(shell cat DIRNAME)
-endif
 SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba
 
 # Variable definitions for 'configure'
@@ -42,7 +39,6 @@ CONFOPTS = --host=$(GNU_TARGET_NAME) \
 
 .source:
 	zcat $(SAMBA_SOURCE) | tar -xvf -
-	echo $(SAMBA_DIR) > DIRNAME
 	touch .source
 
 source: .source
@@ -104,4 +100,3 @@ clean:
 srcclean:
 	rm -rf $(SAMBA_DIR)
 	rm .source
-	rm DIRNAME

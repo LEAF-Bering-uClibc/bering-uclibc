@@ -7,14 +7,10 @@
 include $(MASTERMAKEFILE)
 
 LIBPOPT_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBPOPT_SOURCE) 2>/dev/null )
-ifeq ($(LIBPOPT_DIR),)
-LIBPOPT_DIR:=$(shell cat DIRNAME)
-endif
 LIBPOPT_TARGET_DIR:=$(BT_BUILD_DIR)/libpopt
 
 $(LIBPOPT_DIR)/.source:
 	zcat $(LIBPOPT_SOURCE) |  tar -xvf -
-	echo $(LIBPOPT_DIR) > DIRNAME
 	touch $(LIBPOPT_DIR)/.source
 
 $(LIBPOPT_DIR)/.configured: $(LIBPOPT_DIR)/.source

@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 RADIUS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(RADIUS_SOURCE) 2>/dev/null )
-ifeq ($(RADIUS_DIR),)
-RADIUS_DIR:=$(shell cat DIRNAME)
-endif
 RADIUS_TARGET_DIR:=$(BT_BUILD_DIR)/radius
 
 # Option settings for 'configure':
@@ -52,7 +49,6 @@ export LDFLAGS += $(EXTCCLDFLAGS) -L$(BT_STAGING_DIR)/usr/lib/mysql
 
 .source:
 	bzcat $(RADIUS_SOURCE) | tar -xvf -
-	echo $(RADIUS_DIR) > DIRNAME
 	touch .source
 
 source: .source
@@ -109,5 +105,3 @@ clean:
 srcclean: clean
 	rm -rf $(RADIUS_DIR)
 	-rm .source
-	-rm DIRNAME
-

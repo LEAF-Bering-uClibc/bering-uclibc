@@ -7,13 +7,9 @@
 include $(MASTERMAKEFILE)
 
 SSHBLACK_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null)
-ifeq ($(SSHBLACK_DIR),)
-SSHBLACK_DIR:=$(shell cat DIRNAME)
-endif
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
-	echo $(SSHBLACK_DIR) > DIRNAME
 	touch .source
 
 source: .source
@@ -44,5 +40,3 @@ clean:
 srcclean: clean
 	rm -rf $(SSHBLACK_DIR)
 	rm -f .source
-	rm -f DIRNAME
-

@@ -7,14 +7,10 @@
 include $(MASTERMAKEFILE)
 
 DIBBLER_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(DIBBLER_SOURCE) 2>/dev/null )
-ifeq ($(DIBBLER_DIR),)
-DIBBLER_DIR:=$(shell cat DIRNAME)
-endif
 DIBBLER_TARGET_DIR:=$(BT_BUILD_DIR)/dibbler
 
 $(DIBBLER_DIR)/.source:
 	zcat $(DIBBLER_SOURCE) | tar -xvf -
-	echo $(DIBBLER_DIR) > DIRNAME
 	# Remove debuging parameters
 	( cd $(DIBBLER_DIR) ; perl -i -p -e 's,-pedantic,,'	Makefile.inc )
 	( cd $(DIBBLER_DIR) ; perl -i -p -e 's,-g,,'		Makefile.inc )
@@ -54,5 +50,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(DIBBLER_DIR)
-	rm DIRNAME
-

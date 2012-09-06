@@ -7,14 +7,10 @@
 include $(MASTERMAKEFILE)
 
 MAWK_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
-ifeq ($(MAWK_DIR),)
-MAWK_DIR:=$(shell cat DIRNAME)
-endif
 MAWK_TARGET_DIR:=$(BT_BUILD_DIR)/mawk
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
-	echo $(MAWK_DIR) > DIRNAME
 	# Hack Makefile.in for cross-compiled build
 	# Program makescan.exe needs to execute on the *build* host
 	perl -i -p -e "s,^.* -o makescan\.exe .*,	gcc \\$(CPPFLAGS) -o makescan.exe makescan.c," ${MAWK_DIR}/Makefile.in
@@ -48,5 +44,4 @@ clean:
 
 srcclean: clean
 	rm -rf $(MAWK_DIR)
-	rm DIRNAME
 	rm -f .source

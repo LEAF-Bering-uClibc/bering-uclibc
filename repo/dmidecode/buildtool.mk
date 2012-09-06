@@ -7,14 +7,10 @@
 include $(MASTERMAKEFILE)
 
 DMI_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(DMI_SOURCE) 2>/dev/null )
-ifeq ($(DMI_DIR),)
-DMI_DIR:=$(shell cat DIRNAME)
-endif
 DMI_TARGET_DIR:=$(BT_BUILD_DIR)/dmidecode
 
 $(DMI_DIR)/.source:
 	zcat $(DMI_SOURCE) | tar -xvf -
-	echo $(DMI_DIR) > DIRNAME
 #	cat $(DMI_PATCH1) | patch -p1 -d $(DMI_DIR)
 	touch $(DMI_DIR)/.source
 
@@ -35,5 +31,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(DMI_DIR)
-	-rm DIRNAME
-

@@ -1,13 +1,13 @@
 # makefile for ez-ipupdate
 include $(MASTERMAKEFILE)
 
-EZ_IPUPDATE_DIR:=ez-ipupdate-3.0.11b8
+EZ_IPUPDATE_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(EZ_IPUPDATE_SOURCE) 2>/dev/null )
 EZ_IPUPDATE_TARGET_DIR:=$(BT_BUILD_DIR)/ez-ipupdate
 
 .source:
-	zcat $(EZ_IPUPDATE_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(EZ_IPUPDATE_SOURCE)
 	zcat $(EZ_IPUPDATE_PATCH1) | patch -d $(EZ_IPUPDATE_DIR) -p1
-	cat $(EZ_IPUPDATE_PATCH2) | patch -d $(EZ_IPUPDATE_DIR) -p1
+	cat  $(EZ_IPUPDATE_PATCH2) | patch -d $(EZ_IPUPDATE_DIR) -p1
 	touch .source
 
 source: .source

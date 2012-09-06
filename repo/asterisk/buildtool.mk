@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 ASTERISK_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
-ifeq ($(ASTERISK_DIR),)
-ASTERISK_DIR:=$(shell cat DIRNAME)
-endif
 ASTERISK_TARGET_DIR:=$(BT_BUILD_DIR)/asterisk
 
 # Option settings for 'configure':
@@ -22,7 +19,6 @@ unexport CFLAGS CPPFLAGS
 
 .source:
 	zcat $(SOURCE) | tar -xvf -
-	echo $(ASTERISK_DIR) > DIRNAME
 	perl -i -p -e 's,\&\&\s+\./configure, ,' $(ASTERISK_DIR)/configure $(ASTERISK_DIR)/configure.ac
 	touch .source
 
@@ -67,5 +63,4 @@ clean:
 srcclean: clean
 	rm -rf $(ASTERISK_DIR)
 	-rm -f .source
-	-rm DIRNAME
 

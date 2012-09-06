@@ -1,40 +1,12 @@
-#$Id: Srcclean.pm,v 1.1.1.1 2010/04/26 09:03:17 nitr0man Exp $
 
 package buildtool::Clean::Srcclean;
 
-use buildtool::Clean;
-use Carp;
 use strict;
+use Carp;
 
-use vars qw(@ISA);
-
-@ISA = qw(buildtool::Clean::Buildclean);
+use parent qw< buildtool::Clean::Buildclean >;
 
 ###############################################################################
-sub callMakeClean () {
-  my $self = shift;
-  my $pkg = shift || confess "no pkg given!";
-  my $path = $self->_getSourceDir($pkg);
-
-  my %globConf = %{$self->{'CONFIG'}}; 
-
-  $self->SUPER::callMakeClean($pkg);
-
-  print "calling 'make srcclean' for $pkg: ";
-  # check if dir exists, if not, it is o.k.
-  $self->dumpIt(\%globConf,0);
-  if (! -d $path) {
-	$self->debug("$path is not there, might be ok");
-  } else {
-
-	system("make -d -C ".$path. " -f ./".$globConf{'buildtool_makefile'}." srcclean MASTERMAKEFILE=".$globConf{'root_dir'}. "/make/MasterInclude.mk". " BT_BUILDROOT=". $globConf{'root_dir'}. " >>".$globConf{'logfile'}. " 2>&1" ) == 0
-	  or die "make clean ". $self->make_text_red("failed")." for ".$path."/".$globConf{'buildtool_makefile'}." , please have a look at the logfile " . $globConf{'logfile'};
-  }
-  $self->print_ok();
-  print "\n";
-  return 1
-}
-
 sub clean () {
   my $self = shift;
   my $pkg ;
@@ -59,8 +31,15 @@ sub clean () {
         $self->debug("force enabled, trying to remove anyway");
       }
     }
-    # first call make clean for the package buildtool.mk itself
-    $self->callMakeClean($pkg);
+
+    # Read the package config
+    my %pkg_config = $self->_readBtConfig($pkg);
+
+    # Populate the envstring from file section of package config
+    my $envstring  = $self->_makeEnvString( %{ $pkg_config{'file'} } );
+
+    # now call make srcclean
+    $self->_callMake("srcclean", $pkg, $envstring);
 
     # now remove everything from our list:
     $self->_removePackageFiles($pkg);
@@ -74,4 +53,5 @@ sub clean () {
 
   }
 }
+
 1;

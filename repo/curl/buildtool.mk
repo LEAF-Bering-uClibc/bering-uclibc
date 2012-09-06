@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 CURL_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(CURL_SOURCE) 2>/dev/null )
-ifeq ($(CURL_DIR),)
-CURL_DIR:=$(shell cat DIRNAME)
-endif
 CURL_TARGET_DIR:=$(BT_BUILD_DIR)/curl
 
 # Option settings for 'configure':
@@ -26,7 +23,6 @@ export LDFLAGS += $(EXTCCLDFLAGS)
 
 .source:
 	zcat $(CURL_SOURCE) | tar -xvf -
-	echo $(CURL_DIR) > DIRNAME
 	touch .source
 
 source: .source
@@ -55,5 +51,3 @@ clean:
 srcclean: clean
 	rm -rf $(CURL_DIR)
 	rm -f .source
-	-rm DIRNAME
-

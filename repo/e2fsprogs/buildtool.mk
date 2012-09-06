@@ -7,14 +7,10 @@
 
 include $(MASTERMAKEFILE)
 E2FSPROGS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(E2FSPROGS_SOURCE) 2>/dev/null )
-ifeq ($(E2FSPROGS_DIR),)
-E2FSPROGS_DIR:=$(shell cat DIRNAME)
-endif
 E2FSPROGS_TARGET_DIR:=$(BT_BUILD_DIR)/e2fsprogs
 
 $(E2FSPROGS_DIR)/.source:
 	zcat $(E2FSPROGS_SOURCE) | tar -xvf -
-	echo $(E2FSPROGS_DIR) > DIRNAME
 	touch $(E2FSPROGS_DIR)/.source
 
 $(E2FSPROGS_DIR)/.configured: $(E2FSPROGS_DIR)/.source
@@ -63,4 +59,3 @@ clean:
 
 srcclean:
 	rm -rf $(E2FSPROGS_DIR)
-	-rm DIRNAME

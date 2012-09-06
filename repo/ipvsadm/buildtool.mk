@@ -7,16 +7,12 @@
 include $(MASTERMAKEFILE)
 
 IPVSADM_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(IPVSADM_SOURCE) 2>/dev/null )
-ifeq ($(IPVSADM_DIR),)
-IPVSADM_DIR:=$(shell cat DIRNAME)
-endif
 IPVSADM_TARGET_DIR:=$(BT_BUILD_DIR)/ipvsadm
 
 KERNELSOURCE = $(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)
 
 $(IPVSADM_DIR)/.source:
 	tar xvzf $(IPVSADM_SOURCE)
-	echo $(IPVSADM_DIR) > DIRNAME
 	# specify use of target (rather than host) strip program for "install"
 	perl -i -p -e "s, -s ipvsadm , -s --strip-program=$(GNU_TARGET_NAME)-strip ipvsadm ," $(IPVSADM_DIR)/Makefile
 	touch $(IPVSADM_DIR)/.source
@@ -52,4 +48,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(IPVSADM_DIR)
-

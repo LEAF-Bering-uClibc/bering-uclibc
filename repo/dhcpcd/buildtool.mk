@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 DHCPCD_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(DHCPCD_SOURCE) 2>/dev/null )
-ifeq ($(DHCPCD_DIR),)
-DHCPCD_DIR:=$(shell cat DIRNAME)
-endif
 DHCPCD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpcd
 
 # Option settings for 'configure':
@@ -17,7 +14,6 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) --prefix=/ --build=$(GNU_BUILD_NAME)
 
 $(DHCPCD_DIR)/.source:
 	bzcat $(DHCPCD_SOURCE) | tar -xvf -
-	echo $(DHCPCD_DIR) > DIRNAME
 	cat $(DHCPCD_PATCH1) | patch -d $(DHCPCD_DIR) -p1
 	touch $(DHCPCD_DIR)/.source
 
@@ -52,5 +48,3 @@ clean:
 
 srcclean: clean
 	-rm -rf $(DHCPCD_DIR)
-	-rm DIRNAME
-

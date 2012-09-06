@@ -7,14 +7,10 @@
 include $(MASTERMAKEFILE)
 
 LIBEVENT_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBEVENT_SOURCE) 2>/dev/null )
-ifeq ($(LIBEVENT_DIR),)
-LIBEVENT_DIR:=$(shell cat DIRNAME)
-endif
 LIBEVENT_TARGET_DIR:=$(BT_BUILD_DIR)/libevent
 
 $(LIBEVENT_DIR)/.source:
 	zcat $(LIBEVENT_SOURCE) | tar -xvf -
-	echo $(LIBEVENT_DIR) > DIRNAME
 	touch $(LIBEVENT_DIR)/.source
 
 source: $(LIBEVENT_DIR)/.source
@@ -47,4 +43,3 @@ clean:
 srcclean: clean
 	rm -rf $(LIBEVENT_DIR)
 	rm -rf $(LIBEVENT_DIR)/.source
-	-rm DIRNAME

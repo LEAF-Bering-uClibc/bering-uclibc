@@ -7,17 +7,12 @@
 
 include $(MASTERMAKEFILE)
 
-HDPARM_DIR:=$(shell cat DIRNAME)
-ifeq ($(HDPARM_DIR),)
 HDPARM_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(HDPARM_SOURCE) 2>/dev/null )
-endif
-
 HDPARM_TARGET_DIR:=$(BT_BUILD_DIR)/hdparm
 export CC=$(TARGET_CC)
 
 $(HDPARM_DIR)/.source:
 	zcat $(HDPARM_SOURCE) |  tar -xvf -
-	echo $(HDPARM_DIR) > DIRNAME
 	touch $(HDPARM_DIR)/.source
 
 source: $(HDPARM_DIR)/.source
@@ -42,5 +37,3 @@ clean:
 
 srcclean:
 	rm -rf $(HDPARM_DIR)
-	-rm DIRNAME
-

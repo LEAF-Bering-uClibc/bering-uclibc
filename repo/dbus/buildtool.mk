@@ -7,9 +7,6 @@
 include $(MASTERMAKEFILE)
 
 SOURCE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE_TGZ) 2>/dev/null )
-ifeq ($(SOURCE_DIR),)
-SOURCE_DIR:=$(shell cat DIRNAME)
-endif
 TARGET_DIR:=$(BT_BUILD_DIR)/dbus
 
 # Option settings for 'configure'
@@ -31,7 +28,6 @@ CONFOPTS = \
 
 .source:
 	zcat $(SOURCE_TGZ) | tar -xvf -
-	echo $(SOURCE_DIR) > DIRNAME
 	touch .source
 
 source: .source
@@ -76,4 +72,3 @@ clean:
 srcclean:
 	rm -rf $(SOURCE_DIR)
 	rm .source
-	rm DIRNAME
