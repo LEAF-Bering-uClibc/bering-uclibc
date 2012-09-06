@@ -1,0 +1,48 @@
+diff -ru e1000e-2.0.0.1.orig/src/Makefile e1000e-2.0.0.1/src/Makefile
+--- e1000e-2.0.0.1.orig/src/Makefile	2012-06-18 22:48:05.000000000 +0200
++++ e1000e-2.0.0.1/src/Makefile	2012-09-06 09:18:24.000000000 +0200
+@@ -111,22 +111,9 @@
+   $(error Linux kernel source not configured - missing autoconf.h)
+ endif
+ 
+-# pick a compiler
+-ifneq (,$(findstring egcs-2.91.66, $(shell cat /proc/version)))
+-  CC := kgcc gcc cc
+-else
+-  CC := gcc cc
+-endif
+-test_cc = $(shell $(cc) --version > /dev/null 2>&1 && echo $(cc))
+-CC := $(foreach cc, $(CC), $(test_cc))
+-CC := $(firstword $(CC))
+-ifeq (,$(CC))
+-  $(error Compiler not found)
+-endif
+-
+ # we need to know what platform the driver is being built on
+ # some additional features are only built on Intel platforms
+-ARCH := $(shell uname -m | sed 's/i.86/i386/')
++ARCH ?= $(shell uname -m | sed 's/i.86/i386/')
+ ifeq ($(ARCH),alpha)
+   EXTRA_CFLAGS += -ffixed-8 -mno-fp-regs
+ endif
+@@ -196,20 +183,6 @@
+   SMP := 0
+ endif
+ 
+-ifneq ($(SMP),$(shell uname -a | grep SMP > /dev/null 2>&1 && echo 1 || echo 0))
+-  $(warning ***)
+-  ifeq ($(SMP),1)
+-    $(warning *** Warning: kernel source configuration (SMP))
+-    $(warning *** does not match running kernel (UP))
+-  else
+-    $(warning *** Warning: kernel source configuration (UP))
+-    $(warning *** does not match running kernel (SMP))
+-  endif
+-  $(warning *** Continuing with build,)
+-  $(warning *** resulting driver may not be what you want)
+-  $(warning ***)
+-endif
+-
+ ifeq ($(SMP),1)
+   EXTRA_CFLAGS += -D__SMP__
+ endif
