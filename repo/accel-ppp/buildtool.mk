@@ -1,11 +1,11 @@
 # makefile for accel-pptp
 include $(MASTERMAKEFILE)
 
-ACCEL_DIR:=$(shell echo $(ACCEL_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
+ACCEL_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(ACCEL_SOURCE) 2>/dev/null )
 ACCEL_TARGET_DIR:=$(BT_BUILD_DIR)/accel-ppp
 
 $(ACCEL_DIR)/.source:
-	bzcat $(ACCEL_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(ACCEL_SOURCE)
 	perl -i -p -e 's,#include\s*\<printf.h\>,,' $(ACCEL_DIR)/accel-pppd/ctrl/pppoe/pppoe.c
 	touch $@
 
