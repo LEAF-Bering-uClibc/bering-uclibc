@@ -8,10 +8,10 @@ include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/shorewall6-lite
 
-SHOREWALL_DIR:=shorewall6-lite-4.5.6.2
+SHOREWALL_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SHOREWALL_SOURCE) 2>/dev/null )
 
 $(SHOREWALL_DIR)/.source:
-	zcat $(SHOREWALL_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(SHOREWALL_SOURCE)
 	touch $(SHOREWALL_DIR)/.source
 
 $(SHOREWALL_DIR)/.configured: $(SHOREWALL_DIR)/.source
