@@ -6,25 +6,23 @@ ULOGD_TARGET_DIR:=$(BT_BUILD_DIR)/ulogd
 
 export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
 
-$(ULOGD_DIR)/.source:
+.source:
 	bzcat $(ULOGD_SOURCE) | tar -xvf -
 	cat $(ULOGD_PATCH1) | patch -d $(ULOGD_DIR) -p1
 	cat $(ULOGD_PATCH2) | patch -d $(ULOGD_DIR) -p1
 	cat $(ULOGD_PATCH3) | patch -d $(ULOGD_DIR) -p1
-	touch $(ULOGD_DIR)/.source
+	touch .source
 
-source: $(ULOGD_DIR)/.source
+source: .source
                         
-$(ULOGD_DIR)/.configured: $(ULOGD_DIR)/.source
-#	(cd $(ULOGD_DIR) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) -I$(BT_LINUX_DIR)/include" \
-#	./configure --prefix=/usr --sysconfdir=/etc )
+.configure: .source
 	(cd $(ULOGD_DIR) ; $(AUTOCONF) ; CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(BT_COPT_FLAGS) \
 	-I$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/include" \
 	LDFLAGS="-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib" \
 	./configure --prefix=/usr --sysconfdir=/etc --with-mysql=$(BT_STAGING_DIR)/usr/ )
-	touch $(ULOGD_DIR)/.configured
+	touch .configure
                                                                  
-$(ULOGD_DIR)/.build: $(ULOGD_DIR)/.configured
+.build: .configure
 	mkdir -p $(ULOGD_TARGET_DIR)
 	mkdir -p $(ULOGD_TARGET_DIR)/etc/init.d	
 	mkdir -p $(ULOGD_TARGET_DIR)/etc/cron.daily	
@@ -39,16 +37,15 @@ $(ULOGD_DIR)/.build: $(ULOGD_DIR)/.configured
 	cp -aL ulogd_daily $(ULOGD_TARGET_DIR)/etc/cron.daily/ulogd
 	cp -aL ulogd_weekly $(ULOGD_TARGET_DIR)/etc/cron.weekly/ulogd
 	cp -a $(ULOGD_TARGET_DIR)/* $(BT_STAGING_DIR)
-	touch $(ULOGD_DIR)/.build
+	touch .build
 
-build: $(ULOGD_DIR)/.build
+build: .build
                                                                                          
 clean:
 	make -C $(ULOGD_DIR) clean
 	rm -rf $(ULOGD_TARGET_DIR)
-	rm $(ULOGD_DIR)/.build
-	rm $(ULOGD_DIR)/.configured
+	rm -f .configure .build
                                                                                                                  
 srcclean: clean
 	rm -rf $(ULOGD_DIR) 
-	rm $(ULOGD_DIR)/.source
+	rm .source
