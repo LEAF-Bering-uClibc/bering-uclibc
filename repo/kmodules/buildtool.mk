@@ -18,6 +18,7 @@ build:
 	[ "`echo $(KARCHS_PCIE) | awk '/(^|\W)'"$$i"'(\W|$$)/ {print "yes"}'`" = yes ] && \
 		sed 's,#.*$$,\n,' modulelist.pcie >>modulelist.$$i ; \
 	[ -f specific.$$i ] && sed 's,#.*$$,\n,' specific.$$i >>modulelist.$$i ; \
+	depmod -a -b $(BT_STAGING_DIR) $(KVERSION)-$$i ; \
 	BT_STAGING_DIR=$(BT_STAGING_DIR) BT_KERNEL_RELEASE=$(BT_KERNEL_RELEASE)-$$i \
 		sh $(BT_TOOLS_DIR)/getdep.sh `cat modulelist.$$i` >mod.$$i ; \
 	[ -f files.$$i ] && rm -f files.$$i ; \
