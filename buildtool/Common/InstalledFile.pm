@@ -3,15 +3,14 @@
 
 package buildtool::Common::InstalledFile;
 
-use buildtool::Common::Object;
-use Config::General 2.15;
-use Carp;
 use strict;
+use Carp;
 
-use vars qw(@ISA);
+use buildtool::Tools qw< expand_variables >;
 
-@ISA = qw(buildtool::Common::Object);
+use Config::General 2.15;
 
+use parent qw< buildtool::Common::Object >;
 
 ######################################################################
 # init function
@@ -22,10 +21,9 @@ sub _initialize() {
 
     $self->SUPER::_initialize();
 
-    my $listfile = $self->absoluteFilename( $self->{'CONFIG'}{installedfile} );
-
-    # substitute environment variables like $GNU_TARGET_NAME
-    $listfile =~ s/\$(\w+)/$ENV{$1}/g;
+    my $listfile = $self->absoluteFilename(
+         expand_variables( $self->{'CONFIG'}{installedfile}, $self->{'CONFIG'} )
+    );
 
     # what type we have
     $self->{'TYPES'} = [ "source", "build" ];
@@ -261,17 +259,17 @@ sub addEntry () {
 ###############################################################################
 #
 sub _getSourceDir () {
-      my $self = shift;
-      my $pkg = shift || confess("no pkg given");
+    my $self = shift;
+    my $pkg = shift || confess("no pkg given");
 
-      #  if ($pkg eq "") {
-      #    return;
-      #  }
+    #  if ($pkg eq "") {
+    #    return;
+    #  }
 
-      my $source_dir = $self->{'CONFIG'}{'source_dir'};
-      # substitute environment variables like $GNU_TARGET_NAME
-      $source_dir =~ s/\$(\w+)/$ENV{$1}/g;
-      return $self->absoluteFilename($source_dir."/".$pkg);
+    my $source_dir =
+      expand_variables( $self->{'CONFIG'}{'source_dir'}, $self->{'CONFIG'} );
+
+    return $self->absoluteFilename( $source_dir . "/" . $pkg );
 }
 
 ###############################################################################
