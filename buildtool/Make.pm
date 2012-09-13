@@ -8,6 +8,8 @@ use strict;
 use Carp;
 use List::MoreUtils qw( uniq );
 
+use buildtool::Tools qw< expand_variables >;
+
 use parent qw< buildtool::Common::InstalledFile >;
 
 ##############################################################################
@@ -124,10 +126,9 @@ sub _readBtConfig ($$) {
     my $self = shift;
     my $pkgname = shift || confess("no filename given");
 
-    my $source_dir = $self->{'CONFIG'}{'source_dir'};
+    my $source_dir =
+      expand_variables( $self->{'CONFIG'}{'source_dir'}, $self->{'CONFIG'} );
 
-    # substitute environment variables like $GNU_TARGET_NAME
-    $source_dir =~ s/\$(\w+)/$ENV{$1}/g;
     my $configFile =
       $self->absoluteFilename(   $source_dir . "/"
                                . $pkgname . "/"
