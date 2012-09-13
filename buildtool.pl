@@ -12,6 +12,7 @@ use lib $FindBin::Bin;      # use that dir for libs, too
 use File::Spec::Functions qw(:ALL);
 
 use buildtool::buildtool;
+use buildtool::Tools qw(:ALL);
 use buildtool::Clean;
 use buildtool::Make::Tar;
 use buildtool::Make::Source;
@@ -71,16 +72,21 @@ sub load_global_configfile {
 # find out what our root-dir is and inject it into the config
 $globConf{'root_dir'} = rel2abs($FindBin::Bin);
 
-# make the logfile absolute
-$globConf{'logfile'} = make_absolute_path( $globConf{'logfile'} );
+# make sure, log dir is there
+$globConf{'log_dir'} = $globConf{'log_dir'} || 'log';
+create_dir(
+      make_absolute_path( expand_variables( $globConf{'log_dir'}, \%globConf ) )
+);
 
-# make sure, log dir is there:
-log_dir_make();					
+# make the logfile absolute
+$globConf{'logfile'} =
+  make_absolute_path( expand_variables( $globConf{'logfile'}, \%globConf ) );
 
 # read in global file-config
 my %sourcesConfig;
 eval {
-    %sourcesConfig = load_global_configfile( $globConf{globalconffile} );
+    %sourcesConfig = load_global_configfile(
+                    expand_variables( $globConf{globalconffile}, \%globConf ) );
 }
 or do {
     my $path = $@;
@@ -89,7 +95,8 @@ or do {
     print STDERR "Created missing file \"$path\"...\n";
     open TFILE, ">", $path or die "Can't create file \"$path\"!";
     close TFILE;
-    %sourcesConfig = load_global_configfile( $globConf{globalconffile} );
+    %sourcesConfig = load_global_configfile(
+                    expand_variables( $globConf{globalconffile}, \%globConf ) );
 };
 
 sub usage {
@@ -129,60 +136,48 @@ MYEOF
 exit(1);
 }
 
-# parse commandline commands.
-# we know the following:
-# command                             status
-# =================================================
-# describe [Packagename]              ok     shows descriptionlines of package
-# source [Packagename|Sourcename]     ok     downloads, unpacks and patches
-#                                            the wanted package/source
-# build [Packagename|Sourcename]      ok     the same as source, but builds
-#                                            and installs sources/packages
-# clean [Packagename|Sourcename]      ok     make a make clean in srcdir
-# dlclean [Packagename|Sourcename]    ok     remove everything from dldir
-# NI=not implemented
-
+my $version = expand_variables( $globConf{version}, \%globConf );
 
 # now it seems we are really starting, lets put a message in
 # the logfile , logdir should be created by check_env
 logme("==================================================");
-logme("buildtool Version ". $globConf{version} ." starting");
+logme( "buildtool Version " . $version . " starting" );
 logme(scalar localtime);
 
 &usage() if ($#ARGV < 0);
 
 # check the 
 while ( $ARGV[0] and $ARGV[0] =~ /^-.*/ ) {
-	my $option = $ARGV[0];
-	$option =~ s/^-(.*)$/$1/;
-	debug("option -$option given");
-	shift;
-	# now switch according to option:
-	if ($option eq "v" or $option eq "-version") {
-		print "Version:". $globConf{version} . "\n";
-		exit (0);		
-	} elsif ($option eq "h" or $option eq "-help") {
-		&usage();
-	} elsif ($option eq "f") {
-		$globConf{'force'} = 1;
-	} elsif ($option eq "D") {
-		$globConf{'nodownload'} = 1;
-	} elsif ($option eq "O") {
-		$globConf{'noserveroverride'} = 1;
-	} elsif ($option eq "d") {
-		$globConf{'downloadonly'} = 1;
-	} elsif ($option eq "t") {
-		$globConf{'toolchain'} = $ARGV[0];
-		shift;
-	} else {
+    my $option = $ARGV[0];
+    $option =~ s/^-(.*)$/$1/;
+    debug("option -$option given");
+    shift;
+    # now switch according to option:
+    if ($option eq "v" or $option eq "-version") {
+        print "Version:$version" . "\n";
+        exit (0);
+    } elsif ($option eq "h" or $option eq "-help") {
+        &usage();
+    } elsif ($option eq "f") {
+        $globConf{'force'} = 1;
+    } elsif ($option eq "D") {
+        $globConf{'nodownload'} = 1;
+    } elsif ($option eq "O") {
+        $globConf{'noserveroverride'} = 1;
+    } elsif ($option eq "d") {
+        $globConf{'downloadonly'} = 1;
+    } elsif ($option eq "t") {
+        $globConf{'toolchain'} = $ARGV[0];
+        shift;
+    } else {
 
-		print buildtool::Common::Object::make_text_red('',"Error:" ) . " Unknown Option -" . $option . "\n\n";
-		exit(1);
-	}
+        print buildtool::Common::Object::make_text_red('',"Error:" ) . " Unknown Option -" . $option . "\n\n";
+        exit(1);
+    }
 }
 
 # check the environment
-&check_env();
+check_env();
 
 #???
 # put in the default config stuff
