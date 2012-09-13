@@ -6,16 +6,16 @@
 
 include $(MASTERMAKEFILE)
 
-LINVER=$(shell echo $(KERNEL_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//;s/^.*\-//')
+LINUX_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(KERNEL_SOURCE) 2>/dev/null )
 
 .source:
-	bzcat $(KERNEL_SOURCE) | tar -xvf -
-	ln -s linux-$(LINVER) linux
-	cat $(KERNEL_PATCH1) | patch -d linux-$(LINVER)/lib -p0
-	cat $(KERNEL_PATCH2) | patch -d linux-$(LINVER) -p1
-	cat $(KERNEL_PATCH3) | patch -d linux-$(LINVER) -p1
-	cat $(KERNEL_PATCH4) | patch -d linux-$(LINVER) -p1
-#	cat $(KERNEL_PATCH6) | patch -d linux-$(LINVER) -p1
+	$(BT_SETUP_BUILDDIR) -v $(KERNEL_SOURCE)
+	ln -s $(LINUX_DIR) linux
+	cat $(KERNEL_PATCH1) | patch -d $(LINUX_DIR)/lib -p0
+	cat $(KERNEL_PATCH2) | patch -d $(LINUX_DIR) -p1
+	cat $(KERNEL_PATCH3) | patch -d $(LINUX_DIR) -p1
+	cat $(KERNEL_PATCH4) | patch -d $(LINUX_DIR) -p1
+#	cat $(KERNEL_PATCH6) | patch -d $(LINUX_DIR) -p1
 	mkdir -p $(TOOLCHAIN_DIR)/usr
 	touch .source
 
@@ -24,7 +24,7 @@ LINVER=$(shell echo $(KERNEL_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//;s/^.*
 	(for i in $(KARCHS); do \
 	patch -i $(LINUX_CONFIG)-$$i.patch -o $(LINUX_CONFIG)-$$i $(LINUX_CONFIG) && \
 	mkdir -p linux-$$i && cp $(LINUX_CONFIG)-$$i linux-$$i/.config && \
-	ARCH=$(ARCH) $(MAKE) -C linux-$(LINVER) O=../linux-$$i oldconfig || \
+	ARCH=$(ARCH) $(MAKE) -C $(LINUX_DIR) O=../linux-$$i oldconfig || \
 	exit 1; done ; \
 	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
 	cp -r linux-$$i/usr/include $(TOOLCHAIN_DIR)/usr)
@@ -42,7 +42,7 @@ clean:
 srcclean:
 	for i in $(KARCHS); do rm -rf linux-$$i; done
 	rm -f linux
-	rm -rf linux-$(LINVER)
+	rm -rf $(LINUX_DIR)
 	-rm .configured
 	-rm .source
 
