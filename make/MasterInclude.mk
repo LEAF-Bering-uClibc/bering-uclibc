@@ -50,6 +50,8 @@ export BT_DPATCH=$(BT_TOOLS_DIR)/dpatch
 export BT_TGZ_GETDIRNAME=$(BT_TOOLS_DIR)/getdirname.pl
 # Where to find the setup-builddir tool
 export BT_SETUP_BUILDDIR=$(BT_TOOLS_DIR)/setup-builddir
+# Where to find the get-kernel-version tool
+export BT_GET_KERNEL_VERSION=$(BT_TOOLS_DIR)/get-kernel-version
 
 # Include per-toolchain Makefiles
 include $(BT_BUILDROOT)/make/toolchain/*.mk
@@ -105,7 +107,6 @@ EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib
 
 # Check for linux version
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
-BT_KERNEL_RELEASE1=$(shell cat $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH)/.config | awk '/Linux.*Kernel Configuration/ {print $$3}')
-export BT_KERNEL_RELEASE=$(shell echo ${BT_KERNEL_RELEASE1})
+export BT_KERNEL_RELEASE=$(shell $(BT_GET_KERNEL_VERSION) $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH))
 export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
 
