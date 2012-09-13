@@ -20,14 +20,13 @@ use vars  qw(@EXPORT);
 use strict;
 
 use File::Spec::Functions qw(:ALL);
-use File::Path qw(make_path);
 
+use buildtool::Tools qw(:ALL);
 use buildtool::Download;
 use buildtool::Common::InstalledFile;
 use buildtool::Common::Object;
 
 use vars  ('%globConf');
-
 
 ######################################################################
 # a debug routine for later purposes...
@@ -55,29 +54,14 @@ sub logme {
     }
 }
 
-
 ##################################################################
 # make the log directory if needed
-
 sub log_dir_make {
     my $logfile = $globConf{'logfile'};
     # Get the dirname:
     my ($volume, $directory, $file) = splitpath( $logfile );
     my $dirname = File::Spec->catdir( $volume, $directory );
-    if ( ! -d $dirname ) {
-        # create the dir
-        make_path( $dirname, { error => \my $err } );
-        if (@$err) {
-            for my $diag (@$err) {
-                my ( $dir, $message ) = %$diag;
-                if ( $dir eq '' ) {
-                    die "error: $message\n";
-                } else {
-                    die "can't create directory '$dir': $message\n";
-                }
-            }
-        }
-    }
+    create_dir $dirname;
 }
 
 ########################################################
@@ -92,37 +76,41 @@ sub make_absolute_path {
 ################################################
 # checks the build environment (dirs and...)
 sub check_env {
-      logme("checking build environment");
-  debug("setting \$GNU_TARGET_NAME to toolchain name ($globConf{'toolchain'})");
-  $ENV{GNU_TARGET_NAME} = $globConf{'toolchain'};
-  my @dirs = @{$globConf{'buildenv_dir'}};
-  foreach my $dir (@dirs) {
-    my $dir1 = strip_slashes(make_absolute_path($dir));
-    if (! -d $dir1) {
-      debug("making directory $dir1");
-      system("mkdir -p $dir1") == 0
-	or die "makedir $dir1 failed! " . $!;
-    } elsif (! -w $dir1) {
-	die "cannot write to dir $dir1";
-      }
+    logme("checking build environment");
+    debug(
+        "setting \$GNU_TARGET_NAME to toolchain name ($globConf{'toolchain'})");
+    $ENV{GNU_TARGET_NAME} = $globConf{'toolchain'};
+
+    my @dirs = @{ $globConf{'buildenv_dir'} };
+    foreach my $dir (@dirs) {
+        my $dir1 =
+          strip_slashes(
+                   make_absolute_path( expand_variables( $dir, \%globConf ) ) );
+        debug("making directory $dir1");
+        create_dir $dir1; # create the directory
+        die "cannot write to dir $dir1" unless -w $dir1;
     }
-  #check_lib_link();
 
-  # check if we should trace:
-  if($globConf{'usetracing'}) {
-  	# disable it until it is found in the path:
-    	$globConf{'usetracing'} = 0;
-   	 # try to load tracer
-	eval "use buildtool::Common::FileTrace";
+    #check_lib_link();
+
+    # check if we should trace:
+    if ( $globConf{'usetracing'} ) {
+
+        # disable it until it is found in the path:
+        $globConf{'usetracing'} = 0;
+
+        # try to load tracer
+        eval "use buildtool::Common::FileTrace";
         if ($@) {
-                die("loading  buildtool::Common::FileTrace failed!", "if you want to use file tracing support install File::Find");
-          }
+            die( "loading  buildtool::Common::FileTrace failed!",
+                 "if you want to use file tracing support install File::Find" );
+        }
 
-    	$globConf{'usetracing'} = 1;		
-    	logme("enabling file tracing support");
-   } else {
-    logme("trace support not enabled in configfile");
-  }
+        $globConf{'usetracing'} = 1;
+        logme("enabling file tracing support");
+    } else {
+        logme("trace support not enabled in configfile");
+    }
 }
 
 # checks if the link from /lib/ld-uclibc.so to stagingdir/lib exists
