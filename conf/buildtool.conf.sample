@@ -1,17 +1,18 @@
 # version number
 Version = 0.6pre2
 
-#####################################################################
-# files&directories
+##############################################################################
+# files & directories
 # Adjust to your needs
-# note that the dir or file entries can be relative (to the dir buildtool.pl resides in) 
-# or absolute
+# note that the dir or file entries can be relative (to the dir buildtool.pl
+# resides in) or absolute
 #
 
 #################################################
 #
-# where to log 
-Logfile = log/buildtoollog
+# where to log
+Log_Dir = log
+Logfile = $Log_Dir/buildtoollog
 
 # name of the conf file with the source/package definitions
 GlobalConffile = conf/sources.cfg
@@ -53,14 +54,14 @@ Buildtool_Config = buildtool.cfg
 #NoServerOverride = 1 
 
 # some directories, these will be deleted if you make a buildtool.pl distclean
-Buildenv_Dir=log
+Buildenv_Dir=$Log_Dir
 Buildenv_Dir=conf/$GNU_TARGET_NAME
-Buildenv_Dir=staging/$GNU_TARGET_NAME
-Buildenv_Dir=source/$GNU_TARGET_NAME
-Buildenv_Dir=build/$GNU_TARGET_NAME
-#Buildenv_Dir=conf/trace
 Buildenv_Dir=toolchain/$GNU_TARGET_NAME
-Buildenv_Dir=package/$GNU_TARGET_NAME
+Buildenv_Dir=$Source_Dir
+Buildenv_Dir=build/$GNU_TARGET_NAME
+Buildenv_Dir=$Staging_Dir
+#Buildenv_Dir=conf/trace
+Buildenv_Dir=$Package_Dir
 
 # default toolchain - override with "-t toolchain" argument to buildtool.pl
 Toolchain=i486-unknown-linux-uclibc
