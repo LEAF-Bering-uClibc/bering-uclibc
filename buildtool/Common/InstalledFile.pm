@@ -6,8 +6,6 @@ package buildtool::Common::InstalledFile;
 use strict;
 use Carp;
 
-use buildtool::Tools qw< expand_variables >;
-
 use Config::General 2.15;
 
 use parent qw< buildtool::Common::Object >;
@@ -21,9 +19,7 @@ sub _initialize() {
 
     $self->SUPER::_initialize();
 
-    my $listfile = $self->absoluteFilename(
-         expand_variables( $self->{'CONFIG'}{installedfile}, $self->{'CONFIG'} )
-    );
+    my $listfile = $self->absoluteFilename( $self->{'CONFIG'}{installedfile} );
 
     # what type we have
     $self->{'TYPES'} = [ "source", "build" ];
@@ -266,8 +262,7 @@ sub _getSourceDir () {
     #    return;
     #  }
 
-    my $source_dir =
-      expand_variables( $self->{'CONFIG'}{'source_dir'}, $self->{'CONFIG'} );
+    my $source_dir = $self->{'CONFIG'}{'source_dir'};
 
     return $self->absoluteFilename( $source_dir . "/" . $pkg );
 }

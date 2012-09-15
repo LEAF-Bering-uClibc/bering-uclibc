@@ -2,4 +2,5 @@
 lockfile
 sources.local
 buildtool.conf
+buildtool.local
 *-unknown-linux-*

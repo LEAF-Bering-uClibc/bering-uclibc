@@ -67,7 +67,13 @@ sub adjustFileConfig {
 
   foreach my $name (keys(%list)) {
     $self->debug("name:$name");
-    die make_text_red("$name is a name for a package AND a source, this can not be, please change in " .make_absolute_path($self->{'CONFIG'}{'globalconffile'})) if (exists $cfg->{'source'}{$name}) ;
+    die make_text_red(
+        "$name is a name for a package AND a source, this can not be, please change in "
+          . make_absolute_path(
+                                $self->{'CONFIG'}{'globalconffile'},
+                                $self->{'CONFIG'}{'root_dir'}
+                              )
+                     ) if ( exists $cfg->{'source'}{$name} );
   }
 
   # check for duplicate entries in the sections resulting in an array which may break things:

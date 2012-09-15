@@ -10,6 +10,7 @@
 
 use strict;
 use warnings;
+use Carp;
 
 use FindBin qw($Bin);       # where was script installed?
 use lib $FindBin::Bin;      # use that dir for libs, too
@@ -21,7 +22,9 @@ use Data::Dumper;
 use File::Spec;
 use File::Path;
 use File::Temp;
-use Carp;
+
+use buildtool::Tools qw< make_absolute_path readBuildtoolConfig
+                         set_environment >;
 
 # NON PERL INCLUDES
 
@@ -30,9 +33,7 @@ use Carp;
 # DEFINITION OF GLOBALS
 # uclibc Version
 my $version = "0.9.33.2";
-# kernel Version
-my $kver = qx(cat $Bin/source/*/linux/linux*/.config | awk '/Linux/ {print \$3}' | head -n 1);
-$kver =~ s/\n//;
+my $kver;
 
 # archivers for different package type
 my $initrd_pkr="gzip";
@@ -44,15 +45,11 @@ my $skel_unp="gzip";
 my $verbose;
 my $packager;
 my $tmpDir;
-my $lrp_owner="root";
-my $lrp_group="root";
+my $lrp_owner;
+my $lrp_group;
 my $options = {};
-my $sourceDir;
 my $confDir;
-my $stagingDir;
-my $packageDir;
 my $skelFile;
-my $gzipOptions;
 my $buildInitrd = 0;
 my $initrdImage = 0;
 my $mountcmd;
@@ -1074,91 +1071,61 @@ $verbose = exists($options->{'verbose'}) ? 1 : 0;
 $sign = exists($options->{'sign'}) ? 1 : 0;
 
 my $baseDir	= File::Spec->rel2abs($FindBin::Bin);
+my %force_config = ();
 
+$force_config{'toolchain'} = $options->{'toolchain'}
+  if exists $options->{'toolchain'};
 
-#fetch the buildtool config
-my $btConfig= new Config::General(
-			"-ConfigFile" => File::Spec->catfile(
-							$baseDir,
-							'conf',
-							'buildtool.conf'),
-			"-LowerCaseNames" => 1,
-			"-ExtendedAccess"=> 1
-		);
+$force_config{'packager'} = $options->{'packager'}
+  if exists $options->{'packager'};
 
+# load buildtool.conf and buildtool.local configurations
+my %btConfig = readBuildtoolConfig(
+    ConfigFile =>
+      make_absolute_path(
+                       File::Spec->catfile( 'conf', 'buildtool.conf' ), $baseDir
+                        ),
+    ForceConfig => {
+        %force_config,
+        'root_dir' => $baseDir,    # inject root_dir
+                   }
+);
 
-$lrp_owner = $btConfig->value('lrpowner') if $btConfig->exists('lrpowner');
-$lrp_group = $btConfig->value('lrpgroup') if $btConfig->exists('lrpgroup');
-
-$passphrase = $btConfig->value('passphrase') if $btConfig->exists('passphrase');
-$localuser = $btConfig->value('packager') if $btConfig->exists('packager');
-
-$options->{'mountpoint'} = "/mnt/loop";
-$options->{'mountpoint'} = $btConfig->value('mountpoint') if $btConfig->exists('mountpoint');
-$options->{'mkminixfs'} = "tools/busybox mkfs.minix";
-$options->{'mkminixfs'} = $btConfig->value('mkminixfs') if $btConfig->exists('mkminixfs');
-$mountcmd = "mount";
-$mountcmd = $btConfig->value('mountcmd') if $btConfig->exists('mountcmd');
-$umountcmd = "umount";
-$umountcmd = $btConfig->value('umountcmd') if $btConfig->exists('umountcmd');
-
-if (exists($options->{'toolchain'})) {
-	$toolchain = $options->{'toolchain'};
-} else {
-	if (defined($btConfig->value('toolchain'))) {
-		$toolchain = $btConfig->value('toolchain');
-	} else {
-		$toolchain = "undefined";
-	}
+# Set environment variables
+my @envvars = set_environment( \%btConfig );
+if ($verbose) {
+    for my $var ( sort @envvars ) {
+        printf "Environment variable \$%s set to '%s'\n", $var, $ENV{$var};
+    }
 }
+
+$lrp_owner = $btConfig{'lrpowner'} || 'root';
+$lrp_group = $btConfig{'lrpgroup'} || 'root';
+
+$passphrase = $btConfig{'passphrase'} || '';
+$packager   = $btConfig{'packager'}   || 'Anonymous';
+$localuser  = $btConfig{'localuser'}  || $packager;
+
+$options->{'mountpoint'} = $btConfig{'mountpoint'} || '/mnt/loop';
+$options->{'mkminixfs'} = $btConfig{'mkminixfs'} || 'tools/busybox mkfs.minix';
+$mountcmd  = $btConfig{'mountcmd'}  || 'mount';
+$umountcmd = $btConfig{'umountcmd'} || 'umount';
+
+$toolchain = $btConfig{'toolchain'};
 print "Using toolchain $toolchain\n"  if $verbose;
-$ENV{GNU_TARGET_NAME} = $toolchain;
 
-$sourceDir	= File::Spec->canonpath(
-					File::Spec->catdir(
-						$baseDir,
-						$btConfig->value('source_dir'),
-						$options->{'package'})
-			);
-# substitute environment variables like $GNU_TARGET_NAME
-$sourceDir =~ s/\$(\w+)/$ENV{$1}/g;
+my $toolsDir      = make_absolute_path( $btConfig{'tools_dir'},  $baseDir );
+my $sourceDir     = make_absolute_path( $btConfig{'source_dir'}, $baseDir );
+my $pkgSourceDir  = File::Spec->catdir( $sourceDir, $options->{'package'} );
+my $stagingDir    = make_absolute_path( $btConfig{'staging_dir'},   $baseDir );
+my $packageDir    = make_absolute_path( $btConfig{'package_dir'},   $baseDir );
+my $installedFile = make_absolute_path( $btConfig{'installedfile'}, $baseDir );
 
-$stagingDir	= File::Spec->canonpath(
-					File::Spec->catdir(
-						$baseDir,
-						$btConfig->value('staging_dir'))
-			);
-# substitute environment variables like $GNU_TARGET_NAME
-$stagingDir =~ s/\$(\w+)/$ENV{$1}/g;
-
-$packageDir	= File::Spec->canonpath(
-					File::Spec->catdir(
-						$baseDir,
-						$btConfig->value('package_dir'))
-			);
-# substitute environment variables like $GNU_TARGET_NAME
-$packageDir =~ s/\$(\w+)/$ENV{$1}/g;
-
-my $installedFile = File::Spec->canonpath(
-					File::Spec->catfile(
-						$baseDir,
-						$btConfig->value('installedfile'))
-				);
-# substitute environment variables like $GNU_TARGET_NAME
-$installedFile =~ s/\$(\w+)/$ENV{$1}/g;
-
-
-if (exists($options->{'packager'})) {
-	$packager =  $options->{'packager'};
-} else {
-	# get the packager from the config (if available)
-	if (defined($btConfig->value('packager'))) {
-		$packager =  $btConfig->value('packager');
-	} else {
-		$packager =  "anonymous";
-	}
-}
-
+# kernel Version
+my $linux_source_dir = File::Spec->catdir( $sourceDir, 'linux', 'linux' );
+$kver = qx($toolsDir/get-kernel-version $linux_source_dir);
+die "Can't find kernel version from linux sources directory '$linux_source_dir'"
+  unless $kver =~ /^\d+\.\d+/;
 
 # see if the package has been built at all
 my $installed = new Config::General(
@@ -1180,25 +1147,22 @@ if (!$foundBuiltPackage) {
 }
 
 
-$gzipOptions = $btConfig->value('gzip_options');
-$gzipOptions = '-9' unless defined($gzipOptions) && $gzipOptions;
-
+my $gzipOptions = $btConfig{'gzip_options'} || '-9';
 
 # fetch the global config
 my $globalConfig = new Config::General(
-          "-ConfigFile" =>
-            File::Spec->catfile( $baseDir, $btConfig->value('globalconffile') ),
-          '-IncludeRelative' => 1,
-          '-IncludeGlob'     => 1,
-          "-LowerCaseNames"  => 1,
-          "-ExtendedAccess"  => 1
+                  "-ConfigFile" =>
+                    make_absolute_path( $btConfig{'globalconffile'}, $baseDir ),
+                  '-IncludeRelative' => 1,
+                  '-IncludeGlob'     => 1,
+                  "-LowerCaseNames"  => 1,
+                  "-ExtendedAccess"  => 1
 );
 
 # fetch the package specific config
 
-my $packageConfig= readConfig(File::Spec->catfile(
-						$sourceDir,
-						$btConfig->value('buildtool_config')));
+my $packageConfig = readConfig(
+             File::Spec->catfile( $pkgSourceDir, $btConfig{'buildtool_config'} ) );
 
 my $p_l_targets = [];
 
@@ -1210,8 +1174,6 @@ if (exists($options->{'all'})) {
 } else {
 	push(@$p_l_targets, $options->{'target'});
 }
-
-
 
 foreach my $target (@$p_l_targets) {
 	
@@ -1298,7 +1260,7 @@ foreach my $target (@$p_l_targets) {
 	$tmpDir = prepareTempDir($p_h_package, $packageDir, $options);
 
 	# extract the skel file to the tempdir (if we have a skel file)
-	copySkelFileToPackageStaging($skelFile, $sourceDir) if (defined($skelFile));
+	copySkelFileToPackageStaging($skelFile, $pkgSourceDir) if (defined($skelFile));
 
 	# (optional) copy existing lrp
 	if (exists($options->{'lrp'})) {

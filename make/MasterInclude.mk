@@ -27,21 +27,11 @@ export ac_cv_func_ext_ldap_add_result_entry=yes
 export ac_cv_lib_ldap_r_ldap_init=yes
 endif
 
-# We assume we have the target root dir (BT_BUILDROOT) and the target platform
-# name (GNU_TARGET_NAME) as environment variables, both set by buildtool.pl
+# We assume we have the BT_XXXX variables and the target platform name (GNU_TARGET_NAME)
+# as environment variables, all set by buildtool.pl
 #
-# Where the sources are
-export BT_SOURCE_DIR=$(BT_BUILDROOT)/source/$(GNU_TARGET_NAME)
-# Where the buildstuff goes into
-export BT_BUILD_DIR=$(BT_BUILDROOT)/build/$(GNU_TARGET_NAME)
-export BT_BUILDDIR=$(BT_BUILDROOT)/build/$(GNU_TARGET_NAME)
-export BT_STAGING_DIR:=$(BT_BUILDROOT)/staging/$(GNU_TARGET_NAME)
 # Where the linux sources are
 export BT_LINUX_DIR:=$(BT_SOURCE_DIR)/linux/linux
-# Where to put finished packages
-export BT_PACKAGE_DIR:=$(BT_BUILDROOT)/package/$(GNU_TARGET_NAME)
-# Where the tools are
-export BT_TOOLS_DIR:=$(BT_BUILDROOT)/tools
 # Where to find the patchtool
 export BT_PATCHTOOL:=$(BT_TOOLS_DIR)/make-patches.sh
 # Where to find dpatch
@@ -78,10 +68,10 @@ export BT_STRIP_LIBOPTS:=--strip-unneeded
 export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
 
 # Toolchain dir
-export TOOLCHAIN_DIR=$(BT_BUILDROOT)/toolchain/$(GNU_TARGET_NAME)
+export TOOLCHAIN_DIR=$(BT_TOOLCHAIN_DIR)
 
 # Paths
-export PATH:=$(TOOLCHAIN_DIR)/bin:$(TOOLCHAIN_DIR)/usr/bin:$(PATH)
+export PATH:=$(BT_TOOLCHAIN_DIR)/bin:$(BT_TOOLCHAIN_DIR)/usr/bin:$(PATH)
 export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 export PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=$(BT_STAGING_DIR)
@@ -107,6 +97,5 @@ EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib
 
 # Check for linux version
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
-export BT_KERNEL_RELEASE=$(shell $(BT_GET_KERNEL_VERSION) $(BT_SOURCE_DIR)/linux/linux$(FIRSTKARCH))
+export BT_KERNEL_RELEASE=$(shell $(BT_GET_KERNEL_VERSION) $(BT_LINUX_DIR))
 export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
-

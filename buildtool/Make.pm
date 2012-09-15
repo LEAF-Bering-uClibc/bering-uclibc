@@ -4,11 +4,12 @@
 package buildtool::Make;
 
 use strict;
-
 use Carp;
+
+use File::Spec;
 use List::MoreUtils qw( uniq );
 
-use buildtool::Tools qw< expand_variables >;
+use buildtool::Tools qw< set_environment >;
 
 use parent qw< buildtool::Common::InstalledFile >;
 
@@ -126,13 +127,14 @@ sub _readBtConfig ($$) {
     my $self = shift;
     my $pkgname = shift || confess("no filename given");
 
-    my $source_dir =
-      expand_variables( $self->{'CONFIG'}{'source_dir'}, $self->{'CONFIG'} );
+    my $source_dir = $self->{'CONFIG'}{'source_dir'};
 
     my $configFile =
-      $self->absoluteFilename(   $source_dir . "/"
-                               . $pkgname . "/"
-                               . $self->{'CONFIG'}{'buildtool_config'} );
+      $self->absoluteFilename(
+                File::Spec->catfile(
+                    $source_dir, $pkgname, $self->{'CONFIG'}{'buildtool_config'}
+                                   )
+                             );
 
     # now make a recursive download of all the files in there
     my %flconfig =
@@ -315,6 +317,12 @@ sub _callMake($$$$) {
     my $envstring = shift || confess("no envstring");
     my $dldir     = $self->_getSourceDir($part);
     my $log       = $self->absoluteFilename( $self->{'CONFIG'}{'logfile'} );
+
+    # Set environment variables
+    for my $var ( sort( set_environment( $self->{'CONFIG'} ) ) ) {
+        $self->debug(
+                    "Environment variable \$$var set to '" . $ENV{$var} . "'" );
+    }
 
     my $exportPATH = $self->_makeExportPATH();
 

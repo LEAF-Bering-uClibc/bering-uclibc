@@ -1,0 +1,14 @@
+##############################################################################
+# This is YOUR buildtool configuration file
+# Feel free to copy here variables from master buildtool.conf file and
+# overwrite theirs values.
+#
+# Example:
+#
+# <EnvVars>
+#    MY_ENV_VARS = my value
+# </EnvVars>
+#
+# # Name of the packager - Please put your real name in here (so people will
+# # know who created the package)
+# Packager = Firstname Lastname

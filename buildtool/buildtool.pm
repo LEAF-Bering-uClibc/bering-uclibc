@@ -11,13 +11,13 @@
 use vars  qw(@EXPORT);
 
 
-
 #############################################################################
 # example:
 # server :http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi
 
 
 use strict;
+use Carp;
 
 use File::Spec::Functions qw(:ALL);
 
@@ -28,115 +28,37 @@ use buildtool::Common::Object;
 
 use vars  ('%globConf');
 
-######################################################################
-# a debug routine for later purposes...
-#
-sub debug {
-  if ($globConf{'debugtoconsole'}) {
-    print join("",@_) . "\n" ;
-  }
-  if ($globConf{'debugtologfile'}) {
-    open LOGFILE , ">> $globConf{'logfile'}";
-    print LOGFILE join("",@_) . "\n" ;
-  }
-}
-
-######################################################################
-# print something to the logfile
-#
-sub logme {
-    if ( $globConf{'debugtologfile'} ) {
-        my $logfile = $globConf{'logfile'};
-        # open log
-        open LOGFILE, ">> $logfile"
-          or die "cannot open logfile '$logfile'";
-        print LOGFILE join( "", @_ ) . "\n";
-    }
-}
-
-##################################################################
-# make the log directory if needed
-sub log_dir_make {
-    my $logfile = $globConf{'logfile'};
-    # Get the dirname:
-    my ($volume, $directory, $file) = splitpath( $logfile );
-    my $dirname = File::Spec->catdir( $volume, $directory );
-    create_dir $dirname;
-}
-
-########################################################
-# adds the buildroot path to a given path if path is not
-# absolute
-sub make_absolute_path {
-  my ($path) = @_;
-  die "root_dir must not be empty" unless $globConf{'root_dir'};
-  return File::Spec->rel2abs( $path, $globConf{'root_dir'} );
-}
-
-################################################
-# checks the build environment (dirs and...)
-sub check_env {
-    logme("checking build environment");
-    debug(
-        "setting \$GNU_TARGET_NAME to toolchain name ($globConf{'toolchain'})");
-    $ENV{GNU_TARGET_NAME} = $globConf{'toolchain'};
-
-    my @dirs = @{ $globConf{'buildenv_dir'} };
-    foreach my $dir (@dirs) {
-        my $dir1 =
-          strip_slashes(
-                   make_absolute_path( expand_variables( $dir, \%globConf ) ) );
-        debug("making directory $dir1");
-        create_dir $dir1; # create the directory
-        die "cannot write to dir $dir1" unless -w $dir1;
-    }
-
-    #check_lib_link();
-
-    # check if we should trace:
-    if ( $globConf{'usetracing'} ) {
-
-        # disable it until it is found in the path:
-        $globConf{'usetracing'} = 0;
-
-        # try to load tracer
-        eval "use buildtool::Common::FileTrace";
-        if ($@) {
-            die( "loading  buildtool::Common::FileTrace failed!",
-                 "if you want to use file tracing support install File::Find" );
-        }
-
-        $globConf{'usetracing'} = 1;
-        logme("enabling file tracing support");
-    } else {
-        logme("trace support not enabled in configfile");
-    }
-}
-
 # checks if the link from /lib/ld-uclibc.so to stagingdir/lib exists
 sub check_lib_link {
-      my $linktarget;
-      my $linkdest = make_absolute_path("staging/lib/ld-uClibc.so.0");
-      logme("checking link /lib/ld-uClibc.so");
-      if ($linktarget=readlink("/lib/ld-uClibc.so.0")) {
-	    # check if pointing to right location
-	    if ($linktarget eq $linkdest) {
-		  return 1;
-	    }
-      }
-      # else
-      print "\n\n" .buildtool::Common::Object::make_text_red('','Warning:');
-      print "The symlink from /lib/ld-uClibc.so.0 --> $linkdest does not exist, this may cause problems with some configure scripts that try to run a compiled program\n\nShould i create this link for you (Y/n)?";
-      my $ask = <STDIN>;
-      chop $ask;
-      if ($ask eq "" or $ask eq "y" or $ask eq "Y" or $ask eq "j" or $ask eq "J" ) {
-	    print "please enter root ";
-	    if (system("su -c \"ln -f -s $linkdest /lib/ld-uClibc.so.0 \"") != 0) {
-		  die "cannot create symlink";
-	    }
-	    
-      } 
-      return 1;
+    my $linktarget;
+    my $linkdest =
+      make_absolute_path( "staging/lib/ld-uClibc.so.0", $globConf{'root_dir'} );
+    logme("checking link /lib/ld-uClibc.so");
+    if ( $linktarget = readlink("/lib/ld-uClibc.so.0") ) {
+        # check if pointing to right location
+        if ( $linktarget eq $linkdest ) {
+            return 1;
+        }
+    }
+
+    # else
+    print "\n\n" . buildtool::Common::Object::make_text_red( '', 'Warning:' );
+    print
+      "The symlink from /lib/ld-uClibc.so.0 --> $linkdest does not exist, this may cause problems with some configure scripts that try to run a compiled program\n\nShould i create this link for you (Y/n)?";
+    my $ask = <STDIN>;
+    chop $ask;
+    if (    $ask eq ""
+         or $ask eq "y"
+         or $ask eq "Y"
+         or $ask eq "j"
+         or $ask eq "J" ) {
+        print "please enter root ";
+        if ( system("su -c \"ln -f -s $linkdest /lib/ld-uClibc.so.0 \"") != 0 )
+        {
+            die "cannot create symlink";
+        }
+    }
+    return 1;
 }
 
 

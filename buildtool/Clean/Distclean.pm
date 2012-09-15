@@ -6,7 +6,7 @@ package buildtool::Clean::Distclean;
 use strict;
 use Carp;
 
-use buildtool::Tools qw< remove_dir expand_variables >;
+use buildtool::Tools qw< remove_dir >;
 
 use parent qw< buildtool::Common::Object >;
 
@@ -19,8 +19,7 @@ sub clean () {
     my @dirs = @{ $self->{'CONFIG'}{'buildenv_dir'} };
     foreach my $dir (@dirs) {
         if ($dir) {
-            my $dir1 = $self->absoluteFilename(
-                                  expand_variables( $dir, $self->{'CONFIG'} ) );
+            my $dir1 = $self->absoluteFilename($dir);
             print "removing $dir1 recursive ";
             remove_dir($dir1);
             $self->print_ok();
@@ -42,14 +41,7 @@ sub clean () {
       if (   !$self->{'CONFIG'}{'buildtracedir'}
            or $self->{'CONFIG'}{'buildtracedir'} eq "" );
 
-    remove_dir(
-                $self->absoluteFilename(
-                           expand_variables(
-                                             $self->{'CONFIG'}{'buildtracedir'},
-                                             $self->{'CONFIG'}
-                                           )
-                                       )
-              );
+    remove_dir( $self->absoluteFilename( $self->{'CONFIG'}{'buildtracedir'} ) );
 }
 
 1;

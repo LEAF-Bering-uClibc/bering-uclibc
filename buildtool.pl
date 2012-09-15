@@ -24,6 +24,10 @@ use strict;
 
 use vars ('%globConf');;
 
+$::VERSION = '0.7';
+
+our $baseDir = rel2abs($FindBin::Bin);
+
 ################################################################################
 BEGIN {
       my $lockfile = catfile( $FindBin::Bin, 'conf', 'lockfile');
@@ -48,56 +52,6 @@ END {
     unlink $lockfile or die("removing lockfile '$lockfile' failed: $!");
     exit($errvar);
 }
-
-################################################################################
-
-sub load_global_configfile {
-    my ($global_config_file) = @_;
-    return
-      Config::General::ParseConfig(
-                     "-ConfigFile" =>
-                       make_absolute_path($global_config_file),
-                     '-IncludeRelative' => 1,
-                     '-IncludeGlob'     => 1,
-                     "-LowerCaseNames"  => 1
-      );
-}
-
-
-# load my conf
-%globConf = Config::General::ParseConfig(
-        "-ConfigFile"     => catfile( $FindBin::Bin, 'conf', 'buildtool.conf' ),
-        "-LowerCaseNames" => 1 );
-
-# find out what our root-dir is and inject it into the config
-$globConf{'root_dir'} = rel2abs($FindBin::Bin);
-
-# make sure, log dir is there
-$globConf{'log_dir'} = $globConf{'log_dir'} || 'log';
-create_dir(
-      make_absolute_path( expand_variables( $globConf{'log_dir'}, \%globConf ) )
-);
-
-# make the logfile absolute
-$globConf{'logfile'} =
-  make_absolute_path( expand_variables( $globConf{'logfile'}, \%globConf ) );
-
-# read in global file-config
-my %sourcesConfig;
-eval {
-    %sourcesConfig = load_global_configfile(
-                    expand_variables( $globConf{globalconffile}, \%globConf ) );
-}
-or do {
-    my $path = $@;
-    die $@,$/ if $path =~ /\*/; # Don't try to create a file with a wildcard in is name
-    $path =~ s,^.*\"([^\"]*)\".*not exist.*ConfigPath: ([^!]*)!.*\n,$2/$1,;
-    print STDERR "Created missing file \"$path\"...\n";
-    open TFILE, ">", $path or die "Can't create file \"$path\"!";
-    close TFILE;
-    %sourcesConfig = load_global_configfile(
-                    expand_variables( $globConf{globalconffile}, \%globConf ) );
-};
 
 sub usage {
 print <<MYEOF
@@ -136,13 +90,22 @@ MYEOF
 exit(1);
 }
 
-my $version = expand_variables( $globConf{version}, \%globConf );
+# ' <- fix emacs fontification
 
-# now it seems we are really starting, lets put a message in
-# the logfile , logdir should be created by check_env
-logme("==================================================");
-logme( "buildtool Version " . $version . " starting" );
-logme(scalar localtime);
+sub load_global_configfile {
+    my ($global_config_file) = @_;
+    return
+      Config::General::ParseConfig(
+        "-ConfigFile" => make_absolute_path( $global_config_file, $baseDir ),
+        '-IncludeRelative' => 1,
+        '-IncludeGlob'     => 1,
+        "-LowerCaseNames"  => 1
+                                  );
+}
+
+
+################################################################################
+my %force_config = ();
 
 &usage() if ($#ARGV < 0);
 
@@ -150,34 +113,68 @@ logme(scalar localtime);
 while ( $ARGV[0] and $ARGV[0] =~ /^-.*/ ) {
     my $option = $ARGV[0];
     $option =~ s/^-(.*)$/$1/;
-    debug("option -$option given");
     shift;
     # now switch according to option:
     if ($option eq "v" or $option eq "-version") {
-        print "Version:$version" . "\n";
+        print "Version: $::VERSION" . "\n";
         exit (0);
     } elsif ($option eq "h" or $option eq "-help") {
         &usage();
     } elsif ($option eq "f") {
-        $globConf{'force'} = 1;
+        $force_config{'force'} = 1;
     } elsif ($option eq "D") {
-        $globConf{'nodownload'} = 1;
+        $force_config{'nodownload'} = 1;
     } elsif ($option eq "O") {
-        $globConf{'noserveroverride'} = 1;
+        $force_config{'noserveroverride'} = 1;
     } elsif ($option eq "d") {
-        $globConf{'downloadonly'} = 1;
+        $force_config{'downloadonly'} = 1;
     } elsif ($option eq "t") {
-        $globConf{'toolchain'} = $ARGV[0];
+        $force_config{'toolchain'} = $ARGV[0];
         shift;
     } else {
-
         print buildtool::Common::Object::make_text_red('',"Error:" ) . " Unknown Option -" . $option . "\n\n";
         exit(1);
     }
 }
 
-# check the environment
-check_env();
+# load buildtool.conf and buildtool.local configurations
+%globConf = readBuildtoolConfig(
+    ConfigFile  => catfile( $FindBin::Bin, 'conf', 'buildtool.conf' ),
+    ForceConfig => {
+        %force_config,
+        'root_dir' => $baseDir,    # inject root_dir
+                   }
+);
+
+# make sure, log dir is there
+create_dir( make_absolute_path( $globConf{'log_dir'}, $baseDir ) );
+
+# make the logfile absolute
+$globConf{'logfile'} = make_absolute_path( $globConf{'logfile'}, $baseDir );
+
+# read in global file-config
+my %sourcesConfig;
+eval {
+    %sourcesConfig = load_global_configfile( $globConf{globalconffile} );
+}
+or do {
+    my $path = $@;
+    die $@,$/ if $path =~ /\*/; # Don't try to create a file with a wildcard in is name
+    $path =~ s,^.*\"([^\"]*)\".*not exist.*ConfigPath: ([^!]*)!.*\n,$2/$1,;
+    print STDERR "Created missing file \"$path\"...\n";
+    open TFILE, ">", $path or die "Can't create file \"$path\"!";
+    close TFILE;
+    %sourcesConfig = load_global_configfile( $globConf{globalconffile} );
+};
+
+# now it seems we are really starting, lets put a message in
+# the logfile , logdir should be created by check_env
+logme( \%globConf, "==================================================" );
+logme( \%globConf, "buildtool Version " . $::VERSION . " starting" );
+logme( \%globConf, scalar localtime );
+
+# Set and check the environment
+check_env( \%globConf );
 
 #???
 # put in the default config stuff
