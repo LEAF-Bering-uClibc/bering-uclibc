@@ -10,6 +10,8 @@ use warnings;
 
 use Exporter ();
 use Carp;
+
+use Config::General qw(ParseConfig);
 use File::Spec;
 use File::Path qw< make_path remove_tree >;
 
@@ -19,11 +21,24 @@ BEGIN {
     @ISA       = qw{ Exporter };
     @EXPORT_OK = qw{
       create_dir  check_env  debug  expand_variables  expand_config_variables
-      logme  make_absolute_path  readBuildtoolConfig  remove_dir
-      set_environment
+      logme  make_absolute_path  remove_dir
+      readBtConfig readBtGlobalConfig set_global_environment
       };
     %EXPORT_TAGS = ( ALL => \@EXPORT_OK, );
 }
+
+#
+# set the regex for finding vars
+#
+my $vars_regex = qr{
+                      \$        # dollar sign
+                      (\()?     # $1: optional opening parenthesis
+                      (\w+)     # $2: capturing variable name
+                      (
+                          ?(1)  # $3: if there's the opening parenthesis...
+                          \)    #     ... match closing parenthesis
+                      )
+              }xo;
 
 my $logfile_fh;
 
@@ -126,28 +141,33 @@ sub make_absolute_path {
 # hash ref arguments to resolv variables to values
 sub expand_variables {
     my ( $string, $hash, $envvars ) = @_;
-    $envvars = {} if not defined $envvars;
+    $envvars = $hash->{envvars} || {} if not defined $envvars;
 
     croak "First argument must be defined" if not defined $string;
+
 
     my $loop = 0;
 
     # expand variables
-    while ( $string =~ /\$(\w+)\b/ ) {
+    while ( $string =~ $vars_regex ) {
+        my $var = $2;
         my $value;
-        $loop++;
-        if ($loop > 16) { # Avoid infinite loop
-            die "Error: infinite loop found trying to expand '\$$1' variable\n";
+
+        if ($loop++ > 16) { # Avoid infinite loop
+            die "Error: infinite loop found trying to expand '\$$var' variable\n";
         }
-        if ( exists $envvars->{ uc($1) } ) { # Get the value from envvars
-            $value = $envvars->{ uc($1) };
-        }  elsif ( exists $hash->{ lc($1) } ) {    # Get the value from hash
-            $value = $hash->{ lc($1) };
+        if ( exists $envvars->{ uc($var) } ) {    # Get the value from envvars
+            $value = $envvars->{ uc($var) };
+            warn "warning: environment variable \$$var mask local one\n"
+              if exists $hash->{ lc($var) };
+        } elsif ( exists $hash->{ lc($var) } ) {  # Get the value from hash
+            $value = $hash->{ lc($var) };
         } else {
-            die "Error: can't expand variable \$$1\n";
+            die "Error: can't expand variable \$$var\n";
         }
-        $string =~ s/\$$1\b/$value/g;
+        $string =~ s//$value/;
     }
+
     return $string;
 }
 
@@ -155,12 +175,21 @@ sub expand_variables {
 # expand variables from a config hash
 # use optionnal hash ref argument to resolv variables to values
 sub expand_config_variables {
-    my ( $config, $globalconfig ) = @_;
+    my ( $config, $globalconfig, $envvars ) = @_;
 
     # Use optional global config
     $globalconfig = $config if not defined $globalconfig;
 
+    $envvars = $globalconfig->{envvars} || {} if not defined $envvars;
+
     foreach my $key ( keys %{$config} ) {
+        # check if the key need to be expand
+        my $key_expand = expand_variables( $key, $globalconfig, $envvars );
+        if ($key ne $key_expand) {
+            # Update the key
+            $config->{$key_expand} = delete $config->{$key};
+            $key = $key_expand;
+        }
         if ( not ref( $config->{$key} ) ) {    # it's a scalar
             $config->{$key} = expand_variables( $config->{$key}, $globalconfig,
                                                 $config->{envvars} );
@@ -173,16 +202,25 @@ sub expand_config_variables {
             ];
         } elsif ( $key ne 'envvars' and ref( $config->{$key} ) eq 'HASH' ) {
             # expand variable recursively
-            expand_config_variables( $config->{$key},
-                                   { %{$globalconfig}, %{ $config->{$key} } } );
+            expand_config_variables(
+                                     $config->{$key},
+                                     { %{$globalconfig}, %{ $config->{$key} } },
+                                     $globalconfig->{envvars}
+                                   );
         }
     }
 }
 
 ###############################################################################
-# read the buildtool configuration file and expand all variables
+# read a config file and merge with a local file (if exists) then expand all
+# variables.
+# Options:
+#       ForceConfig   => hash ref containing key => values pairs to force
+#       DefaultConfig => hash ref containing key => value to define if not
+#                        exists
+#
 # return a hash with all values expanded
-sub readBuildtoolConfig {
+sub readBtConfig {
     my (@args) = @_;
     my %args;
     if (@args % 2 == 0) {
@@ -193,20 +231,11 @@ sub readBuildtoolConfig {
 
     my $configfile = delete $args{ConfigFile}
       or croak "Parameter ConfigFile required !";
-    my $forceconfig = delete $args{ForceConfig} || {};
+    my $forceconfig   = delete $args{ForceConfig}   || {};
+    my $defaultconfig = delete $args{DefaultConfig} || {};
 
     my $rest = ( keys %args )[0];
     croak "Unknown argument '$rest'" if defined $rest;
-
-    my $defaultconfig = {
-                          'log_dir'     => 'log',
-                          'conf_dir'    => 'conf',
-                          'tools_dir'   => 'tools',
-                          'source_dir'  => 'source/$toolchain',
-                          'staging_dir' => 'staging/$toolchain',
-                          'package_dir' => 'package/$toolchain',
-                          'image_dir'   => 'image',
-                        },
 
     # load the buildtool configuration file
     my %btconfig =
@@ -216,8 +245,10 @@ sub readBuildtoolConfig {
                                     "-MergeDuplicateBlocks" => 1,
                                   );
 
+    # A local file have the same name has the global one but with
+    # .local extension
     my $localConfigFile;
-    ($localConfigFile = $configfile) =~ s/\.conf$/.local/;
+    ($localConfigFile = $configfile) =~ s/\.(conf|cfg)$/.local/;
 
     my %btLocalConfig = ();
     if ( -f $localConfigFile ) {
@@ -291,12 +322,35 @@ sub readBuildtoolConfig {
 }
 
 ###############################################################################
+# read the buildtool.conf and buildtools.local (if exists)
+# return a hash with all values expanded
+sub readBtGlobalConfig {
+    my $defaultconfig = {
+                          'log_dir'     => '$Root_Dir/log',
+                          'conf_dir'    => '$Root_Dir/conf',
+                          'tools_dir'   => '$Root_Dir/tools',
+                          'source_dir'  => '$Root_Dir/source/$toolchain',
+                          'staging_dir' => '$Root_Dir/staging/$toolchain',
+                          'package_dir' => '$Root_Dir/package/$toolchain',
+                          'image_dir'   => '$Root_Dir/image',
+                        };
+    return readBtConfig( 'DefaultConfig' => $defaultconfig, @_ );
+}
+
+###############################################################################
 # Set environment variables from builtool config envvars
 # return an array with name of variables that has been set
-sub set_environment {
+sub set_global_environment {
     my ($btConfig) = @_;
-    return
-      map { $ENV{$_} = $btConfig->{'envvars'}->{$_}; $_ }
+    return map {
+        my $value = $btConfig->{'envvars'}->{$_};
+        if ( not ref $value ) { # value is a scalar
+            $ENV{$_} = $value;
+            $_;    # return the variable name
+        } else {
+            ();    # return an empty array (to not return a variable name)
+        }
+      }
       keys %{ $btConfig->{'envvars'} };
 }
 

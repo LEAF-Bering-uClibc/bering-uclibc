@@ -35,11 +35,11 @@ sub clean () {
     # Read the package config
     my %pkg_config = $self->_readBtConfig($pkg);
 
-    # Populate the envstring from file section of package config
-    my $envstring  = $self->_makeEnvString( %{ $pkg_config{'file'} } );
+    # Extract environment from package config
+    my $localEnv = $self->_extractLocalEnv( \%pkg_config );
 
     # now call make srcclean
-    $self->_callMake("srcclean", $pkg, $envstring);
+    $self->_callMake( "srcclean", $pkg, $localEnv );
 
     # now remove everything from our list:
     $self->_removePackageFiles($pkg);

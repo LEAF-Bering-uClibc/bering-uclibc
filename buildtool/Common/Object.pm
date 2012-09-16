@@ -18,24 +18,18 @@ $VERSION	= '0.5';
 # constructor routine
 #
 
-sub new($$)
-{
+sub new {
 	my ($type, $p_h_config, %rest) = @_;
-
 	my $self;
 
-	confess("Config is not a valid hash, is a ". ref($p_h_config)) if (ref($p_h_config) ne "HASH") ;
+    confess( "Config is not a valid hash, is a " . ref($p_h_config) )
+      if ref($p_h_config) ne "HASH";
 
-	$self= {
-		'CONFIG'		=> $p_h_config,
-	};
-
+    $self = { 'CONFIG' => $p_h_config, };
 
 	bless($self, $type);
 
 	$self->dumpIt(\%rest);
-
-
 
 #	if (scalar(keys(%rest)) > 0) {
 	      # call init function if we have something to init
@@ -49,15 +43,15 @@ sub new($$)
 # init function
 #
 sub _initialize() {
-  my $self = shift;
-  # empty function,
-  # fill if needed
-  ######################################### default init #############
-  # set debug value of Class (for debugging output)
-  $self->{'DEBUG'} = $self->{'CONFIG'}->{'debugtoconsole'} ||$self->{'CONFIG'}->{'debugtologfile'} ;
-  ######################################### default init END##########
+    my ($self) = @_;
 
-
+    # empty function,
+    # fill if needed
+    ######################################### default init #############
+    # set debug value of Class (for debugging output)
+    $self->{'DEBUG'} = $self->{'CONFIG'}->{'debugtoconsole'}
+      || $self->{'CONFIG'}->{'debugtologfile'};
+    ######################################### default init END##########
 }
 
 

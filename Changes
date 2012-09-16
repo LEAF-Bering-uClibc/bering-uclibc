@@ -2,7 +2,9 @@
 - added new file type - 'module', it'll be ignored during backup
 - added auto-loading of 'module' files (if it needed parameters - just load it manually in /etc/modules)
 - hacks for cross-compilation on x86_64
-- some other small changes
+- each sources has its own configuration file in conf/sources.d
+- buildtool.conf/buildtool.local files can contain variables
+- dump the environment of buildtool or sources/packages on screen or file
 
 0.6pre2
 - removed itrace support

@@ -7,9 +7,10 @@ use strict;
 use Carp;
 
 use File::Spec;
+use Hash::Merge;
 use List::MoreUtils qw( uniq );
 
-use buildtool::Tools qw< set_environment >;
+use buildtool::Tools qw< set_global_environment readBtConfig >;
 
 use parent qw< buildtool::Common::InstalledFile >;
 
@@ -42,7 +43,7 @@ sub _initialize () {
 
     ################################### class configuration BEGIN ################
     # add stuff to environment:
-    $self->{'ENVIRONMENT'} = "LANG=C";
+    $self->{'ENVIRONMENT'} = { 'LANG' => 'C' };
 
     # how deep do we go before throwing an error ??
     $self->{'REQUIRELIST_MAXDEPTH'} = 20;
@@ -136,12 +137,11 @@ sub _readBtConfig ($$) {
                                    )
                              );
 
-    # now make a recursive download of all the files in there
-    my %flconfig =
-      Config::General::ParseConfig( "-ConfigFile"     => $configFile,
-                                    "-LowerCaseNames" => 1 );
+    # now read the package config file
+    my %flconfig = readBtConfig( "ConfigFile" => $configFile );
 
     %flconfig = $self->_addDefaultServer(%flconfig);
+
     return %flconfig;
 }
 
@@ -174,35 +174,42 @@ sub _addDefaultServer ($$) {
 }
 
 ##############################################################################
-# return the the environment vars:
+# return a hash containing the local environment vars:
 # those vars can be set in the buildtool.cfg via a env = NAME entry
 # this would result in NAME=$filename entry
-sub _makeEnvString {
-    my $self      = shift;
-    my %config    = @_;
-    my $envstring = "";
+sub _extractLocalEnv {
+    my ( $self, $pkgConfig ) = @_;
+
     $self->debug("starting");
-    foreach my $file ( keys %config ) {
-        if ( exists( $config{$file}{'envname'} )
-             && ( $config{$file}{'envname'} ne "" ) ) {
-            if ( $config{$file}{'envname'} =~ /^[0-9a-zA-Z_-]+$/ ) {
-                $envstring .= " " . $config{$file}{'envname'} . "=" . $file;
+
+    my $pkg_envvars = $pkgConfig->{'envvars'} || {};
+    my $environment = $self->{'ENVIRONMENT'}  || {};
+    my $merge       = Hash::Merge->new('RIGHT_PRECEDENT');
+    my $localEnv = $merge->merge( $environment, $pkg_envvars );
+
+    # Convert envvars keys to uppercase
+    $localEnv = {
+                  map { uc $_ => $localEnv->{$_} }
+                    keys %{$localEnv}
+                };
+
+    # Extract environment variables from file sections of package config
+    my $files = $pkgConfig->{file};
+    foreach my $file ( keys %{$files} ) {
+        my $file_hash = $files->{$file};
+        if ( exists $file_hash->{'envname'} and $file_hash->{'envname'} ) {
+            my $var = $file_hash->{'envname'};
+            if ( $var =~ /^[0-9a-zA-Z_-]+$/ ) {
+                $localEnv->{$var} = $file;
             } else {
                 # die , not allowed to use
                 # maybe change to an error message and do not die...
-                confess "not allowed characters in environment varname : "
-                  . $config{$file}{'envname'};
+                confess "not allowed characters in environment varname '$var'";
             }
         }
     }
 
-    # if we have something we should add to environment, do it
-    if ( $self->{'ENVIRONMENT'} ) {
-        $envstring .= " " . $self->{'ENVIRONMENT'};
-    }
-
-    $self->debug("envstring:$envstring");
-    return $envstring;
+    return $localEnv;
 }
 
 ##############################################################################
@@ -309,22 +316,60 @@ sub _makeExportPATH ($) {
 }
 
 ##############################################################################
+##
+sub _dumpEnv {
+    my ( $self, %options ) = @_;
+    my $output_fh;
+
+    my $output_file = $options{output};
+    my $localEnv    = $options{localenv} || {};
+
+    if ($output_file) {
+        open $output_fh, ">", $output_file
+          or croak "Can't create $output_file:$!";
+    } else {
+        $output_fh = *STDOUT;
+    }
+
+    my $globalEnv = $self->{'CONFIG'}->{envvars} || {};
+
+    # Dump global environment
+    foreach my $var ( sort keys %{$globalEnv} ) {
+        my $value = $globalEnv->{$var};
+        if ( not ref $value ) {    # value is a scalar
+            print $output_fh "export " . uc($var) . "='$value'", $/;
+        }
+    }
+
+    # Dump local environment
+    foreach my $var ( sort keys %{$localEnv} ) {
+        my $value = $localEnv->{$var};
+        if ( not ref $value ) {    # value is a scalar
+            print $output_fh "$var='$value'", $/;
+        }
+    }
+}
+
+
+##############################################################################
 ## internal method to call make
-sub _callMake($$$$) {
+sub _callMake {
     my $self      = shift;
     my $target    = shift || confess("no target rule given");
     my $part      = shift || confess("no part given");
-    my $envstring = shift || confess("no envstring");
+    my $localEnv  = shift || confess("no localEnv");
     my $dldir     = $self->_getSourceDir($part);
     my $log       = $self->absoluteFilename( $self->{'CONFIG'}{'logfile'} );
 
     # Set environment variables
-    for my $var ( sort( set_environment( $self->{'CONFIG'} ) ) ) {
+    for my $var ( sort( set_global_environment( $self->{'CONFIG'} ) ) ) {
         $self->debug(
                     "Environment variable \$$var set to '" . $ENV{$var} . "'" );
     }
 
     my $exportPATH = $self->_makeExportPATH();
+    my $envstring =
+      join( ' ', map { "$_=$localEnv->{$_}" } sort keys %{$localEnv} );
 
     my $commandStr =
         "export PATH=" . $exportPATH . " && " . $self->{'ITRACE'}

@@ -23,8 +23,8 @@ use File::Spec;
 use File::Path;
 use File::Temp;
 
-use buildtool::Tools qw< make_absolute_path readBuildtoolConfig
-                         set_environment >;
+use buildtool::Tools qw< make_absolute_path readBtGlobalConfig
+                         set_global_environment >;
 
 # NON PERL INCLUDES
 
@@ -499,10 +499,10 @@ sub cleanTempDir() {
 #	}
 }
 
-sub system_exec($;$$) {
-	my ($command, $error_message, $no_cleanup) = @_;
+sub system_exec {
+    my ( $command, $error_message, $no_cleanup ) = @_;
 
-	$no_cleanup = 0 unless defined($no_cleanup);
+    $no_cleanup = 0 unless defined $no_cleanup;
 	
 	$error_message = "$command failed " unless defined($error_message);
 
@@ -572,50 +572,52 @@ sub createDirectories($$){
 
 }
 
-sub copyBinariesToPackageStaging($$) {
+sub copyBinariesToPackageStaging {
 	my ($p_h_package, $build_dir) = @_;
-	print "Copying binaries\n"  if($verbose);
+    print "Copying binaries\n" if $verbose;
 
-	foreach my $p_h_file (@{$p_h_package->{'contents'}->{'file'}}) {
-			my $filename = $p_h_file->{'filename'};
+	foreach my $file (@{$p_h_package->{'contents'}->{'file'}}) {
 
-			next unless exists($p_h_file->{'type'}->{'BINARY'});
+        next unless exists $file->{'type'}->{'BINARY'};
 
+		my $filename = $file->{'filename'};
 
-			my $source_filename = File::Spec->catfile($build_dir,$p_h_file->{'source'});
-			$source_filename =~ s/__KVER__/$kver/g;
+		my $source_filename = File::Spec->catfile($build_dir,$file->{'source'});
+		$source_filename =~ s/__KVER__/$kver/g;
 
-			my $destination_filename; 
-			my $destination_path;
+		my $destination_filename;
+		my $destination_path;
 
-			
-			# if the source filename contains "*", the destination file _must_ be a directory
-			if ($source_filename =~ /\*/ig) {
-				$destination_filename = File::Spec->catdir($tmpDir,$filename);
-				$destination_path= $destination_filename;
+		# if the source filename contains "*", the destination file _must_ be a directory
+		if ($source_filename =~ /\*/ig) {
+			$destination_filename = File::Spec->catdir($tmpDir,$filename);
+			$destination_path= $destination_filename;
 				
-			} else {
-				my $volume;
-				my $file;
-				
-				$destination_filename = File::Spec->catdir($tmpDir,$filename);
-				($volume,$destination_path,$file) = File::Spec->splitpath( $destination_filename );
-			}
+		} else {
+			$destination_filename =
+			  File::Spec->catdir( $tmpDir, $filename );
+			( undef, $destination_path, undef ) =
+			  File::Spec->splitpath($destination_filename);
+		}
 			
-			$destination_path =~ s/__KVER__/$kver/g;
+		$destination_path =~ s/__KVER__/$kver/g;
 
 
-			# create the target directory, if it doesn't exist
-			createDirUnlessItExists($destination_path,$p_h_package);
+		# create the target directory, if it doesn't exist
+        createDirUnlessItExists( $destination_path, $p_h_package );
 
-			# Skip files that are marked as "conf" but already came from the skeleton
-			# this way, we don't trash the existing config from the skeleton
-			if (exists($p_h_file->{'type'}->{'CONF'}) && ( -e $destination_filename ) ) {
-					print "Not overwriting file $destination_filename since it was contained in the skeleton\n" if($verbose);
-					next;
-			}
+		# Skip files that are marked as "conf" but already came from the skeleton
+		# this way, we don't trash the existing config from the skeleton
+        if ( exists( $file->{'type'}->{'CONF'} )
+             && ( -e $destination_filename ) ) {
+            print
+              "Not overwriting file $destination_filename since it was contained in the skeleton\n"
+              if ($verbose);
+            next;
+        }
 			
-			system_exec("cp -r $source_filename $destination_filename","Copying file $source_filename failed.");
+        system_exec( "cp -r $source_filename $destination_filename",
+                     "Copying file $source_filename failed." );
 	}
 }
 
@@ -1080,7 +1082,7 @@ $force_config{'packager'} = $options->{'packager'}
   if exists $options->{'packager'};
 
 # load buildtool.conf and buildtool.local configurations
-my %btConfig = readBuildtoolConfig(
+my %btConfig = readBtGlobalConfig(
     ConfigFile =>
       make_absolute_path(
                        File::Spec->catfile( 'conf', 'buildtool.conf' ), $baseDir
@@ -1092,7 +1094,7 @@ my %btConfig = readBuildtoolConfig(
 );
 
 # Set environment variables
-my @envvars = set_environment( \%btConfig );
+my @envvars = set_global_environment( \%btConfig );
 if ($verbose) {
     for my $var ( sort @envvars ) {
         printf "Environment variable \$%s set to '%s'\n", $var, $ENV{$var};
@@ -1124,6 +1126,7 @@ my $installedFile = make_absolute_path( $btConfig{'installedfile'}, $baseDir );
 # kernel Version
 my $linux_source_dir = File::Spec->catdir( $sourceDir, 'linux', 'linux' );
 $kver = qx($toolsDir/get-kernel-version $linux_source_dir);
+chomp $kver;
 die "Can't find kernel version from linux sources directory '$linux_source_dir'"
   unless $kver =~ /^\d+\.\d+/;
 

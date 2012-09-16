@@ -29,11 +29,11 @@ sub clean () {
     # Read the package config
     my %pkg_config = $self->_readBtConfig($pkg);
 
-    # Populate the envstring from file section of package config
-    my $envstring  = $self->_makeEnvString( %{ $pkg_config{'file'} } );
+    # Extract environment from package config
+    my $localEnv = $self->_extractLocalEnv( \%pkg_config );
 
     # now call make clean
-    $self->_callMake("clean", $pkg, $envstring);
+    $self->_callMake( "clean", $pkg, $localEnv );
 
     # now remove everything from our list:
     $self->_removePackageFiles($pkg);

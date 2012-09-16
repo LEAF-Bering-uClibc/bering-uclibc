@@ -52,7 +52,10 @@ sub setFiles ($$) {
 # file (hashref) as from Config::General
 # dlroot (string)
 sub download () {
-  my $self = shift;
+  my ($self, %options) = @_;
+
+  $options{quiet} = 0 unless exists $options{quiet};
+
   my %myconf = %{$self->{'CONFIG'}};
 
   my $dir = "";
@@ -89,13 +92,14 @@ sub download () {
 
     $self->die("Error in Config:","no server type given for server $dlserver") if ((! $dltype) or ($dltype eq ""));
 
-    print "downloading: $file from server $dlserver type $dltype ";
+    print "downloading: $file from server $dlserver type $dltype "
+      unless $options{quiet};
 
-  if ($myconf{'nodownload'}) {
-	$self->debug("not downloading anything as requested by commandline");
-	print $self->make_text_green("[skipped]") . "\n";
-	return;
-  }
+    if ( $myconf{'nodownload'} ) {
+        $self->debug("not downloading anything as requested by commandline");
+        print $self->make_text_green("[skipped]") . "\n" unless $options{quiet};
+        return;
+    }
 
 
 
@@ -257,18 +261,17 @@ sub download () {
       $self->die("download failed", $object->getErrorMsg() . " \n") if  ($object->download()== 0);
 
 
-
-
     } else {
       confess("unknown type $dltype");
     }
+
     # not died, so everything seems to be o.k.
-    $self->printOk();
-    print "\n";
+    if (not $options{quiet}) {
+        $self->printOk();
+        print "\n";
+    }
   }
 }
-
-
 
 
 1;

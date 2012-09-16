@@ -1,10 +1,7 @@
-# $Id: Source.pm,v 1.1.1.1 2010/04/26 09:03:17 nitr0man Exp $
 package buildtool::Make::Source;
 
 use strict;
-
 use Carp;
-use Config::General qw( ParseConfig );
 
 use parent qw< buildtool::Make >;
 
@@ -104,13 +101,9 @@ sub downloadFiles($) {
         $download->setDlroot( $self->_getSourceDir($part) );
         $download->download();
 
-        # make the environment vars ready:
-        # those vars can be set in the buildtool.cfg via a env = NAME entry
-        # this would result in NAME=$filename entry
-        my $envstring = "";
+        # Extract environment from package config
+        my $localEnv = $self->_extractLocalEnv( \%pkg_config );
 
-        # make the envstring
-        $envstring = $self->_makeEnvString( %{ $pkg_config{'file'} } );
         my $downloadOnly = 0;
         $downloadOnly = 1
           if exists( $self->{'CONFIG'}{'downloadonly'} )
@@ -118,7 +111,7 @@ sub downloadFiles($) {
 
         if ( !$downloadOnly ) {
             # now call make source
-            $self->_callMake( "source", $part, $envstring );
+            $self->_callMake( "source", $part, $localEnv );
 
             # add to list
             $self->addEntry( "source", $part );
@@ -128,35 +121,75 @@ sub downloadFiles($) {
 }
 
 ########################################################################################
-sub _downloadBuildtoolCfg ($$$) {
-    my $self = shift;
-    my $part = shift;
+sub _downloadBuildtoolCfg {
+    my ( $self, $package, %options ) = @_;
     my $mdir;
-    my %allfiles = $self->_getAllHash();
+
+    $options{quiet} = 0 unless exists $options{quiet};
+
+    my %pkgs = $self->_getAllHash();
+    die("'$package' is not a package nor a source!\n") unless exists $pkgs{$package};
+
     my %server   = %{ $self->{'FILECONF'}->{'server'} };
 
-    if ( exists $allfiles{$part}{'directory'} ) {
-        $mdir = $allfiles{$part}{'directory'};
+    if ( exists $pkgs{$package}{'directory'} ) {
+        $mdir = $pkgs{$package}{'directory'};
     } else {
         $mdir = "";
     }
 
     # download the buildtool config gile
 
-    my %files = (
+    my %pkg_config_file = (
                   $self->{'CONFIG'}{'buildtool_config'} => {
-                                     'revision' => $allfiles{$part}{'revision'},
-                                     'server'   => $allfiles{$part}{'server'},
+                                     'revision' => $pkgs{$package}{'revision'},
+                                     'server'   => $pkgs{$package}{'server'},
                                      'directory' => $mdir
                   }
                 );
 
     # first get the config file we want:
     my $download = buildtool::Download->new( $self->{'CONFIG'} );
-    $download->setServer( \%server );
-    $download->setFiles( \%files );
-    $download->setDlroot( $self->_getSourceDir($part) );
-    $download->download();
+    $download->setServer( \%server );            # Which server to use
+    $download->setFiles( \%pkg_config_file );    # File(s) to download
+    $download->setDlroot( $self->_getSourceDir($package) );  # Where to download
+    $download->download( quiet => $options{quiet} );         # Download !!!
+}
+
+
+########################################################################################
+sub dump_env {
+    my ( $self, %options ) = @_;
+
+    my $pkg         = $options{package} || '';
+    my $output_file = $options{output};
+    my $localEnv;
+
+    $options{quiet} = 0 unless exists $options{quiet};
+
+    # If a package is specified we need to download the package config file
+    if ($pkg) {
+        # the download function wants two hashes: one for the files,
+        # and one for the servers (that's the easy part) ;-)
+
+        # download package config file
+        $self->_downloadBuildtoolCfg( $pkg, quiet => 0 );
+
+        # Read the package config
+        my %pkg_config = $self->_readBtConfig($pkg);
+
+        # Extract environment from package config
+        $localEnv = $self->_extractLocalEnv( \%pkg_config );
+
+        if ($output_file) {
+            print "\ndumping environment of '$pkg' to $output_file\n";
+        } else {
+            print "\ndump environment: $pkg\n";
+            print "------------------------\n";
+        }
+    }
+
+    $self->_dumpEnv( %options, localenv => $localEnv );
 }
 
 1;

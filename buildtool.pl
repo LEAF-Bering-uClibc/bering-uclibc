@@ -60,6 +60,7 @@ usage: $0 [option] command [pkgname|srcname] [...]
 commands:
 describe [pkgname|srcname]\t shows descriptionlines of package
 list [sourced|built]\t\t shows a list of built/sourced packages and sources
+dumpenv [pkgname|srcname]\t dump the environment of buildtool and package
 source [pkgname|srcname]  \t downloads, unpacks and patches
                           \t the wanted package/source
 build [pkgname|srcname]     \t the same as source, but builds
@@ -138,7 +139,7 @@ while ( $ARGV[0] and $ARGV[0] =~ /^-.*/ ) {
 }
 
 # load buildtool.conf and buildtool.local configurations
-%globConf = readBuildtoolConfig(
+%globConf = readBtGlobalConfig(
     ConfigFile  => catfile( $FindBin::Bin, 'conf', 'buildtool.conf' ),
     ForceConfig => {
         %force_config,
@@ -204,6 +205,7 @@ if ($ARGV[0] eq "describe") {
 } elsif ($ARGV[0] eq "source") {
   # source packages/sources
   shift;
+
   my $make = buildtool::Make::Source->new(\%globConf, \%sourcesConfig);
   $make->make(@ARGV);
 
@@ -218,7 +220,7 @@ if ($ARGV[0] eq "describe") {
   shift;
   # first do a make source:
   #check_lib_link();
-  
+
   my $source = buildtool::Make::Source->new(\%globConf, \%sourcesConfig);
   $source->make(@ARGV);
   # now do a make build...
@@ -258,6 +260,10 @@ if ($ARGV[0] eq "describe") {
     $clean->clean();
   }
 
+} elsif ($ARGV[0] eq "dumpenv") {
+  shift;
+  my $env = buildtool::Make::Source->new(\%globConf, \%sourcesConfig);
+  $env->dump_env( package => $ARGV[0], xoutput => '/tmp/toto' );
 
 } else {
   # unknown command

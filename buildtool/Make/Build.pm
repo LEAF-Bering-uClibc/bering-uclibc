@@ -1,7 +1,3 @@
-
-#$Id: Build.pm,v 1.1.1.1 2010/04/26 09:03:17 nitr0man Exp $
-# class for doing the make source stuff
-
 package buildtool::Make::Build;
 
 use strict;
@@ -96,11 +92,11 @@ sub _buildFiles($) {
         # Read the package config
         my %pkg_config = $self->_readBtConfig($part);
 
-        # Populate the envstring from file section of package config
-        my $envstring = $self->_makeEnvString( %{ $pkg_config{'file'} } );
+        # Extract environment from package config
+        my $localEnv = $self->_extractLocalEnv( \%pkg_config );
 
         # now call make build
-        $self->_callMake( "build", $part, $envstring );
+        $self->_callMake( "build", $part, $localEnv );
 
         # add to list
         $self->addEntry( "build", $part );
