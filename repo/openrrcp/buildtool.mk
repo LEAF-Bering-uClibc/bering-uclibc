@@ -20,7 +20,7 @@ build: $(OPENRRCP_DIR)/Makefile
 	mkdir -p $(OPENRRCP_TARGET_DIR)
 	mkdir -p $(OPENRRCP_TARGET_DIR)/usr
 	mkdir -p $(OPENRRCP_TARGET_DIR)/usr/bin
-	$(MAKE) KERNEL_INCLUDE=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/include  \
+	$(MAKE) KERNEL_INCLUDE=$(BT_LINUX_DIR)/include  \
 		LIBC_INCLUDE=$(BT_STAGING_DIR)/include \
 		CC=$(TARGET_CC) \
 		CCOPTS="-D_GNU_SOURCE $(CFLAGS) -Wstrict-prototypes -Wall " \

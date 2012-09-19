@@ -23,7 +23,7 @@ $(DIR)/.source:
 $(DIR)/.build: $(DIR)/.source
 	mkdir -p $(TARGET_DIR)
 	(cd $(DIR) && for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
-	export KERNEL_DIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) ; \
+	export KERNEL_DIR=$(BT_LINUX_DIR) ; \
 	export KBUILD_OUTPUT=$(BT_LINUX_DIR)-$$i ; \
 	./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) \
 	--prefix=/ --with-kbuild=$$KERNEL_DIR --with-xtlibdir=/lib/xtables &&\
@@ -50,6 +50,6 @@ build: $(DIR)/.build
 clean:
 	-rm $(DIR)/.build
 	-$(MAKE) -C $(DIR) clean
-  
+
 srcclean:
 	rm -rf $(DIR)

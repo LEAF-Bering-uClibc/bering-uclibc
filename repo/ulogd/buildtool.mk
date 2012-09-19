@@ -1,13 +1,13 @@
 # makefile for ulog
 include $(MASTERMAKEFILE)
 
-ULOGD_DIR:=ulogd-1.24
+ULOGD_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(ULOGD_SOURCE) 2>/dev/null )
 ULOGD_TARGET_DIR:=$(BT_BUILD_DIR)/ulogd
 
 #export LDFLAGS += $(EXTCCLDFLAGS)
 
 $(ULOGD_DIR)/.source:
-	bzcat $(ULOGD_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(ULOGD_SOURCE)
 	cat $(ULOGD_PATCH1) | patch -d $(ULOGD_DIR) -p1
 	cat $(ULOGD_PATCH2) | patch -d $(ULOGD_DIR) -p1
 	cat $(ULOGD_PATCH3) | patch -d $(ULOGD_DIR) -p1

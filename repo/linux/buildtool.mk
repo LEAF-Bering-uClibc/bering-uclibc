@@ -6,17 +6,18 @@
 
 include $(MASTERMAKEFILE)
 
-LINUX_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(KERNEL_SOURCE) 2>/dev/null )
+LINUX_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(KERNEL_BASE_SOURCE) 2>/dev/null )
 
 .source:
-	$(BT_SETUP_BUILDDIR) -v $(KERNEL_SOURCE)
+	$(BT_SETUP_BUILDDIR) -v $(KERNEL_BASE_SOURCE)
+	xzcat $(UPDATE_KERNEL_SOURCE_PATCH) | patch -p1 -s -d $(LINUX_DIR)
 	ln -s $(LINUX_DIR) linux
 	cat $(KERNEL_PATCH1) | patch -d $(LINUX_DIR)/lib -p0
 	cat $(KERNEL_PATCH2) | patch -d $(LINUX_DIR) -p1
 	cat $(KERNEL_PATCH3) | patch -d $(LINUX_DIR) -p1
 	cat $(KERNEL_PATCH4) | patch -d $(LINUX_DIR) -p1
 #	cat $(KERNEL_PATCH6) | patch -d $(LINUX_DIR) -p1
-	mkdir -p $(TOOLCHAIN_DIR)/usr
+	mkdir -p $(BT_TOOLCHAIN_DIR)/usr
 	touch .source
 
 
@@ -27,7 +28,7 @@ LINUX_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(KERNEL_SOURCE) 2>/dev/null )
 	ARCH=$(ARCH) $(MAKE) -C $(LINUX_DIR) O=../linux-$$i oldconfig || \
 	exit 1; done ; \
 	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
-	cp -r linux-$$i/usr/include $(TOOLCHAIN_DIR)/usr)
+	cp -r linux-$$i/usr/include $(BT_TOOLCHAIN_DIR)/usr)
 	touch .configured
 
 source: .source .configured
