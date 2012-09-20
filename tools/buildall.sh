@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 #set -x
 # call this from the 
 #
@@ -19,7 +19,7 @@ HTMLFILE=$MYDIR/build.html
 BTROOTDIR=.
 BTBIN=$BTROOTDIR/buildtool.pl
 BPBIN=$BTROOTDIR/buildpacket.pl
-TOOLCHAIN=`grep -i ^Toolchain= $BTROOTDIR/conf/buildtool.conf | cut -d= -f2`
+TOOLCHAIN=$(sed -n 's/^toolchain *= *//ip' $BTROOTDIR/conf/buildtool.conf)
 BTSOURCEDIR=${BTROOTDIR}/source/${TOOLCHAIN}
 BTLOGFILE="${BTROOTDIR}/log/buildtoollog"
 EXITVALUE=0
