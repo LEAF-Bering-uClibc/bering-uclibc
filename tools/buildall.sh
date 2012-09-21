@@ -12,18 +12,21 @@
 EXPORTDIR=/tmp
 
 #########################################################
+BTROOTDIR=$(git rev-parse --show-toplevel 2>/dev/null)
 DATE=$(date "+%Y-%m-%dT%H:%M")
 STARTDATE=$(date)
 MYDIR=$EXPORTDIR/$DATE
 HTMLFILE=$MYDIR/build.html
-BTROOTDIR=.
 BTBIN=$BTROOTDIR/buildtool.pl
 BPBIN=$BTROOTDIR/buildpacket.pl
-TOOLCHAIN=$(sed -n 's/^toolchain *= *//ip' $BTROOTDIR/conf/buildtool.conf)
-BTSOURCEDIR=${BTROOTDIR}/source/${TOOLCHAIN}
-BTLOGFILE="${BTROOTDIR}/log/buildtoollog"
-EXITVALUE=0
 
+################## set environment ######################
+tmpfile=$(mktemp)
+$BTBIN dumpenv > $tmpfile || exit 1
+source $tmpfile || exit 1
+rm -f $tmpfile
+TOOLCHAIN=$GNU_TARGET_NAME
+EXITVALUE=0
 
 
 print_usage() {
@@ -47,17 +50,18 @@ call_buildtool() {
 	else
 		echo -n "<font color=red><b>FAILED</b></font>"
 		EXITVALUE=1
-	fi		
+	fi
 }
 
 call_buildpacket() {
 	echo "-------------------------" >> $MYDIR/$name.build.txt 2>&1
 	# check if it has a package definition in it:
-	grep -q '<Package>' $BTSOURCEDIR/$1/buildtool.cfg 2>/dev/null
+	grep -qEi '<Package.*>' $BT_SOURCE_DIR/$1/buildtool.cfg 2>/dev/null
 	if [ $? -eq 0 ] ; then
-		echo "calling buildpacket for $1 " >> $BTLOGFILE 2>&1
+		echo "creating lrp packet(s) for '$name'..." >&2
+		echo "calling buildpacket for $1 " >> $BT_LOG_FILE 2>&1
 
-		fakeroot $BPBIN --package=$1 --all >> $BTLOGFILE 2>&1
+		fakeroot $BPBIN --package=$1 --all >> $BT_LOG_FILE 2>&1
 		ret=$?
 		if [ $ret -eq 0 ] ; then
 			echo -n "<font color=green>OK</font>"
@@ -65,10 +69,8 @@ call_buildpacket() {
 			echo -n "<font color=red><b>FAILED<b></font>"
 			EXITVALUE=1
 		fi		
-
 	else
 		echo -n "<font color=blue>No Package</font>"
-
 	fi
 }
 
@@ -87,7 +89,7 @@ PKGLIST=$($BTBIN pkglist | tr ',' ' ');
 PKGSIZE=$(echo $PKGLIST | tr ' ' '\n' | wc -l)
 
 # wipe the buildtool logfile
-> $BTLOGFILE
+> $BT_LOG_FILE
 
 echo "report (build.html) will be generated in $MYDIR"
 
@@ -112,7 +114,7 @@ EOF
 for name in $PKGLIST; do
 	echo "building $name"
 	# clear logfile
-	> $BTLOGFILE
+	> $BT_LOG_FILE
 	echo -n "<tr><td>$name</td><td><a href=$name.build.txt>$name.build.txt</a></td><td>" >> $HTMLFILE
 	OLDEXITVALUE=$EXITVALUE
 	EXITVALUE=0
@@ -123,15 +125,13 @@ for name in $PKGLIST; do
 		call_buildtool build $name >> $HTMLFILE
 		echo -n "</td><td>" >> $HTMLFILE
 		
-		if [ $EXITVALUE -eq 0 ] ; then	
+		if [ $EXITVALUE -eq 0 ] ; then
 			call_buildpacket $name >> $HTMLFILE		
 			EXITVALUE=$OLDEXITVALUE	
 		else
 			echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 			EXITVALUE=1
 		fi
-			
-
 	else
 		echo -n "<font color=red><b>FAILED</b></font>" >> $HTMLFILE
 		echo -n "</td><td>" >> $HTMLFILE
@@ -140,8 +140,8 @@ for name in $PKGLIST; do
 	fi
 	echo "</td></tr>" >> $HTMLFILE		
 	# copy logfile
-	cp $BTLOGFILE $MYDIR/$name.build.txt
-
+	cp $BT_LOG_FILE $MYDIR/$name.build.txt
+	echo
 done
 
 echo "</TABLE>" >> $HTMLFILE
