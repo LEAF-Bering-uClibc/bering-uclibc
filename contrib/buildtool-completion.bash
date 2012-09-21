@@ -45,7 +45,7 @@ _buildtool () {
             __buccomp "sourced built"
             return
             ;;
-        describe|build|source|pkglist|remove)
+        describe|dumpenv|build|source|pkglist|remove)
             local prog=${COMP_WORDS[0]}
             __buccomp "$(LC_ALL=C $prog pkglist | sed 's/,/ /g')"
             return
@@ -72,7 +72,8 @@ _buildtool () {
         __buccomp "-v -f -O -D -d -t"
     else
         # Default commands
-        __buccomp "describe list source build pkglist buildclean srcclean remove distclean maketar"
+        __buccomp "describe list dumpenv source build pkglist buildclean
+                   srcclean remove distclean maketar"
     fi
 }
 
