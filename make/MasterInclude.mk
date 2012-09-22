@@ -67,9 +67,6 @@ export BT_STRIP:=$(GNU_TARGET_NAME)-strip
 export BT_STRIP_LIBOPTS:=--strip-unneeded 
 export BT_STRIP_BINOPTS:=-s --remove-section=.note --remove-section=.comment
 
-# Toolchain dir
-export TOOLCHAIN_DIR=$(BT_TOOLCHAIN_DIR)
-
 # Paths
 export PATH:=$(BT_TOOLCHAIN_DIR)/bin:$(BT_TOOLCHAIN_DIR)/usr/bin:$(PATH)
 export PKG_CONFIG_PATH=$(BT_STAGING_DIR)/usr/lib/pkgconfig

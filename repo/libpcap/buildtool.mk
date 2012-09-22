@@ -32,7 +32,7 @@ source: $(LIBPCAP_DIR)/.source
 $(LIBPCAP_DIR)/.build: $(LIBPCAP_DIR)/.configured
 	mkdir -p $(LIBPCAP_TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
-	mkdir -p $(TOOLCHAIN_DIR)/usr/bin
+	mkdir -p $(BT_TOOLCHAIN_DIR)/usr/bin
 	$(MAKE) $(MAKEOPTS) -C $(LIBPCAP_DIR) shared
 	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBPCAP_TARGET_DIR) -C $(LIBPCAP_DIR) install install-shared
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBPCAP_TARGET_DIR)/usr/lib/*
@@ -40,7 +40,7 @@ $(LIBPCAP_DIR)/.build: $(LIBPCAP_DIR)/.configured
 	perl -i -p -e "s,/usr,$(BT_STAGING_DIR)/usr,g" $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config
 	-rm -rf $(LIBPCAP_TARGET_DIR)/usr/share
 	cp -a $(LIBPCAP_TARGET_DIR)/* $(BT_STAGING_DIR)/
-	cp -a $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config $(TOOLCHAIN_DIR)/usr/bin/pcap-config
+	cp -a $(LIBPCAP_TARGET_DIR)/usr/bin/pcap-config $(BT_TOOLCHAIN_DIR)/usr/bin/pcap-config
 	touch $(LIBPCAP_DIR)/.build
 
 build: $(LIBPCAP_DIR)/.build

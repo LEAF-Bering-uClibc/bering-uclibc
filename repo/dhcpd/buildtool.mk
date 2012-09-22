@@ -53,7 +53,7 @@ source: .source
 	mkdir -p $(BT_STAGING_DIR)/etc/default/
 #
 	# Need to force setting of CC for included copy of bind - see README
-	CC=$(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc BUILD_CC=gcc make -C $(DHCPD_DIR)
+	CC=$(BT_TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gcc BUILD_CC=gcc make -C $(DHCPD_DIR)
 	make DESTDIR=$(DHCPD_TARGET_DIR) -C $(DHCPD_DIR) install
 #
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DHCPD_TARGET_DIR)/bin/*

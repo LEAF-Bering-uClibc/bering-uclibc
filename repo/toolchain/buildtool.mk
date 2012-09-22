@@ -12,8 +12,8 @@ GCC_STAGE2_BUILD_DIR=$(BUILD_DIR)/gcc-stage2
 BINUTILS_BUILD_DIR=$(BUILD_DIR)/binutils
 BINUTILS_BUILD_DIR2=$(BUILD_DIR)/binutils-target
 
-export TARGET_DIR=$(TOOLCHAIN_DIR)
-export PREFIX=$(TOOLCHAIN_DIR)
+export TARGET_DIR=$(BT_TOOLCHAIN_DIR)
+export PREFIX=$(BT_TOOLCHAIN_DIR)
 
 GCC_CONFOPTS=   --with-gnu-ld --with-gnu-as \
 		--disable-libmudflap --disable-libssp \
@@ -44,7 +44,7 @@ $(BINUTILS_DIR)/.source:
 $(GCC_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(GCC_SOURCE)
 	touch $(GCC_DIR)/.source
-	
+
 $(DEPMOD_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(DEPMOD_SOURCE)
 	touch $(DEPMOD_DIR)/.source
@@ -61,17 +61,17 @@ $(UCLIBC_DIR)/.headers: $(UCLIBC_DIR)/.source
 $(BINUTILS_BUILD_DIR)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.headers
 	mkdir -p $(BINUTILS_BUILD_DIR)
 	(cd $(BINUTILS_BUILD_DIR) && \
-	 $(BINUTILS_DIR)/configure --target=$(GNU_TARGET_NAME) --prefix=$(TOOLCHAIN_DIR) \
-	  --includedir=$(TOOLCHAIN_DIR)/usr/include  --with-sysroot=$(TOOLCHAIN_DIR) \
-	  --with-build-sysroot=$(TOOLCHAIN_DIR) && \
+	 $(BINUTILS_DIR)/configure --target=$(GNU_TARGET_NAME) --prefix=$(BT_TOOLCHAIN_DIR) \
+	  --includedir=$(BT_TOOLCHAIN_DIR)/usr/include  --with-sysroot=$(BT_TOOLCHAIN_DIR) \
+	  --with-build-sysroot=$(BT_TOOLCHAIN_DIR) && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include &&  make install) || exit 1
 	touch $(BINUTILS_BUILD_DIR)/.build
 
 $(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source $(BINUTILS_BUILD_DIR)/.build
 	mkdir -p $(GCC_STAGE1_BUILD_DIR)
 	(cd $(GCC_STAGE1_BUILD_DIR) && \
-	 $(GCC_DIR)/configure --target=$(GNU_TARGET_NAME) --with-sysroot=$(TOOLCHAIN_DIR) \
-	  --includedir=$(TOOLCHAIN_DIR)/usr/include --prefix=$(TOOLCHAIN_DIR) \
+	 $(GCC_DIR)/configure --target=$(GNU_TARGET_NAME) --with-sysroot=$(BT_TOOLCHAIN_DIR) \
+	  --includedir=$(BT_TOOLCHAIN_DIR)/usr/include --prefix=$(BT_TOOLCHAIN_DIR) \
 	  --disable-shared --enable-ld=yes $(GCC_CONFOPTS) \
 	  --enable-languages=c && \
 	  make $(MAKEOPTS) && make install) || exit 1
@@ -80,8 +80,8 @@ $(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source $(BINUTILS_BUILD_DIR)/.build
 $(GCC_STAGE2_BUILD_DIR)/.build: $(GCC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
 	mkdir -p $(GCC_STAGE2_BUILD_DIR)
 	(cd $(GCC_STAGE2_BUILD_DIR) && \
-	 $(GCC_DIR)/configure --target=$(GNU_TARGET_NAME) --with-sysroot=$(TOOLCHAIN_DIR) \
-	  --includedir=$(TOOLCHAIN_DIR)/usr/include --prefix=$(TOOLCHAIN_DIR) \
+	 $(GCC_DIR)/configure --target=$(GNU_TARGET_NAME) --with-sysroot=$(BT_TOOLCHAIN_DIR) \
+	  --includedir=$(BT_TOOLCHAIN_DIR)/usr/include --prefix=$(BT_TOOLCHAIN_DIR) \
 	  --enable-shared $(GCC_CONFOPTS) \
 	  --enable-languages=c++ && \
 	  make $(MAKEOPTS) all-host all-target-libgcc all-target-libstdc++-v3 && \
@@ -117,17 +117,17 @@ $(DEPMOD_DIR)/Makefile: $(DEPMOD_DIR)/.source
 	(cd $(DEPMOD_DIR); ./configure --enable-zlib --enable-zlib-dynamic --disable-static-utils)
 
 $(DEPMOD_DIR)/.build: $(DEPMOD_DIR)/Makefile
-	mkdir -p $(TOOLCHAIN_DIR)/bin
+	mkdir -p $(BT_TOOLCHAIN_DIR)/bin
 	make $(MAKEOPTS) -C $(DEPMOD_DIR) depmod
-	cp -a $(DEPMOD_DIR)/build/depmod $(TOOLCHAIN_DIR)/bin
+	cp -a $(DEPMOD_DIR)/build/depmod $(BT_TOOLCHAIN_DIR)/bin
 	touch $@
 
 build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build $(DEPMOD_DIR)/.build
 	mkdir -p $(BT_STAGING_DIR)/lib
-	cp -a $(TOOLCHAIN_DIR)/lib/*.so.* $(BT_STAGING_DIR)/lib
-	cp -a $(TOOLCHAIN_DIR)/lib/*.so $(BT_STAGING_DIR)/lib
-	cp -a $(TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so.* $(BT_STAGING_DIR)/lib
-	cp -a $(TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so $(BT_STAGING_DIR)/lib
+	cp -a $(BT_TOOLCHAIN_DIR)/lib/*.so.* $(BT_STAGING_DIR)/lib
+	cp -a $(BT_TOOLCHAIN_DIR)/lib/*.so $(BT_STAGING_DIR)/lib
+	cp -a $(BT_TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so.* $(BT_STAGING_DIR)/lib
+	cp -a $(BT_TOOLCHAIN_DIR)/$(GNU_TARGET_NAME)/lib/*.so $(BT_STAGING_DIR)/lib
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BINUTILS_BUILD_DIR2)-built/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BINUTILS_BUILD_DIR2)-built/usr/$(GNU_TARGET_NAME)/*
 	-rm -rf $(BINUTILS_BUILD_DIR2)-built/usr/share
