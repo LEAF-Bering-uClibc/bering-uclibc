@@ -38,11 +38,6 @@ BEGIN {
       }
       # else touch lockfile
       die("making lockfile failed:".$!) if (system("touch $lockfile") != 0);
-      my $buildtoolconf = catfile( $FindBin::Bin, 'conf', 'buildtool.conf');
-      if (! -f $buildtoolconf){
-	    system("cp $buildtoolconf.sample $buildtoolconf");
-      }
-
 };
 
 END {
@@ -69,7 +64,7 @@ pkglist [pkgname|srcname]  \t create a list with all dependencies
                           \t for the package given or all if no name given
 buildclean [pkgname|srcname]\t removes everything that is outside
                              \t the source dir
-srcclean [pkgname|srcname]\t same as buildclean + call make srcclean  
+srcclean [pkgname|srcname]\t same as buildclean + call make srcclean
 remove [pkgname|srcname]\t same as buildclean + remove everything from dldir
 distclean                  \t remove everything
 maketar                    \t make a tar for distribution
@@ -140,7 +135,7 @@ while ( $ARGV[0] and $ARGV[0] =~ /^-.*/ ) {
 
 # load buildtool.conf and buildtool.local configurations
 %globConf = readBtGlobalConfig(
-    ConfigFile  => catfile( $FindBin::Bin, 'conf', 'buildtool.conf' ),
+    ConfigFile  => catfile( $baseDir, 'conf', 'buildtool.conf' ),
     ForceConfig => {
         %force_config,
         'root_dir' => $baseDir,    # inject root_dir

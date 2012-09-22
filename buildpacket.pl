@@ -1055,10 +1055,6 @@ Getopt::Long::GetOptions($options,
 					'all')	or die $Usage;
 
 die $Usage unless exists($options->{'package'});
-my $buildtoolconf = File::Spec->catfile( $FindBin::Bin, 'conf', 'buildtool.conf');
-if (! -f $buildtoolconf){
-	system("cp $buildtoolconf.sample $buildtoolconf");
-}
 
 # only root (or fakeroot) may use this (we need to do chown...)
 die "$0 can only be run as root!\n" unless $>==0;
@@ -1082,11 +1078,9 @@ $force_config{'packager'} = $options->{'packager'}
   if exists $options->{'packager'};
 
 # load buildtool.conf and buildtool.local configurations
+my $buildtoolconf = File::Spec->catfile( $FindBin::Bin, 'conf', 'buildtool.conf');
 my %btConfig = readBtGlobalConfig(
-    ConfigFile =>
-      make_absolute_path(
-                       File::Spec->catfile( 'conf', 'buildtool.conf' ), $baseDir
-                        ),
+    ConfigFile  => $buildtoolconf,
     ForceConfig => {
         %force_config,
         'root_dir' => $baseDir,    # inject root_dir

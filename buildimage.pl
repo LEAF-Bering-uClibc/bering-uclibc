@@ -62,11 +62,6 @@ GetOptions( "verbose!"    => \$verbose,
 	    "keeptmp!"    => \$keeptmp,
 	    "debug!"      => \$debug ) or die $Usage;
 
-my $buildtoolconf = File::Spec->catfile( $FindBin::Bin, 'conf', 'buildtool.conf');
-if (! -f $buildtoolconf){
-	system("cp $buildtoolconf.sample $buildtoolconf");
-}
-
 die $Usage unless defined( $image );
 die $Usage unless defined( $label );
 $configHash{ '{VERSION}' } = $label;
@@ -78,12 +73,10 @@ warn "WARNING: Not running as (fake)root" if ( $> != 0 );
 
 # Fetch the buildtool config
 my $btConfig = new Config::General(
-    "-ConfigFile" => File::Spec->catfile(
-        $baseDir,
-	'conf',
-	'buildtool.conf' ),
+    "-ConfigFile" => File::Spec->catfile( $baseDir, 'conf', 'buildtool.conf' ),
     "-LowerCaseNames" => 1,
-    "-ExtendedAccess" => 1 );
+    "-ExtendedAccess" => 1
+                                  );
 
 # Fetch the global config (conf/sources.cfg)
 my $glConfig = new Config::General(
