@@ -19,10 +19,11 @@ function buildtool {
 function buildpacket {
     local root_dir=$(git rev-parse --show-toplevel 2>/dev/null)
     if [[ -n "$root_dir" ]]; then
+		COME_ROOT=$( type -P fakeroot sudo | head -1 )
         local buildpacket_script="$root_dir/buildpacket.pl"
         if [[ -x "$buildpacket_script" ]];then
             if [[ "${#@}" -gt 0 ]]; then
-                sudo "$buildpacket_script" $@
+                $COME_ROOT "$buildpacket_script" $@
             else
                 "$buildpacket_script"
             fi
