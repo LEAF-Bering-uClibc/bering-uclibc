@@ -23,8 +23,7 @@ use File::Spec;
 use File::Path;
 use File::Temp;
 
-use buildtool::Tools qw< make_absolute_path readBtGlobalConfig readBtConfig
-                         set_global_environment >;
+use buildtool::Tools qw< make_absolute_path readBtGlobalConfig readBtConfig >;
 
 # NON PERL INCLUDES
 
@@ -1086,14 +1085,6 @@ my %btConfig = readBtGlobalConfig(
         'root_dir' => $baseDir,    # inject root_dir
                    }
 );
-
-# Set environment variables
-my @envvars = set_global_environment( \%btConfig );
-if ($verbose) {
-    for my $var ( sort @envvars ) {
-        printf "Environment variable \$%s set to '%s'\n", $var, $ENV{$var};
-    }
-}
 
 $lrp_owner = $btConfig{'lrpowner'} || 'root';
 $lrp_group = $btConfig{'lrpgroup'} || 'root';

@@ -10,7 +10,7 @@ use File::Spec;
 use Hash::Merge;
 use List::MoreUtils qw( uniq );
 
-use buildtool::Tools qw< set_global_environment readBtConfig >;
+use buildtool::Tools qw< readBtConfig >;
 
 use parent qw< buildtool::Common::InstalledFile >;
 
@@ -392,12 +392,6 @@ sub _callMake {
     my $localEnv  = shift || confess("no localEnv");
     my $dldir     = $self->_getSourceDir($part);
     my $log       = $self->absoluteFilename( $self->{'CONFIG'}{'logfile'} );
-
-    # Set environment variables
-    for my $var ( sort( set_global_environment( $self->{'CONFIG'} ) ) ) {
-        $self->debug(
-                    "Environment variable \$$var set to '" . $ENV{$var} . "'" );
-    }
 
     my $exportPATH = $self->_makeExportPATH();
 

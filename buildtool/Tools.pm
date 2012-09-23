@@ -22,7 +22,7 @@ BEGIN {
     @EXPORT_OK = qw{
       create_dir  check_env  debug  expand_variables  expand_config_variables
       logme  make_absolute_path  remove_dir
-      readBtConfig readBtGlobalConfig set_global_environment
+      readBtConfig readBtGlobalConfig
       };
     %EXPORT_TAGS = ( ALL => \@EXPORT_OK, );
 }
@@ -372,23 +372,6 @@ sub readBtGlobalConfig {
                           'image_dir'   => '$Root_Dir/image',
                         };
     return readBtConfig( 'DefaultConfig' => $defaultconfig, @_ );
-}
-
-###############################################################################
-# Set environment variables from builtool config envvars
-# return an array with name of variables that has been set
-sub set_global_environment {
-    my ($btConfig) = @_;
-    return map {
-        my $value = $btConfig->{'envvars'}->{$_};
-        if ( not ref $value ) { # value is a scalar
-            $ENV{$_} = $value;
-            $_;    # return the variable name
-        } else {
-            ();    # return an empty array (to not return a variable name)
-        }
-      }
-      keys %{ $btConfig->{'envvars'} };
 }
 
 ###############################################################################
