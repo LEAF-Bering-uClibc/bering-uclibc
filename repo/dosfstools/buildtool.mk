@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 DOSFSTOOLS_DIR:=dosfstools-3.0.9
 DOSFSTOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/dosfstools
 export CC=$(TARGET_CC)

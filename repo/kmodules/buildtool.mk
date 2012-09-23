@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 

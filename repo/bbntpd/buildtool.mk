@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 
 BBNTPD_DIR=bbntpd
 BBNTPD_BUILD_DIR=$(BT_BUILD_DIR)/bbntpd

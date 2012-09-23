@@ -1,5 +1,4 @@
 # makefile for tftp
-include $(MASTERMAKEFILE)
 
 DIR:=mbus-0.1.2
 TARGET_DIR:=$(BT_BUILD_DIR)/mbusd

@@ -2,10 +2,8 @@
 #
 # e3
 #
-# $Id: buildtool.mk,v 1.3 2010/10/26 12:55:47 kapeka Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 E3_DIR:=e3-2.8
 E3_TARGET_DIR:=$(BT_BUILD_DIR)/e3
 

@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 source:
 	# nothing to be done

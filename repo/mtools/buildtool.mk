@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 MTOOLS_DIR:=mtools-3.9.9
 MTOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/mtools
 

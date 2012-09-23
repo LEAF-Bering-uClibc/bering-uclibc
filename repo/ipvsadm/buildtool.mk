@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 IPVSADM_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(IPVSADM_SOURCE) 2>/dev/null )
 IPVSADM_TARGET_DIR:=$(BT_BUILD_DIR)/ipvsadm

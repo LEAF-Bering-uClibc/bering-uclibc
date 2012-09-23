@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 YATE_DIR:=yate
 YATE_TARGET_DIR:=$(BT_BUILD_DIR)/yate

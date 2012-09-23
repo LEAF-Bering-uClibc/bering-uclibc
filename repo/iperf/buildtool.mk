@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 IPERF_DIR:=iperf-2.0.5
 IPERF_TARGET_DIR:=$(BT_BUILD_DIR)/iperf
 #export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf

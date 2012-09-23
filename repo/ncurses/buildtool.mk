@@ -2,10 +2,8 @@
 #
 # ncurses
 #
-# $Id: buildtool.mk,v 1.2 2010/09/18 08:52:38 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 NCURSES_DIR=ncurses-5.5
 NCURSES_BUILD_DIR=$(BT_BUILD_DIR)/ncurses

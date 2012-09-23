@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 STRACE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(STRACE_SOURCE) 2>/dev/null )
 STRACE_TARGET_DIR:=$(BT_BUILD_DIR)/strace

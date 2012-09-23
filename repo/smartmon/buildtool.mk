@@ -1,5 +1,4 @@
 # makefile for smartmon
-include $(MASTERMAKEFILE)
 
 SMARTMON_DIR:=smartmontools-5.42
 SMARTMON_TARGET_DIR:=$(BT_BUILD_DIR)/smartmon

@@ -2,10 +2,8 @@
 #
 # netkit-base
 #
-# $Id: buildtool.mk,v 1.1.1.1 2010/04/26 09:03:10 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 NETKIT_BASE_DIR:=netkit-base
 NETKIT_BASE_TARGET_DIR:=$(BT_BUILD_DIR)/netkit-base
 

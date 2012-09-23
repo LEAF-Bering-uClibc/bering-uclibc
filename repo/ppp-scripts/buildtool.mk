@@ -1,5 +1,4 @@
 # makefile for ppp, ppp-filter, pppoe and pppoatm
-include $(MASTERMAKEFILE)
 
 PPP_SCRIPT_TARGET_DIR:=$(BT_BUILD_DIR)/ppp-scripts
 

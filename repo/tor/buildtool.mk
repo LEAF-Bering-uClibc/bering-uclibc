@@ -1,5 +1,4 @@
 # makefile for tor
-include $(MASTERMAKEFILE)
 
 TOR_DIR:=tor-0.2.2.39
 TOR_TARGET_DIR:=$(BT_BUILD_DIR)/tor

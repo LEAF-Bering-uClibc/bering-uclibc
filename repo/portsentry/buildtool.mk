@@ -1,5 +1,4 @@
 # makefile for portsentry
-include $(MASTERMAKEFILE)
 
 PORTSENTRY_DIR:=portsentry_beta
 PORTSENTRY_TARGET_DIR:=$(BT_BUILD_DIR)/portsentry

@@ -1,5 +1,4 @@
 # makefile for rng-tools
-include $(MASTERMAKEFILE)
 
 RNGTOOLS_DIR:= rng-tools-4
 RNGTOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/rng-tools

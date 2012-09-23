@@ -1,5 +1,4 @@
 # makefile for perl
-include $(MASTERMAKEFILE)
 
 PERL_DIR:=perl-$(PERL_VER)
 PERL_TARGET_DIR:=$(BT_BUILD_DIR)/perl

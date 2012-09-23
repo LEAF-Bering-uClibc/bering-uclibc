@@ -5,7 +5,6 @@
 # $Header: /cvsroot/leaf/src/bering-uclibc4/source/e2fsprogs/buildtool.mk,v 1.3 2010/12/27 16:30:48 davidmbrooke Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 E2FSPROGS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(E2FSPROGS_SOURCE) 2>/dev/null )
 E2FSPROGS_TARGET_DIR:=$(BT_BUILD_DIR)/e2fsprogs
 

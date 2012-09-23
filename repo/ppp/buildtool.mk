@@ -1,5 +1,4 @@
 # makefile for ppp, ppp-filter, pppoe and pppoatm
-include $(MASTERMAKEFILE)
 
 PPP_DIR:=ppp-2.4.5
 PPP_TARGET_DIR:=$(BT_BUILD_DIR)/ppp

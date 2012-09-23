@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 DIR:=gettext-0.18.1.1
 TARGET_DIR:=$(BT_BUILD_DIR)/gettext
 export CC=$(TARGET_CC)

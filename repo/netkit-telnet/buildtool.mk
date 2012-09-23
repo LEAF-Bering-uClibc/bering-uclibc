@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 TELNET_DIR:=netkit-telnet-0.17
 TELNET_TARGET_DIR:=$(BT_BUILD_DIR)/netkit-telnet
 export CFLAGS += $(LDFLAGS)

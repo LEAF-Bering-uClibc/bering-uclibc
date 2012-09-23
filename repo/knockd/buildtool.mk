@@ -1,5 +1,4 @@
 # makefile for pmacctd
-include $(MASTERMAKEFILE)
 
 KNOCKD_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(KNOCKD_SOURCE) 2>/dev/null )
 KNOCKD_TARGET_DIR:=$(BT_BUILD_DIR)/knockd

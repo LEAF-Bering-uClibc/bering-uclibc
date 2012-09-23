@@ -1,10 +1,8 @@
 # buildtool make file for buildenv
-# $Id: buildtool.mk,v 1.17 2011/01/22 15:20:18 kapeka Exp $
 #
 # Note that this is some kind of a hack as you normally should do things
 # not the way they are handled here
 
-include $(MASTERMAKEFILE)
 
 LINUX_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(KERNEL_BASE_SOURCE) 2>/dev/null )
 

@@ -1,5 +1,4 @@
 # makefile for toolchain
-include $(MASTERMAKEFILE)
 
 GCC_DIR=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(GCC_SOURCE) 2>/dev/null )
 UCLIBC_DIR=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(UCLIBC_SOURCE) 2>/dev/null )

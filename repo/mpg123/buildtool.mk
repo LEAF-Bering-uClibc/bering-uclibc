@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 
 MPG123_DIR:=mpg123-0.60
 

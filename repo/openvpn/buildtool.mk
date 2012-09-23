@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 
 # setup for openvpn 2.0
 # based on the setup for 1.6 with enhancements for 2.0

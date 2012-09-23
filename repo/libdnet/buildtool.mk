@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBDNET_DIR:=libdnet-1.11
 LIBDNET_TARGET_DIR:=$(BT_BUILD_DIR)/libdnet
 export CC=$(TARGET_CC)

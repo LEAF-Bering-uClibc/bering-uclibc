@@ -1,5 +1,4 @@
 # makefile for e1000e Intel Network Adapter Driver
-include $(MASTERMAKEFILE)
 
 DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/e1000e

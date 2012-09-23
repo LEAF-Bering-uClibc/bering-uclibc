@@ -1,5 +1,4 @@
 # makefile for havp
-include $(MASTERMAKEFILE)
 
 HAVP_DIR:=havp-0.92a
 HAVP_TARGET_DIR:=$(BT_BUILD_DIR)/havp

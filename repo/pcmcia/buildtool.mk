@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 PCMCIA_DIR:=pcmciautils-017
 PCMCIA_TARGET_DIR:=$(BT_BUILD_DIR)/pcmcia

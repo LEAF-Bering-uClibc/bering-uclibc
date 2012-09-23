@@ -1,5 +1,4 @@
 # makefile for pump
-include $(MASTERMAKEFILE)
 
 PUMP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(PUMP_SOURCE) 2>/dev/null )
 PUMP_TARGET_DIR:=$(BT_BUILD_DIR)/pump

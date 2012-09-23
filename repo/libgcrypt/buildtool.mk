@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBGCRYPT_DIR:=libgcrypt-1.5.0
 LIBGCRYPT_TARGET_DIR:=$(BT_BUILD_DIR)/libgcrypt
 

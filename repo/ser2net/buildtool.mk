@@ -1,5 +1,4 @@
 # makefile for ser2net
-include $(MASTERMAKEFILE)
 
 SER2NET_DIR:=ser2net-2.3
 SER2NET_TARGET_DIR:=$(BT_BUILD_DIR)/ser2net

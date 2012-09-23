@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 LIBSSH2_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBSSH2_SOURCE) 2>/dev/null )
 LIBSSH2_TARGET_DIR:=$(BT_BUILD_DIR)/libssh2

@@ -1,5 +1,4 @@
 # makefile for beep
-include $(MASTERMAKEFILE)
 
 BEEP_DIR:=beep-1.3
 BEEP_TARGET_DIR:=$(BT_BUILD_DIR)/beep

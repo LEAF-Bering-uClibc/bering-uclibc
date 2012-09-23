@@ -3,7 +3,6 @@
 # webconf - based on weblet buildtool.mk
 #
 #####################################################
-include $(MASTERMAKEFILE)
 
 #####################################################
 # Build webconf

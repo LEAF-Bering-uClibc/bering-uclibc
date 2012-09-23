@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 SPEEDTOUCH_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SPEEDTOUCH_SOURCE) 2>/dev/null )
 SPEEDTOUCH_TARGET_DIR:=$(BT_BUILD_DIR)/speedtouch

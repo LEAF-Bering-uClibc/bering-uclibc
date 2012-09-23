@@ -1,10 +1,3 @@
-#############################################################
-#
-# $Id: buildtool.mk,v 1.5 2010/12/27 09:57:56 etitl Exp $
-#
-#############################################################
-
-include $(MASTERMAKEFILE)
 
 OPENSWAN_DIR:=$(OPENSWAN_SOURCE:.tar.gz=)
 OPENSWAN_TARGET_DIR:=$(BT_BUILD_DIR)/openswan

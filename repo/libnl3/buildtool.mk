@@ -1,5 +1,4 @@
 # makefile for libnl
-include $(MASTERMAKEFILE)
 
 LIBNL_DIR:=libnl-3.2.3
 LIBNL_TARGET_DIR:=$(BT_BUILD_DIR)/libnl3

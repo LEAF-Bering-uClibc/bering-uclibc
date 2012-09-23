@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 LMSENSORS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LMSENSORS_SOURCE) 2>/dev/null )
 LMSENSORS_TARGET_DIR:=$(BT_BUILD_DIR)/lmsensors

@@ -1,5 +1,4 @@
 # makefile for accel-pptp
-include $(MASTERMAKEFILE)
 
 PPTP_DIR:=accel-pptp-0.8.5
 PPTP_TARGET_DIR:=$(BT_BUILD_DIR)/accel-pptp

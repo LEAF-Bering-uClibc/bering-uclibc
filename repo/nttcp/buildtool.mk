@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 NTTCP_DIR:=nttcp-1.47
 NTTCP_TARGET_DIR:=$(BT_BUILD_DIR)/nttcp
 

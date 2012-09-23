@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 DIR:=readline-6.2
 TARGET_DIR:=$(BT_BUILD_DIR)/libreadline
 export CC=$(TARGET_CC)

@@ -1,5 +1,4 @@
 # makefile for initrd
-include $(MASTERMAKEFILE)
 
 INITRD_DIR=.
 INITRD_TARGET_DIR:=$(BT_BUILD_DIR)/config

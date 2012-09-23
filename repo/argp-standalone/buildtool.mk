@@ -1,5 +1,4 @@
 # makefile for argp-standalone
-include $(MASTERMAKEFILE)
 
 ARGP-STANDALONE_DIR:=argp-standalone-1.4-test2
 ARGP-STANDALONE_TARGET_DIR:=$(BT_BUILD_DIR)/argp-standalone

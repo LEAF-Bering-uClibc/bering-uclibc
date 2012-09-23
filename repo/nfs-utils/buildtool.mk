@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 NFSUTILS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(NFSUTILS_SOURCE) 2>/dev/null )
 NFSUTILS_TARGET_DIR:=$(BT_BUILD_DIR)/nfs-utils

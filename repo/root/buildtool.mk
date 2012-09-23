@@ -2,9 +2,7 @@
 #
 # root.lrp
 #
-# $Id: buildtool.mk,v 1.1.1.1 2010/04/26 09:02:28 nitr0man Exp $
 #############################################################
-include $(MASTERMAKEFILE)
 ROOT_TARGET_DIR:=$(BT_BUILD_DIR)/root
 
 source:

@@ -2,10 +2,8 @@
 #
 # libosip2
 #
-# $Id: buildtool.mk,v 1.2 2006/12/12 21:11:28 espakman Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBOSIP2_DIR=libosip2-2.2.2
 LIBOSIP2_TARGET_DIR=$(BT_BUILD_DIR)/libosip
 

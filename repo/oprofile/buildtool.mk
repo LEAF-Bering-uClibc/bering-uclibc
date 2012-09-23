@@ -4,7 +4,6 @@
 #
 ######################################
 
-include $(MASTERMAKEFILE)
 
 DIR:=oprofile-0.9.7
 TARGET_DIR:=$(BT_BUILD_DIR)/oprofile

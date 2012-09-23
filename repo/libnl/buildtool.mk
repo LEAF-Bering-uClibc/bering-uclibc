@@ -1,5 +1,4 @@
 # makefile for libnl
-include $(MASTERMAKEFILE)
 
 LIBNL_DIR:=libnl-1.1
 LIBNL_TARGET_DIR:=$(BT_BUILD_DIR)/libnl

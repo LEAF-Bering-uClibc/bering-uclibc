@@ -1,5 +1,4 @@
 # makefile for radiusd-cistron
-include $(MASTERMAKEFILE)
 
 RADIUS_DIR:=radcoad-0.1.2
 RADIUS_TARGET_DIR:=$(BT_BUILD_DIR)/radcoad

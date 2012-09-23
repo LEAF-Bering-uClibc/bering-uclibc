@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 EVENTLOG_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(EVENTLOG_SOURCE) 2>/dev/null )
 EVENTLOG_TARGET_DIR:=$(BT_BUILD_DIR)/eventlog

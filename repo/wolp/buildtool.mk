@@ -1,5 +1,4 @@
 # makefile for wolp
-include $(MASTERMAKEFILE)
 
 WOLP_DIR:=wolp-0.5
 WOLP_TARGET_DIR:=$(BT_BUILD_DIR)/wolp

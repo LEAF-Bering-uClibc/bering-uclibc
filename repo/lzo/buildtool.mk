@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 LZO_DIR:=lzo-2.06
 LZO_TARGET_DIR:=$(BT_BUILD_DIR)/lzo

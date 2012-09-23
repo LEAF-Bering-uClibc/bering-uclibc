@@ -1,5 +1,4 @@
 # makefile for snarf
-include $(MASTERMAKEFILE)
 
 SNARF_DIR:=snarf-7.0.orig
 SNARF_TARGET_DIR:=$(BT_BUILD_DIR)/snarf

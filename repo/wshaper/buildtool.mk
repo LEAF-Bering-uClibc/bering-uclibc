@@ -1,5 +1,4 @@
 # makefile for wondershaper
-include $(MASTERMAKEFILE)
 
 WSHAPER_DIR=.
 WSHAPER_TARGET_DIR:=$(BT_BUILD_DIR)/wshaper

@@ -1,5 +1,4 @@
 # makefile for pptp
-include $(MASTERMAKEFILE)
 
 PPTP_DIR:=pptp-1.7.1
 PPTP_TARGET_DIR:=$(BT_BUILD_DIR)/pptp

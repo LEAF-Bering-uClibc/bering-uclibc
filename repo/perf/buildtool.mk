@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 
 DIR=perf
 SRCDIR=$(BT_LINUX_DIR)/tools/perf

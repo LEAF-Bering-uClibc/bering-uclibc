@@ -2,10 +2,8 @@
 #
 # openssh
 #
-# $Id: buildtool.mk,v 1.2 2010/12/03 20:30:17 kapeka Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 OPENSSH_DIR:=openssh-5.8p1
 OPENSSH_TARGET_DIR:=$(BT_BUILD_DIR)/openssh

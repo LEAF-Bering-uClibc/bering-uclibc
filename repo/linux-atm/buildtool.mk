@@ -13,7 +13,6 @@
 #
 ################################################################################
 
-include $(MASTERMAKEFILE)
 
 ATM_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 ATM_TARGET_DIR:=$(BT_BUILD_DIR)/linuxatm

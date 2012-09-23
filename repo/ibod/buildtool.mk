@@ -2,10 +2,8 @@
 #
 # ibod
 #
-# $Id: buildtool.mk,v 1.1 2005/03/02 20:09:17 espakman Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 IBOD_DIR:=ibod-1.5.0
 IBOD_TARGET_DIR:=$(BT_BUILD_DIR)/ibod
 

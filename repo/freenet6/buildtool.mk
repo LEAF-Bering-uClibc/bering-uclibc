@@ -1,5 +1,4 @@
 # makefile for freenet6
-include $(MASTERMAKEFILE)
 
 FREENET6_DIR:=freenet6-client-1.0
 FREENET6_TARGET_DIR:=$(BT_BUILD_DIR)/freenet6

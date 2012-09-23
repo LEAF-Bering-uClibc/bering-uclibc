@@ -1,5 +1,4 @@
 # makefile for daemontools
-include $(MASTERMAKEFILE)
 
 DAEMONTOOLS_DIR:=admin/daemontools-0.76
 DAEMONTOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/daemontools

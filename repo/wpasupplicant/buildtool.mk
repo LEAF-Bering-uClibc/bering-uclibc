@@ -1,5 +1,4 @@
 # makefile for wpasupplicant
-include $(MASTERMAKEFILE)
 
 SOURCE_DIR:=$(shell basename `tar tzf $(SOURCE_TARBALL) | head -1`)/wpa_supplicant
 TARGET_DIR:=$(BT_BUILD_DIR)/wpasupplicant

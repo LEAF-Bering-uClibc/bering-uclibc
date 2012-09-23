@@ -1,5 +1,4 @@
 # makefile for ethtool
-include $(MASTERMAKEFILE)
 
 ETHTOOL_DIR:=ethtool-3.2
 ETHTOOL_TARGET_DIR:=$(BT_BUILD_DIR)/ethtool

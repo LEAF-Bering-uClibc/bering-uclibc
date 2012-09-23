@@ -1,5 +1,4 @@
 # makefile for ulog
-include $(MASTERMAKEFILE)
 
 ULOGD_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(ULOGD_SOURCE) 2>/dev/null )
 ULOGD_TARGET_DIR:=$(BT_BUILD_DIR)/ulogd

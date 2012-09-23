@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 LIBEVENT_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBEVENT_SOURCE) 2>/dev/null )
 LIBEVENT_TARGET_DIR:=$(BT_BUILD_DIR)/libevent

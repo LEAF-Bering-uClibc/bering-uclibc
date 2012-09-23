@@ -1,5 +1,4 @@
 # makefile for tinyproxy
-include $(MASTERMAKEFILE)
 
 TINYPROXY_DIR:=tinyproxy-1.8.3
 TINYPROXY_TARGET_DIR:=$(BT_BUILD_DIR)/tinyproxy

@@ -5,7 +5,6 @@
 # $Header:$
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 HDPARM_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(HDPARM_SOURCE) 2>/dev/null )
 HDPARM_TARGET_DIR:=$(BT_BUILD_DIR)/hdparm

@@ -5,7 +5,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 DIR:=elfutils-0.148
 TARGET_DIR:=$(BT_BUILD_DIR)/libelf
 

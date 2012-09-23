@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 DIBBLER_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(DIBBLER_SOURCE) 2>/dev/null )
 DIBBLER_TARGET_DIR:=$(BT_BUILD_DIR)/dibbler

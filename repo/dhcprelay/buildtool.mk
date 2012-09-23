@@ -1,5 +1,4 @@
 # makefile for dhcprelay
-include $(MASTERMAKEFILE)
 
 DHCPRELAY_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(DHCPRELAY_SOURCE) 2>/dev/null )
 DHCPRELAY_TARGET_DIR:=$(BT_BUILD_DIR)/dhcprelay

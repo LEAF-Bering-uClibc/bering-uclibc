@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBECAP_DIR:=libecap-0.2.0
 LIBECAP_TARGET_DIR:=$(BT_BUILD_DIR)/libecap
 

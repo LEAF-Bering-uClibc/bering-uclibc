@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 XL2TPD_DIR:=xl2tpd-1.1.06
 
 $(XL2TPD_DIR)/.source:

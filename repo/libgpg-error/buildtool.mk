@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBGPG-ERROR_DIR:=libgpg-error-1.10
 LIBGPG-ERROR_TARGET_DIR:=$(BT_BUILD_DIR)/libgpgerror
 

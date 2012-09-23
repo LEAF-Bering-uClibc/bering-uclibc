@@ -1,5 +1,4 @@
 # makefile for ebtables
-include $(MASTERMAKEFILE)
 
 EBTABLES_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(EBTABLES_SOURCE) 2>/dev/null )
 EBTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/ebtables

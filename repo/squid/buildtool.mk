@@ -1,5 +1,4 @@
 # makefile for squid
-include $(MASTERMAKEFILE)
 
 #alias gcc=$(BT_STAGING_DIR)/usr/local/kgcc/bin/gcc
 

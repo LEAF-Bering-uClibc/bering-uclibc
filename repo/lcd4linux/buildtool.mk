@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LCD4LINUX_DIR:=lcd4linux-0.10.1-RC1
 LCD4LINUX_TARGET_DIR:=$(BT_BUILD_DIR)/lcd4linux
 

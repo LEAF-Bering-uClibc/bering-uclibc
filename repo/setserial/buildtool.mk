@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 SETSERIAL_DIR:=setserial-2.17
 SETSERIAL_TARGET_DIR:=$(BT_BUILD_DIR)/setserial
 

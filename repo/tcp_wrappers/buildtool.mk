@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 TCP_WRAPPERS_DIR=tcp-wrappers-7.6.dbs.orig
 TCP_WRAPPERS_BUILDDIR=$(BT_BUILD_DIR)/tcp_wrappers

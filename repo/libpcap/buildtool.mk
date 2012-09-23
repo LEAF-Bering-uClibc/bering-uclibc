@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 LIBPCAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBPCAP_SOURCE) 2>/dev/null )
 LIBPCAP_TARGET_DIR:=$(BT_BUILD_DIR)/libpcap

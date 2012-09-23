@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 BUSYBOX_DIR=$(shell echo $(BUSYBOX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 #BUSYBOX_BUILD_DIR=$(BT_BUILD_DIR)/busybox

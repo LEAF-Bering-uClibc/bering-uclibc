@@ -1,5 +1,4 @@
 # makefile for modules
-include $(MASTERMAKEFILE)
 
 CONFIG_DIR=.
 CONFIG_TARGET_DIR:=$(BT_BUILD_DIR)/modules

@@ -2,10 +2,8 @@
 #
 # iptables
 #
-# $Id: buildtool.mk,v 1.8 2010/12/08 18:28:44 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 IPTABLES_VER=1.4.12.2
 IPTABLES_DIR:=iptables-$(IPTABLES_VER)
 IPT_NF_DIR:=ipt_netflow-1.7.1

@@ -2,10 +2,8 @@
 #
 # zlib
 #
-# $Id: buildtool.mk,v 1.1.1.1 2010/04/26 09:02:31 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 ZLIB_DIR=zlib-1.2.7
 ZLIB_BUILD_DIR=$(BT_BUILD_DIR)/zlib

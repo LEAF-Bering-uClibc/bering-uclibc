@@ -1,5 +1,4 @@
 # makefile for qos-htb
-include $(MASTERMAKEFILE)
 
 QOS-HTB_DIR=.
 QOS-HTB_TARGET_DIR:=$(BT_BUILD_DIR)/qos-htb

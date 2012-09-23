@@ -1,5 +1,4 @@
 # makefile for igmproxy
-include $(MASTERMAKEFILE)
 
 IGMPPROXY_DIR:=igmpproxy-0.1
 IGMPPROXY_TARGET_DIR:=$(BT_BUILD_DIR)/igmpproxy

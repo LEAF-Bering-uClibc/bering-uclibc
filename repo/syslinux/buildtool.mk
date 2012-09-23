@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 SYSLINUX_DIR:=syslinux-4.03
 SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
 

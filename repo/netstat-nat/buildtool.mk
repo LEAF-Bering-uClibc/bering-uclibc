@@ -1,5 +1,4 @@
 # makefile for netstat-nat
-include $(MASTERMAKEFILE)
 
 NETSTAT_NAT_DIR:=netstat-nat-1.4.7
 NETSTAT_NAT_TARGET_DIR:=$(BT_BUILD_DIR)/netstat-nat

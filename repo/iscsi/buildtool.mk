@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 ISCSI_DIR:=iscsitarget-1.4.20.2
 ISCSI_TARGET_DIR:=$(BT_BUILD_DIR)/iscsi

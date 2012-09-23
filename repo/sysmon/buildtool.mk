@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 SYSMON_DIR:=sysmon
 SYSMON_TARGET_DIR:=$(BT_BUILD_DIR)/sysmon
 export CC=$(TARGET_CC)

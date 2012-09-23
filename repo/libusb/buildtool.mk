@@ -1,5 +1,4 @@
 # makefile for libusb
-include $(MASTERMAKEFILE)
 
 LIBUSB_DIR:=libusb-0.1.12
 LIBUSB_TARGET_DIR:=$(BT_BUILD_DIR)/libusb

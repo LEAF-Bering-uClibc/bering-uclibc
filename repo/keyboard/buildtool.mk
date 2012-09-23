@@ -1,5 +1,4 @@
 # makefile for keyboard
-include $(MASTERMAKEFILE)
 
 KEYBOARD_DIR=.
 KEYBOARD_TARGET_DIR:=$(BT_BUILD_DIR)/config

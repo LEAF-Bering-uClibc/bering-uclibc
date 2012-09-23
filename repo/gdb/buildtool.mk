@@ -5,7 +5,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 DIR:=gdb-7.3.1
 TARGET_DIR:=$(BT_BUILD_DIR)/gdb
 

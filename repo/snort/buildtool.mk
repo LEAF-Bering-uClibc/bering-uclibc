@@ -4,7 +4,6 @@
 #
 ######################################
 
-include $(MASTERMAKEFILE)
 
 SNORT_DIR:=snort-2.4.5
 SNORT_TARGET_DIR:=$(BT_BUILD_DIR)/snort

@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 SDIR:=at-3.1.10.2
 TARGET_DIR:=$(BT_BUILD_DIR)/at
 

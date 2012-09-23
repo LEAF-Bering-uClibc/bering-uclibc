@@ -1,5 +1,4 @@
 # makefile for ntp
-include $(MASTERMAKEFILE)
 
 NTP_DIR:=ntp-4.2.6
 NTP_TARGET_DIR:=$(BT_BUILD_DIR)/ntp

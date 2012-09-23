@@ -4,7 +4,6 @@
 #
 ######################################
 
-include $(MASTERMAKEFILE)
 
 TARGET_DIR=$(BT_BUILD_DIR)/upnpd
 

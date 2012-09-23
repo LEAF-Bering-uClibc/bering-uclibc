@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 KISMET_DIR:=kismet-2010-07-R1
 KISMET_TARGET_DIR:=$(BT_BUILD_DIR)/kismet

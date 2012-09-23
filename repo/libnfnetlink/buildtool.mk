@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 LIBNFNETLINK_DIR:=libnfnetlink-1.0.0
 LIBNFNETLINK_TARGET_DIR:=$(BT_BUILD_DIR)/libnfnetlink
 #export CC=$(TARGET_CC)

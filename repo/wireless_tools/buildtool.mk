@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 WIRELESS_TOOLS_DIR:=wireless_tools.30
 WIRELESS_TOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/wireless_tools

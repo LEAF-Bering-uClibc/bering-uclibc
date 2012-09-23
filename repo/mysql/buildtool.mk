@@ -4,7 +4,6 @@
 #
 ######################################
 
-include $(MASTERMAKEFILE)
 
 MYSQL_DIR:=mysql-5.1.60
 MYSQL_TARGET_DIR:=$(BT_BUILD_DIR)/mysql

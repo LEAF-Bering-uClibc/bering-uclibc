@@ -1,5 +1,4 @@
 # makefile for tftp
-include $(MASTERMAKEFILE)
 
 TFTP_DIR:=tftp-hpa-0.41
 TFTP_TARGET_DIR:=$(BT_BUILD_DIR)/tftp

@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 PORTMAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(PORTMAP_SOURCE) 2>/dev/null )
 PORTMAP_TARGET_DIR:=$(BT_BUILD_DIR)/portmap

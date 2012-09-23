@@ -1,5 +1,4 @@
 # makefile for privoxy
-include $(MASTERMAKEFILE)
 
 PRIVOXY_DIR:=privoxy-3.0.19-stable
 PRIVOXY_TARGET_DIR:=$(BT_BUILD_DIR)/privoxy

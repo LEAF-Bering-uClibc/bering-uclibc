@@ -1,5 +1,4 @@
 # makefile for bridge
-include $(MASTERMAKEFILE)
 
 BRIDGE-UTILS_DIR:=bridge-utils-1.2
 BRIDGE-UTILS_TARGET_DIR:=$(BT_BUILD_DIR)/bridge

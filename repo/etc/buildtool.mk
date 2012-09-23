@@ -1,5 +1,4 @@
 # makefile for etc.lrp
-include $(MASTERMAKEFILE)
 
 ETC_DIR=.
 ETC_TARGET_DIR:=$(BT_BUILD_DIR)/etc

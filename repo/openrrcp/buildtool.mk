@@ -2,10 +2,8 @@
 #
 # iproute
 #
-# $Id: buildtool.mk,v 1.5 2010/11/01 11:02:10 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 OPENRRCP_DIR:=openrrcp-0.2.1
 OPENRRCP_TARGET_DIR:=$(BT_BUILD_DIR)/openrrcp
 

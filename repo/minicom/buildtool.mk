@@ -1,5 +1,4 @@
 # makefile for minicom
-include $(MASTERMAKEFILE)
 
 MINICOM_DIR:=minicom-2.1
 MINICOM_TARGET_DIR:=$(BT_BUILD_DIR)/minicom

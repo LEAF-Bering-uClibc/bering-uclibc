@@ -1,5 +1,4 @@
 # makefile for irqbalance
-include $(MASTERMAKEFILE)
 
 DIR:=irqbalance-0.55
 TARGET_DIR:=$(BT_BUILD_DIR)/irqbalance

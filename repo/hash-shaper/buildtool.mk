@@ -1,5 +1,4 @@
 # makefile for hash shaper
-include $(MASTERMAKEFILE)
 
 PKG_DIR=.
 PKG_TARGET_DIR:=$(BT_BUILD_DIR)/hash-shaper

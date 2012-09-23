@@ -2,10 +2,8 @@
 #
 # etherwake
 #
-# $Id: buildtool.mk,v 1.2 2004/11/17 18:59:30 espakman Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 ETHERWAKE_DIR:=etherwake-1.08.orig
 ETHERWAKE_TARGET_DIR:=$(BT_BUILD_DIR)/etherwake
 

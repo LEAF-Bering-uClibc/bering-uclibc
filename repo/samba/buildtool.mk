@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 SAMBA_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SAMBA_SOURCE) 2>/dev/null )
 SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba

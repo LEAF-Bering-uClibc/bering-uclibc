@@ -2,10 +2,8 @@
 #
 # vsftpd
 #
-# $Id: buildtool.mk,v 1.2 2010/06/06 21:47:30 kapeka Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 VSFTPD_DIR:=vsftpd-3.0.0
 VSFTPD_TARGET_DIR:=$(BT_BUILD_DIR)/vsftpd
 

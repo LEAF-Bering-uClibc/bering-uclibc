@@ -1,5 +1,4 @@
 # makefile for p9100
-include $(MASTERMAKEFILE)
 
 P9100_DIR:=p910nd-0.95
 P9100_TARGET_DIR:=$(BT_BUILD_DIR)/p9100

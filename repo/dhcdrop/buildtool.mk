@@ -1,5 +1,4 @@
 # makefile for dhcpd
-include $(MASTERMAKEFILE)
 
 DIR:=dhcdrop-0.5
 TARGET_DIR:=$(BT_BUILD_DIR)/dhcdrop

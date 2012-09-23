@@ -6,10 +6,6 @@
 #
 # so a ./buildtool2.pl build kernel (we in here ) must do it
 
-ifneq ($(strip $(MASTERMAKEFILE)),)
-	include $(MASTERMAKEFILE)
-endif
-
 ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 
 LINUX_BUILDDIR=$(BT_BUILD_DIR)/kernel

@@ -2,10 +2,8 @@
 #
 # nut
 #
-# $Id: buildtool.mk,v 1.6 2010/11/06 21:28:34 davidmbrooke Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 NUT_DIR:=nut-2.6.2
 NUT_TARGET_DIR:=$(BT_BUILD_DIR)/nut
 

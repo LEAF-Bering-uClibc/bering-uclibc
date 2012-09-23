@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 PATCH_DIR:=patch-2.5.9
 PATCH_TARGET_DIR:=$(BT_BUILD_DIR)/patch
 

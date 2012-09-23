@@ -1,5 +1,4 @@
 # makefile for aiccu, adapted from bash
-include $(MASTERMAKEFILE)
 
 AICCU_DIR:=aiccu
 AICCU_TARGET_DIR:=$(BT_BUILD_DIR)/aiccu

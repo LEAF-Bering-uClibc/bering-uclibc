@@ -1,5 +1,4 @@
 # makefile for clamav
-include $(MASTERMAKEFILE)
 
 CLAMAV_DIR:=clamav-0.97.3
 CLAMAV_TARGET_DIR:=$(BT_BUILD_DIR)/clamav

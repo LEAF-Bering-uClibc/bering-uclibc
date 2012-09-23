@@ -1,5 +1,4 @@
 # makefile for iptraf
-include $(MASTERMAKEFILE)
 
 IPTRAF_DIR:=iptraf-2.7.0
 IPTRAF_TARGET_DIR:=$(BT_BUILD_DIR)/iptraf

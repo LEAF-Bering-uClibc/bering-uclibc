@@ -1,6 +1,5 @@
 
 # makefile for gnupg
-include $(MASTERMAKEFILE)
 
 GNUPG_DIR:=gnupg-1.4.11
 GNUPG_TARGET_DIR:=$(BT_BUILD_DIR)/gnupg

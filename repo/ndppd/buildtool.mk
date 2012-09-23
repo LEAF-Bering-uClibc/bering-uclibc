@@ -1,5 +1,4 @@
 # makefile for ndppd
-include $(MASTERMAKEFILE)
 
 NDPPD_DIR:=ndppd-0.2.2
 NDPPD_TARGET_DIR:=$(BT_BUILD_DIR)/ndppd

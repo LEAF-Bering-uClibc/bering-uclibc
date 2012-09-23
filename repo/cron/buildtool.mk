@@ -2,10 +2,8 @@
 #
 # cron
 #
-# $Id: buildtool.mk,v 1.1.1.1 2010/04/26 09:02:26 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 CRON_DIR:=cron-3.0pl1.orig
 CRON_TARGET_DIR:=$(BT_BUILD_DIR)/cron
 

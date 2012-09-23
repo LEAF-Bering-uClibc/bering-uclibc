@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 RADIUS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(RADIUS_SOURCE) 2>/dev/null )
 RADIUS_TARGET_DIR:=$(BT_BUILD_DIR)/radius

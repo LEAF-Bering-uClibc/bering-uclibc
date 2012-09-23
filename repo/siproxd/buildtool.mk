@@ -2,10 +2,8 @@
 #
 # siproxd
 #
-# $Id: buildtool.mk,v 1.1 2010/09/18 15:33:44 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 SIPROXD_DIR:=siproxd-0.5.13
 SIPROXD_TARGET_DIR:=$(BT_BUILD_DIR)/siproxd
 

@@ -2,10 +2,8 @@
 #
 # sysklogd
 #
-# $Id: buildtool.mk,v 1.2 2010/11/01 11:02:10 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 DIR:=syslog-ng-1.6.12
 DIR2:=$(DIR)/libol-0.3.18
 TARGET_DIR:=$(BT_BUILD_DIR)/syslog-ng

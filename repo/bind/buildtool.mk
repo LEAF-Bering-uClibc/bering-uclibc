@@ -1,5 +1,4 @@
 # makefile for squid
-include $(MASTERMAKEFILE)
 
 DIR:=bind-9.8.1-P1
 TARGET_DIR:=$(BT_BUILD_DIR)/bind

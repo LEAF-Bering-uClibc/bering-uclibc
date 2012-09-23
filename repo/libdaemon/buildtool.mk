@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBDAEMON_DIR:=libdaemon-0.14
 LIBDAEMON_TARGET_DIR:=$(BT_BUILD_DIR)/libdaemon
 

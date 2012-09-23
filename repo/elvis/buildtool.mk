@@ -1,5 +1,4 @@
 # makefile for elvis-tiny
-include $(MASTERMAKEFILE)
 
 ELVIS-TINY_DIR:=elvis-tiny-1.4.orig
 ELVIS-TINY_TARGET_DIR:=$(BT_BUILD_DIR)/elvis-tiny

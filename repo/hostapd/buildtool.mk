@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 
 HOSTAPD_DIR:=hostapd-1.0/

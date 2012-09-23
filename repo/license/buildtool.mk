@@ -2,7 +2,6 @@
 # makefile for license.lrp
 # collects the licenses we have to provide
 #
-include $(MASTERMAKEFILE)
 
 LICENSE_DIR=.
 LICENSE_TARGET_DIR:=$(BT_BUILD_DIR)/license

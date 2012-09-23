@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 CONNTRACK-TOOLS_DIR:=conntrack-tools-1.0.1
 CONNTRACK-TOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/conntrack-tools
 

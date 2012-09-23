@@ -1,5 +1,4 @@
 # makefile for DJDBNS
-include $(MASTERMAKEFILE)
 
 DJBDNS_DIR:=djbdns-1.05
 DJBDNS_TARGET_DIR:=$(BT_BUILD_DIR)/djbdns

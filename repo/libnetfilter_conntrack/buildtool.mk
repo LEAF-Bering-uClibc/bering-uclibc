@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 LIBNETFILTER_CONNTRACK_DIR:=libnetfilter_conntrack-1.0.0
 LIBNETFILTER_CONNTRACK_TARGET_DIR:=$(BT_BUILD_DIR)/libnetfilter_conntrack
 

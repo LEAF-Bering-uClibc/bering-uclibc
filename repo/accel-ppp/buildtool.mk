@@ -1,5 +1,4 @@
 # makefile for accel-pptp
-include $(MASTERMAKEFILE)
 
 ACCEL_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(ACCEL_SOURCE) 2>/dev/null )
 ACCEL_TARGET_DIR:=$(BT_BUILD_DIR)/accel-ppp

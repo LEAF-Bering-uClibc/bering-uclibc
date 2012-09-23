@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBNET_DIR:=libnet
 LIBNET_TARGET_DIR:=$(BT_BUILD_DIR)/libnet
 

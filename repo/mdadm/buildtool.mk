@@ -1,5 +1,4 @@
 # makefile for mdadm
-include $(MASTERMAKEFILE)
 
 MDADM_DIR:=mdadm-3.2.2
 MDADM_TARGET_DIR:=$(BT_BUILD_DIR)/mdadm

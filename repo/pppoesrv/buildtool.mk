@@ -1,4 +1,3 @@
-include $(MASTERMAKEFILE)
 PPPOESRV_DIR:=rp-pppoe-3.10
 PPPOESRV_BUILD_DIR:=$(BT_BUILD_DIR)/pppoesrv
 

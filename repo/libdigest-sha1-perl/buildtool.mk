@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 LIBDIGEST-SHA1-PERL_DIR:=Digest-SHA1-2.13
 LIBDIGEST-SHA1-PERL_TARGET_DIR:=$(BT_BUILD_DIR)/libdigest-sha1-perl
 export CC=$(TARGET_CC)

@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 LIBNFSIDMAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBNFSIDMAP_SOURCE) 2>/dev/null )
 LIBNFSIDMAP_TARGET_DIR:=$(BT_BUILD_DIR)/libnfsidmap

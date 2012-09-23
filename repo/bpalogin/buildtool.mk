@@ -1,5 +1,4 @@
 # makefile for bpalogin
-include $(MASTERMAKEFILE)
 
 BPALOGIN_DIR:=bpalogin-2.0.2
 BPALOGIN_TARGET_DIR:=$(BT_BUILD_DIR)/bpalogin

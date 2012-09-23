@@ -6,7 +6,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 IPROUTE_DIR:=$(shell echo $(IPROUTE_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 IPROUTE_TARGET_DIR:=$(BT_BUILD_DIR)/iproute2
 

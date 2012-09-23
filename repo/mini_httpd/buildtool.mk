@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 MINI_HTTPD_DIR:=mini_httpd-1.19
 MINI_HTTPD_TARGET_DIR:=$(BT_BUILD_DIR)/mini_httpd
 export CC=$(TARGET_CC)

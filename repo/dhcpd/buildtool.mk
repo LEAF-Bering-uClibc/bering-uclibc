@@ -16,7 +16,6 @@
 #
 ################################################################################
 
-include $(MASTERMAKEFILE)
 
 DHCPD_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 DHCPD_TARGET_DIR:=$(BT_BUILD_DIR)/dhcpd

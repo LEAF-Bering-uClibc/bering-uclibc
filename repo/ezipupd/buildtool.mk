@@ -1,5 +1,4 @@
 # makefile for ez-ipupdate
-include $(MASTERMAKEFILE)
 
 EZ_IPUPDATE_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(EZ_IPUPDATE_SOURCE) 2>/dev/null )
 EZ_IPUPDATE_TARGET_DIR:=$(BT_BUILD_DIR)/ez-ipupdate

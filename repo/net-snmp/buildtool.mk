@@ -2,10 +2,8 @@
 #
 # net-snmp
 #
-# $Id: buildtool.mk,v 1.4 2010/07/22 19:14:00 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 SNMP_DIR:=net-snmp-5.7.1
 SNMP_TARGET_DIR:=$(BT_BUILD_DIR)/net-snmp

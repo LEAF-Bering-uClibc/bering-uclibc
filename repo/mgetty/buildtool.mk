@@ -1,5 +1,4 @@
 # makefile for mgetty
-include $(MASTERMAKEFILE)
 
 MGETTY_DIR:=mgetty-1.1.30
 MGETTY_TARGET_DIR:=$(BT_BUILD_DIR)/mgetty

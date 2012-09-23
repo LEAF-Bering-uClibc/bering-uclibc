@@ -2,10 +2,8 @@
 #
 # dhcp-helper
 #
-# $Id: buildtool.mk,v 1.1.1.1 2010/04/26 09:03:04 nitr0man Exp $
 #############################################################
 
-include $(MASTERMAKEFILE)
 DHCP-HELPER_DIR:=dhcp-helper-0.7
 DHCP-HELPER_TARGET_DIR:=$(BT_BUILD_DIR)/dhcp-helper
 

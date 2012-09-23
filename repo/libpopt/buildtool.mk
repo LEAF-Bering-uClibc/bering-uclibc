@@ -4,7 +4,6 @@
 #
 #############################################################
 
-include $(MASTERMAKEFILE)
 
 LIBPOPT_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBPOPT_SOURCE) 2>/dev/null )
 LIBPOPT_TARGET_DIR:=$(BT_BUILD_DIR)/libpopt

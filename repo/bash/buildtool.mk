@@ -1,5 +1,4 @@
 # makefile for bash
-include $(MASTERMAKEFILE)
 
 BASH_DIR:=bash-4.2
 BASH_TARGET_DIR:=$(BT_BUILD_DIR)/bash

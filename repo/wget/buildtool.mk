@@ -1,5 +1,4 @@
 # makefile for wget
-include $(MASTERMAKEFILE)
 
 WGET_DIR:=wget-1.13.4
 WGET_TARGET_DIR:=$(BT_BUILD_DIR)/wget
