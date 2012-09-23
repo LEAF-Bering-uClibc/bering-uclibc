@@ -14,7 +14,7 @@ IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
 EXTRA_VARS := BINDIR=/sbin \
 	DO_IPV6=1 \
 	PREFIX= \
-	KERNEL_DIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) \
+	KERNEL_DIR=$(BT_LINUX_DIR) \
 	COPT_FLAGS="$(CFLAGS)" \
 	LIBDIR=/lib \
 	MANDIR=/usr/share/man \
@@ -40,7 +40,7 @@ $(IPTABLES_DIR)/Makefile: $(IPTABLES_DIR)/.source
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
 	--libexecdir=/lib --includedir=/usr/include \
-	--with-kernel=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) --enable-devel )
+	--with-kernel=$(BT_LINUX_DIR) --enable-devel )
 
 $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	-rm -rf $(IPTABLES_TARGET_DIR)

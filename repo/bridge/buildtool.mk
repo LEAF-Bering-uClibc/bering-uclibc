@@ -15,7 +15,7 @@ $(BRIDGE-UTILS_DIR)/.configured: $(BRIDGE-UTILS_DIR)/.source
 	(cd $(BRIDGE-UTILS_DIR) ; autoreconf -i -f ;\
 	./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
-	--with-linux-headers=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/include )
+	--with-linux-headers=$(BT_LINUX_DIR)/include )
 	touch $(BRIDGE-UTILS_DIR)/.configured
 
 $(BRIDGE-UTILS_DIR)/.build: $(BRIDGE-UTILS_DIR)/.configured

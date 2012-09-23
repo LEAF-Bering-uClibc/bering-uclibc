@@ -21,7 +21,7 @@ source: .source
 # LIBC_INCLUDE=$(BT_STAGING_DIR)/usr/include
 $(NUT_DIR)/Makefile: .source
 	(cd $(NUT_DIR) ; PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib LIBS=-lm \
-	KERNEL_INCLUDE=$(BT_LINUX_DIR)-$(BT_KERNEL_VERSION)/include \
+	KERNEL_INCLUDE=$(BT_LINUX_DIR)/include \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \

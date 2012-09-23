@@ -20,7 +20,7 @@ $(KEEPALIVED_DIR)/.configured: $(KEEPALIVED_DIR)/.source
 		--prefix=/usr \
 		--host=$(GNU_TARGET_NAME) \
 		--build=$(GNU_BUILD_NAME) \
-		--with-kernel-dir=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) \
+		--with-kernel-dir=$(BT_LINUX_DIR) \
 		 );
 		touch $(KEEPALIVED_DIR)/.configured
 

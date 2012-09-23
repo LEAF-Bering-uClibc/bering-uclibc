@@ -1,7 +1,7 @@
 include $(MASTERMAKEFILE)
 
 DIR=perf
-SRCDIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE)/tools/perf
+SRCDIR=$(BT_LINUX_DIR)/tools/perf
 TARGET_DIR=$(BT_BUILD_DIR)/perf
 
 $(DIR)/.source:

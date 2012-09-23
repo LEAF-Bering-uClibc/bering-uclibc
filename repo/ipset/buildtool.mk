@@ -37,7 +37,7 @@ $(DIR)/.build: $(DIR)/Makefile
 #	(export IP_NF_SET_MAX=$(IP_NF_SET_MAX); \
 #	export IP_NF_SET_HASHSIZE=$(IP_NF_SET_HASHSIZE); \
 #	cd $(DIR) && for i in $(KARCHS); do export LOCALVERSION="-$$i" ; \
-#	export KERNEL_DIR=$(BT_LINUX_DIR)-$(BT_KERNEL_RELEASE) ; \
+#	export KERNEL_DIR=$(BT_LINUX_DIR) ; \
 #	export KBUILD_OUTPUT=$(BT_LINUX_DIR)-$$i ; \
 #	export INSTALL_MOD_PATH=$(BT_STAGING_DIR) ; \
 #	find ./kernel -name '*.ko.gz' -delete ; $(MAKE) clean && \
