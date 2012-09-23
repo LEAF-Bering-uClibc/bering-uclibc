@@ -40,6 +40,21 @@ my $vars_regex = qr{
                       )
               }xo;
 
+my $package_valid_key_regex = qr{
+                                    ^               # start from the begining
+                                    (?:             # start group without capturing
+                                        contents|
+                                        dependson|
+                                        help|
+                                        license|
+                                        owner|
+                                        permissions|
+                                        revision|
+                                        version
+                                    )               # end group
+                                    $               # match the end
+                            }xio;
+
 my $logfile_fh;
 
 ###############################################################################
@@ -297,6 +312,16 @@ sub readBtConfig {
         my $lkey = lc($key);    # Convert to LowerCase
         if ( not exists $btconfig{$lkey} and defined $defaultconfig->{$key} ) {
             $btconfig{$lkey} = $defaultconfig->{$key};
+        }
+    }
+
+    # Check keywords defined for package(s)
+    my @packages = keys %{$btconfig{package}};
+    for my $pkg (@packages) {
+        for my $key ( keys %{ $btconfig{package}->{$pkg} } ) {
+            die "Error unknown key '$key' in file '$configfile'"
+              . " for package '$pkg'\n"
+              unless $key =~ $package_valid_key_regex;
         }
     }
 
