@@ -317,6 +317,31 @@ sub _makeExportPATH ($) {
 
 ##############################################################################
 ##
+sub _export_env_by_format {
+    my ( $self, %options ) = @_;
+    my $output_fh = $options{output_fh}
+      || die "You must specified a filehandley";
+    my $key    = $options{key}    || die "You must specified a key";
+    my $value  = $options{value}  || die "You must specified a value";
+    my $format = $options{format} || 'shell';
+
+    if ( $format eq 'shell' ) {
+        print $output_fh "export $key='$value'", $/;
+    } elsif ( $format eq 'makefile' ) {
+        $value =~ s/ /\\ /g;    # Escape space
+        print $output_fh "export $key = $value", $/;
+    } else {
+        die "Unknown output format '$format'";
+    }
+}
+
+##############################################################################
+## dump the environment on screen or file
+## Options:
+##    localenv => hash ref containing key/values pairs to dump (optional)
+##    output   => path to the file that receive the dump (default STDOUT)
+##    format   => format of the dump. Can be 'shell' or 'makefile'
+##                (default 'shell')
 sub _dumpEnv {
     my ( $self, %options ) = @_;
     my $output_fh;
@@ -337,7 +362,12 @@ sub _dumpEnv {
     foreach my $var ( sort keys %{$globalEnv} ) {
         my $value = $globalEnv->{$var};
         if ( not ref $value ) {    # value is a scalar
-            print $output_fh "export " . uc($var) . "='$value'", $/;
+            $self->_export_env_by_format(
+                                          %options,
+                                          'key'       => $var,
+                                          'value'     => $value,
+                                          'output_fh' => $output_fh
+                                        );
         }
     }
 
@@ -345,7 +375,12 @@ sub _dumpEnv {
     foreach my $var ( sort keys %{$localEnv} ) {
         my $value = $localEnv->{$var};
         if ( not ref $value ) {    # value is a scalar
-            print $output_fh "$var='$value'", $/;
+            $self->_export_env_by_format(
+                                          %options,
+                                          'key'       => $var,
+                                          'value'     => $value,
+                                          'output_fh' => $output_fh
+                                        );
         }
     }
 }
