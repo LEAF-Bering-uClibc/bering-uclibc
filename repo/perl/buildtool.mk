@@ -1,15 +1,14 @@
 # makefile for perl
 include $(MASTERMAKEFILE)
 
-PERL_VER:=5.14.2
 PERL_DIR:=perl-$(PERL_VER)
 PERL_TARGET_DIR:=$(BT_BUILD_DIR)/perl
 
 unexport LDFLAGS
 
 $(PERL_DIR)/.source:
-	zcat $(PERL_SOURCE) | tar -xvf -
-	zcat $(PERL_CROSS_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(PERL_SOURCE)
+	$(BT_SETUP_BUILDDIR) -v --no-rmdir $(PERL_CROSS_SOURCE)
 	touch $(PERL_DIR)/.source
 
 source: $(PERL_DIR)/.source
@@ -33,13 +32,13 @@ $(PERL_DIR)/.build: $(PERL_DIR)/.configured
 
 # Build in single thread - -jN failed
 	$(MAKE) -C $(PERL_DIR)
-	cp -a $(PERL_DIR)/perl $(PERL_TARGET_DIR)/usr/bin
+	cp -af  $(PERL_DIR)/perl $(PERL_TARGET_DIR)/usr/bin/
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PERL_TARGET_DIR)/usr/bin/*
-	cp -a $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
-	cp -a $(PERL_DIR)/*.h $(PERL_TARGET_DIR)/usr/include/perl5/CORE
-	cp -aL Socket6.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
-	cp -aL Temp.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/File
-	cp -a $(PERL_TARGET_DIR)/* $(BT_STAGING_DIR)
+	cp -af  $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/
+	cp -af  $(PERL_DIR)/*.h $(PERL_TARGET_DIR)/usr/include/perl5/CORE/
+	cp -afL $(PERL_SOCKET6_PM) $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/
+	cp -afL $(PERL_TEMP_PM) $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/File/
+	cp -af  $(PERL_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(PERL_DIR)/.build
 
 build: $(PERL_DIR)/.build
