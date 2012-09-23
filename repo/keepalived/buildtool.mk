@@ -2,7 +2,6 @@
 #
 # keepalived
 #
-# $Id: buildtool.mk,v 1.2 2010/11/01 11:02:09 nitr0man Exp $
 #############################################################
 
 include $(MASTERMAKEFILE)
@@ -12,8 +11,7 @@ KEEPALIVED_TARGET_DIR:=$(BT_BUILD_DIR)/keepalived
 
 
 $(KEEPALIVED_DIR)/.source:
-	zcat $(KEEPALIVED_SOURCE) | tar -xvf -
-#	(cd $(KEEPALIVED_DIR); zcat ../$(KEEPALIVED_PATCH1) | patch -p1)
+	$(BT_SETUP_BUILDDIR) -v $(KEEPALIVED_SOURCE)
 	touch $(KEEPALIVED_DIR)/.source
 
 $(KEEPALIVED_DIR)/.configured: $(KEEPALIVED_DIR)/.source
