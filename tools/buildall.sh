@@ -12,7 +12,7 @@
 EXPORTDIR=/tmp
 
 #########################################################
-BTROOTDIR=$(git rev-parse --show-toplevel 2>/dev/null)
+BTROOTDIR=$(git rev-parse --show-toplevel 2>/dev/null || echo '.')
 DATE=$(date "+%Y-%m-%dT%H:%M")
 STARTDATE=$(date)
 MYDIR=$EXPORTDIR/$DATE
