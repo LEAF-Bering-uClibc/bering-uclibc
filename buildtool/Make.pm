@@ -306,12 +306,18 @@ sub _makeExportPATH ($) {
     my $self = shift;
 
     # make the new path, put the staging dir (gcc... first)
-    my $path =
-        $self->{'CONFIG'}->{'root_dir'}
-      . "/staging/usr/bin:"
-      . $self->{'CONFIG'}->{'root_dir'}
-      . "/staging/bin:"
-      . $ENV{'PATH'};
+    my $path = join(
+                     ':',
+                     File::Spec->catdir(
+                                          $self->{'CONFIG'}->{'root_dir'},
+                                          '/staging/usr/bin'
+                                        ),
+                     File::Spec->catdir(
+                                          $self->{'CONFIG'}->{'root_dir'},
+                                          '/staging/bin'
+                                        ),
+                     $ENV{'PATH'}
+                   );
     return $path;
 }
 
@@ -319,11 +325,10 @@ sub _makeExportPATH ($) {
 ##
 sub _export_env_by_format {
     my ( $self, %options ) = @_;
-    my $output_fh = $options{output_fh}
-      || die "You must specified a filehandley";
-    my $key    = $options{key}    || die "You must specified a key";
-    my $value  = $options{value}  || die "You must specified a value";
-    my $format = $options{format} || 'shell';
+    my $output_fh = $options{output_fh} || *STDOUT;
+    my $key       = $options{key}       || die "You must specified a key";
+    my $value     = $options{value}     || die "You must specified a value";
+    my $format    = $options{format}    || 'shell';
 
     if ( $format eq 'shell' ) {
         print $output_fh "export $key='$value'", $/;
@@ -333,29 +338,23 @@ sub _export_env_by_format {
     } else {
         die "Unknown output format '$format'";
     }
+
+    $self->debug("Environment variable \$$key set to '$value'");
 }
 
 ##############################################################################
 ## dump the environment on screen or file
 ## Options:
-##    localenv => hash ref containing key/values pairs to dump (optional)
-##    output   => path to the file that receive the dump (default STDOUT)
-##    format   => format of the dump. Can be 'shell' or 'makefile'
-##                (default 'shell')
+##    localenv  => hash ref containing key/values pairs to dump (optional)
+##    output_fh => filehandle where the environment will be dump
+##                 (default STDOUT)
+##    format    => format of the dump. Can be 'shell' or 'makefile'
+##                 (default 'shell')
 sub _dumpEnv {
     my ( $self, %options ) = @_;
     my $output_fh;
 
-    my $output_file = $options{output};
-    my $localEnv    = $options{localenv} || {};
-
-    if ($output_file) {
-        open $output_fh, ">", $output_file
-          or croak "Can't create $output_file:$!";
-    } else {
-        $output_fh = *STDOUT;
-    }
-
+    my $localEnv  = $options{localenv}           || {};
     my $globalEnv = $self->{'CONFIG'}->{envvars} || {};
 
     # Dump global environment
@@ -366,7 +365,6 @@ sub _dumpEnv {
                                           %options,
                                           'key'       => $var,
                                           'value'     => $value,
-                                          'output_fh' => $output_fh
                                         );
         }
     }
@@ -379,7 +377,6 @@ sub _dumpEnv {
                                           %options,
                                           'key'       => $var,
                                           'value'     => $value,
-                                          'output_fh' => $output_fh
                                         );
         }
     }
@@ -403,19 +400,27 @@ sub _callMake {
     }
 
     my $exportPATH = $self->_makeExportPATH();
-    my $envstring =
-      join( ' ', map { "$_=$localEnv->{$_}" } sort keys %{$localEnv} );
+
+    # Create the Makefile
+    my $makefileFile = File::Spec->catfile( $dldir, 'Makefile' );
+    open my $output_fh, ">$makefileFile"
+      or croak "Can't create $makefileFile:$!";
+    print $output_fh "#\n# This file was automaticaly generated\n#\n";
+    my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+    my $updateLocalEnv = $merge->merge( { PATH => $exportPATH }, $localEnv );
+    $self->_dumpEnv(
+                     output_fh => $output_fh,
+                     localenv  => $updateLocalEnv,
+                     format    => 'makefile'
+                   );
+    printf $output_fh "\ninclude %s",   '$(BT_MASTERMAKEFILE)';
+    printf $output_fh "\ninclude %s\n", $self->{'CONFIG'}{'buildtool_makefile'};
+    close $output_fh;
 
     my $commandStr =
-        "export PATH=" . $exportPATH . " && " . $self->{'ITRACE'}
-      . "make -C " . $dldir
-      . " -f ./" . $self->{'CONFIG'}{'buildtool_makefile'} . " "
-      . $target
-      . " MASTERMAKEFILE=" . $self->{'CONFIG'}{'root_dir'} . "/make/MasterInclude.mk"
-      . " BT_BUILDROOT="   . $self->{'CONFIG'}{'root_dir'} . " "
-      . $envstring . " >>" . $log . " 2>&1";
+      "make -C " . $dldir . "  " . $target . " >>" . $log . " 2>&1";
 
-    $self->debug("starting command:$commandStr");
+    $self->debug("starting command: $commandStr");
     print "calling 'make " . $target . "' for $part ";
     system($commandStr ) == 0
       or die "make $target "
