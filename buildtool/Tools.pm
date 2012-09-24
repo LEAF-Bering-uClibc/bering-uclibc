@@ -213,7 +213,19 @@ sub expand_config_variables {
             # expand every item in the array
             $config->{$key} = [
                 map {
-                    expand_variables( $_, $globalconfig, $config->{envvars} )
+                    if ( ref $_ ) {
+                        if ( ref $_ eq 'HASH' ) {
+                            expand_config_variables(
+                                                    $_,
+                                                    { %{$globalconfig}, %{$_} },
+                                                    $globalconfig->{envvars}
+                                                   );
+                            $_;
+                        }
+                    } else {
+                        expand_variables( $_, $globalconfig,
+                                          $config->{envvars} );
+                    }
                   } @{ $config->{$key} }
             ];
         } elsif ( $key ne 'envvars' and ref( $config->{$key} ) eq 'HASH' ) {
@@ -258,7 +270,6 @@ sub readBtConfig {
       Config::General::ParseConfig(
                                     "-ConfigFile"           => $configfile,
                                     "-LowerCaseNames"       => 1,
-                                    "-MergeDuplicateBlocks" => 1,
                                   );
 
     # A local file have the same name has the global one but with
@@ -272,7 +283,6 @@ sub readBtConfig {
           Config::General::ParseConfig(
                                         "-ConfigFile"     => $localConfigFile,
                                         "-LowerCaseNames" => 1,
-                                        "-MergeDuplicateBlocks" => 1,
                                       );
 
         # Merge the two config file
