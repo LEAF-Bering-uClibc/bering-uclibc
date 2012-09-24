@@ -23,7 +23,7 @@ use File::Spec;
 use File::Path;
 use File::Temp;
 
-use buildtool::Tools qw< make_absolute_path readBtGlobalConfig
+use buildtool::Tools qw< make_absolute_path readBtGlobalConfig readBtConfig
                          set_global_environment >;
 
 # NON PERL INCLUDES
@@ -1157,30 +1157,33 @@ my $globalConfig = new Config::General(
 );
 
 # fetch the package specific config
-
-my $packageConfig = readConfig(
-             File::Spec->catfile( $pkgSourceDir, $btConfig{'buildtool_config'} ) );
+my %packageConfig =
+  readBtConfig( ConfigFile =>
+          File::Spec->catfile( $pkgSourceDir, $btConfig{'buildtool_config'} ) );
 
 my $p_l_targets = [];
 
-if (exists($options->{'all'})) {
-	# fetch all possible targets for this package
-	foreach my $target (keys(%{$packageConfig->value('package')})) {
-		push(@$p_l_targets, $target);
-	}
+if ( exists( $options->{'all'} ) ) {
+    # fetch all possible targets for this package
+    foreach my $target ( keys %{ $packageConfig{'package'} } ) {
+        push( @$p_l_targets, $target );
+    }
 } else {
-	push(@$p_l_targets, $options->{'target'});
+    push( @$p_l_targets, $options->{'target'} );
 }
 
 foreach my $target (@$p_l_targets) {
 	
 	print "Generating package $target\n";
-	my $p_h_package = $packageConfig->value('package')->{$target};
+	my $p_h_package = $packageConfig{'package'}->{$target};
 	
 	die "Could not read package config for package " . $target
 		unless defined($p_h_package);
 	
-	my $packageType = exists($p_h_package->{'packagetype'}) ? lc($p_h_package->{'packagetype'}) : 'lrp';
+    my $packageType =
+      exists( $p_h_package->{'packagetype'} )
+      ? lc( $p_h_package->{'packagetype'} )
+      : 'lrp';
 	
 	if (uc($packageType) eq uc('lrp')) {
 		$buildInitrd = 0;
