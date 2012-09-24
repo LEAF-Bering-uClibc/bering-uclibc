@@ -50,6 +50,7 @@ my $package_valid_key_regex = qr{
                                         owner|
                                         permissions|
                                         packagename|
+                                        packagetype|
                                         revision|
                                         version
                                     )               # end group
