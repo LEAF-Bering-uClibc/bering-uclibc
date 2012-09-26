@@ -10,7 +10,7 @@ export CC=$(TARGET_CC)
 
 $(LIBDIGEST-SHA1-PERL_DIR)/.source: 
 	zcat $(LIBDIGEST-SHA1-PERL_SOURCE) | tar -xvf -
-	cp -aL Makefile $(LIBDIGEST-SHA1-PERL_DIR)
+	cp -aL $(LIBDIGEST-SHA1-PERL_MAKEFILE) $(LIBDIGEST-SHA1-PERL_DIR)/Makefile
 	touch $(LIBDIGEST-SHA1-PERL_DIR)/.source
 
 source: $(LIBDIGEST-SHA1-PERL_DIR)/.source
