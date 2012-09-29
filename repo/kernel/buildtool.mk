@@ -43,7 +43,7 @@ $(LINUX_BUILDDIR):
 	#
 	-rm -f package.cfg
 	( for i in $(KARCHS); do \
-	    echo $(ESCKEY) "#include <common.$$i>" >>package.cfg; \
+	    echo $(ESCKEY) "?include <common.$$i>" >>package.cfg; \
 	    sed 's,##KARCH##,'"$$i"',g' common.tpl >common.$$i ; \
 	done )
 	touch .build

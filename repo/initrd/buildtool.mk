@@ -12,7 +12,7 @@ $(INITRD_DIR)/.build:
 	mkdir -p $(INITRD_TARGET_DIR)/boot/etc
 	mkdir -p $(INITRD_TARGET_DIR)/sbin
 
-	echo $(ESCKEY) "isofs\nvfat">$(INITRD_TARGET_DIR)/boot/etc/modules
+	echo $(ESCKEY) "isofs\nvfat" > $(INITRD_TARGET_DIR)/boot/etc/modules
 	-rm -f package.cfg
 	(for a in $(KARCHS); do \
 	sed 's,#.*$$,\n,' modulelist.common >modulelist.$$a ; \
@@ -23,7 +23,7 @@ $(INITRD_DIR)/.build:
 	for m in `cat mod`; do echo $(ESCKEY) "<File>\n\tSource\t\t= lib/modules/__KVER__-$$a/$$m \n\t\
 	Filename\t= lib/modules/$$(echo $$m|sed 's,\([a-z0-9]*/\)\+,,')\n\t\
 	Type\t\t= binary\n\tType\t\t= module\n\tPermissions\t= 644\n</File>">>files.$$a; done; \
-	echo $(ESCKEY) "#include <common.$$a>" >>package.cfg; \
+	echo $(ESCKEY) "?include <common.$$a>" >>package.cfg; \
 	perl -p -e "s,##ARCH##,$$a,g" common.tpl >common.$$a ; \
 	done)
 
@@ -38,12 +38,16 @@ build: $(INITRD_DIR)/.build
 
 clean:
 	rm -rf $(INITRD_TARGET_DIR)
+	for a in $(KARCHS); do \
+		rm -f $(INITRD_DIR)/modulelist.$$a ; \
+		rm -f $(INITRD_DIR)/files.$$a ;      \
+		rm -f $(INITRD_DIR)/common.$$a ;     \
+	done
+	rm -f $(INITRD_DIR)/mod
+	rm -f $(INITRD_DIR)/package.cfg
 	rm -f $(INITRD_DIR)/.build
 	rm -f $(INITRD_DIR)/.configured
 
 srcclean: clean
 	rm -f $(INITRD_DIR)/.source
-	rm -f $(INITRD_DIR)/root.linuxrc
 	rm -f $(INITRD_DIR)/modules
-	rm -f $(INITRD_DIR)/README
-

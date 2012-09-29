@@ -25,6 +25,6 @@
 	</Owner>
 
 	<Contents>
-		#include <files.##ARCH##>
+		?include <files.##ARCH##>
 	</Contents>
 </initrd-##ARCH##>

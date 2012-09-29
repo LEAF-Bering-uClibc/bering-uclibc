@@ -1,4 +1,4 @@
-Insert in the /boot/etc/modules files the modules that you want to load
+Insert in the /boot/etc/modules file the modules that you want to load
 right after initrd is mounted.
 This feature is generally used to give access to the media
 where all the LEAF packages are stored.

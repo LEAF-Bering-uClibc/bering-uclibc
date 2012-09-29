@@ -19,7 +19,7 @@
 			Directories = root:root
 	</Owner>
 	<Contents>
-		#include <files.##KARCH##>
+		?include <files.##KARCH##>
 		<File>
 			Source		= lib/firmware/e100/*.bin
 			Filename	= lib/firmware/e100/
