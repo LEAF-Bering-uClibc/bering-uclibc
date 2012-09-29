@@ -991,56 +991,12 @@ sub createLrpPacket($$$$) {
 	my ($p_h_package, $package_dir,$p_h_options, $gzip_options) = @_;
 		
 	if ($buildInitrd) {
-		createInitrd($p_h_package, $package_dir,$p_h_options, $gzip_options);	
+		createInitrd($p_h_package, $package_dir,$p_h_options, $gzip_options);
 	} else {
 		createRegularLRP($p_h_package, $package_dir,$p_h_options, $gzip_options);
 	}
 }
-sub readFile($) ;
-sub readFile($) {
-	my ($filename) = @_;
-	my $lines = [];
-	my $line ;
 
-	# find the file to read
-	# Get the contents.
-	my $dirFH = Symbol::gensym();
-
-	my $hInputFile     = Symbol::gensym();
-	open($hInputFile,$filename) or die "Could not open file $filename\n";
-	my ($volume,$destination_path,$file) = File::Spec->splitpath( $filename );	
-
-	$line = '';
-	while($line = <$hInputFile>){
-	
-		# Replace #include <filename> with the contents of "filename"
-		if ($line=~ /#\s*include\s*\<([^\>]*)\>/ig) {
-			# avoid endless loops 
-			if ($filename ne $1) {
-				my $includedFile = readFile(File::Spec->catfile($destination_path,$1));
-				$line =~ s/#\s*include\s*\<[^\>]*\>/$includedFile/igs;
-			}
-		}
-
-	
-		push(@{$lines},$line);
-	}
-	close($hInputFile);
-
-	return join('', @$lines,"\n");
-}
-
-sub readConfig($) {
-	my ($filename) = @_;
-	my $config = readFile($filename);
-	my $p_h_pkgcfg = new Config::General(
-			"-String" => $config,
-			"-LowerCaseNames" => 1,
-			"-ExtendedAccess"=> 1
-		);
-
-	
-}
 # MAIN
 
 Getopt::Long::GetOptions($options,
@@ -1148,9 +1104,11 @@ my $globalConfig = new Config::General(
 );
 
 # fetch the package specific config
-my %packageConfig =
-  readBtConfig( ConfigFile =>
-          File::Spec->catfile( $pkgSourceDir, $btConfig{'buildtool_config'} ) );
+my %packageConfig = readBtConfig(
+    "ConfigFile" =>
+      File::Spec->catfile( $pkgSourceDir, $btConfig{'buildtool_config'} ),
+    "IncludedFileMustExists" => 1,
+);
 
 my $p_l_targets = [];
 

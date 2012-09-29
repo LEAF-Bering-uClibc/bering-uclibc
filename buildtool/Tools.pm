@@ -57,6 +57,21 @@ my $package_valid_key_regex = qr{
                                     $               # match the end
                             }xio;
 
+# detect lines like: ?include <filename>
+my $conditional_include_regex = qr{
+                                   ^            # begining of the line
+                                   \s*          # follow by zero or more space
+                                   \?           # start with ?
+                                   \s*          # follow by zero or more space
+                                   include      # word include
+                                   \s+          # follow by one or more space
+                                   <            # open <
+                                     \s*        # follow by zero or more space
+                                     (.+)       # capture filename
+                                     \s*        # follow by zero or more space
+                                   >            # close >
+                              }xio;
+
 my $logfile_fh;
 
 ###############################################################################
@@ -241,6 +256,51 @@ sub expand_config_variables {
 }
 
 ###############################################################################
+# Read a config file in memory and include conditional included file
+# Options:
+#   IncludedFileMustExists => if true included file must exists
+# return a string that is the content of the file
+sub _readBtFile {
+    my (%params) = @_;
+    my @file_contents = ();
+    my ( $inputfh, $line );
+
+    my $filename = delete $params{filename}
+      or croak "Parameter filename required !";
+
+    # Can we open the file ?
+    if ( not open( $inputfh, $filename ) ) {
+        if (
+            exists $params{included_file}    # it's an included file
+            and $params{IncludedFileMustExists} == 0
+          ) {
+            return '';                       # return an empty line
+        }
+        croak "Could not open file '$filename'\n";
+    }
+    my ( undef, $path, $file ) = File::Spec->splitpath($filename);
+
+    while ( $line = <$inputfh> ) {
+        # Replace #include <filename> with the contents of "filename"
+        if ( $line =~ /$conditional_include_regex/ig ) {
+            # avoid endless loops
+            if ( $filename ne $1 ) {
+                my $includedFileContent = _readBtFile(
+                    %params,
+                    included_file => 1,
+                    filename      => File::Spec->catfile( $path, $1 )
+                );
+                $line =~ s/$conditional_include_regex/$includedFileContent/igs;
+            }
+        }
+        push( @file_contents, $line );
+    }
+    close($inputfh);
+
+    return join( '', @file_contents, "\n" );
+}
+
+###############################################################################
 # read a config file and merge with a local file (if exists) then expand all
 # variables.
 # Options:
@@ -260,31 +320,49 @@ sub readBtConfig {
 
     my $configfile = delete $args{ConfigFile}
       or croak "Parameter ConfigFile required !";
-    my $forceconfig   = delete $args{ForceConfig}   || {};
-    my $defaultconfig = delete $args{DefaultConfig} || {};
+    my $forceconfig            = delete $args{ForceConfig}            || {};
+    my $defaultconfig          = delete $args{DefaultConfig}          || {};
+    my $includedfilemustexists = delete $args{IncludedFileMustExists} || 0;
 
     my $rest = ( keys %args )[0];
     croak "Unknown argument '$rest'" if defined $rest;
 
+    # load the file content
+    my $fileContent = _readBtFile(
+        %args,
+        IncludedFileMustExists => $includedfilemustexists,
+        filename               => $configfile
+    );
+
     # load the buildtool configuration file
-    my %btconfig =
-      Config::General::ParseConfig(
-                                    "-ConfigFile"           => $configfile,
-                                    "-LowerCaseNames"       => 1,
-                                  );
+    my %btconfig = Config::General::ParseConfig(
+        "-String"          => $fileContent,
+        "-LowerCaseNames"  => 1,
+        '-IncludeRelative' => 1,
+        '-IncludeGlob'     => 1,
+    );
 
     # A local file have the same name has the global one but with
     # .local extension
     my $localConfigFile;
-    ($localConfigFile = $configfile) =~ s/\.(conf|cfg)$/.local/;
+    ( $localConfigFile = $configfile ) =~ s/\.(conf|cfg)$/.local/;
 
     my %btLocalConfig = ();
     if ( -f $localConfigFile ) {
-        %btLocalConfig =
-          Config::General::ParseConfig(
-                                        "-ConfigFile"     => $localConfigFile,
-                                        "-LowerCaseNames" => 1,
-                                      );
+
+        # load the file content
+        $fileContent = _readBtFile(
+            %args,
+            IncludedFileMustExists => $includedfilemustexists,
+            filename               => $localConfigFile
+        );
+
+        %btLocalConfig = Config::General::ParseConfig(
+            "-String"          => $fileContent,
+            "-LowerCaseNames"  => 1,
+            '-IncludeRelative' => 1,
+            '-IncludeGlob'     => 1,
+        );
 
         # Merge the two config file
         for my $key ( keys %btLocalConfig ) {
@@ -293,22 +371,27 @@ sub readBtConfig {
                     # Merge the hash
                     $btconfig{$key} =
                       { %{ $btconfig{$key} }, %{ $btLocalConfig{$key} } };
-                } elsif ( ref $btconfig{$key} eq 'ARRAY' ) {
+                }
+                elsif ( ref $btconfig{$key} eq 'ARRAY' ) {
                     # Merge the array
                     my @localvalues;
                     if ( ref $btLocalConfig{$key} eq 'ARRAY' ) {
                         @localvalues = @{ $btLocalConfig{$key} };
-                    } elsif ( ref $btLocalConfig{$key} eq 'HASH' ) {
+                    }
+                    elsif ( ref $btLocalConfig{$key} eq 'HASH' ) {
                         @localvalues = %{ $btLocalConfig{$key} };
-                    } else {
+                    }
+                    else {
                         @localvalues = ( $btLocalConfig{$key} );
                     }
                     $btconfig{$key} = [ @{ $btconfig{$key} }, @localvalues ];
-                } else {
+                }
+                else {
                     # Must must not go there
                     confess "Error must not go there !";
                 }
-            } else {
+            }
+            else {
                 $btconfig{$key} = $btLocalConfig{$key};   # Overwrite the option
             }
         }
