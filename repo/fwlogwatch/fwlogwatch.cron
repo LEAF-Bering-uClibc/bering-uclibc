@@ -1,0 +1,47 @@
+#!/bin/sh
+# fwlogwatch's daily cron job
+# Copyright 2001 Alberto Gonzalez Iniesta <agi@agi.as>
+# Licensed under the GNU General Public License, version 2.  See the file
+# /usr/share/common-licenses/GPL or <http://www.gnu.org/copyleft/gpl.txt>.
+# LEAF changes by LEAF Bering-uClibc Team 2012
+# 
+set -e
+
+FWLOGWATCH=/usr/bin/fwlogwatch
+CONFIG=/etc/default/fwlogwatch
+EXTRA_HEADER="Content-Type: text/plain"
+
+test -x $FWLOGWATCH || exit 0
+test -r $CONFIG || exit 0
+
+# Source configuration generated from debconf's values
+. $CONFIG
+
+if [ "$CRON_EMAIL" = "none" ]; then
+  exit 0
+fi
+
+OUTPUT=`$FWLOGWATCH $CRON_PARAMS`
+
+(echo "$OUTPUT" | grep -q 'No valid time entries found') \
+  && exit 0
+
+## Mail results
+
+TMPFILE=`mktemp /tmp/fwlogwatch.XXXXXXXXXX`
+
+#echo "From: " >> $TMPFILE
+echo "To: $CRON_EMAIL" >> $TMPFILE
+echo "Subject: fwlogwatch daily news" >> $TMPFILE
+
+(echo "$OUTPUT" | grep -q '<html>') \
+  && echo "Content-Type: text/html" >> $TMPFILE
+
+echo >> $TMPFILE
+
+echo "$OUTPUT" >> $TMPFILE
+
+/usr/sbin/sendmail -F `id -nu` "$CRON_EMAIL" < $TMPFILE
+
+rm -f $TMPFILE
+

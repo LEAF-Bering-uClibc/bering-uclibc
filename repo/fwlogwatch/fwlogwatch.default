@@ -1,0 +1,8 @@
+#
+# Configuration for fwlogwatch
+#
+START_DAEMON='true'
+PARAMS='-A -B'
+MODE='iptables'
+EMAIL='root@localhost'
+CRON_EMAIL='none'

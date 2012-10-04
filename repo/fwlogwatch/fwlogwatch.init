@@ -1,0 +1,52 @@
+#!/bin/sh -e
+#
+# Original version by Robert Leslie
+# <rob@mars.org>, edited by iwj and cs
+# Modified for fwlogwatch by Alberto Gonzalez Iniesta <agi@agi.as>
+# LEAF changes by LEAF Bering-uClibc Team 2012  
+
+RCDLINKS="0,K50 1,K50 2,S75 3,S75 4,S75 5,S75 6,K50"
+
+DAEMON=/usr/bin/fwlogwatch
+CONFIG=/etc/fwlogwatch/fwlogwatch.config
+DEFAULT=/etc/default/fwlogwatch
+
+test -x $DAEMON || exit 0
+test -f $CONFIG || exit 0
+test -r $DEFAULT || exit 0
+
+# Source configuration generated from debconf's values
+. $DEFAULT
+
+# Start fwlogwatch as a daemon?
+if [ "$START_DAEMON" != "true" ]; then
+  exit 0
+fi
+
+PIDFILE=`grep "^pidfile" $CONFIG | sed 's/.*=[\t ]*//' `
+
+case "$1" in
+start)
+  echo -n "Starting firewall log watcher: fwlogwatch"
+  start-stop-daemon --start --quiet \
+	--exec $DAEMON -- -R $PARAMS
+  echo "."
+  ;;
+stop)
+  echo -n "Stopping firewall log watcher: fwlogwatch"
+  start-stop-daemon --stop --quiet --oknodo \
+	--exec $DAEMON --pidfile $PIDFILE
+  echo "."
+  ;;
+restart|force-reload)
+  $0 stop
+  sleep 1
+  $0 start
+  ;;
+*)
+  echo "Usage: /etc/init.d/fwlogwatch {start|stop|restart|force-reload}" >&2
+  exit 1
+  ;;
+esac
+
+exit 0
