@@ -23,7 +23,7 @@ set -e
 
 case "$1" in
   start)
-	echo "Starting $(DESC)..."
+	echo "Starting ${DESC}..."
 	$DAEMON -s -c ${TEMP_MACTAB}
 	$DAEMON -s 
 	echo "$DESC done"
