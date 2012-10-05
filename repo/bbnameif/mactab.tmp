@@ -1,4 +1,8 @@
 ###############################################################
 # give temporary names to your interfaces to avoid name clashes
+# this is used by a first run of nameif to set the interfaces
+# to names different than ethxx so they are somewhat unique.
+# To use this file enter your desired interface name 
+# followed by it's MAC address 
 ###############################################################
 #t-eth0		00:00:00:00:00:00
