@@ -1,0 +1,38 @@
+#! /bin/sh
+#
+# skeleton	example file to build /etc/init.d/ scripts.
+#		This file should be used to construct scripts for /etc/init.d.
+#
+#		Written by Miquel van Smoorenburg <miquels@cistron.nl>.
+#		Modified for Debian 
+#		by Ian Murdock <imurdock@gnu.ai.mit.edu>.
+#
+# Version:	@(#)skeleton  1.9  26-Feb-2001  miquels@cistron.nl
+#
+RCDLINKS="2,S04"
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/sbin/nameif
+NAME=nameif
+DESC="BusyBox nameif"
+TEMP_MACTAB=/etc/mactab.tmp
+
+test -x $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+	echo "Starting $(DESC)..."
+	$DAEMON -s -c ${TEMP_MACTAB}
+	$DAEMON -s 
+	echo "$DESC done"
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N start" >&2
+	exit 1
+	;;
+esac
+
+exit 0
