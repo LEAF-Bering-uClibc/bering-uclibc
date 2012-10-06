@@ -1,0 +1,6 @@
+################################################################
+# enter the final names for your interfaces here
+# To use this file enter your desired interface name
+# followed by it's MAC address
+###############################################################
+#eth0		00:00:00:00:00:00
