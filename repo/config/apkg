@@ -258,13 +258,13 @@ upgrade () {
 	if [ $? -eq 0 ]; then
 		echo "$pkg upgraded"
 		# process any package dependencies by recursively calling install()...
-		$deplist=""
+		deplist=""
 		if [ -f $PKGDIR/$pkg.deplrp ] ; then
 			for deplrp in `cat $PKGDIR/$pkg.deplrp` ; do
 				[ -f "$PKGDIR/$deplrp.list" ] || $deplist="$deplist $deplrp"
 			done
 		fi
-		[ -z "$deppkg" ] && echo "Required packages that are misssed: $deplist"
+		[ -z "$deppkg" ] && echo "Required packages that are missed: $deplist"
 		return 0
 	else
 	    return $?
