@@ -27,16 +27,22 @@ MNT=$BACKUP_PATH;	test -d $MNT || usage
 PACKAGE=$1;		test $PACKAGE != "configdb" -a $PACKAGE != "moddb" && usage
 DIR="/tmp"
 
+# source the lrpkg/backup file to respect the configdb and moddb parameters
+LRPKG=${LRPKG:-"/var/lib/lrpkg"}
+. ${LRPKG}/backup
+
 echo -n "Creating $PACKAGE.lrp Please wait: "
 ticker & 2>/dev/null
 cd /
 case "$PACKAGE" in
 	configdb)
 		/usr/sbin/apkg -o $DIR > /dev/null 2>&1
+		PACKAGE=${configdb}
 		retval=$?
 		;;
 	moddb)
 		/usr/sbin/apkg -d $DIR > /dev/null 2>&1
+		PACKAGE=${moddb}
 		retval=$?
 		;;
 	*)

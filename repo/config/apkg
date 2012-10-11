@@ -264,7 +264,7 @@ upgrade () {
 				[ -f "$PKGDIR/$deplrp.list" ] || $deplist="$deplist $deplrp"
 			done
 		fi
-		[ -n "$deppkg" ] && echo "Required packages that are misssed: $deplist"
+		[ -n "$deppkg" ] && echo "Required packages that are missed: $deplist"
 		return 0
 	else
 	    return $?
