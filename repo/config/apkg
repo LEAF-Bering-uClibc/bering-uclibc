@@ -261,10 +261,10 @@ upgrade () {
 		deplist=""
 		if [ -f $PKGDIR/$pkg.deplrp ] ; then
 			for deplrp in `cat $PKGDIR/$pkg.deplrp` ; do
-				[ -f "$PKGDIR/$deplrp.list" ] || $deplist="$deplist $deplrp"
+				[ -f "$PKGDIR/$deplrp.list" ] || deplist="$deplist $deplrp"
 			done
 		fi
-		[ -n "$deppkg" ] && echo "Required packages that are missed: $deplist"
+		[ -n "$deplist" ] && echo "Required packages that are missed: $deplist"
 		return 0
 	else
 	    return $?
