@@ -6,6 +6,8 @@
 
 LINUX_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(KERNEL_BASE_SOURCE) 2>/dev/null )
 
+unexport CROSS_COMPILE
+
 .source:
 	$(BT_SETUP_BUILDDIR) -v $(KERNEL_BASE_SOURCE)
 	xzcat $(UPDATE_KERNEL_SOURCE_PATCH) | patch -p1 -s -d $(LINUX_DIR)
