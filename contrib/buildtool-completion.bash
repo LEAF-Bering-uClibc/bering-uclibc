@@ -113,3 +113,46 @@ _buildpacket () {
 }
 
 complete -F _buildpacket buildpacket.pl
+
+#
+# buildimage.pl
+#
+__buildtool_list_images () {
+    local prog=${COMP_WORDS[0]}
+    # Get the image dir from buildtool conf
+    imagedir=$(LC_ALL=C ${prog/buildimage/buildtool} dumpenv | \
+               sed -rn "s/^.*BT_IMAGE_DIR='(.*)'/\1/p")
+    k="${#COMPREPLY[@]}"
+    for image in $( compgen -d $imagedir/$cur ); do
+        COMPREPLY[k++]=${image#$imagedir/}
+    done
+}
+
+_buildimage () {
+    local cur prev split=false
+
+    COMPREPLY=()
+    cur=`_get_cword`
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    _split_longopt && split=true
+
+    case "$prev" in
+        --packager|--target|--lrp|--toolchain)
+            # option need a value
+            return
+            ;;
+        --image)
+            __buildtool_list_images
+            return
+            ;;
+    esac
+
+    $split && return 0
+
+    if [[ "$cur" == -* ]]; then
+        __buccomp "--image --relver --verbose --keeptmp"
+    fi
+}
+
+complete -F _buildimage buildimage.pl
