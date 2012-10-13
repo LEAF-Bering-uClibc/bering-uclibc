@@ -130,9 +130,9 @@ sub create_dir {
             for my $diag (@$err) {
                 my ( $dir, $message ) = %$diag;
                 if ( $dir eq '' ) {
-                    croak "error: $message\n";
+                    croak "error: $message";
                 } else {
-                    croak "can't create directory '$dir': $message\n";
+                    croak "can't create directory '$dir': $message";
                 }
             }
         }
@@ -151,9 +151,9 @@ sub remove_dir {
             for my $diag (@$err) {
                 my ( $dir, $message ) = %$diag;
                 if ( $dir eq '' ) {
-                    croak "error: $message\n";
+                    croak "error: $message";
                 } else {
-                    croak "can't remove directory '$dir': $message\n";
+                    croak "can't remove directory '$dir': $message";
                 }
             }
         }
