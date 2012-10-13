@@ -175,7 +175,6 @@ $tmpDir = createTempDir( );
 # Set environment variables
 for my $var (keys %{ $btConfig{envvars} }) {
     $ENV{$var} = $btConfig{envvars}->{$var};
-    print STDERR "$var = $btConfig{envvars}->{$var}",$/;
 }
 
 # Check if the config file specifies a path for modules.tgz & firmware.tgz files
