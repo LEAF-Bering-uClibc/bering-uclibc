@@ -33,6 +33,23 @@ function buildpacket {
     echo "No buildpacket script in this worktree !" >&2
 }
 
+function buildimage {
+    local root_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -n "$root_dir" ]]; then
+        COME_ROOT=$( type -P fakeroot sudo | head -1 )
+        local buildimage_script="$root_dir/buildimage.pl"
+        if [[ -x "$buildimage_script" ]];then
+            if [[ "${#@}" -gt 0 ]]; then
+                $COME_ROOT "$buildimage_script" $@
+            else
+                "$buildimage_script"
+            fi
+            return $?
+        fi
+    fi
+    echo "No buildimage script in this worktree !" >&2
+}
+
 function _tools_wrappers_add_completion {
     local completion
 
@@ -46,6 +63,12 @@ function _tools_wrappers_add_completion {
     local completion=$(complete -p buildpacket.pl)
     if [[ -n "$completion" ]];then
         eval ${completion/buildpacket.pl/buildpacket}
+    fi
+
+    # Add completion to buildimage if exists
+    local completion=$(complete -p buildimage.pl)
+    if [[ -n "$completion" ]];then
+        eval ${completion/buildimage.pl/buildimage}
     fi
 }
 
