@@ -281,7 +281,7 @@ sub _readBtFile {
     my ( undef, $path, $file ) = File::Spec->splitpath($filename);
 
     while ( $line = <$inputfh> ) {
-        # Replace #include <filename> with the contents of "filename"
+        # Replace ?include <filename> with the contents of "filename"
         if ( $line =~ /$conditional_include_regex/ig ) {
             # avoid endless loops
             if ( $filename ne $1 ) {
