@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This script will build the webconf standard .lwp files from buildtool dir source/lwp
 #
 # If necessary it adds the files with owner and permissions to a tarfile and then gzip's the tarfile
