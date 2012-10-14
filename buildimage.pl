@@ -96,12 +96,11 @@ my $glConfig = new Config::General(
 );
 
 # Fetch the image specific config (${image_dir}/buildimage.cfg)
-my $imConfig = new Config::General(
-    "-ConfigFile" => File::Spec->catfile(
+my %imConfig = readBtConfig(
+    "ConfigFile" => File::Spec->catfile(
         $btConfig{'image_dir'}, $image, $btConfig{'buildimage_config'}
     ),
-    "-LowerCaseNames" => 1,
-    "-ExtendedAccess" => 1
+    "IncludedFileMustExists" => 1,
 );
 
 # Generate date label
@@ -109,7 +108,7 @@ $configHash{ '{DATE}' } = time2str( "%Y-%m-%d", time );
 print "Build Date is:\t\t$configHash{ '{DATE}' }\n" if $verbose;
 
 # Extract image name, type, kernel arch, suffix and toolchain from config file
-my $imageStruc = $imConfig->value('image');
+my $imageStruc = $imConfig{'image'};
 my $imgName    = $imageStruc->{'imagename'};
 die "ERROR: ImageName is not specified in config file" unless defined $imgName;
 print "Image name:\t\t$imgName\n" if $verbose;
