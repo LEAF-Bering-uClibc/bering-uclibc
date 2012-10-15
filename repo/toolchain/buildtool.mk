@@ -16,7 +16,8 @@ export PREFIX=$(BT_TOOLCHAIN_DIR)
 
 GCC_CONFOPTS=   --with-gnu-ld --with-gnu-as \
 		--disable-libmudflap --disable-libssp \
-		--disable-libquadmath --disable-libgomp
+		--disable-libquadmath --disable-libgomp \
+		--disable-multilib
 
 #save flags for cross-compiling target libs, and clean flags for toolchain
 BT_CFLAGS=$(CFLAGS)
@@ -26,7 +27,7 @@ unexport CPPFLAGS
 unexport LDFLAGS
 
 $(UCLIBC_DIR)/.source:
-	$(BT_SETUP_BUILDDIR) -v $(UCLIBC_SOURCE)
+	$(BT_SETUP_BUILDDIR) $(UCLIBC_SOURCE)
 	# create config.$(GNU_TARGET_NAME)_headers with no CROSS_COMPILER_PREFIX
 	perl -p -e 's,^CROSS_COMPILER_PREFIX=.*$$,CROSS_COMPILER_PREFIX="",' config.$(GNU_TARGET_NAME) > config.$(GNU_TARGET_NAME)_headers
 #	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
@@ -37,15 +38,18 @@ $(UCLIBC_DIR)/.source:
 	touch $(UCLIBC_DIR)/.source
 
 $(BINUTILS_DIR)/.source:
-	$(BT_SETUP_BUILDDIR) -v $(BINUTILS_SOURCE)
+	$(BT_SETUP_BUILDDIR) $(BINUTILS_SOURCE)
+	#  Patch libiberty so it will not be install in /usr/lib64 on 64bits architecture
+	sed -i 's%\(^MULTIOSDIR = \).*%\1 ../lib%' $(BINUTILS_DIR)/libiberty/Makefile.in
 	touch $(BINUTILS_DIR)/.source
 
 $(GCC_DIR)/.source:
-	$(BT_SETUP_BUILDDIR) -v $(GCC_SOURCE)
+	$(BT_SETUP_BUILDDIR) $(GCC_SOURCE)
+	cat $(GCC_PURE64_PATCH) | patch -p1 -d $(GCC_DIR)
 	touch $(GCC_DIR)/.source
 
 $(DEPMOD_DIR)/.source:
-	$(BT_SETUP_BUILDDIR) -v $(DEPMOD_SOURCE)
+	$(BT_SETUP_BUILDDIR) $(DEPMOD_SOURCE)
 	touch $(DEPMOD_DIR)/.source
 
 source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source $(DEPMOD_DIR)/.source
@@ -61,8 +65,8 @@ $(BINUTILS_BUILD_DIR)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.headers
 	mkdir -p $(BINUTILS_BUILD_DIR)
 	(cd $(BINUTILS_BUILD_DIR) && \
 	 $(BINUTILS_DIR)/configure --target=$(GNU_TARGET_NAME) --prefix=$(BT_TOOLCHAIN_DIR) \
-	  --includedir=$(BT_TOOLCHAIN_DIR)/usr/include  --with-sysroot=$(BT_TOOLCHAIN_DIR) \
-	  --with-build-sysroot=$(BT_TOOLCHAIN_DIR) && \
+	  --includedir=$(BT_TOOLCHAIN_DIR)/usr/include --with-sysroot=$(BT_TOOLCHAIN_DIR) \
+	  --with-build-sysroot=$(BT_TOOLCHAIN_DIR) --disable-multilib && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include &&  make install) || exit 1
 	touch $(BINUTILS_BUILD_DIR)/.build
 
@@ -104,7 +108,7 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	(cd $(BINUTILS_BUILD_DIR2) && CFLAGS="$(BT_CFLAGS)" LDFLAGS="$(BT_LDFLAGS)" \
 	 $(BINUTILS_DIR)/configure --host=$(GNU_TARGET_NAME) --prefix=/usr \
 	  --build=$(GNU_BUILD_NAME) \
-	  --with-build-sysroot=$(BT_STAGING_DIR) && \
+	  --with-build-sysroot=$(BT_STAGING_DIR) --disable-multilib && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include configure-host && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
 	 install-libiberty install-intl install-bfd install-binutils install-opcodes) || exit 1
@@ -121,7 +125,7 @@ $(DEPMOD_DIR)/.build: $(DEPMOD_DIR)/Makefile
 	cp -a $(DEPMOD_DIR)/build/depmod $(BT_TOOLCHAIN_DIR)/bin
 	touch $@
 
-build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE1_BUILD_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build $(DEPMOD_DIR)/.build
+build: $(BINUTILS_BUILD_DIR)/.build $(UCLIBC_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build $(BINUTILS_BUILD_DIR2)/.build $(DEPMOD_DIR)/.build
 	mkdir -p $(BT_STAGING_DIR)/lib
 	cp -a $(BT_TOOLCHAIN_DIR)/lib/*.so.* $(BT_STAGING_DIR)/lib
 	cp -a $(BT_TOOLCHAIN_DIR)/lib/*.so $(BT_STAGING_DIR)/lib

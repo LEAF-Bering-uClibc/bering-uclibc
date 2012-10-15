@@ -7,12 +7,16 @@ ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
 export ARCH:=x86_64
 # Space-separated list of kernel sub-archs to generate
 export KARCHS:=x86_64
+# Available kernel archs with pci-express support
+export KARCHS_PCIE:=x86_64
 # Arch-specific CFLAGS
-export ARCH_CFLAGS:=-march=generic -mtune=generic
+export ARCH_CFLAGS:=-mtune=generic
 # Name of kernel image
 export KERN_IMAGE:=bzImage
 # Name of OpenSSL target
-export OPENSSL_TARGET:=linux-elf
+export OPENSSL_TARGET:=linux-x86_64
+# Compile a pure 64bits toolchain
+export GCC_PURE64:=yes
 
 # Set variables to "prime" the configure scripts' cache for cross-compiling
 # These are toolchain-specific settings - generic settings go above
