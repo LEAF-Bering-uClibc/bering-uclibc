@@ -22,11 +22,12 @@
 use strict;
 use warnings;
 use Config::General;
-use Getopt::Long;
+use Getopt::Long qw< :config no_auto_abbrev no_ignore_case bundling >;
 use Date::Format;
 use File::Spec;
 use File::Temp;
 use File::Copy;
+use Pod::Usage;
 use Carp;
 use FindBin qw($Bin);       # where was script installed?
 use lib $FindBin::Bin;      # use that dir for libs, too
@@ -34,22 +35,11 @@ use lib $FindBin::Bin;      # use that dir for libs, too
 use buildtool::Tools
   qw< make_absolute_path create_dir remove_dir readBtGlobalConfig readBtConfig >;
 
+my $imgName = "Bering-uClibc";
+
 my %configHash = ( );
-my $relver;
 my $image;
-my $verbose = 0;
-my $keeptmp = 0;
-my $debug;
 my $tmpDir;
-my $Usage =
-qq{Usage: $0 --image=ImgDir [--relver=VersionLabel] [--verbose] [--keeptmp]
-   image      Parent directory for buildimage.cfg, under buildtool/image
-              e.g. Bering-uClibc_i486_isolinux_vga
-   relver     [Optional] String to append to image name to show release version
-              e.g. 4.0beta1. Use version defined in initrd package by default
-   verbose    [Optional] Report progress during execution
-   keeptmp    [Optional] Do not delete temporary directory
-};
 
 sub createTempDir;
 sub cleanTempDir;
@@ -58,16 +48,39 @@ sub createDirUnlessItExists;
 sub copyFilesToTempDir;
 sub copyFilesWithSearchAndReplace;
 
+my %options = (
+    'verbose' => 0,
+    'debug'   => 0,
+);
+
 # Process command line arguments
 GetOptions(
-    "verbose!" => \$verbose,
-    "image=s"  => \$image,
-    "relver=s" => \$relver,
-    "keeptmp!" => \$keeptmp,
-    "debug!"   => \$debug
-) or die $Usage;
+    \%options, qw{
+      help|h!  verbose|v!  debug|d!  keep-tmp|k!  toolchain|t=s  release|r=s
+      kernel-arch|a=s  image-type|i=s variant|v=s
+      }
+) or pod2usage(2);
+pod2usage(-verbose => 2)  if ($options{help});
 
-die $Usage unless defined( $image );
+# Check for kernel-arch parameter
+pod2usage( -exitval => 2, -message => "$0: no kernel architecture given.\n" )
+  unless exists $options{'kernel-arch'};
+my $kernelArch = lc $options{'kernel-arch'};
+
+# Check for image-type parameter
+pod2usage( -exitval => 2, -message => "$0: no image type given.\n" )
+  unless exists $options{'image-type'};
+my $imgType = lc $options{'image-type'};
+
+# Check for variant parameter
+pod2usage( -exitval => 2, -message => "$0: no variant given.\n" )
+  unless exists $options{'variant'};
+my $variant = lc $options{'variant'};
+
+my $verbose = $options{'verbose'};
+my $debug   = $options{'debug'};
+my $relver  = $options{'release'};
+my $keeptmp = $options{'keep-tmp'};
 
 $SIG{'INT'} = 'CLEANUP';
 
@@ -78,11 +91,14 @@ warn "WARNING: Not running as (fake)root" if ( $> != 0 );
 
 # Fetch the buildtool config
 my $buildtoolconf = File::Spec->catfile( $baseDir, 'conf', 'buildtool.conf' );
+my $forceConfig = {
+    'root_dir' => $baseDir,    # inject root_dir
+};
+$forceConfig->{'toolchain'} = $options{toolchain} if exists $options{toolchain};
+
 my %btConfig = readBtGlobalConfig(
     ConfigFile  => $buildtoolconf,
-    ForceConfig => {
-        'root_dir' => $baseDir,    # inject root_dir
-    }
+    ForceConfig => $forceConfig,
 );
 
 # Fetch the global config (conf/sources.cfg)
@@ -95,11 +111,19 @@ my $glConfig = new Config::General(
     "-ExtendedAccess"  => 1
 );
 
-# Fetch the image specific config (${image_dir}/buildimage.cfg)
+# Fetch the image template config file aka
+# ${conf_dir}/image/templates/buildimage.cfg
 my %imConfig = readBtConfig(
     "ConfigFile" => File::Spec->catfile(
-        $btConfig{'image_dir'}, $image, $btConfig{'buildimage_config'}
+        $btConfig{'conf_dir'}, 'image',
+        'templates',           $btConfig{'buildimage_config'}
     ),
+    "DefaultConfig" => \%btConfig,
+    "ForceConfig"   => {
+        'ImageType'  => $imgType,
+        'KernelArch' => $kernelArch,
+        'Variant'    => $variant,
+    },
     "IncludedFileMustExists" => 1,
 );
 
@@ -107,34 +131,10 @@ my %imConfig = readBtConfig(
 $configHash{ '{DATE}' } = time2str( "%Y-%m-%d", time );
 print "Build Date is:\t\t$configHash{ '{DATE}' }\n" if $verbose;
 
-# Extract image name, type, kernel arch, suffix and toolchain from config file
-my $imageStruc = $imConfig{'image'};
-my $imgName    = $imageStruc->{'imagename'};
-die "ERROR: ImageName is not specified in config file" unless defined $imgName;
-print "Image name:\t\t$imgName\n" if $verbose;
-my $kernelArch = $imageStruc->{ 'kernelarch' };
-die "ERROR: KernelArch is not specified in config file" unless defined $kernelArch;
+print "Image name:\t\t$imgName\n"     if $verbose;
 print "Kernel Arch:\t\t$kernelArch\n" if $verbose;
-my $imgType = $imageStruc->{ 'imagetype' };
-die "ERROR: ImageType is not specified in config file" unless defined $imgType;
-print "Image type:\t\t$imgType\n" if $verbose;
-my $imgSuffix = $imageStruc->{ 'imagesuffix' };
-die "ERROR: ImageSuffix is not specified in config file" unless defined $imgSuffix;
-print "Image Suffix:\t\t$imgSuffix\n" if $verbose;
-my $toolchain = $imageStruc->{ 'toolchain' };
-die "ERROR: Toolchain is not specified in config file" unless defined $toolchain;
-print "Toolchain name:\t\t$toolchain\n" if $verbose;
-
-# Reread the config file with the right toolchain
-my %force_config = ();
-$force_config{'toolchain'} = $toolchain;
-%btConfig = readBtGlobalConfig(
-    ConfigFile  => $buildtoolconf,
-    ForceConfig => {
-        %force_config,
-        'root_dir' => $baseDir,    # inject root_dir
-    }
-);
+print "Image type:\t\t$imgType\n"     if $verbose;
+print "Variant:\t\t$variant\n"        if $verbose;
 
 my $sourceDir  = make_absolute_path( $btConfig{'source_dir'},  $baseDir );
 my $stagingDir = make_absolute_path( $btConfig{'staging_dir'}, $baseDir );
@@ -177,7 +177,7 @@ for my $var (keys %{ $btConfig{envvars} }) {
 }
 
 # Check if the config file specifies a path for modules.tgz & firmware.tgz files
-my $modTgzPath = $imageStruc->{ 'modtgzpath' };
+my $modTgzPath = $imConfig{ 'modtgzpath' };
 $modTgzPath = "/" unless defined $modTgzPath;
 print "modules.tgz path:\t$modTgzPath\n" if $verbose;
 
@@ -199,6 +199,7 @@ system_exec(
 );
 
 # Extract configuration variables from config file
+my $imageStruc = $imConfig{'image'};
 # Populate global configHash with Search-And-Replace Key:Value
 while ( my ( $key, $value ) = each( %{ $imageStruc->{'config'} } ) ) {
     my $ucKey = $key;
@@ -252,12 +253,9 @@ foreach my $fileStruc ( @{ $imageContents->{'file'} } ) {
 
 # Complete the processing depending on the image type specified
 print "Performing ".$imgType." processing...\n" if $verbose;
-my $fileBase = File::Spec->catfile( $btConfig{'image_dir'}, $image,
-        $imgName . "_"
-      . $relver . "_"
-      . $kernelArch . "_"
-      . $imgType . "_"
-      . $imgSuffix );
+my $fileBase =
+  File::Spec->catfile( $btConfig{'image_dir'}, $image,
+    join( '_', $imgName, $relver, $kernelArch, $imgType, $variant ) );
 
 if ( $imgType eq "syslinux" || $imgType eq "pxelinux" ) {
     my $fileName = $fileBase . ".tar.gz";
@@ -289,6 +287,8 @@ elsif ( $imgType eq "isolinux" ) {
 else {
     die "ERROR: Unsupported image type $imgType\n";
 }
+
+print "Temporary directory:\t$tmpDir\n" if $keeptmp;
 
 END {
     # Tidyup
@@ -362,11 +362,8 @@ sub createDirUnlessItExists {
 
 sub copyFilesToTempDir {
     my ( $source, $target ) = @_;
-    my $absSource = File::Spec->catdir( $baseDir, $source );
+    my $absSource = make_absolute_path( $source, $baseDir );
     my $absTarget = File::Spec->catdir( $tmpDir,  $target );
-
-    # Substitute environment variables like $GNU_TARGET_NAME in absSource
-    $absSource =~ s/\$(\w+)/$ENV{$1}/g;
 
     # Check for '*' in Source
     if ( $absSource =~ /\*/ ) {
@@ -387,7 +384,7 @@ sub copyFilesToTempDir {
 
 sub copyFilesWithSearchAndReplace {
     my ( $source, $target, @sAndR ) = @_;
-    my $absSource = File::Spec->catdir( $baseDir, $source );
+    my $absSource = make_absolute_path( $source, $baseDir );
     my $absTarget = File::Spec->catdir( $tmpDir,  $target );
 
     # Check for '*' in Source
@@ -427,52 +424,80 @@ buildimage.pl - create a Bering-uClibc disk image
 
 =head1 SYNOPSIS
 
-B<buildimage.pl> --image=ImgDir [--relver=VersionLabel] [--verbose] [--keeptmp]
-
-   image      Parent directory for buildimage.cfg, under buildtool/image
-              e.g. Bering-uClibc-isolinux-std
-   relver     [Optional] String to append to image name to show release version
-              e.g. 4.0beta1. Use version defined in initrd package by default
-   verbose    [Optional] Report progress during execution
-   keeptmp    [Optional] Do not delete temporary directory
+B<buildimage.pl> [-h] [-v] [-k] [--toolchain=<toolchain>]
+              [--release=<relver>] --kernel-arch=<karch> --image-type=<imgtype>
+              --variant=<variant>
 
 =head1 DESCRIPTION
 
-B<buildimage.pl> creates a Bering-uClibc disk image based on parameter
-settings defined in a configuration file (buildimage.cfg) located within a
-sub-directory of $BT_ROOT/image/. The name of this sub-directory is specified
-with the "--image" command-line argument.
+B<buildimage.pl> creates a Bering-uClibc disk image.
 
-The disk image can be for SYSLINUX (suitable for writing to a flash drive),
-PXELINUX (suitable for network booting) or can use ISOLINUX.
-The choice between these is specified in buildimage.cfg.
+The disk image can be for I<SYSLINUX> (suitable for writing to a flash drive),
+I<PXELINUX> (suitable for network booting) or can use I<ISOLINUX>.
+The choice between these is specified by the B<--image-type> command-line
+argument.
 
-For SYSLINUX and PXELINUX, the "image" is a .tar.gz file which needs to be
-extracted onto suitably prepared media or installed on a PXELINUX server.
-For ISOLINUX the "image" is a .iso file which can be burned to a CD-R disk.
-
-Note that the name of the generated image file is derived from entries in the
-configuration file rather than from the --image command-line argument.
+For I<SYSLINUX> and I<PXELINUX>, the "image" is a .tar.gz file which needs to be
+extracted onto suitably prepared media or installed on a I<PXELINUX> server.
+For I<ISOLINUX> the "image" is a .iso file which can be burned to a CD-R disk.
 
 The generated image name is formed from:
-   - The value of the ImageName entry in the configuration file
-       Typically "Bering-uClibc"
-   - The value of the --relver command-line argument
-       Something like "4.0-beta1"
-   - The value of the KernelArch entry in the configuration file
+   - "Bering-uClibc"
+   - The value of the B<--release> command-line argument
+       Something like "5.0-beta1"
+   - The value of the B<--kernel-arch> command-line argument
        Something like "i686"
-   - The value of the ImageType entry in the configuration file
+   - The value of the B<--image-type> command-line argument
        Something like "syslinux"
-   - The value of the ImageSuffix entry in the configuration file
-       A free-format string like "vga" or "ser"
+   - The value of the B<--variant> command-line argument
+       Something like "vga"
 
 Each of these is separated by an underscore character (_).
 In addition, a file extension based on ImageType is appended (e.g. ".iso"
 for ISOLINUX).
+Disk images are create into the B<image> directory.
+
+=head1 OPTIONS
+
+=over
+
+=item B<-h>, B<--help>
+
+Prints this manual page.
+
+=item B<-v>, B<--verbose>
+
+Produce verbose output.
+
+=item B<-k>, B<--keep-tmp>
+
+Do not delete temporary directory.
+
+=item B<-t> <toolchain>, B<--toolchain>=<toolchain>
+
+Specify the toolchain to use. By default toolchain defined in conf/buildtool.conf is used.
+
+=item B<-r> <relver>, B<--release>=<relver>
+
+String to append to image name to show release version (e.g. 5.0beta1). By default use version defined in initrd package.
+
+=item B<-a> <karch>, B<--kernel-arch>=<karch>
+
+Kernel architecture to put in the image.
+
+=item B<-i> <imgtype>, B<--image-type>=<imgtype>
+
+Type of bootloader to use. Currently only I<isolinux> and I<syslinux> is supported.
+
+=item B<-v> <variant>, B<--variant>=<variant>
+
+Variant to use. Currently only I<vga> and I<serial> is defined.
+
+=back
 
 =head1 SEE ALSO
 
-http://sourceforge.net/apps/mediawiki/leaf/index.php?title=Bering-uClibc_4.x_-_Developer_Guide_-_Building_an_Image
+http://sourceforge.net/apps/mediawiki/leaf/index.php?title=Bering-uClibc_5.x_-_Developer_Guide_-_Building_an_Image
 
 =cut
 

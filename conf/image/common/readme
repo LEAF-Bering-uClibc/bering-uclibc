@@ -1,7 +1,7 @@
 LEAF "Bering-uClibc" Firewall - {VERSION}
 
 Bering-uClibc crew
-Arne Bernin             <arne@alamut.de> 
+Arne Bernin             <arne@alamut.de>
 Eric Spakman            <E.Spakman@inter.nl.net>
 Luis Correia            <lfcorreia@users.sourceforge.net>
 KP Kirchdoerfer         <kapeka@epost.de>
@@ -10,7 +10,7 @@ Eric de Thouars         <dorus@xs4all.nl>
 Andrew Denisenko        <nitr0man@users.sourceforge.net>
 Yves Blusseau           <blusseau@users.sourceforge.net>
 
-Based on Bering built by the Bering crew 
+Based on Bering built by the Bering crew
 Jacques Nilo    <jnilo@users.sourceforge.net>
 Eric Wolzak     <leaf@wolzak.de>
 

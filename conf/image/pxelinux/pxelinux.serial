@@ -1,0 +1,5 @@
+SERIAL 0 19200
+DISPLAY pxelinux.dpy
+TIMEOUT 0
+APPEND reboot=bios console=ttyS0,19200n8 VERBOSE=1
+DEFAULT http://192.168.1.12/bering-uclibc/5/pxelinux/linux initrd=http://192.168.1.12/bering-uclibc/5/pxelinux/initrd.lrp rw root=/dev/ram0 LEAFCFG={LEAFCFG}
