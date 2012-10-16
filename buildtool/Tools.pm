@@ -14,6 +14,7 @@ use Carp;
 use Config::General qw(ParseConfig);
 use File::Spec;
 use File::Path qw< make_path remove_tree >;
+use Hash::Merge;
 
 use vars qw< @ISA @EXPORT_OK %EXPORT_TAGS >;
 
@@ -65,11 +66,14 @@ my $conditional_include_regex = qr{
                                    \s*          # follow by zero or more space
                                    include      # word include
                                    \s+          # follow by one or more space
-                                   <            # open <
-                                     \s*        # follow by zero or more space
-                                     (.+)       # capture filename
-                                     \s*        # follow by zero or more space
-                                   >            # close >
+                                   (<\s*)?      # $1: optional open < follow
+                                                # by zero or more space
+                                     (.+)       # $2: capture filename
+                                   \s*          # follow by zero or more space
+                                   (
+                                       ?(1)     # $3: if there's the opening <
+                                       >        #     ... match the closing >
+                                   )
                               }xio;
 
 my $logfile_fh;
@@ -177,7 +181,6 @@ sub expand_variables {
 
     croak "First argument must be defined" if not defined $string;
 
-
     my $loop = 0;
 
     # expand variables
@@ -215,44 +218,71 @@ sub expand_config_variables {
     $envvars = $globalconfig->{envvars} || {} if not defined $envvars;
 
     foreach my $key ( keys %{$config} ) {
+
         # check if the key need to be expand
         my $key_expand = expand_variables( $key, $globalconfig, $envvars );
-        if ($key ne $key_expand) {
+        if ( $key ne $key_expand ) {
             # Update the key
             $config->{$key_expand} = delete $config->{$key};
             $key = $key_expand;
         }
         if ( not ref( $config->{$key} ) ) {    # it's a scalar
-            $config->{$key} = expand_variables( $config->{$key}, $globalconfig,
-                                                $config->{envvars} );
-        } elsif ( ref( $config->{$key} ) eq 'ARRAY' ) {    # it's an array
+            $config->{$key} =
+              expand_variables( $config->{$key}, $globalconfig,
+                $config->{envvars} );
+        }
+        elsif ( ref( $config->{$key} ) eq 'ARRAY' ) {    # it's an array
             # expand every item in the array
             $config->{$key} = [
                 map {
                     if ( ref $_ ) {
                         if ( ref $_ eq 'HASH' ) {
                             expand_config_variables(
-                                                    $_,
-                                                    { %{$globalconfig}, %{$_} },
-                                                    $globalconfig->{envvars}
-                                                   );
-                            $_;
+                                $_,
+                                { %{$globalconfig}, %{$_} },
+                                $globalconfig->{envvars}
+                            );
+                            $_; # return expanded hash
                         }
-                    } else {
+                    }
+                    else {
                         expand_variables( $_, $globalconfig,
-                                          $config->{envvars} );
+                            $config->{envvars} );
                     }
                   } @{ $config->{$key} }
             ];
-        } elsif ( $key ne 'envvars' and ref( $config->{$key} ) eq 'HASH' ) {
+        }
+        elsif ( $key ne 'envvars' and ref( $config->{$key} ) eq 'HASH' ) {
             # expand variable recursively
             expand_config_variables(
-                                     $config->{$key},
-                                     { %{$globalconfig}, %{ $config->{$key} } },
-                                     $globalconfig->{envvars}
-                                   );
+                $config->{$key},
+                { %{$globalconfig}, %{ $config->{$key} } },
+                $globalconfig->{envvars}
+            );
         }
     }
+}
+
+###############################################################################
+# Make the keys LowerCase and EnvVars keys UpperCase
+sub _normalizeConfig {
+    my ($config) = (@_);
+
+    # Convert keys to lowercase
+    for my $key ( keys %{$config} ) {
+        my $lkey = lc($key);    # Convert to LowerCase
+        if ( $lkey ne $key ) {
+            $config->{$lkey} = delete $config->{$key};
+        }
+    }
+
+    # Convert envvars keys to uppercase
+    $config->{envvars} = {
+        map { uc $_ => $config->{envvars}->{$_} }
+          keys %{ $config->{envvars} }
+    };
+
+    return $config;
 }
 
 ###############################################################################
@@ -262,39 +292,84 @@ sub expand_config_variables {
 # return a string that is the content of the file
 sub _readBtFile {
     my (%params) = @_;
-    my @file_contents = ();
     my ( $inputfh, $line );
 
     my $filename = delete $params{filename}
       or croak "Parameter filename required !";
 
+    my $loaded_files   = $params{loaded_files}   || {};
+    my $current_config = $params{current_config} || {};
+    my $force_config   = $params{ForceConfig}    || {};
+    my $default_config = $params{DefaultConfig}  || {};
+
+    my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+    $current_config = $merge->merge( $default_config, $current_config );
+
     # Can we open the file ?
     if ( not open( $inputfh, $filename ) ) {
         if (
-            exists $params{included_file}    # it's an included file
+            keys %{$loaded_files}    # it's an included file
             and $params{IncludedFileMustExists} == 0
           ) {
-            return '';                       # return an empty line
+            return '';               # return an empty line
         }
-        croak "Could not open file '$filename'\n";
+        croak "Could not open file '$filename'";
     }
+
+    my @file_contents = <$inputfh>;
+    close $inputfh;
+    $loaded_files->{$filename}++;    # Mark the file as loaded
+
     my ( undef, $path, $file ) = File::Spec->splitpath($filename);
 
-    while ( $line = <$inputfh> ) {
+    foreach $line (@file_contents) {
+
         # Replace ?include <filename> with the contents of "filename"
         if ( $line =~ /$conditional_include_regex/ig ) {
-            # avoid endless loops
-            if ( $filename ne $1 ) {
-                my $includedFileContent = _readBtFile(
-                    %params,
-                    included_file => 1,
-                    filename      => File::Spec->catfile( $path, $1 )
-                );
-                $line =~ s/$conditional_include_regex/$includedFileContent/igs;
+            my $include_filename = File::Spec->catpath( undef, $path, $2 );
+
+            # Convert current file contents to hash
+            my %config = Config::General::ParseConfig(
+                "-String"          => join( '', @file_contents, "\n" ),
+                "-LowerCaseNames"  => 1,
+                '-IncludeRelative' => 1,
+                '-IncludeGlob'     => 1,
+            );
+
+            my $include_config = _normalizeConfig(\%config);
+
+            # Merge the two config hashes
+            my $new_config = $merge->merge( $current_config, $include_config );
+
+            # If the filename contain a variable we need to expand it
+            if ( $include_filename =~ $vars_regex ) {
+                # Apply force config
+                my $global_config = $merge->merge( $new_config, $force_config );
+                $include_filename =
+                  expand_variables( $include_filename, $global_config );
             }
+
+            # Check if we don't have already loaded the file
+            croak
+              "Can't include file '$include_filename' from file '$filename': "
+              . "file has already been loaded."
+              if $loaded_files->{$include_filename};
+
+            # load the buildtool configuration file
+            my $includedFileContent = _readBtFile(
+                %params,
+                loaded_files   => $loaded_files,
+                filename       => $include_filename,
+                DefaultConfig  => $default_config,
+                current_config => $new_config,
+                ForceConfig    => $force_config,
+            );
+
+            # Replace ?include line with content that we was just read
+            $line =~ s/$conditional_include_regex/$includedFileContent/igs;
         }
-        push( @file_contents, $line );
     }
+
     close($inputfh);
 
     return join( '', @file_contents, "\n" );
@@ -320,9 +395,18 @@ sub readBtConfig {
 
     my $configfile = delete $args{ConfigFile}
       or croak "Parameter ConfigFile required !";
-    my $forceconfig            = delete $args{ForceConfig}            || {};
-    my $defaultconfig          = delete $args{DefaultConfig}          || {};
     my $includedfilemustexists = delete $args{IncludedFileMustExists} || 0;
+
+    my $defaultconfig =
+      exists $args{DefaultConfig}
+      ? _normalizeConfig( delete $args{DefaultConfig} )
+      : {};
+
+    my $forceconfig =
+      exists $args{ForceConfig}
+      ? _normalizeConfig( delete $args{ForceConfig} )
+      : {};
+
 
     my $rest = ( keys %args )[0];
     croak "Unknown argument '$rest'" if defined $rest;
@@ -331,7 +415,9 @@ sub readBtConfig {
     my $fileContent = _readBtFile(
         %args,
         IncludedFileMustExists => $includedfilemustexists,
-        filename               => $configfile
+        filename               => $configfile,
+        DefaultConfig          => $defaultconfig,
+        ForceConfig            => $forceconfig,
     );
 
     # load the buildtool configuration file
@@ -397,10 +483,10 @@ sub readBtConfig {
         }
     }
 
+    my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+
     # Overwrite config
-    for my $key (keys %{$forceconfig}) {
-        $btconfig{ lc($key) } = $forceconfig->{$key};
-    }
+    %btconfig = %{ $merge->merge(\%btconfig, $forceconfig) };
 
     # Add defaultconfig keys if not exists
     for my $key ( keys %{$defaultconfig} ) {
