@@ -138,7 +138,10 @@ sub _readBtConfig ($$) {
                              );
 
     # now read the package config file
-    my %flconfig = readBtConfig( "ConfigFile" => $configFile );
+    my %flconfig = readBtConfig(
+        "ConfigFile"    => $configFile,
+        "DefaultConfig" => $self->{'CONFIG'}, # Add variables from global config
+    );
 
     %flconfig = $self->_addDefaultServer(%flconfig);
 
@@ -357,21 +360,13 @@ sub _dumpEnv {
     my $localEnv  = $options{localenv}           || {};
     my $globalEnv = $self->{'CONFIG'}->{envvars} || {};
 
-    # Dump global environment
-    foreach my $var ( sort keys %{$globalEnv} ) {
-        my $value = $globalEnv->{$var};
-        if ( not ref $value ) {    # value is a scalar
-            $self->_export_env_by_format(
-                                          %options,
-                                          'key'       => $var,
-                                          'value'     => $value,
-                                        );
-        }
-    }
+    # Merge the 2 environments. Priority to localEnv
+    my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+    my $mergedEnv = $merge->merge( $globalEnv, $localEnv );
 
-    # Dump local environment
-    foreach my $var ( sort keys %{$localEnv} ) {
-        my $value = $localEnv->{$var};
+    # Dump merged environment
+    foreach my $var ( sort keys %{$mergedEnv} ) {
+        my $value = $mergedEnv->{$var};
         if ( not ref $value ) {    # value is a scalar
             $self->_export_env_by_format(
                                           %options,
