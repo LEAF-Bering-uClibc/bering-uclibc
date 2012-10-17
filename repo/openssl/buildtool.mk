@@ -20,6 +20,7 @@ source: .source
 	./Configure $(OPENSSL_TARGET)  \
 		--prefix=/usr \
 		--openssldir=/usr/ssl \
+		--libdir=lib \
 		--install_prefix=$(TARGET_DIR) \
 		--cross-compile-prefix=$(CROSS_COMPILE) \
 		no-ssl3 no-idea no-mdc2 no-rc5  no-krb5 shared no-fips no-threads  \
@@ -38,7 +39,6 @@ source: .source
 	-mkdir -p $(BT_STAGING_DIR)/etc/private
 	-mkdir -p $(BT_STAGING_DIR)/usr/ssl/misc
 
-#Use building in 1 thread due to buggy makefile
 	make -C $(SOURCE_DIR) depend
 	make -C $(SOURCE_DIR)
 	make -C $(SOURCE_DIR) INSTALL_PREFIX=$(TARGET_DIR) install_sw
@@ -64,10 +64,6 @@ clean:
 	-rm -rf $(BT_STAGING_DIR)/usr/ssl
 	-$(MAKE) -C $(SOURCE_DIR) clean
 
-srcclean:
-	-rm -f $(BT_STAGING_DIR)/bin/openssl
-	-rm -f $(BT_STAGING_DIR)/usr/lib/libcrypto.so*
-	-rm -f $(BT_STAGING_DIR)/usr/lib/libssl.so*
-	-rm -rf $(BT_STAGING_DIR)/usr/ssl
+srcclean: clean
 	-rm -rf $(SOURCE_DIR)
 	-rm .source
