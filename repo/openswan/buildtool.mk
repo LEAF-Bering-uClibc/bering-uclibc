@@ -17,7 +17,9 @@ export USE_EXTRACRYPTO=true
 
 .source:
 	zcat $(OPENSWAN_SOURCE) | tar -xvf -
+	patch -d $(OPENSWAN_DIR) -p 1 < $(OPENSWAN_2_6_38_ANDROID_ICS_NATOA_PATCH)
 	echo $(OPENSWAN_DIR) > .source
+	echo $(OPENSWAN_2_6_38_ANDROID_ICS-NATOA_PATCH) >> .source
 
 source: .source
 	
@@ -32,7 +34,7 @@ source: .source
 	## build the userland programs and install them
 	############################################################
 	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) programs install\
-	    USERCOMPILE="-g $(BT_COPT_FLAGS)" \
+	    USERCOMPILE="-g $(BT_COPT_FLAGS) -DSUPPORT_BROKEN_ANDROID_ICS"\
 	    LDFLAGS="-L$(BT_STAGING_DIR)/usr/lib" \
 	    INC_USRLOCAL="/usr" \
 	    FINALBINDIR="/usr/lib/ipsec" \
@@ -53,7 +55,7 @@ source: .source
 	############################################################
 	for i in $(KARCHS); do \
 	$(MAKE) CC=$(TARGET_CC) -C $(OPENSWAN_DIR) module\
-	    USERCOMPILE="-g $(BT_COPT_FLAGS)" \
+	    USERCOMPILE="-g $(BT_COPT_FLAGS) -DSUPPORT_BROKEN_ANDROID_ICS" \
 	    LDFLAGS=-L$(BT_STAGING_DIR)/usr/lib \
 	    INC_USRLOCAL="/usr" \
 	    FINALBINDIR="/usr/lib/ipsec" \
@@ -78,10 +80,10 @@ clean:
 	for i in $(KARCHS); do \
 	    rm -rf $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/net/ipsec ;\
 	done;
-	make -C `cat .source` clean
+	make -C $(shell head  -1 .source) clean
 
 srcclean: clean
-	rm -rf `cat .source`
+	rm -rf $(shell cat .source)
 	rm .source
 
 #
