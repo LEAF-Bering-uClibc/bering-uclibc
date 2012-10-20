@@ -117,17 +117,6 @@ complete -F _buildpacket buildpacket.pl
 #
 # buildimage.pl
 #
-__buildtool_list_images () {
-    local prog=${COMP_WORDS[0]}
-    # Get the image dir from buildtool conf
-    imagedir=$(LC_ALL=C ${prog/buildimage/buildtool} dumpenv | \
-               sed -rn "s/^.*BT_IMAGE_DIR='(.*)'/\1/p")
-    k="${#COMPREPLY[@]}"
-    for image in $( compgen -d $imagedir/$cur ); do
-        COMPREPLY[k++]=${image#$imagedir/}
-    done
-}
-
 _buildimage () {
     local cur prev split=false
 
@@ -138,12 +127,16 @@ _buildimage () {
     _split_longopt && split=true
 
     case "$prev" in
-        --packager|--target|--lrp|--toolchain)
+        --toolchain|--release|--kernel-arch)
             # option need a value
             return
             ;;
-        --image)
-            __buildtool_list_images
+        --image-type)
+            __buccomp "isolinux syslinux"
+            return
+            ;;
+        --variant)
+            __buccomp "serial vga"
             return
             ;;
     esac
@@ -151,7 +144,10 @@ _buildimage () {
     $split && return 0
 
     if [[ "$cur" == -* ]]; then
-        __buccomp "--image --relver --verbose --keeptmp"
+        __buccomp "
+            --help --verbose --keep-tmp --toolchain --release --kernel-arch
+            --image-type --variant
+            "
     fi
 }
 
