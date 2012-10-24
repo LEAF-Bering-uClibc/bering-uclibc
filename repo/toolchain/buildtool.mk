@@ -105,7 +105,7 @@ $(UCLIBC_DIR)/.build: $(UCLIBC_DIR)/.source $(GCC_STAGE1_BUILD_DIR)/.build
 #binutils + libs for target host
 $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GCC_STAGE2_BUILD_DIR)/.build
 	mkdir -p $(BINUTILS_BUILD_DIR2)
-	(cd $(BINUTILS_BUILD_DIR2) && CFLAGS="$(BT_CFLAGS)" LDFLAGS="$(BT_LDFLAGS)" \
+	(cd $(BINUTILS_BUILD_DIR2) && CFLAGS="$(BT_CFLAGS) -fPIC" LDFLAGS="$(BT_LDFLAGS)" \
 	 $(BINUTILS_DIR)/configure --host=$(GNU_TARGET_NAME) --prefix=/usr \
 	  --build=$(GNU_BUILD_NAME) \
 	  --with-build-sysroot=$(BT_STAGING_DIR) --disable-multilib && \
