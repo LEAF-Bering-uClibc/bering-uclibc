@@ -23,7 +23,9 @@ use File::Spec;
 use File::Path;
 use File::Temp;
 
-use buildtool::Tools qw< make_absolute_path readBtGlobalConfig readBtConfig >;
+use buildtool::Tools qw<
+  make_absolute_path readBtGlobalConfig readBtConfig check_env
+  >;
 
 # NON PERL INCLUDES
 
@@ -1041,6 +1043,9 @@ my %btConfig = readBtGlobalConfig(
         'root_dir' => $baseDir,    # inject root_dir
                    }
 );
+
+# Check environment
+check_env \%btConfig;
 
 $lrp_owner = $btConfig{'lrpowner'} || 'root';
 $lrp_group = $btConfig{'lrpgroup'} || 'root';
