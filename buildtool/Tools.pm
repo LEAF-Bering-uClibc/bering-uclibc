@@ -297,7 +297,7 @@ sub _readBtFile {
     my $filename = delete $params{filename}
       or croak "Parameter filename required !";
 
-    my $loaded_files   = $params{loaded_files}   || {};
+    my $included_files = $params{included_files} || 0;
     my $current_config = $params{current_config} || {};
     my $force_config   = $params{ForceConfig}    || {};
     my $default_config = $params{DefaultConfig}  || {};
@@ -308,17 +308,16 @@ sub _readBtFile {
     # Can we open the file ?
     if ( not open( $inputfh, $filename ) ) {
         if (
-            keys %{$loaded_files}    # it's an included file
+            $included_files > 0    # it's an included file
             and $params{IncludedFileMustExists} == 0
           ) {
-            return '';               # return an empty line
+            return '';             # return an empty line
         }
         croak "Could not open file '$filename'";
     }
 
     my @file_contents = <$inputfh>;
     close $inputfh;
-    $loaded_files->{$filename}++;    # Mark the file as loaded
 
     my ( undef, $path, $file ) = File::Spec->splitpath($filename);
 
@@ -349,16 +348,14 @@ sub _readBtFile {
                   expand_variables( $include_filename, $global_config );
             }
 
-            # Check if we don't have already loaded the file
-            croak
-              "Can't include file '$include_filename' from file '$filename': "
-              . "file has already been loaded."
-              if $loaded_files->{$include_filename};
+            if ($included_files > 16) { # Avoid infinite loop
+                die "Error: infinite loop found trying to include '$include_filename'\n";
+            }
 
             # load the buildtool configuration file
             my $includedFileContent = _readBtFile(
                 %params,
-                loaded_files   => $loaded_files,
+                included_files => ++$included_files,
                 filename       => $include_filename,
                 DefaultConfig  => $default_config,
                 current_config => $new_config,
