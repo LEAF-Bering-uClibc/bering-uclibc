@@ -5,6 +5,7 @@ QUAGGA_TARGET_DIR:=$(BT_BUILD_DIR)/quagga
 
 $(QUAGGA_DIR)/.source:
 	zcat $(QUAGGA_SOURCE) | tar -xvf -
+	cat $(QUAGGA_PATCH1) | patch -p1 -d $(QUAGGA_DIR)
 	touch $(QUAGGA_DIR)/.source
 
 source: $(QUAGGA_DIR)/.source
