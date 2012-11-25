@@ -4,13 +4,13 @@
 #
 #############################################################
 
-LIBNET_DIR:=libnet
 LIBNET_TARGET_DIR:=$(BT_BUILD_DIR)/libnet
+LIBNET_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LIBNET_SOURCE) 2>/dev/null )
 
 source:
 	zcat $(LIBNET_SOURCE) | tar -xvf -
 	zcat $(BT_TOOLS_DIR)/config.sub.gz > $(LIBNET_DIR)/config.sub
-	cat $(LIBNET_PATCH1) | patch -d $(LIBNET_DIR) -p0
+#	cat $(LIBNET_PATCH1) | patch -d $(LIBNET_DIR) -p0
 
 $(LIBNET_DIR)/Makefile: $(LIBNET_DIR)/configure
 	(cd $(LIBNET_DIR); autoconf && \
@@ -24,8 +24,6 @@ build: $(LIBNET_DIR)/Makefile
 	$(MAKE) $(MAKEOPTS) -C $(LIBNET_DIR)
 	$(MAKE) $(MAKEOPTS) DESTDIR=$(LIBNET_TARGET_DIR) -C $(LIBNET_DIR) install
 	cp -a $(LIBNET_TARGET_DIR)/* $(BT_STAGING_DIR)/
-
-#build: $(LIBPCAP_DIR)/.build
 
 clean:
 	echo $(PATH)
