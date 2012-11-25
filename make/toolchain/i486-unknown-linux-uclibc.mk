@@ -22,8 +22,6 @@ export OPENSSL_TARGET:=linux-elf
 ifndef GCC_SOURCE
 # Generic endianness setting used by many applications
 export ac_cv_c_bigendian=no
-# Fix ../include/libnet.h:117:10: error: macro names must be identifiers
-export ac_cv_libnet_endianess=lil
 # Fix "checking packing order of bit fields... no defaults for cross-compiling"
 export rpppoe_cv_pack_bitfields=rev
 # Fix "WARNING: cross compiling; assuming big endianess"
