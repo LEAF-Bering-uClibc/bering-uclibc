@@ -10,7 +10,7 @@ TARGET_DIR:=$(BT_BUILD_DIR)/oprofile
 
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -
-#	zcat $(PATCH) | patch -d $(DIR) -p1
+	cat $(PATCH1) | patch -d $(DIR) -p1 
 	touch $(DIR)/.source
 
 source: $(DIR)/.source

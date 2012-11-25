@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Version: 0.9.33.2
-# Sun Jun 17 15:07:11 2012
+# Sat Nov 24 00:20:57 2012
 #
 # TARGET_alpha is not set
 # TARGET_arm is not set
@@ -70,7 +70,7 @@ DO_C99_MATH=y
 # DO_XSI_MATH is not set
 UCLIBC_HAS_FENV=y
 UCLIBC_HAS_LONG_DOUBLE_MATH=y
-KERNEL_HEADERS="/usr/include"
+KERNEL_HEADERS="/opt/buildtool-master/toolchain/i486-unknown-linux-uclibc/usr/include"
 HAVE_DOT_CONFIG=y
 
 #
@@ -106,7 +106,7 @@ UCLIBC_HAS_LFS=y
 MALLOC_STANDARD=y
 MALLOC_GLIBC_COMPAT=y
 UCLIBC_DYNAMIC_ATEXIT=y
-COMPAT_ATEXIT=y
+# COMPAT_ATEXIT is not set
 UCLIBC_SUSV3_LEGACY=y
 UCLIBC_SUSV3_LEGACY_MACROS=y
 UCLIBC_SUSV4_LEGACY=y
@@ -137,7 +137,7 @@ UCLIBC_GRP_BUFFER_SIZE=256
 # Support various families of functions
 #
 UCLIBC_LINUX_MODULE_26=y
-UCLIBC_LINUX_MODULE_24=y
+# UCLIBC_LINUX_MODULE_24 is not set
 UCLIBC_LINUX_SPECIFIC=y
 UCLIBC_HAS_GNU_ERROR=y
 UCLIBC_BSD_SPECIFIC=y
