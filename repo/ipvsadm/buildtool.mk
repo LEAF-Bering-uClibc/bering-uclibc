@@ -29,7 +29,7 @@ $(IPVSADM_DIR)/.build: $(IPVSADM_DIR)/.source
 		LIB_SEARCH="$(BT_STAGING_DIR)/usr/lib $(BT_STAGING_DIR)/lib" \
 		CC=$(TARGET_CC) \
 		BUILD_ROOT=$(IPVSADM_TARGET_DIR) \
-		CFLAGS="$(CFLAGS) $(LDFLAGS)" KERNELSOURCE=$(KERNELSOURCE) install
+		CFLAGS="$(CFLAGS) $(LDFLAGS) -fPIC" KERNELSOURCE=$(KERNELSOURCE) install
 	-rm -rf $(IPVSADM_TARGET_DIR)/usr/man
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPVSADM_TARGET_DIR)/sbin/*
 	cp -aL ipvsadm.default $(IPVSADM_TARGET_DIR)/etc/default/ipvsadm
