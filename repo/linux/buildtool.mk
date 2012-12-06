@@ -16,6 +16,8 @@ PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 	cat $(KERNEL_PATCH2) | patch -d linux-$(LINVER) -p1
 	zcat $(KERNEL_PATCH3) | patch -d linux-$(LINVER) -p1
 	cat $(KERNEL_PATCH4) | patch -d linux-$(LINVER) -p1
+	bzcat $(WIRELESS_REGDB) | tar -xvf -
+	cp $(WIRELESS_REGDB:.tar.bz2=)/db.txt linux/net/wireless
 	touch .source
 
 
