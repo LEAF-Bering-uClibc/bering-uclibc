@@ -1,7 +1,7 @@
 # makefile for dnsmasq
 include $(MASTERMAKEFILE)
 
-DNSMASQ_DIR:=dnsmasq-2.63
+DNSMASQ_DIR:=dnsmasq-2.64
 DNSMASQ_TARGET_DIR:=$(BT_BUILD_DIR)/dnsmasq
 
 $(DNSMASQ_DIR)/.source:
