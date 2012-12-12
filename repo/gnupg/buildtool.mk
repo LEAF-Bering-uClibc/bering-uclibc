@@ -1,11 +1,12 @@
-
+#########################################################
 # makefile for gnupg
+#########################################################
 
-GNUPG_DIR:=gnupg-1.4.11
+GNUPG_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(GNUPG_SOURCE) 2>/dev/null )
 GNUPG_TARGET_DIR:=$(BT_BUILD_DIR)/gnupg
 
 .source:
-	zcat $(GNUPG_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(GNUPG_SOURCE)
 	touch .source
 
 source: .source
@@ -14,7 +15,13 @@ $(GNUPG_DIR)/.configured: .source
 	(cd $(GNUPG_DIR) ; ./configure --without-readline \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
-	--disable-gnupg-iconv --disable-asm --disable-card-support --disable-nls )
+	--disable-asm \
+	--disable-gettext \
+	--disable-gnupg-iconv \
+	--disable-agent-support \
+	--disable-idea \
+	--without-libiconv-prefix \
+	--disable-card-support --disable-nls )
 	perl -i -p -e 's,checks\s*=\s*checks,,' $(GNUPG_DIR)/Makefile
 	touch $(GNUPG_DIR)/.configured
 
