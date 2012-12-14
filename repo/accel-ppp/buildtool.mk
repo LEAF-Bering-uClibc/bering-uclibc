@@ -6,9 +6,7 @@ ACCEL_TARGET_DIR:=$(BT_BUILD_DIR)/accel-ppp
 $(ACCEL_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(ACCEL_SOURCE)
 	perl -i -p -e 's,#include\s*\<printf.h\>,,' $(ACCEL_DIR)/accel-pppd/ctrl/pppoe/pppoe.c
-	cat $(PATCH1) | patch -p1 -d $(ACCEL_DIR)
-	cat $(PATCH2) | patch -p1 -d $(ACCEL_DIR)
-	cat $(PATCH3) | patch -p1 -d $(ACCEL_DIR)
+#	cat $(PATCH1) | patch -p1 -d $(ACCEL_DIR)
 	touch $@
 
 source: $(ACCEL_DIR)/.source
