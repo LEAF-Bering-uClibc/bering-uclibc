@@ -23,6 +23,8 @@ expandpath () {
 
 # ---------------------------------------------------------
 
+# ---------------------------------------------------------
+
 PKGROOT=`expandpath ${PKGROOT:-"/"}`
 LRPKG=${LRPKG:-"var/lib/lrpkg"}
 PKGDIR="$PKGROOT/$LRPKG"
@@ -161,6 +163,39 @@ install () {
 	return 0
 	}
 
+# ------------------------------------------
+# verify - verifies a package
+
+verify () {
+	local pkg pth
+	
+	if [ -z "$1" ]; then
+	    echo "No package name given." ; return 1
+	fi
+	
+	pth=$( makeFN $1 )
+	pkg=$( package_part $pth )
+
+	if [ -z "$pkg" ]; then
+	    echo "No package name given."; return 1	
+	fi
+
+	gpgfile=$(dirname $1)"/"$pkg".gpg"
+
+	if [ ! -f "$gpgfile" ]; then
+	    echo "No gpg signature file found."; return 1	
+	fi
+
+	if [ ! -f /usr/bin/gpgv ]; then
+	    echo "gpgv is not installed"; return 1	
+	fi
+	
+	# everything is there
+	gpgv $gpgfile $pth
+
+	return 0
+	}
+	
 # ---------------------------------------------------------
 # figure out which files have changed from this package
 
@@ -432,6 +467,7 @@ usage () {
 		
 	-i [path]<package>	install package
 	-u [path]<package>	upgrade package
+	-v [path]<package>	verify package
 	-f [path]<package>	freshen package (fail if config files are changed)
 	-c [path]<package>	list contents of package
 	-l [<package>]		list installed packages;
@@ -474,6 +510,9 @@ case $1 in
 	"-u")	upgrade $2
 		exit $?
 		;;
+	"-v")	verify $2
+		exit $?
+		;;		
 
 	"-f")	upgrade $2 1
 		exit $?

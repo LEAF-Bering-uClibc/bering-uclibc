@@ -13,6 +13,7 @@ build:
 	mkdir -p $(CONFIG_TARGET_DIR)/usr/bin
 	mkdir -p $(CONFIG_TARGET_DIR)/usr/sbin
 	mkdir -p $(CONFIG_TARGET_DIR)/etc
+	mkdir -p $(CONFIG_TARGET_DIR)/root/.gnupg
 	cp -aL help $(CONFIG_TARGET_DIR)/usr/bin
 	cp -aL hwdetect $(CONFIG_TARGET_DIR)/usr/sbin
 	cp -aL pauseme $(CONFIG_TARGET_DIR)/usr/bin
@@ -25,6 +26,7 @@ build:
 	cp -aL lrcfg.conf $(CONFIG_TARGET_DIR)/usr/sbin
 	cp -aL lrcfg.conf.packs $(CONFIG_TARGET_DIR)/usr/sbin
 	cp -aL lrcfg $(CONFIG_TARGET_DIR)/usr/sbin
+	cp -aL trustedkeys.gpg $(CONFIG_TARGET_DIR)/root/.gnupg
 	cp -a $(CONFIG_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(CONFIG_DIR)/.build
 
