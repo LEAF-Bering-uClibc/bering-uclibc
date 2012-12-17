@@ -1,6 +1,6 @@
 # makefile for dnsmasq
 
-DNSMASQ_DIR:=dnsmasq-2.63
+DNSMASQ_DIR:=dnsmasq-2.65
 DNSMASQ_TARGET_DIR:=$(BT_BUILD_DIR)/dnsmasq
 
 $(DNSMASQ_DIR)/.source:
