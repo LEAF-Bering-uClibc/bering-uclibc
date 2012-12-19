@@ -4,14 +4,11 @@
 #
 #############################################################
 
-
-
-HOSTAPD_DIR:=hostapd-1.0/
+HOSTAPD_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(HOSTAPD_SOURCE) 2>/dev/null )
 HOSTAPD_TARGET_DIR:=$(BT_BUILD_DIR)/hostapd
 
-
 $(HOSTAPD_DIR)/.source:
-	zcat $(HOSTAPD_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(HOSTAPD_SOURCE)
 #	cat $(HOSTAPD_PATCH1) | patch -d $(HOSTAPD_DIR)/hostapd -p1
 	cat $(HOSTAPD_PATCH2) | patch -d $(HOSTAPD_DIR) -p1
 	touch $(HOSTAPD_DIR)/.source
