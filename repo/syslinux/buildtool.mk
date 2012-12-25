@@ -1,16 +1,12 @@
 #############################################################
-#
-# syslinux
-#
+# makefile for syslinux
 #############################################################
 
-SYSLINUX_DIR:=syslinux-4.03
+SYSLINUX_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SYSLINUX_SOURCE) 2>/dev/null )
 SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
 
-
 $(SYSLINUX_DIR)/.source:
-	bzcat $(SYSLINUX_SOURCE) |  tar -xvf -
-#	cat $(SYSLINUX_PATCH) | patch -d $(SYSLINUX_DIR) -p1
+	$(BT_SETUP_BUILDDIR) -v $(SYSLINUX_SOURCE)
 	touch $(SYSLINUX_DIR)/.source
 
 $(SYSLINUX_DIR)/.build: $(SYSLINUX_DIR)/.source
