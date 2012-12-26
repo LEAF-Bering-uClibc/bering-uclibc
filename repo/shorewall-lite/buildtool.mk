@@ -24,7 +24,7 @@ $(SHOREWALL_DIR)/.configured: $(SHOREWALL_DIR)/.source
 	--confdir=/etc \
 	--sbindir=/sbin \
 	--initdir=/etc/init.d \
-	--initfile=shorewall \
+	--initfile=shorewall-lite \
 	--initsource=init.sh \
 	--annotated= \
 	--vardir=/var/lib \
@@ -60,6 +60,7 @@ clean:	stageclean
 stageclean:
 	rm -f  $(BT_STAGING_DIR)/etc/init.d/shorewall-lite
 	rm -f  $(BT_STAGING_DIR)/etc/default/shorewall-lite
+	rm -f  $(BT_STAGING_DIR)/sbin/shorewall-lite
 
 srcclean: clean
 	rm -rf $(SHOREWALL_DIR)

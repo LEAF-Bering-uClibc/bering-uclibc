@@ -60,9 +60,9 @@ clean:	stageclean
 	rm -f  $(SHOREWALL_DIR)/.configured
 
 stageclean:
-	rm -f  $(BT_STAGING_DIR)/etc/init.d/shorewall
-	rm -f  $(BT_STAGING_DIR)/etc/default/shorewall
-	rm -f  $(BT_STAGING_DIR)/sbin/shorewall
+	rm -f  $(BT_STAGING_DIR)/etc/init.d/shorewall6
+	rm -f  $(BT_STAGING_DIR)/etc/default/shorewall6
+	rm -f  $(BT_STAGING_DIR)/sbin/shorewall6
 	rm -rf $(BT_STAGING_DIR)/etc/shorewall6
 	rm -rf $(BT_STAGING_DIR)/usr/share/shorewall6
 	rm -rf $(BT_STAGING_DIR)/var/lib/shorewall6
