@@ -4,7 +4,8 @@
 #
 #############################################################
 
-UTIL_LINUX_DIR:=util-linux-ng-2.18
+UTIL_LINUX_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(UTIL_LINUX_NG_SOURCE) 2>/dev/null )
+
 UTIL_LINUX_TARGET_DIR:=$(BT_BUILD_DIR)/util-linux-ng
 OPT="-pipe -fomit-frame-pointer $(BT_COPT_FLAGS)"
 export $OPT
@@ -12,7 +13,7 @@ export $OPT
 LOOPAES_DIR:=loop-AES-v3.1d
 
 $(UTIL_LINUX_DIR)/.source:
-	bzcat $(UTIL_LINUX_NG_SOURCE) |  tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(UTIL_LINUX_NG_SOURCE) 
 	touch $(UTIL_LINUX_DIR)/.source
 
 $(UTIL_LINUX_DIR)/.configured: $(UTIL_LINUX_DIR)/.source
