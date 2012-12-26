@@ -4,13 +4,13 @@
 #
 #############################################################
 
-VSFTPD_DIR:=vsftpd-3.0.0
+VSFTPD_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(VSFTPD_SOURCE) 2>/dev/null )
 VSFTPD_TARGET_DIR:=$(BT_BUILD_DIR)/vsftpd
-
 
 $(VSFTPD_DIR)/.source:
 	zcat $(VSFTPD_SOURCE) |  tar -xvf -
 	cat $(VSFTPD_PATCH1) | patch -d $(VSFTPD_DIR) -p1
+	cat $(VSFTPD_PATCH2) | patch -d $(VSFTPD_DIR) -p1
 	perl -i -p -e \
 		'/^locate_library\(\).*/ && s,\$$,$(BT_STAGING_DIR)\$$,g' \
 		$(VSFTPD_DIR)/vsf_findlibs.sh
@@ -21,7 +21,7 @@ $(VSFTPD_DIR)/.build:
 	mkdir -p $(VSFTPD_TARGET_DIR)/usr/sbin
 	mkdir -p $(VSFTPD_TARGET_DIR)/etc/init.d
 	mkdir -p $(VSFTPD_TARGET_DIR)/etc/cron.daily
-	$(MAKE) $(MAKEOPTS) -C $(VSFTPD_DIR) CC=$(TARGET_CC) LDFLAGS="-fPIE -pie -Wl,-z,relro -Wl,-z,now  $(LDFLAGS)" CFLAGS="-Wall -W -Wshadow $(CFLAGS)" LINK=
+	$(MAKE) $(MAKEOPTS) -C $(VSFTPD_DIR) CC=$(TARGET_CC) LDFLAGS=" $(LDFLAGS)" CFLAGS="-Wall -W -Wshadow $(CFLAGS)" LINK=
 	cp -a $(VSFTPD_DIR)/vsftpd $(VSFTPD_TARGET_DIR)/usr/sbin/
 	cp -aL vsftpd.init $(VSFTPD_TARGET_DIR)/etc/init.d/vsftpd
 	cp -aL vsftpd.conf $(VSFTPD_TARGET_DIR)/etc/
