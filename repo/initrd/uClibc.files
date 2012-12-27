@@ -1,0 +1,55 @@
+<File>
+	Source		= lib/$(uClibc_loader)
+	Filename	= lib/$(uClibc_loader)
+	Type		= binary
+	Permissions = 755
+</File>
+<File>
+	Filename	= lib/ld-uClibc.so.0
+	Target		= lib/$(uClibc_loader)
+	Type		= link
+</File>
+<File>
+	Source		= lib/libuClibc-$(uClibc_version).so
+	Filename	= lib/libuClibc-$(uClibc_version).so
+	Type		= binary
+	Permissions	= 755
+</File>
+<File>
+	Filename	= lib/libc.so.0
+	Target		= lib/libuClibc-$(uClibc_version).so
+	Type		= link
+</File>
+<File>
+	Source		= lib/librt-$(uClibc_version).so
+	Filename	= lib/librt-$(uClibc_version).so
+	Type		= binary
+	Permissions	= 755
+</File>
+<File>
+	Filename	= lib/librt.so.0
+	Target		= lib/librt-$(uClibc_version).so
+	Type		= link
+</File>
+<File>
+	Source		= lib/libm-$(uClibc_version).so
+	Filename	= lib/libm-$(uClibc_version).so
+	Type		= binary
+	Permissions	= 755
+</File>
+<File>
+	Filename	= lib/libm.so.0
+	Target		= lib/libm-$(uClibc_version).so
+	Type		= link
+</File>
+<File>
+	Source		= lib/libcrypt-$(uClibc_version).so
+	Filename	= lib/libcrypt-$(uClibc_version).so
+	Type		= binary
+	Permissions	= 755
+</File>
+<File>
+	Filename	= lib/libcrypt.so.0
+	Target		= lib/libcrypt-$(uClibc_version).so
+	Type		= link
+</File>
