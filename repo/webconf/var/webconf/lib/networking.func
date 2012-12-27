@@ -246,3 +246,11 @@ is_in(){
 	[ $1 -lt $bb -a $1 -ge $nb ] && return 0
 	return 1
 }
+
+nslookup_lines(){
+	nslookup $1 | grep ^Address | tail +2 | wc -l 
+}
+
+nslookup_all(){
+	nslookup $1 localhost | grep ^Address | tail +2 | sed -e 's/^\w* [0-9]*: //;s/^\([0-9a-z9:.]*\).*/\1/'
+}
