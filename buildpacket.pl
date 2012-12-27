@@ -1112,6 +1112,7 @@ my $globalConfig = new Config::General(
 my %packageConfig = readBtConfig(
     "ConfigFile" =>
       File::Spec->catfile( $pkgSourceDir, $btConfig{'buildtool_config'} ),
+    "DefaultConfig"          => \%btConfig,   # Add variables from global config
     "IncludedFileMustExists" => 1,
 );
 
