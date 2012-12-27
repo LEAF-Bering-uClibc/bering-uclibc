@@ -19,6 +19,10 @@
 # Package dependency loading and findfs changes by David M Brooke, May. 2012
 #
 
+# create busybox links
+/bin/busybox --install -s
+/bin/chmod +rx /
+
 # Uncomment for more verbose execution.
 #VERBOSE=1
 
@@ -29,6 +33,7 @@
 DEF_syst_size=40M	#  Size of root partition
 DEF_log_size=3M		#  Size of /var/log partition
 DEF_usb_wait=1		#  Wait time in sec. for USB drive
+DEF_zswap_size=-1	#  zram swap size; -1 = disabled, 0 = auto, other = size of zram swap partition
 DEF_CONFIGDB=configdb
 DEF_MODDB=moddb
 
@@ -93,21 +98,26 @@ Lloadlrp () {
 	fi
 }
 
+sizetobytes() {
+	case $1 in
+		*[kK]) echo $(($(echo $1 | sed 's,[kK],,')*1024)) ;;
+		*[mM]) echo $(($(echo $1 | sed 's,[mM],,')*1024*1024)) ;;
+		*[gG]) echo $(($(echo $1 | sed 's,[gG],,')*1024*1024*1024)) ;;
+		*) echo $1 ;;
+	esac
+}
+
 PFX=/var/lib/lrpkg
 BPFX=/boot
-BB=/bin/busybox
 
 IFS=' 	
 '
 OIFS="$IFS"
 
-$BB mkdir /proc 
-$BB mount -nt proc /proc /proc
-$BB mkdir /sys 
-$BB mount -nt sysfs sysfs /sys
-
-/bin/busybox --install -s
-/bin/chmod +rx /
+mkdir /proc
+mount -nt proc /proc /proc
+mkdir /sys
+mount -nt sysfs sysfs /sys
 
 VERSION="`cat $PFX/initrd.version`"
 
@@ -217,7 +227,7 @@ for dev in ${KCMD_LEAFCFG}; do
 done
 
 # Set config variables, falling back to defaults
-for i in LRP PKGPATH CONFIGDB MODDB tmp_size syst_size log_size; do
+for i in LRP PKGPATH CONFIGDB MODDB tmp_size syst_size log_size zswap_size; do
 	eval $i=\"\${$i:-\${KCMD_$i:-\$DEF_$i}}\"
 done
 
@@ -235,13 +245,23 @@ qt mkdir /var/run
 qt ln -s /tmp /var/tmp
 qt ln -s /tmp /usr/tmp
 
-[ "$VERBOSE" ] && Lecho "Generating /tmp & /var/log partitions ..."
+[ "$VERBOSE" ] && Lecho "Creating /tmp & /var/log partitions ..."
 qt mount -t tmpfs tmpfs /tmp -o defaults${tmp_size:+,size=$tmp_size}
 qt mount -t tmpfs tmpfs /var/log -o size=$log_size
 
 #Set some permissions
 chmod 1777 /var/lock
 chmod 1777 /tmp
+
+zswap_size=$(sizetobytes $zswap_size)
+if [ "$zswap_size" -ge 0 ]; then
+	[ "$VERBOSE" ] && Lecho "Setting up ZRAM swap ..."
+	if [ "$zswap_size" -eq 0 ]; then
+		zswap_size=$(($(sizetobytes $syst_size) + $(sizetobytes $tmp_size) + $(sizetobytes $log_size)))
+	fi
+	echo $zswap_size >/sys/block/zram0/disksize
+	mkswap /dev/zram0
+fi
 
 # Query /proc/cmdline to see if we want to ask for a second disk
 # to be inserted for use as a rescue set
@@ -336,9 +356,7 @@ if [ "$syst_size" = 0 ]; then
 	[ "$VERBOSE" ] && Lecho "Moving root to tmpfs disabled! Booting from initramfs..."
 	qt mount -t tmpfs tmpfs /tmp -o defaults${tmp_size:+,size=$tmp_size}
 	qt mount -t tmpfs tmpfs /var/log -o size=$log_size
-	[ -d /sys/kernel/debug/ ] && mount -t debugfs debugfs /sys/kernel/debug/
-	[ -d /sys/kernel/config/ ] && mount -t configfs configfs /sys/kernel/config/
-	exec /sbin/init
+	exec /var/lib/lrpkg/root.helper
 	exit 0
 fi
 
@@ -347,8 +365,6 @@ mkdir /newroot
 qt mount -t tmpfs root /newroot -o size=$syst_size
 mkdir /newroot/tmp
 mkdir -p /newroot/var/log
-qt mount -t tmpfs tmpfs /newroot/tmp -o defaults${tmp_size:+,size=$tmp_size}
-qt mount -t tmpfs tmpfs /newroot/var/log -o size=$log_size
 
 copy_err=0
 
@@ -356,16 +372,23 @@ for i in `ls /`; do
 	case $i in
 		proc) ;;
 		sys) ;;
+		tmp) ;;
+		var) ;;
 		newroot) ;;
 		*) qt cp -a $i /newroot || copy_err=1 ;;
 	esac
 done
+for i in `ls /var`; do
+	case $i in
+		log) ;;
+		*) qt cp -a /var/$i /newroot/var || copy_err=1 ;;
+	esac
+done
 if [ "$copy_err" -eq 0 ]; then
-	qt umount /tmp
-	qt umount /var/log
-
 	[ "$VERBOSE" ] && Lecho "Switch_root into new rootfs..."
 
+	qt mount /tmp /newroot/tmp -o move
+	qt mount /var/log /newroot/var/log -o move
 	[ ! $VERBOSE ] && rm /linuxrc.err
 
 	umount /sys /proc
