@@ -2,7 +2,7 @@
 # makefile for dnsmasq
 ###########################################
 
-DNSMASQ_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(DNSMASQ_SOURCE) 2>/dev/null ) 
+DNSMASQ_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(DNSMASQ_SOURCE) 2>/dev/null)
 DNSMASQ_TARGET_DIR:=$(BT_BUILD_DIR)/dnsmasq
 
 $(DNSMASQ_DIR)/.source:
