@@ -1,11 +1,11 @@
 #!/usr/bin/haserl
 #
-# Copyleft 2008 Erich Titl (erich.titl@think.ch)
+# Copyleft 2012 Erich Titl (erich.titl@think.ch)
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 2 of the License, or (at your
-# option) any later version.  See <http://www.fsf.org/copyleft/gpl.txt>.
+# option) any later version.  See <http://www.fsf.org/copyleft/gpl.txt>
 #
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
@@ -13,7 +13,7 @@
 # for more details.
 #
 ######################################################################
-# $Id: ping.cgi,v 1.1 2009/01/26 08:59:23 etitl Exp $
+# $Id: ping.cgi,v 1.3 2012/05/03 08:59:23 etitl Exp $
 ######################################################################
 <? # 
 
@@ -41,12 +41,21 @@ title="View/Configure network interfaces"
 #<script src="interfaces.js" type="text/javascript"></script>
 #EOF
 ######################################################################
+######################################################################
+# insert the interface css file
+######################################################################
+cat <<-EOF
+        <link rel="stylesheet" type="text/css" href="/interfaces.css">
+EOF
+######################################################################
 
 ######################################################################
 cat <<-EOF
+<br><div id=info>
 <p>
 This page  allows you to run a ping command on your firewall 
 </p>
+</div>
 EOF
 ######################################################################
 
@@ -64,29 +73,80 @@ EOF
 cat <<-EOF
 <div id="interfaces">
 <table cellspacing=0 cellpadding=2>
-<colgroup> <col width="250"><col width="120"><col width="100"><col width="80"></colgroup>
+<colgroup> <col width="250"><col width="120"><col width="40"><col width="40"><col width="40"></colgroup>
 <tr height=10>
-	<td align=middle><label for=addr>Name or IP address of the target host</label></td>
+	<td align=middle><label for=addr class=info>Name or IP address of the target host</label></td>
 	<td><input class=address name=addr id="addr" value="$FORM_addr" size=30 maxlength=60 align=right"></td>
-	<td><input type=submit name="cmd" value="Run"></td>
+	<td><input type=submit name="cmd" value="ping"></td>
 </tr>
 </table>
 EOF
 
-	case "$FORM_cmd" in
-	Run )	# generate the network configuration file 
-			# according to the parameters
-			# first copy the loopback which is always needed
-			echo "<pre>"
-			/bin/ping -c 5 $FORM_addr 
+	TRUE=0
+	FALSE=1
+	IPV4_enabled=$FALSE
+	IPv6_enabled=$FALSE
+	IPv4_address="" 
+	IPv6_address=""
+
+	#first check if IPv4/Ipv6 is enabled on the system
+	[ -e /proc/sys/net/ipv4 ] && IPv4_enabled=$TRUE
+	[ -e /proc/sys/net/ipv6 ] && IPv6_enabled=$TRUE
+
+
+#####################################################################
+# just debugging stuff
+#####################################################################
+#echo "<pre>"
+#echo $IPv4_enabled
+#echo $IPv6_enabled
+#echo FORM_cmd $FORM_cmd
+#echo FORM_addr $FORM_addr
+#echo IPv4 $IPv4_address
+#echo IPv6 $IPv6_address
+#echo "</pre>"
+#####################################################################
+
+	if [ "$FORM_addr" ]; then
+		addresses=`nslookup_all $FORM_addr`
+		for i in $addresses
+		do
+			echo $i | grep ':' > /dev/null 2>&1
+			[ $? -eq 0 ] && IPv6_address=$i && continue
+			echo $i | grep '^[0-9]' > /dev/null 2>&1
+			[ $? -eq 0 ] && IPv4_address=$i 
+		done
+	fi
+
+#####################################################################
+# just debugging stuff
+#####################################################################
+#echo "<pre>"
+#echo $IPv4_enabled
+#echo $IPv6_enabled
+#echo FORM_cmd $FORM_cmd
+#echo FORM_addr $FORM_addr
+#echo IPv4 $IPv4_address
+#echo IPv6 $IPv6_address
+#echo "</pre>"
+#####################################################################
+
+	case $FORM_cmd in 
+		ping) 	echo "<pre>"
+			[ $IPv4_enabled -eq 0 -a "$IPv4_address" ]  && \
+				/bin/ping -c 5 $IPv4_address
+			[ $IPv6_enabled -eq 0 -a "$IPv6_address" ]  && \
+				/bin/ping6 -c 5 $IPv6_address
 			echo "</pre>"
-			;; 
-			
+			;;
 	esac
 
 echo "<div id=warning>"
 
 [ -r ./ping.blurb ] && cat ./ping.blurb
+[ ! $IPv4_enabled -eq 0 -a "$IPv6_address" ] && echo IPv4 is disabled and can therefore not be tested
+[ ! $IPv6_enabled -eq 0 -a "$IPv6_address" ] && echo IPv6 is disabled and can therefore not be tested
+[ ! "$FORM_addr" ] && echo No address or name specified
 
 cat -<<EOF
 </div>
