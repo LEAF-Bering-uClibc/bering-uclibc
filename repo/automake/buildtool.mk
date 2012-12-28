@@ -8,7 +8,7 @@ include $(MASTERMAKEFILE)
 AUTOMAKE_DIR_LATEST:=automake-1.11.1
 AUTOMAKE_DIR_4:=automake-1.4-p6
 export CC=$(TARGET_CC)
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 CFLAGS=-Os -s -I$(BT_STAGING_DIR)/include:$(BT_STAGING_DIR)/include/include
 export CFLAGS

@@ -7,7 +7,7 @@
 include $(MASTERMAKEFILE)
 
 LINVER=2.6.35.14
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 .source:
 	bzcat $(KERNEL_SOURCE) | tar -xvf -

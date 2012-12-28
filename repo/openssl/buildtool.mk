@@ -9,7 +9,7 @@ include $(MASTERMAKEFILE)
 OPENSSL_DIR:=openssl-1.0.0j
 OPENSSL_TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5) 
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 $(OPENSSL_DIR)/.source: 
 	zcat $(OPENSSL_SOURCE) | tar -xvf -

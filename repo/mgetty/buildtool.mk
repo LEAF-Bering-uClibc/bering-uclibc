@@ -5,8 +5,8 @@ MGETTY_DIR:=mgetty-1.1.30
 MGETTY_TARGET_DIR:=$(BT_BUILD_DIR)/mgetty
 
 patchdir = $(MGETTY_DIR)/debian/patches
-patches = $(shell ls $(patchdir) | sort)
-rev_patches = $(shell ls $(patchdir) | sort -r)
+patches := $(shell ls $(patchdir) | sort)
+rev_patches := $(shell ls $(patchdir) | sort -r)
 
 
 $(MGETTY_DIR)/.source:

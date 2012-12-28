@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 EZ_IPUPDATE_DIR:=ez-ipupdate-3.0.11b8
 EZ_IPUPDATE_TARGET_DIR:=$(BT_BUILD_DIR)/ez-ipupdate
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 .source:
 	zcat $(EZ_IPUPDATE_SOURCE) | tar -xvf -

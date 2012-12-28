@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 PERL_DIR:=perl-5.12.1
 PERL_TARGET_DIR:=$(BT_BUILD_DIR)/perl
-#PREG_STAGING_DIR=$(shell echo $(BT_STAGING_DIR)|sed 's/\//\\\//g')
+#PREG_STAGING_DIR:=$(shell echo $(BT_STAGING_DIR)|sed 's/\//\\\//g')
 
 $(PERL_DIR)/.source:
 	bzcat $(PERL_SOURCE) | tar -xvf -

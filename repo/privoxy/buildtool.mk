@@ -6,7 +6,7 @@ PRIVOXY_TARGET_DIR:=$(BT_BUILD_DIR)/privoxy
 
 export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
 export AUTOHEADER=$(BT_STAGING_DIR)/bin/autoheader
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 $(PRIVOXY_DIR)/.source:
 	zcat $(PRIVOXY_SOURCE) | tar -xvf -

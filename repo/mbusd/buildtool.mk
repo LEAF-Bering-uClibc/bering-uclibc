@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 DIR:=mbus-0.1.2
 TARGET_DIR:=$(BT_BUILD_DIR)/mbusd
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER)
 
 #LIBS = -liberty

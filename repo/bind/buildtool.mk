@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 DIR:=bind-9.8.0-P1
 TARGET_DIR:=$(BT_BUILD_DIR)/bind
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -

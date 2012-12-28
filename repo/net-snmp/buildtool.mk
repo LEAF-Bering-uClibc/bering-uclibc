@@ -12,7 +12,7 @@ SNMP_TARGET_DIR:=$(BT_BUILD_DIR)/net-snmp
 
 CFLAGS = $(BT_COPT_FLAGS) -D_REENTRANT
 MIB_MODULES = host smux ucd-snmp/dlmod ucd-snmp/lmsensorsMib #ucd-snmp/lmSensors
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 $(SNMP_DIR)/.source:
 	zcat $(SNMP_SOURCE) | tar -xvf -

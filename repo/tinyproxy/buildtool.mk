@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 TINYPROXY_DIR:=tinyproxy-1.8.3
 TINYPROXY_TARGET_DIR:=$(BT_BUILD_DIR)/tinyproxy
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 $(TINYPROXY_DIR)/.source:
 	bzcat $(TINYPROXY_SOURCE) | tar -xvf -

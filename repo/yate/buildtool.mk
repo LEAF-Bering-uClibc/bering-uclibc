@@ -9,7 +9,7 @@ include $(MASTERMAKEFILE)
 YATE_DIR:=yate
 YATE_TARGET_DIR:=$(BT_BUILD_DIR)/yate
 export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 $(YATE_DIR)/.source:
 	zcat $(YATE_SOURCE) | tar -xvf -

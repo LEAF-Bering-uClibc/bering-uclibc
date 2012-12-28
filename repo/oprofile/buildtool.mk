@@ -8,7 +8,7 @@ include $(MASTERMAKEFILE)
 
 DIR:=oprofile-0.9.6
 TARGET_DIR:=$(BT_BUILD_DIR)/oprofile
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER)
 
 $(DIR)/.source:

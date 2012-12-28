@@ -7,7 +7,7 @@
 include $(MASTERMAKEFILE)
 SYSLINUX_DIR:=syslinux-4.03
 SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5) 
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 
 $(SYSLINUX_DIR)/.source: 

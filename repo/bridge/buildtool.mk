@@ -4,7 +4,7 @@ include $(MASTERMAKEFILE)
 BRIDGE-UTILS_DIR:=bridge-utils-1.2
 BRIDGE-UTILS_TARGET_DIR:=$(BT_BUILD_DIR)/bridge
 export AUTOCONF=$(BT_STAGING_DIR)/bin/autoconf
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5 2>/dev/null)
 
 $(BRIDGE-UTILS_DIR)/.source:
 	zcat $(BRIDGE-UTILS_SOURCE) | tar -xvf -

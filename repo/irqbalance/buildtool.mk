@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 DIR:=irqbalance-0.55
 TARGET_DIR:=$(BT_BUILD_DIR)/irqbalance
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 $(DIR)/.source:
 	zcat $(SOURCE) | tar -xvf -

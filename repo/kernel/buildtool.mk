@@ -12,7 +12,7 @@ ifneq ($(strip $(MASTERMAKEFILE)),)
 endif
 
 LINUX_BUILDDIR=$(BT_BUILD_DIR)/kernel
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 # set some vars
 KVERSION:=$(BT_KERNEL_RELEASE)

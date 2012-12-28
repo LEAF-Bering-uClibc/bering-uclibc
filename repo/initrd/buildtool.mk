@@ -3,7 +3,7 @@ include $(MASTERMAKEFILE)
 
 INITRD_DIR=.
 INITRD_TARGET_DIR:=$(BT_BUILD_DIR)/config
-ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
+ESCKEY:=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 
 $(INITRD_DIR)/.source:
 	touch $(INITRD_DIR)/.source

@@ -10,7 +10,7 @@ export CC=$(TARGET_CC)
 CFLAGS=-Os -s -I$(BT_STAGING_DIR)/include:$(BT_STAGING_DIR)/include/include
 export CFLAGS
 STRIP_OPTIONS=-s --remove-section=.note --remove-section=.comment 
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5) 
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 
 
 $(AUTOCONF_DIR)/.source: 		
@@ -41,4 +41,3 @@ clean:
 
 srcclean:
 	rm -rf $(AUTOCONF_DIR)
-	
