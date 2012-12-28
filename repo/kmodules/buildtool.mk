@@ -4,8 +4,7 @@
 #
 #############################################################
 
-
-ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
+ESCKEY:=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 
 source:
 	# nothing to be done

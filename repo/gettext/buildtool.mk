@@ -7,7 +7,7 @@
 DIR:=gettext-0.18.1.1
 TARGET_DIR:=$(BT_BUILD_DIR)/gettext
 export CC=$(TARGET_CC)
-PERLVER=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
+PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER)
 
 $(DIR)/.source:

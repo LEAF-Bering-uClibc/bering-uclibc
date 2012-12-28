@@ -6,7 +6,7 @@
 #
 # so a ./buildtool2.pl build kernel (we in here ) must do it
 
-ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
+ESCKEY:=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 
 LINUX_BUILDDIR=$(BT_BUILD_DIR)/kernel
 

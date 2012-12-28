@@ -1,7 +1,7 @@
 # makefile for initmod
 
 INITMOD_DIR=.
-ESCKEY=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
+ESCKEY:=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
 
 source:
 

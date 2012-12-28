@@ -4,7 +4,7 @@
 #
 #############################################################
 
-FLEX_DIR=$(shell echo $(FLEX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
+FLEX_DIR:=$(shell echo $(FLEX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 FLEX_TARGET_DIR=$(BT_BUILD_DIR)/flex
 
 $(FLEX_DIR)/.source:
