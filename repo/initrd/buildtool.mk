@@ -3,6 +3,7 @@
 INITRD_DIR=.
 INITRD_TARGET_DIR:=$(BT_BUILD_DIR)/initrd
 ESCKEY:=$(shell echo "a\nb"|awk '/\\n/ {print "-e"}')
+UCLIBC_LOADER_LINK:=$(notdir $(lastword $(wildcard $(BT_STAGING_DIR)/lib/ld*-uClibc.so.0)))
 UCLIBC_LOADER:=$(notdir $(lastword $(wildcard $(BT_STAGING_DIR)/lib/ld*-uClibc-*.so)))
 UCLIBC_VERSION:=$(shell echo $(UCLIBC_LOADER) | sed 's/^.*-//;s/\.so//')
 
@@ -18,6 +19,7 @@ $(INITRD_DIR)/.build:
 
 	echo "uClibc_version = $(UCLIBC_VERSION)" >  uClibc.inc
 	echo "uClibc_loader  = $(UCLIBC_LOADER)"  >> uClibc.inc
+	echo "uClibc_loader_link  = $(UCLIBC_LOADER_LINK)"  >> uClibc.inc
 	echo '?include <uClibc.files>'            >> uClibc.inc
 
 	touch $(INITRD_DIR)/.build

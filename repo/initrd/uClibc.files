@@ -5,7 +5,7 @@
 	Permissions = 755
 </File>
 <File>
-	Filename	= lib/ld-uClibc.so.0
+	Filename	= lib/$(uClibc_loader_link)
 	Target		= lib/$(uClibc_loader)
 	Type		= link
 </File>
