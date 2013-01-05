@@ -1,11 +1,11 @@
 # makefile for clamav
 
-CLAMAV_DIR:=clamav-0.97.3
+CLAMAV_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(CLAMAV_SOURCE) 2>/dev/null )
 CLAMAV_TARGET_DIR:=$(BT_BUILD_DIR)/clamav
 export LDFLAGS += $(EXTCCLDFLAGS)
 
 $(CLAMAV_DIR)/.source:
-	zcat $(CLAMAV_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(CLAMAV_SOURCE)
 	cat $(CLAMAV_PATCH1) | patch -d $(CLAMAV_DIR) -p1
 	touch $(CLAMAV_DIR)/.source
 
