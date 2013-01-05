@@ -4,7 +4,7 @@
 #
 #############################################################
 
-IPTABLES_VER=1.4.12.2
+IPTABLES_VER=1.4.16.3
 IPTABLES_DIR:=iptables-$(IPTABLES_VER)
 IPT_NF_DIR:=ipt_netflow-1.7.1
 IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
@@ -24,8 +24,8 @@ BUILD_TARGETS :=all
 
 $(IPTABLES_DIR)/.source:
 	bzcat $(IPTABLES_SOURCE) |  tar -xvf -
-	cat $(IPTABLES_PATCH1) | patch -d $(IPTABLES_DIR) -p1
-	cat $(IPTABLES_PATCH2) | patch -d $(IPTABLES_DIR)/extensions -p0
+#	cat $(IPTABLES_PATCH1) | patch -d $(IPTABLES_DIR) -p1
+#	cat $(IPTABLES_PATCH2) | patch -d $(IPTABLES_DIR)/extensions -p0
 	touch $(IPTABLES_DIR)/.source
 
 $(IPT_NF_DIR)/.source:
@@ -47,21 +47,18 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/init.d
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/iptables
-	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
+	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/linux/netfilter
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/lib
 	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) $(BUILD_TARGETS)
 	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) DESTDIR=$(IPTABLES_TARGET_DIR) install
 	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/usr/include
 	cp -a $(IPTABLES_DIR)/include/iptables/*.h $(IPTABLES_TARGET_DIR)/usr/include/iptables
-	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
+	cp -a $(IPTABLES_DIR)/include/linux/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/linux/netfilter
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTABLES_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/lib\'," $(IPTABLES_TARGET_DIR)/lib/*.la
 	mv -f $(IPTABLES_TARGET_DIR)/lib/pkgconfig $(IPTABLES_TARGET_DIR)/usr/lib
-#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
-#	perl -i -p -e "s,=/lib,=$(BT_STAGING_DIR)/lib," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
-#	perl -i -p -e "s,prefix=/$$,prefix=$(BT_STAGING_DIR)," $(IPTABLES_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(IPTABLES_TARGET_DIR)/share
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/iptables
 	cp -aL iptables.init $(IPTABLES_TARGET_DIR)/etc/init.d/ip6tables
