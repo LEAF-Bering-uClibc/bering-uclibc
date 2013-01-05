@@ -48,12 +48,14 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	mkdir -p $(IPTABLES_TARGET_DIR)/etc/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/iptables
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/linux/netfilter
+	mkdir -p $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
 	mkdir -p $(IPTABLES_TARGET_DIR)/usr/lib
 	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) $(BUILD_TARGETS)
 	$(MAKE) $(MAKEOPTS) -C $(IPTABLES_DIR) DESTDIR=$(IPTABLES_TARGET_DIR) install
 	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/usr/include
 	cp -a $(IPTABLES_DIR)/include/iptables/*.h $(IPTABLES_TARGET_DIR)/usr/include/iptables
 	cp -a $(IPTABLES_DIR)/include/linux/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/linux/netfilter
+	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTABLES_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
