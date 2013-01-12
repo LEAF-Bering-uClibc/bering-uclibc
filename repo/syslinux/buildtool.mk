@@ -7,6 +7,8 @@ SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
 
 $(SYSLINUX_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(SYSLINUX_SOURCE)
+	cat $(SYSLINUX_PATCH1) | patch -d $(SYSLINUX_DIR) -p1 
+	cat $(SYSLINUX_PATCH2) | patch -d $(SYSLINUX_DIR) -p1 
 	touch $(SYSLINUX_DIR)/.source
 
 $(SYSLINUX_DIR)/.build: $(SYSLINUX_DIR)/.source
