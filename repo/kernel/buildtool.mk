@@ -37,7 +37,7 @@ $(LINUX_BUILDDIR):
 	depmod -ae -b $(LINUX_BUILDDIR) -F $(LINUX_BUILDDIR)/System.map-$(KVERSION)-$$i $(KVERSION)-$$i || exit 1; \
 	done)
 # Compile slabinfo tool
-#	$(TARGET_CC) $(CFLAGS) -o $(LINUX_BUILDDIR)/usr/sbin/slabinfo $(BT_LINUX_DIR)/tools/slub/slabinfo.c
+	$(TARGET_CC) $(CFLAGS) -o $(LINUX_BUILDDIR)/usr/sbin/slabinfo $(BT_LINUX_DIR)/tools/vm/slabinfo.c
 
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LINUX_BUILDDIR)/usr/sbin/*
 	cp -R $(LINUX_BUILDDIR)/lib $(LINUX_BUILDDIR)/usr $(BT_STAGING_DIR)
