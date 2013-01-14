@@ -1,10 +1,10 @@
-*** Bering-3.2.31.config	2012-10-11 10:52:38.000000000 +0200
---- Bering-3.2.31-x86_64.config	2012-10-15 10:59:37.806614583 +0200
+*** Bering-3.2.35.config	2013-01-04 14:01:27.429117404 +0100
+--- Bering-3.2.35.config-x86_64	2013-01-04 14:00:13.669119763 +0100
 ***************
 *** 1,17 ****
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/i386 3.2.27 Kernel Configuration
+! # Linux/i386 3.2.35 Kernel Configuration
   #
 ! # CONFIG_64BIT is not set
 ! CONFIG_X86_32=y
@@ -22,7 +22,7 @@
 --- 1,18 ----
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/x86_64 3.2.31 Kernel Configuration
+! # Linux/x86_64 3.2.35 Kernel Configuration
   #
 ! CONFIG_64BIT=y
 ! # CONFIG_X86_32 is not set
@@ -547,17 +547,7 @@
   CONFIG_HPET=y
 --- 1909,1914 ----
 ***************
-*** 2028,2033 ****
---- 1965,1971 ----
-  #
-  # I2C system bus drivers (mostly embedded / system-on-chip)
-  #
-+ CONFIG_I2C_DESIGNWARE_CORE=m
-  CONFIG_I2C_DESIGNWARE_PCI=m
-  # CONFIG_I2C_GPIO is not set
-  # CONFIG_I2C_INTEL_MID is not set
-***************
-*** 2051,2057 ****
+*** 2052,2058 ****
   # Other I2C/SMBus bus drivers
   #
   # CONFIG_I2C_STUB is not set
@@ -567,7 +557,7 @@
   # CONFIG_I2C_DEBUG_BUS is not set
 --- 1989,1994 ----
 ***************
-*** 2286,2295 ****
+*** 2287,2296 ****
   # CONFIG_SC1200_WDT is not set
   # CONFIG_PC87413_WDT is not set
   CONFIG_NV_TCO=m
@@ -580,7 +570,7 @@
   CONFIG_SMSC37B787_WDT=m
 --- 2223,2230 ----
 ***************
-*** 2533,2539 ****
+*** 2534,2540 ****
   # CONFIG_SND_RME32 is not set
   # CONFIG_SND_RME96 is not set
   # CONFIG_SND_RME9652 is not set
@@ -590,7 +580,7 @@
   CONFIG_SND_VIA82XX=m
 --- 2468,2473 ----
 ***************
-*** 2989,3004 ****
+*** 2990,3005 ****
   #
   # Hardware Spinlock drivers
   #
@@ -626,7 +616,7 @@
   # CONFIG_HYPERV is not set
   CONFIG_PM_DEVFREQ=y
 ***************
-*** 3269,3275 ****
+*** 3270,3276 ****
   CONFIG_STACKTRACE=y
   # CONFIG_DEBUG_STACK_USAGE is not set
   # CONFIG_DEBUG_KOBJECT is not set
@@ -636,7 +626,7 @@
   # CONFIG_DEBUG_VM is not set
 --- 3204,3209 ----
 ***************
-*** 3331,3337 ****
+*** 3332,3338 ****
   CONFIG_DEBUG_RODATA_TEST=y
   # CONFIG_DEBUG_SET_MODULE_RONX is not set
   # CONFIG_DEBUG_NX_TEST is not set
@@ -653,7 +643,7 @@
   CONFIG_HAVE_MMIOTRACE_SUPPORT=y
   CONFIG_IO_DELAY_TYPE_0X80=0
 ***************
-*** 3436,3456 ****
+*** 3437,3457 ****
   CONFIG_CRYPTO_RMD256=m
   CONFIG_CRYPTO_RMD320=m
   CONFIG_CRYPTO_SHA1=m
@@ -701,7 +691,7 @@
   CONFIG_CRYPTO_CAST5=m
   CONFIG_CRYPTO_CAST6=m
 ***************
-*** 3458,3470 ****
+*** 3459,3471 ****
   CONFIG_CRYPTO_FCRYPT=m
   CONFIG_CRYPTO_KHAZAD=m
   CONFIG_CRYPTO_SALSA20=m
@@ -731,7 +721,7 @@
   #
   # Compression
 ***************
-*** 3482,3488 ****
+*** 3483,3489 ****
   CONFIG_CRYPTO_USER_API_SKCIPHER=m
   CONFIG_CRYPTO_HW=y
   # CONFIG_CRYPTO_DEV_PADLOCK is not set
