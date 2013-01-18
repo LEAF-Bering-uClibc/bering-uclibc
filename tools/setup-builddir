@@ -149,7 +149,8 @@ check_binary 'dd'
 
 if [[ -z "$top_level_dir" ]]; then
     # Get the root directory from the tarfile
-    first_line=$(dd if="$tarfile" bs=1024 count=10 2>/dev/null | tar t $tar_filter_option -f "$tarfile" 2>/dev/null | head -1)
+    first_line=$(dd if="$tarfile" bs=1024 count=200 2>/dev/null | \
+        tar -t $tar_filter_option -f - 2>/dev/null | head -1)
     top_level_dir=${first_line#./}      # remove leading ./
     top_level_dir=${top_level_dir%%/*}  # keep only the top level directory
 else
