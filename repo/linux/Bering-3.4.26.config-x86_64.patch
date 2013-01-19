@@ -1,5 +1,5 @@
-*** Bering-3.4.25.config	2013-01-12 17:21:11.260911517 +0100
---- Bering-3.4.25.config-x86_64	2013-01-12 11:53:09.064015375 +0100
+*** Bering-3.4.25.config	2013-01-13 11:33:53.795897262 +0100
+--- Bering-3.4.25.config-x86_64	2013-01-13 11:35:00.975900164 +0100
 ***************
 *** 1,17 ****
   #
@@ -583,7 +583,7 @@
   # CONFIG_INPUT_ATI_REMOTE2 is not set
   # CONFIG_INPUT_KEYSPAN_REMOTE is not set
 ***************
-*** 2015,2026 ****
+*** 2014,2025 ****
   CONFIG_HW_RANDOM_TIMERIOMEM=m
   CONFIG_HW_RANDOM_INTEL=m
   CONFIG_HW_RANDOM_AMD=m
@@ -596,9 +596,9 @@
   
   #
   # PCMCIA character devices
---- 1952,1961 ----
+--- 1951,1960 ----
 ***************
-*** 2030,2037 ****
+*** 2029,2036 ****
   # CONFIG_CARDMAN_4040 is not set
   # CONFIG_IPWIRELESS is not set
   # CONFIG_MWAVE is not set
@@ -607,9 +607,9 @@
   CONFIG_RAW_DRIVER=y
   CONFIG_MAX_RAW_DEVS=256
   CONFIG_HPET=y
---- 1965,1970 ----
+--- 1964,1969 ----
 ***************
-*** 2112,2123 ****
+*** 2111,2122 ****
   # Other I2C/SMBus bus drivers
   #
   # CONFIG_I2C_STUB is not set
@@ -622,7 +622,7 @@
   
   #
   # PPS support
---- 2045,2061 ----
+--- 2044,2060 ----
   # Other I2C/SMBus bus drivers
   #
   # CONFIG_I2C_STUB is not set
@@ -641,7 +641,7 @@
   #
   # PPS support
 ***************
-*** 2181,2203 ****
+*** 2180,2202 ****
   #
   # MODULbus GPIO expanders:
   #
@@ -665,7 +665,7 @@
   CONFIG_HWMON=m
   CONFIG_HWMON_VID=m
   CONFIG_HWMON_DEBUG_CHIP=y
---- 2119,2167 ----
+--- 2118,2166 ----
   #
   # MODULbus GPIO expanders:
   #
@@ -716,7 +716,7 @@
   CONFIG_HWMON_VID=m
   CONFIG_HWMON_DEBUG_CHIP=y
 ***************
-*** 2353,2362 ****
+*** 2352,2361 ****
   # CONFIG_SC1200_WDT is not set
   # CONFIG_PC87413_WDT is not set
   CONFIG_NV_TCO=m
@@ -727,9 +727,9 @@
   # CONFIG_CPU5_WDT is not set
   CONFIG_SMSC_SCH311X_WDT=m
   CONFIG_SMSC37B787_WDT=m
---- 2317,2324 ----
+--- 2316,2323 ----
 ***************
-*** 2596,2602 ****
+*** 2595,2601 ****
   # CONFIG_SND_RME32 is not set
   # CONFIG_SND_RME96 is not set
   # CONFIG_SND_RME9652 is not set
@@ -737,9 +737,9 @@
   # CONFIG_SND_SONICVIBES is not set
   # CONFIG_SND_TRIDENT is not set
   CONFIG_SND_VIA82XX=m
---- 2558,2563 ----
+--- 2557,2562 ----
 ***************
-*** 2665,2671 ****
+*** 2664,2670 ****
   # CONFIG_HID_PICOLCD is not set
   # CONFIG_HID_PRIMAX is not set
   # CONFIG_HID_ROCCAT is not set
@@ -747,7 +747,7 @@
   # CONFIG_HID_SAMSUNG is not set
   # CONFIG_HID_SONY is not set
   # CONFIG_HID_SPEEDLINK is not set
---- 2626,2632 ----
+--- 2625,2631 ----
   # CONFIG_HID_PICOLCD is not set
   # CONFIG_HID_PRIMAX is not set
   # CONFIG_HID_ROCCAT is not set
@@ -756,7 +756,7 @@
   # CONFIG_HID_SONY is not set
   # CONFIG_HID_SPEEDLINK is not set
 ***************
-*** 2783,2789 ****
+*** 2782,2788 ****
   CONFIG_USB_SERIAL_IR=m
   CONFIG_USB_SERIAL_EDGEPORT=m
   CONFIG_USB_SERIAL_EDGEPORT_TI=m
@@ -764,7 +764,7 @@
   CONFIG_USB_SERIAL_GARMIN=m
   CONFIG_USB_SERIAL_IPW=m
   CONFIG_USB_SERIAL_IUU=m
---- 2744,2750 ----
+--- 2743,2749 ----
   CONFIG_USB_SERIAL_IR=m
   CONFIG_USB_SERIAL_EDGEPORT=m
   CONFIG_USB_SERIAL_EDGEPORT_TI=m
@@ -773,7 +773,7 @@
   CONFIG_USB_SERIAL_IPW=m
   CONFIG_USB_SERIAL_IUU=m
 ***************
-*** 2804,2810 ****
+*** 2803,2809 ****
   CONFIG_USB_SERIAL_KLSI=m
   CONFIG_USB_SERIAL_KOBIL_SCT=m
   CONFIG_USB_SERIAL_MCT_U232=m
@@ -781,7 +781,7 @@
   CONFIG_USB_SERIAL_MOS7720=m
   # CONFIG_USB_SERIAL_MOS7715_PARPORT is not set
   CONFIG_USB_SERIAL_MOS7840=m
---- 2765,2771 ----
+--- 2764,2770 ----
   CONFIG_USB_SERIAL_KLSI=m
   CONFIG_USB_SERIAL_KOBIL_SCT=m
   CONFIG_USB_SERIAL_MCT_U232=m
@@ -790,7 +790,7 @@
   # CONFIG_USB_SERIAL_MOS7715_PARPORT is not set
   CONFIG_USB_SERIAL_MOS7840=m
 ***************
-*** 3063,3084 ****
+*** 3062,3083 ****
   #
   # CONFIG_ANDROID is not set
   # CONFIG_PHONE is not set
@@ -813,7 +813,7 @@
   
   #
   # Remoteproc drivers (EXPERIMENTAL)
---- 3024,3047 ----
+--- 3023,3046 ----
   #
   # CONFIG_ANDROID is not set
   # CONFIG_PHONE is not set
@@ -839,7 +839,7 @@
   #
   # Remoteproc drivers (EXPERIMENTAL)
 ***************
-*** 3352,3358 ****
+*** 3351,3357 ****
   CONFIG_STACKTRACE=y
   # CONFIG_DEBUG_STACK_USAGE is not set
   # CONFIG_DEBUG_KOBJECT is not set
@@ -847,9 +847,9 @@
   CONFIG_DEBUG_BUGVERBOSE=y
   # CONFIG_DEBUG_INFO is not set
   # CONFIG_DEBUG_VM is not set
---- 3315,3320 ----
+--- 3314,3319 ----
 ***************
-*** 3415,3421 ****
+*** 3414,3420 ****
   CONFIG_DEBUG_RODATA_TEST=y
   # CONFIG_DEBUG_SET_MODULE_RONX is not set
   # CONFIG_DEBUG_NX_TEST is not set
@@ -857,7 +857,7 @@
   # CONFIG_IOMMU_STRESS is not set
   CONFIG_HAVE_MMIOTRACE_SUPPORT=y
   CONFIG_IO_DELAY_TYPE_0X80=0
---- 3377,3383 ----
+--- 3376,3382 ----
   CONFIG_DEBUG_RODATA_TEST=y
   # CONFIG_DEBUG_SET_MODULE_RONX is not set
   # CONFIG_DEBUG_NX_TEST is not set
@@ -866,7 +866,7 @@
   CONFIG_HAVE_MMIOTRACE_SUPPORT=y
   CONFIG_IO_DELAY_TYPE_0X80=0
 ***************
-*** 3521,3556 ****
+*** 3520,3555 ****
   CONFIG_CRYPTO_RMD256=m
   CONFIG_CRYPTO_RMD320=m
   CONFIG_CRYPTO_SHA1=m
@@ -903,7 +903,7 @@
   
   #
   # Compression
---- 3483,3523 ----
+--- 3482,3522 ----
   CONFIG_CRYPTO_RMD256=m
   CONFIG_CRYPTO_RMD320=m
   CONFIG_CRYPTO_SHA1=m
@@ -946,7 +946,7 @@
   #
   # Compression
 ***************
-*** 3568,3574 ****
+*** 3567,3573 ****
   CONFIG_CRYPTO_USER_API_SKCIPHER=m
   CONFIG_CRYPTO_HW=y
   # CONFIG_CRYPTO_DEV_PADLOCK is not set
@@ -954,9 +954,9 @@
   CONFIG_HAVE_KVM=y
   # CONFIG_VIRTUALIZATION is not set
   # CONFIG_BINARY_PRINTF is not set
---- 3535,3540 ----
+--- 3534,3539 ----
 ***************
-*** 3587,3593 ****
+*** 3586,3592 ****
   CONFIG_CRC_T10DIF=m
   CONFIG_CRC_ITU_T=m
   CONFIG_CRC32=y
@@ -964,7 +964,7 @@
   CONFIG_CRC32_SLICEBY8=y
   # CONFIG_CRC32_SLICEBY4 is not set
   # CONFIG_CRC32_SARWATE is not set
---- 3553,3559 ----
+--- 3552,3558 ----
   CONFIG_CRC_T10DIF=m
   CONFIG_CRC_ITU_T=m
   CONFIG_CRC32=y
