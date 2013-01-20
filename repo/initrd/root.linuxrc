@@ -241,6 +241,7 @@ qt mkdir /mnt
 qt mkdir /nfs
 qt mkdir /var/lock
 qt mkdir /var/run
+qt mkdir /dev/pts
 
 qt ln -s /tmp /var/tmp
 qt ln -s /tmp /usr/tmp

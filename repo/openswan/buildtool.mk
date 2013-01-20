@@ -10,7 +10,7 @@ export USE_EXTRACRYPTO=true
 
 .source:
 	zcat $(OPENSWAN_SOURCE) | tar -xvf -
-	patch -d $(OPENSWAN_DIR) -p 1 < $(OPENSWAN_2_6_38_ANDROID_ICS_NATOA_PATCH)
+#	patch -d $(OPENSWAN_DIR) -p 1 < $(OPENSWAN_2_6_38_ANDROID_ICS_NATOA_PATCH)
 	echo $(OPENSWAN_DIR) > .source
 	echo $(OPENSWAN_2_6_38_ANDROID_ICS-NATOA_PATCH) >> .source
 
