@@ -1,10 +1,5 @@
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** Bering-3.2.35.config	2013-01-04 14:01:27.429117404 +0100
---- Bering-3.2.35.config-i486	2013-01-04 13:59:50.809120498 +0100
-=======
 *** Bering-3.4.25.config	2013-01-13 11:33:53.795897262 +0100
 --- Bering-3.4.25.config-i486	2013-01-13 11:34:15.843898106 +0100
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
 ***************
 *** 12,23 ****
   CONFIG_GENERIC_CMOS_UPDATE=y
@@ -1048,11 +1043,7 @@
   CONFIG_B44=m
   CONFIG_B44_PCI_AUTOSELECT=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 1414,1459 ****
-=======
 *** 1453,1499 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_BNX2=m
   CONFIG_CNIC=m
   CONFIG_TIGON3=m
@@ -1100,27 +1091,17 @@
   CONFIG_NET_VENDOR_HP=y
   CONFIG_HP100=m
   CONFIG_NET_VENDOR_INTEL=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 1365,1387 ----
-=======
 --- 1404,1428 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_BNX2=m
   CONFIG_CNIC=m
   CONFIG_TIGON3=m
 ! # CONFIG_BNX2X is not set
 ! # CONFIG_NET_VENDOR_BROCADE is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-! # CONFIG_NET_VENDOR_CHELSIO is not set
-! CONFIG_NET_VENDOR_CIRRUS=y
-! CONFIG_CS89x0=m
-=======
 ! # CONFIG_NET_CALXEDA_XGMAC is not set
 ! # CONFIG_NET_VENDOR_CHELSIO is not set
 ! CONFIG_NET_VENDOR_CIRRUS=y
 ! CONFIG_CS89x0=m
 ! # CONFIG_CS89x0_PLATFORM is not set
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
 ! # CONFIG_NET_VENDOR_CISCO is not set
   CONFIG_DNET=m
 ! # CONFIG_NET_VENDOR_DEC is not set
@@ -1137,11 +1118,7 @@
   CONFIG_HP100=m
   CONFIG_NET_VENDOR_INTEL=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 1462,1513 ****
-=======
 *** 1502,1553 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_E1000E is not set
   # CONFIG_IGB is not set
   # CONFIG_IGBVF is not set
@@ -1194,11 +1171,7 @@
   CONFIG_8139CP=m
   CONFIG_8139TOO=m
   # CONFIG_8139TOO_PIO is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 1390,1440 ----
-=======
 --- 1431,1481 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_E1000E is not set
   # CONFIG_IGB is not set
   # CONFIG_IGBVF is not set
@@ -1301,11 +1274,7 @@
   CONFIG_TLAN=m
   CONFIG_NET_VENDOR_VIA=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 1544,1550 ****
-=======
 *** 1586,1592 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_VIA_RHINE_MMIO is not set
   CONFIG_VIA_VELOCITY=m
   CONFIG_NET_VENDOR_XIRCOM=y
@@ -1313,11 +1282,7 @@
   # CONFIG_FDDI is not set
   # CONFIG_HIPPI is not set
   # CONFIG_NET_SB1000 is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 1462,1468 ----
-=======
 --- 1504,1510 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_VIA_RHINE_MMIO is not set
   CONFIG_VIA_VELOCITY=m
   CONFIG_NET_VENDOR_XIRCOM=y
@@ -1575,11 +1540,7 @@
   CONFIG_I2C_ALGOBIT=m
   
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2028,2035 ****
-=======
 *** 2087,2095 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   #
   # I2C system bus drivers (mostly embedded / system-on-chip)
   #
@@ -1599,16 +1560,7 @@
   # CONFIG_I2C_INTEL_MID is not set
   # CONFIG_I2C_OCORES is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2037,2048 ****
-  # CONFIG_I2C_PXA_PCI is not set
-  # CONFIG_I2C_SIMTEC is not set
-  # CONFIG_I2C_XILINX is not set
-! CONFIG_I2C_EG20T=m
-  
-=======
 *** 2101,2107 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   #
   # External I2C/SMBus adapter drivers
   #
@@ -1625,13 +1577,8 @@
   # CONFIG_I2C_PARPORT_LIGHT is not set
   # CONFIG_I2C_TAOS_EVM is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2051,2057 ****
---- 1959,1968 ----
-=======
 *** 2110,2116 ****
 --- 2014,2023 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   #
   # Other I2C/SMBus bus drivers
   #
@@ -1643,11 +1590,7 @@
   # CONFIG_I2C_DEBUG_CORE is not set
   # CONFIG_I2C_DEBUG_ALGO is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2078,2117 ****
-=======
 *** 2138,2177 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_GPIOLIB=y
   # CONFIG_DEBUG_GPIO is not set
   # CONFIG_GPIO_SYSFS is not set
@@ -1727,9 +1670,6 @@
   #
   # AC97 GPIO expanders:
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2157,2166 ****
-=======
 *** 2195,2201 ****
   # CONFIG_CHARGER_MAX8903 is not set
   # CONFIG_CHARGER_LP8727 is not set
@@ -1741,7 +1681,6 @@
 --- 2099,2104 ----
 ***************
 *** 2221,2230 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_SENSORS_ASC7621=m
   CONFIG_SENSORS_K8TEMP=m
   CONFIG_SENSORS_K10TEMP=m
@@ -1764,11 +1703,7 @@
   CONFIG_SENSORS_I5K_AMB=m
   CONFIG_SENSORS_F71805F=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2170,2180 ****
-=======
 *** 2234,2244 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_SENSORS_G760A=m
   CONFIG_SENSORS_GL518SM=m
   CONFIG_SENSORS_GL520SM=m
@@ -1793,11 +1728,7 @@
   CONFIG_SENSORS_LM73=m
   CONFIG_SENSORS_LM75=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2187,2234 ****
-=======
 *** 2251,2299 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_SENSORS_LM90=m
   CONFIG_SENSORS_LM92=m
   CONFIG_SENSORS_LM93=m
@@ -1888,11 +1819,7 @@
   CONFIG_SENSORS_AMC6821=m
   CONFIG_SENSORS_THMC50=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2243,2250 ****
-=======
 *** 2308,2315 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_SENSORS_W83791D=m
   CONFIG_SENSORS_W83792D=m
   CONFIG_SENSORS_W83793=m
@@ -1910,11 +1837,7 @@
   CONFIG_SENSORS_W83L786NG=m
   CONFIG_SENSORS_W83627HF=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2254,2260 ****
-=======
 *** 2319,2325 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   #
   # ACPI drivers
   #
@@ -1931,11 +1854,7 @@
   CONFIG_THERMAL=m
   CONFIG_THERMAL_HWMON=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2268,2277 ****
-=======
 *** 2333,2342 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_SOFT_WATCHDOG=m
   # CONFIG_ACQUIRE_WDT is not set
   CONFIG_ADVANTECH_WDT=m
@@ -1958,11 +1877,7 @@
   # CONFIG_SBC_FITPC2_WATCHDOG is not set
   # CONFIG_EUROTECH_WDT is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2281,2292 ****
-=======
 *** 2346,2357 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_I6300ESB_WDT is not set
   CONFIG_ITCO_WDT=m
   CONFIG_ITCO_VENDOR_SUPPORT=y
@@ -1990,13 +1905,8 @@
   # CONFIG_60XX_WDT is not set
   # CONFIG_SBC8360_WDT is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2303,2308 ****
---- 2201,2213 ----
-=======
 *** 2369,2374 ****
 --- 2262,2274 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_SBC_EPX_C3_WATCHDOG is not set
   
   #
@@ -2011,11 +1921,7 @@
   #
   # CONFIG_PCIPCWATCHDOG is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2334,2344 ****
-=======
 *** 2400,2410 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   #
   # Broadcom specific AMBA
   #
@@ -2036,11 +1942,7 @@
   #
   # Multifunction device drivers
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2347,2385 ****
-=======
 *** 2413,2419 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_MFD_SM501 is not set
   # CONFIG_HTC_PASIC3 is not set
   # CONFIG_UCB1400_CORE is not set
@@ -2107,13 +2009,8 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2411,2416 ****
---- 2294,2300 ----
-=======
 *** 2471,2476 ****
 --- 2348,2354 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_VGA_CONSOLE=y
   CONFIG_VGACON_SOFT_SCROLLBACK=y
   CONFIG_VGACON_SOFT_SCROLLBACK_SIZE=1024
@@ -2122,13 +2019,8 @@
   CONFIG_SOUND=m
   CONFIG_SOUND_OSS_CORE=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2455,2460 ****
---- 2339,2376 ----
-=======
 *** 2516,2521 ****
 --- 2394,2431 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_SND_MPU401 is not set
   # CONFIG_SND_PORTMAN2X4 is not set
   # CONFIG_SND_AC97_POWER_SAVE is not set
@@ -2168,11 +2060,7 @@
   # CONFIG_SND_AD1889 is not set
   # CONFIG_SND_ALS300 is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2543,2551 ****
-=======
 *** 2604,2612 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_SND_VX222 is not set
   # CONFIG_SND_YMFPCI is not set
   # CONFIG_SND_USB is not set
@@ -2184,11 +2072,7 @@
   # CONFIG_SND_PDAUDIOCF is not set
 --- 2514,2519 ----
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2678,2684 ****
-=======
 *** 2738,2744 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   #
   CONFIG_USB_STORAGE=m
   # CONFIG_USB_STORAGE_DEBUG is not set
@@ -2205,11 +2089,7 @@
   CONFIG_USB_STORAGE_FREECOM=m
   CONFIG_USB_STORAGE_ISD200=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2690,2697 ****
-=======
 *** 2750,2756 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_USB_STORAGE_ONETOUCH=m
   CONFIG_USB_STORAGE_KARMA=m
   CONFIG_USB_STORAGE_CYPRESS_ATACB=m
@@ -2226,9 +2106,6 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2768,2774 ****
-=======
 *** 2782,2788 ****
   CONFIG_USB_SERIAL_IR=m
   CONFIG_USB_SERIAL_EDGEPORT=m
@@ -2264,7 +2141,6 @@
   CONFIG_USB_SERIAL_MOS7840=m
 ***************
 *** 2829,2835 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_USB_SERIAL_OPTICON=m
   # CONFIG_USB_SERIAL_VIVOPAY_SERIAL is not set
   # CONFIG_USB_SERIAL_ZIO is not set
@@ -2281,11 +2157,7 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2793,2799 ****
-=======
 *** 2854,2860 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_USB_IOWARRIOR is not set
   # CONFIG_USB_TEST is not set
   # CONFIG_USB_ISIGHTFW is not set
@@ -2302,11 +2174,7 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2811,2826 ****
-=======
 *** 2872,2887 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # LED drivers
   #
   # CONFIG_LEDS_LM3530 is not set
@@ -2342,11 +2210,7 @@
   CONFIG_LEDS_INTEL_SS4200=m
   CONFIG_LEDS_LT3593=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2862,2872 ****
-=======
 *** 2925,2935 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_RTC_DRV_DS1307 is not set
   # CONFIG_RTC_DRV_DS1374 is not set
   # CONFIG_RTC_DRV_DS1672 is not set
@@ -2371,11 +2235,7 @@
   # CONFIG_RTC_DRV_PCF8563 is not set
   # CONFIG_RTC_DRV_PCF8583 is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2876,2883 ****
-=======
 *** 2939,2946 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_RTC_DRV_FM3130 is not set
   # CONFIG_RTC_DRV_RX8581 is not set
   # CONFIG_RTC_DRV_RX8025 is not set
@@ -2394,11 +2254,7 @@
   #
   # SPI RTC drivers
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2910,2927 ****
-=======
 *** 2973,2990 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # DMA Devices
   #
   # CONFIG_INTEL_MID_DMAC is not set
@@ -2428,13 +2284,8 @@
   CONFIG_UIO=m
   # CONFIG_UIO_CIF is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2968,2974 ****
-  CONFIG_XVMALLOC=y
-=======
 *** 3038,3044 ****
   # CONFIG_IIO is not set
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_ZRAM=y
   # CONFIG_ZRAM_DEBUG is not set
 - # CONFIG_ZCACHE is not set
@@ -2443,11 +2294,7 @@
   # CONFIG_WLAGS49_H25 is not set
 --- 2937,2942 ----
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 2994,3005 ****
-=======
 *** 3072,3083 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_CLKEVT_I8253=y
   CONFIG_I8253_LOCK=y
   CONFIG_CLKBLD_I8253=y
@@ -2462,11 +2309,7 @@
   # Remoteproc drivers (EXPERIMENTAL)
 --- 2970,2976 ----
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3049,3062 ****
-=======
 *** 3134,3147 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_EXT4_DEBUG is not set
   CONFIG_FS_XIP=y
   CONFIG_JBD=m
@@ -2483,11 +2326,7 @@
   # CONFIG_NILFS2_FS is not set
 --- 3027,3037 ----
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3232,3238 ****
-=======
 *** 3313,3319 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_MAGIC_SYSRQ=y
   CONFIG_STRIP_ASM_SYMS=y
   # CONFIG_UNUSED_SYMBOLS is not set
@@ -2504,11 +2343,7 @@
   # CONFIG_DEBUG_SECTION_MISMATCH is not set
   CONFIG_DEBUG_KERNEL=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3251,3262 ****
-=======
 *** 3332,3343 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_SCHEDSTATS is not set
   # CONFIG_TIMER_STATS is not set
   # CONFIG_DEBUG_OBJECTS is not set
@@ -2521,11 +2356,7 @@
   # CONFIG_DEBUG_RT_MUTEXES is not set
   # CONFIG_RT_MUTEX_TESTER is not set
   # CONFIG_DEBUG_SPINLOCK is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3146,3152 ----
-=======
 --- 3222,3228 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_SCHEDSTATS is not set
   # CONFIG_TIMER_STATS is not set
   # CONFIG_DEBUG_OBJECTS is not set
@@ -2534,11 +2365,7 @@
   # CONFIG_RT_MUTEX_TESTER is not set
   # CONFIG_DEBUG_SPINLOCK is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3267,3273 ****
-=======
 *** 3348,3354 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_LOCK_STAT is not set
   # CONFIG_DEBUG_ATOMIC_SLEEP is not set
   # CONFIG_DEBUG_LOCKING_API_SELFTESTS is not set
@@ -2546,15 +2373,9 @@
   # CONFIG_DEBUG_STACK_USAGE is not set
   # CONFIG_DEBUG_KOBJECT is not set
   # CONFIG_DEBUG_HIGHMEM is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3157,3162 ----
-***************
-*** 3286,3298 ****
-=======
 --- 3233,3238 ----
 ***************
 *** 3367,3381 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_FRAME_POINTER is not set
   # CONFIG_BOOT_PRINTK_DELAY is not set
   # CONFIG_RCU_TORTURE_TEST is not set
@@ -2569,17 +2390,10 @@
 - # CONFIG_CPU_NOTIFIER_ERROR_INJECT is not set
   # CONFIG_FAULT_INJECTION is not set
   # CONFIG_LATENCYTOP is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-  # CONFIG_SYSCTL_SYSCALL_CHECK is not set
---- 3175,3183 ----
-***************
-*** 3311,3318 ****
-=======
   # CONFIG_DEBUG_PAGEALLOC is not set
 --- 3251,3260 ----
 ***************
 *** 3393,3400 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_TRACING_SUPPORT=y
   # CONFIG_FTRACE is not set
   # CONFIG_PROVIDE_OHCI1394_DMA_INIT is not set
@@ -2588,15 +2402,9 @@
   # CONFIG_DMA_API_DEBUG is not set
   # CONFIG_ATOMIC64_SELFTEST is not set
   CONFIG_ASYNC_RAID6_TEST=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3196,3201 ----
-***************
-*** 3320,3326 ****
-=======
 --- 3272,3277 ----
 ***************
 *** 3402,3408 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_HAVE_ARCH_KGDB=y
   # CONFIG_KGDB is not set
   CONFIG_HAVE_ARCH_KMEMCHECK=y
@@ -2604,15 +2412,9 @@
   # CONFIG_TEST_KSTRTOX is not set
   # CONFIG_STRICT_DEVMEM is not set
   CONFIG_X86_VERBOSE_BOOTUP=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3203,3208 ----
-***************
-*** 3344,3350 ****
-=======
 --- 3279,3284 ----
 ***************
 *** 3426,3436 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_IO_DELAY_UDELAY is not set
   # CONFIG_IO_DELAY_NONE is not set
   CONFIG_DEFAULT_IO_DELAY_TYPE=1
@@ -2620,11 +2422,6 @@
   # CONFIG_CPA_DEBUG is not set
   # CONFIG_OPTIMIZE_INLINING is not set
   # CONFIG_DEBUG_STRICT_USER_COPY_CHECKS is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3226,3231 ----
-***************
-*** 3358,3364 ****
-=======
 - # CONFIG_DEBUG_NMI_SELFTEST is not set
   
   #
@@ -2632,7 +2429,6 @@
 --- 3302,3310 ----
 ***************
 *** 3441,3447 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # CONFIG_SECURITY_DMESG_RESTRICT is not set
   # CONFIG_SECURITY is not set
   # CONFIG_SECURITYFS is not set
@@ -2640,15 +2436,9 @@
   CONFIG_DEFAULT_SECURITY_DAC=y
   CONFIG_DEFAULT_SECURITY=""
   CONFIG_XOR_BLOCKS=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3239,3244 ----
-***************
-*** 3367,3374 ****
-=======
 --- 3315,3320 ----
 ***************
 *** 3450,3457 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_ASYNC_XOR=m
   CONFIG_ASYNC_PQ=m
   CONFIG_ASYNC_RAID6_RECOV=m
@@ -2657,15 +2447,9 @@
   CONFIG_CRYPTO=y
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3247,3252 ----
-***************
-*** 3388,3398 ****
-=======
 --- 3323,3328 ----
 ***************
 *** 3471,3481 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_CRYPTO_PCOMP2=y
   CONFIG_CRYPTO_MANAGER=y
   CONFIG_CRYPTO_MANAGER2=y
@@ -2677,11 +2461,7 @@
   CONFIG_CRYPTO_WORKQUEUE=y
   CONFIG_CRYPTO_CRYPTD=m
   CONFIG_CRYPTO_AUTHENC=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3266,3275 ----
-=======
 --- 3342,3351 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_CRYPTO_PCOMP2=y
   CONFIG_CRYPTO_MANAGER=y
   CONFIG_CRYPTO_MANAGER2=y
@@ -2693,11 +2473,7 @@
   CONFIG_CRYPTO_CRYPTD=m
   CONFIG_CRYPTO_AUTHENC=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3446,3453 ****
-=======
 *** 3529,3536 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # Ciphers
   #
   CONFIG_CRYPTO_AES=m
@@ -2706,11 +2482,7 @@
   CONFIG_CRYPTO_ANUBIS=m
   CONFIG_CRYPTO_ARC4=m
   CONFIG_CRYPTO_BLOWFISH=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3323,3330 ----
-=======
 --- 3399,3406 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # Ciphers
   #
   CONFIG_CRYPTO_AES=m
@@ -2720,11 +2492,7 @@
   CONFIG_CRYPTO_ARC4=m
   CONFIG_CRYPTO_BLOWFISH=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3478,3489 ****
-=======
 *** 3562,3573 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # Random Number Generation
   #
   CONFIG_CRYPTO_ANSI_CPRNG=m
@@ -2737,11 +2505,7 @@
   CONFIG_HAVE_KVM=y
   # CONFIG_VIRTUALIZATION is not set
   # CONFIG_BINARY_PRINTF is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3355,3366 ----
-=======
 --- 3432,3443 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   # Random Number Generation
   #
   CONFIG_CRYPTO_ANSI_CPRNG=m
@@ -2755,11 +2519,7 @@
   # CONFIG_VIRTUALIZATION is not set
   # CONFIG_BINARY_PRINTF is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3498,3523 ****
-=======
 *** 3585,3615 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_CRC16=m
   CONFIG_CRC_T10DIF=m
   CONFIG_CRC_ITU_T=m
@@ -2791,11 +2551,7 @@
   CONFIG_TEXTSEARCH=y
   CONFIG_TEXTSEARCH_KMP=m
   CONFIG_TEXTSEARCH_BM=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
---- 3375,3393 ----
-=======
 --- 3455,3478 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_CRC16=m
   CONFIG_CRC_T10DIF=m
   CONFIG_CRC_ITU_T=m
@@ -2821,11 +2577,7 @@
   CONFIG_TEXTSEARCH_KMP=m
   CONFIG_TEXTSEARCH_BM=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-*** 3526,3532 ****
-=======
 *** 3618,3625 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch
   CONFIG_HAS_IOPORT=y
   CONFIG_HAS_DMA=y
   CONFIG_CHECK_SIGNATURE=y
@@ -2841,9 +2593,4 @@
   CONFIG_DQL=y
   CONFIG_NLATTR=y
   CONFIG_AVERAGE=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-i486.patch
-  # CONFIG_CORDIC is not set
---- 3396,3401 ----
-=======
 ! # CONFIG_CORDIC is not set
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-i486.patch

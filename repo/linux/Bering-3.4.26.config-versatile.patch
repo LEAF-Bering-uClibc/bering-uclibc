@@ -1,19 +1,10 @@
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** Bering-3.2.35.config	2013-01-04 14:01:27.429117404 +0100
---- Bering-3.2.35.config-versatile	2013-01-04 14:00:28.509119289 +0100
-=======
 *** Bering-3.4.25.config	2013-01-13 11:33:53.795897262 +0100
 --- Bering-3.4.25.config-versatile	2013-01-13 11:35:21.307901086 +0100
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
 ***************
 *** 1,53 ****
   #
   # Automatically generated file; DO NOT EDIT.
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-! # Linux/i386 3.2.35 Kernel Configuration
-=======
 ! # Linux/i386 3.4.24 Kernel Configuration
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
 ! # CONFIG_64BIT is not set
 ! CONFIG_X86_32=y
@@ -67,11 +58,7 @@
 --- 1,29 ----
   #
   # Automatically generated file; DO NOT EDIT.
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-! # Linux/arm 3.2.35 Kernel Configuration
-=======
 ! # Linux/arm 3.4.24 Kernel Configuration
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
 ! CONFIG_ARM=y
 ! CONFIG_MIGHT_HAVE_PCI=y
@@ -1704,11 +1691,7 @@
   
   #
   # MII PHY device drivers
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1249,1319 ----
-=======
 --- 1303,1377 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CAIF transport drivers
   #
   CONFIG_ETHERNET=y
@@ -1794,11 +1777,7 @@
   CONFIG_PPP=m
   CONFIG_PPP_BSDCOMP=m
   CONFIG_PPP_DEFLATE=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1332,1340 ----
-=======
 --- 1391,1399 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_STE10XP=m
   CONFIG_LSI_ET1011C_PHY=m
   CONFIG_MICREL_PHY=m
@@ -1855,11 +1834,7 @@
   CONFIG_ATMEL=m
   CONFIG_PCI_ATMEL=m
   # CONFIG_PCMCIA_ATMEL is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1356,1392 ----
-=======
 --- 1415,1452 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # USB Network Adapters
   #
@@ -1921,23 +1896,12 @@
 ! # CONFIG_ATH6KL_DEBUG is not set
   CONFIG_B43=m
   CONFIG_B43_BCMA=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-  CONFIG_B43_SSB=y
-  CONFIG_B43_PCI_AUTOSELECT=y
-  CONFIG_B43_PCICORE_AUTOSELECT=y
-  # CONFIG_B43_PCMCIA is not set
-  CONFIG_B43_BCMA_PIO=y
-  CONFIG_B43_PIO=y
-  CONFIG_B43_PHY_N=y
---- 1412,1431 ----
-=======
   CONFIG_B43_BCMA_EXTRA=y
 --- 1469,1486 ----
   CONFIG_ATH5K_PCI=y
   CONFIG_ATH9K_HW=m
   CONFIG_ATH9K_COMMON=m
 ! CONFIG_ATH9K_BTCOEX_SUPPORT=y
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_ATH9K=m
   CONFIG_ATH9K_PCI=y
   # CONFIG_ATH9K_AHB is not set
@@ -1963,12 +1927,6 @@
   CONFIG_B43_PIO=y
   CONFIG_B43_PHY_N=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 1686,1691 ****
---- 1445,1451 ----
-  CONFIG_B43LEGACY_DMA_AND_PIO_MODE=y
-  # CONFIG_B43LEGACY_DMA_MODE is not set
-=======
 *** 1738,1745 ****
   # CONFIG_B43LEGACY_PIO_MODE is not set
   CONFIG_BRCMUTIL=m
@@ -1979,7 +1937,6 @@
   CONFIG_HOSTAP=m
   CONFIG_HOSTAP_FIRMWARE=y
 --- 1510,1516 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_B43LEGACY_PIO_MODE is not set
   CONFIG_BRCMUTIL=m
   CONFIG_BRCMSMAC=m
@@ -1988,18 +1945,12 @@
   CONFIG_HOSTAP=m
   CONFIG_HOSTAP_FIRMWARE=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 1718,1726 ****
---- 1478,1488 ----
-  # CONFIG_IWLWIFI_LEGACY_DEBUG is not set
-=======
 *** 1765,1771 ****
   #
   # CONFIG_IWLWIFI_DEBUG is not set
   # CONFIG_IWLWIFI_P2P is not set
 ! CONFIG_IWLWIFI_EXPERIMENTAL_MFP=y
   CONFIG_IWLEGACY=m
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_IWL4965=m
   CONFIG_IWL3945=m
 --- 1536,1542 ----
@@ -2033,11 +1984,7 @@
   CONFIG_RT2800USB_UNKNOWN=y
   CONFIG_RT2800_LIB=m
   CONFIG_RT2X00_LIB_PCI=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1512,1518 ----
-=======
 --- 1579,1585 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_RT2800USB=m
   CONFIG_RT2800USB_RT33XX=y
   CONFIG_RT2800USB_RT35XX=y
@@ -2059,12 +2006,7 @@
   CONFIG_MWIFIEX_PCIE=m
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1528,1541 ----
-  CONFIG_RTL8192CU=m
-=======
 --- 1596,1609 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_RTLWIFI=m
   # CONFIG_RTLWIFI_DEBUG is not set
   CONFIG_RTL8192C_COMMON=m
@@ -2080,13 +2022,8 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 1787,1792 ****
---- 1551,1557 ----
-=======
 *** 1844,1849 ****
 --- 1619,1625 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # ISDN feature submodules
   #
@@ -2103,12 +2040,6 @@
   # CONFIG_KEYBOARD_TCA6416 is not set
   # CONFIG_KEYBOARD_TCA8418 is not set
   # CONFIG_KEYBOARD_MATRIX is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-  # CONFIG_KEYBOARD_LM8323 is not set
---- 1616,1621 ----
-***************
-*** 1870,1881 ****
-=======
 --- 1683,1688 ----
 ***************
 *** 1917,1922 ****
@@ -2122,7 +2053,6 @@
   # CONFIG_KEYBOARD_OMAP4 is not set
 ***************
 *** 1928,1941 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_INPUT_MISC=y
   # CONFIG_INPUT_AD714X is not set
   # CONFIG_INPUT_BMA150 is not set
@@ -2137,11 +2067,7 @@
   # CONFIG_INPUT_ATI_REMOTE2 is not set
   # CONFIG_INPUT_KEYSPAN_REMOTE is not set
   # CONFIG_INPUT_KXTJ9 is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1634,1641 ----
-=======
 --- 1704,1713 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
 ***************
 *** 1952,1961 ****
   # Hardware I/O ports
@@ -2154,11 +2080,7 @@
   # CONFIG_SERIO_PCIPS2 is not set
   CONFIG_SERIO_LIBPS2=y
   # CONFIG_SERIO_RAW is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1652,1659 ----
-=======
 --- 1724,1731 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Hardware I/O ports
   #
   CONFIG_SERIO=y
@@ -2168,28 +2090,7 @@
   CONFIG_SERIO_LIBPS2=y
   # CONFIG_SERIO_RAW is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 1914,1920 ****
-  CONFIG_UNIX98_PTYS=y
-  # CONFIG_DEVPTS_MULTIPLE_INSTANCES is not set
-  CONFIG_LEGACY_PTYS=y
-! CONFIG_LEGACY_PTY_COUNT=256
-  # CONFIG_SERIAL_NONSTANDARD is not set
-  # CONFIG_NOZOMI is not set
-  # CONFIG_N_GSM is not set
---- 1672,1678 ----
-  CONFIG_UNIX98_PTYS=y
-  # CONFIG_DEVPTS_MULTIPLE_INSTANCES is not set
-  CONFIG_LEGACY_PTYS=y
-! CONFIG_LEGACY_PTY_COUNT=16
-  # CONFIG_SERIAL_NONSTANDARD is not set
-  # CONFIG_NOZOMI is not set
-  # CONFIG_N_GSM is not set
-***************
-*** 1924,1942 ****
-=======
 *** 1983,2001 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # Serial drivers
   #
@@ -2209,11 +2110,7 @@
   # CONFIG_SERIAL_MFD_HSU is not set
   CONFIG_SERIAL_CORE=y
   CONFIG_SERIAL_CORE_CONSOLE=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1682,1703 ----
-=======
 --- 1753,1774 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # Serial drivers
   #
@@ -2258,11 +2155,7 @@
   
   #
   # PCMCIA character devices
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1708,1720 ----
-=======
 --- 1779,1791 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SERIAL_PCH_UART is not set
   # CONFIG_SERIAL_XILINX_PS_UART is not set
   # CONFIG_TTY_PRINTK is not set
@@ -2308,11 +2201,7 @@
   CONFIG_I2C_HELPER_AUTO=y
   CONFIG_I2C_ALGOBIT=m
   
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1723,1738 ----
-=======
 --- 1794,1809 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_CARDMAN_4000 is not set
   # CONFIG_CARDMAN_4040 is not set
   # CONFIG_IPWIRELESS is not set
@@ -2344,15 +2233,9 @@
   # CONFIG_I2C_SIS5595 is not set
   CONFIG_I2C_SIS630=m
   CONFIG_I2C_SIS96X=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1747,1757 ----
-***************
-*** 2021,2034 ****
-=======
 --- 1818,1828 ----
 ***************
 *** 2080,2093 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_I2C_VIAPRO=m
   
   #
@@ -2367,12 +2250,7 @@
   CONFIG_I2C_DESIGNWARE_PCI=m
   CONFIG_I2C_EG20T=m
   # CONFIG_I2C_GPIO is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-  # CONFIG_I2C_INTEL_MID is not set
---- 1759,1768 ----
-=======
 --- 1830,1839 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_I2C_VIAPRO=m
   
   #
@@ -2384,23 +2262,13 @@
   CONFIG_I2C_EG20T=m
   # CONFIG_I2C_GPIO is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2036,2041 ****
---- 1770,1776 ----
-=======
 *** 2096,2108 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_I2C_PCA_PLATFORM is not set
   # CONFIG_I2C_PXA_PCI is not set
   # CONFIG_I2C_SIMTEC is not set
   # CONFIG_I2C_XILINX is not set
   
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-***************
-*** 2043,2049 ****
-=======
   #
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # External I2C/SMBus adapter drivers
   #
   CONFIG_I2C_DIOLAN_U2C=m
@@ -2408,11 +2276,6 @@
   # CONFIG_I2C_PARPORT_LIGHT is not set
   # CONFIG_I2C_TAOS_EVM is not set
   # CONFIG_I2C_TINY_USB is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1778,1783 ----
-***************
-*** 2052,2058 ****
-=======
 --- 1842,1854 ----
   # CONFIG_I2C_PCA_PLATFORM is not set
   # CONFIG_I2C_PXA_PCI is not set
@@ -2429,7 +2292,6 @@
   # CONFIG_I2C_TINY_USB is not set
 ***************
 *** 2111,2117 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Other I2C/SMBus bus drivers
   #
   # CONFIG_I2C_STUB is not set
@@ -2437,16 +2299,10 @@
   # CONFIG_I2C_DEBUG_CORE is not set
   # CONFIG_I2C_DEBUG_ALGO is not set
   # CONFIG_I2C_DEBUG_BUS is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1786,1791 ----
-***************
-*** 2086,2092 ****
-=======
 --- 1857,1862 ----
 ***************
 *** 2145,2152 ****
   # Memory mapped GPIO drivers:
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   CONFIG_GPIO_GENERIC_PLATFORM=m
 ! CONFIG_GPIO_IT8761E=m
@@ -2454,12 +2310,8 @@
   CONFIG_GPIO_VX855=m
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1819,1825 ----
-=======
 --- 1890,1896 ----
   # Memory mapped GPIO drivers:
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   CONFIG_GPIO_GENERIC_PLATFORM=m
 ! # CONFIG_GPIO_PL061 is not set
@@ -2467,11 +2319,7 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2094,2110 ****
-=======
 *** 2154,2170 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   CONFIG_GPIO_MAX7300=m
   CONFIG_GPIO_MAX732X=m
@@ -2489,11 +2337,7 @@
   CONFIG_GPIO_ML_IOH=m
   CONFIG_GPIO_RDC321X=m
   
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1827,1840 ----
-=======
 --- 1898,1911 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   CONFIG_GPIO_MAX7300=m
   CONFIG_GPIO_MAX732X=m
@@ -2509,13 +2353,7 @@
   CONFIG_GPIO_RDC321X=m
   
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2133,2263 ****
-  # CONFIG_BATTERY_MAX17042 is not set
-  # CONFIG_CHARGER_MAX8903 is not set
-=======
 *** 2197,2328 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_CHARGER_GPIO is not set
   # CONFIG_CHARGER_MANAGER is not set
   # CONFIG_CHARGER_SMB347 is not set
@@ -2648,13 +2486,7 @@
   CONFIG_WATCHDOG=y
   CONFIG_WATCHDOG_CORE=y
   # CONFIG_WATCHDOG_NOWAYOUT is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1863,1870 ----
-  # CONFIG_BATTERY_MAX17042 is not set
-  # CONFIG_CHARGER_MAX8903 is not set
-=======
 --- 1938,1945 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_CHARGER_GPIO is not set
   # CONFIG_CHARGER_MANAGER is not set
   # CONFIG_CHARGER_SMB347 is not set
@@ -2664,11 +2496,7 @@
   CONFIG_WATCHDOG_CORE=y
   # CONFIG_WATCHDOG_NOWAYOUT is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2266,2306 ****
-=======
 *** 2331,2372 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Watchdog Device Drivers
   #
   CONFIG_SOFT_WATCHDOG=m
@@ -2711,11 +2539,7 @@
   
   #
   # PCI-based Watchdog Cards
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1873,1882 ----
-=======
 --- 1948,1957 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Watchdog Device Drivers
   #
   CONFIG_SOFT_WATCHDOG=m
@@ -2727,13 +2551,8 @@
   #
   # PCI-based Watchdog Cards
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2325,2330 ****
---- 1901,1908 ----
-=======
 *** 2391,2396 ****
 --- 1976,1983 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_SSB_B43_PCI_BRIDGE=y
   CONFIG_SSB_PCMCIAHOST_POSSIBLE=y
   # CONFIG_SSB_PCMCIAHOST is not set
@@ -2743,11 +2562,7 @@
   # CONFIG_SSB_DEBUG is not set
   CONFIG_SSB_DRIVER_PCICORE_POSSIBLE=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2344,2366 ****
-=======
 *** 2410,2433 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Multifunction device drivers
   #
   CONFIG_MFD_CORE=m
@@ -2772,11 +2587,7 @@
   CONFIG_REGULATOR=y
   # CONFIG_REGULATOR_DEBUG is not set
   # CONFIG_REGULATOR_DUMMY is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1922,1965 ----
-=======
 --- 1997,2046 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Multifunction device drivers
   #
   CONFIG_MFD_CORE=m
@@ -2828,9 +2639,6 @@
   # CONFIG_REGULATOR_DEBUG is not set
   # CONFIG_REGULATOR_DUMMY is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2385,2399 ****
-=======
 *** 2444,2477 ****
   # CONFIG_REGULATOR_LP3971 is not set
   # CONFIG_REGULATOR_LP3972 is not set
@@ -2841,7 +2649,6 @@
 - CONFIG_REGULATOR_TPS65217=m
   # CONFIG_MEDIA_SUPPORT is not set
   
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # Graphics support
   #
@@ -2858,9 +2665,6 @@
   # CONFIG_BACKLIGHT_LCD_SUPPORT is not set
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 1984,2051 ----
-=======
   # Console display driver support
   #
 - CONFIG_VGA_CONSOLE=y
@@ -2879,7 +2683,6 @@
   # CONFIG_REGULATOR_TPS6507X is not set
   # CONFIG_MEDIA_SUPPORT is not set
   
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # Graphics support
   #
@@ -2950,23 +2753,6 @@
   # CONFIG_BACKLIGHT_LCD_SUPPORT is not set
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-***************
-*** 2408,2417 ****
-  #
-  # Console display driver support
-  #
-- CONFIG_VGA_CONSOLE=y
-- CONFIG_VGACON_SOFT_SCROLLBACK=y
-- CONFIG_VGACON_SOFT_SCROLLBACK_SIZE=1024
-  CONFIG_DUMMY_CONSOLE=y
-  CONFIG_SOUND=m
-  CONFIG_SOUND_OSS_CORE=y
-  CONFIG_SOUND_OSS_CORE_PRECLAIM=y
---- 2060,2081 ----
-  #
-=======
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Console display driver support
   #
   CONFIG_DUMMY_CONSOLE=y
@@ -2989,12 +2775,7 @@
   CONFIG_SOUND_OSS_CORE=y
   CONFIG_SOUND_OSS_CORE_PRECLAIM=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2435,2441 ****
-  # CONFIG_SND_VERBOSE_PRINTK is not set
-=======
 *** 2496,2502 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SND_DEBUG is not set
   CONFIG_SND_VMASTER=y
   CONFIG_SND_KCTL_JACK=y
@@ -3002,15 +2783,9 @@
   CONFIG_SND_RAWMIDI_SEQ=m
   CONFIG_SND_OPL3_LIB_SEQ=m
   # CONFIG_SND_OPL4_LIB_SEQ is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2099,2104 ----
-***************
-*** 2445,2466 ****
-=======
 --- 2174,2179 ----
 ***************
 *** 2506,2527 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_SND_OPL3_LIB=m
   CONFIG_SND_AC97_CODEC=m
   CONFIG_SND_DRIVERS=y
@@ -3033,15 +2808,9 @@
   CONFIG_SND_ATIIXP=m
   # CONFIG_SND_ATIIXP_MODEM is not set
   # CONFIG_SND_AU8810 is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2108,2124 ----
-***************
-*** 2474,2480 ****
-=======
 --- 2183,2199 ----
 ***************
 *** 2535,2541 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SND_OXYGEN is not set
   # CONFIG_SND_CS4281 is not set
   # CONFIG_SND_CS46XX is not set
@@ -3049,15 +2818,9 @@
   # CONFIG_SND_CS5535AUDIO is not set
   # CONFIG_SND_CTXFI is not set
   # CONFIG_SND_DARLA20 is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2132,2137 ----
-***************
-*** 2534,2540 ****
-=======
 --- 2207,2212 ----
 ***************
 *** 2595,2601 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SND_RME32 is not set
   # CONFIG_SND_RME96 is not set
   # CONFIG_SND_RME9652 is not set
@@ -3065,15 +2828,9 @@
   # CONFIG_SND_SONICVIBES is not set
   # CONFIG_SND_TRIDENT is not set
   CONFIG_SND_VIA82XX=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2191,2196 ----
-***************
-*** 2542,2554 ****
-=======
 --- 2266,2271 ----
 ***************
 *** 2603,2615 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SND_VIRTUOSO is not set
   # CONFIG_SND_VX222 is not set
   # CONFIG_SND_YMFPCI is not set
@@ -3087,11 +2844,7 @@
   # CONFIG_SND_SOC is not set
   # CONFIG_SOUND_PRIME is not set
   CONFIG_AC97_BUS=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2198,2208 ----
-=======
 --- 2273,2283 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SND_VIRTUOSO is not set
   # CONFIG_SND_VX222 is not set
   # CONFIG_SND_YMFPCI is not set
@@ -3104,11 +2857,7 @@
   # CONFIG_SOUND_PRIME is not set
   CONFIG_AC97_BUS=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2703,2709 ****
-=======
 *** 2762,2768 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # USB port drivers
   #
@@ -3116,11 +2865,6 @@
   CONFIG_USB_SERIAL=m
   CONFIG_USB_EZUSB=y
   CONFIG_USB_SERIAL_GENERIC=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2357,2362 ----
-***************
-*** 2744,2750 ****
-=======
 --- 2430,2435 ----
 ***************
 *** 2782,2788 ****
@@ -3142,7 +2886,6 @@
 ***************
 *** 2803,2811 ****
   CONFIG_USB_SERIAL_KLSI=m
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_USB_SERIAL_KOBIL_SCT=m
   CONFIG_USB_SERIAL_MCT_U232=m
 ! CONFIG_USB_SERIAL_METRO=m
@@ -3151,11 +2894,6 @@
   CONFIG_USB_SERIAL_MOS7840=m
   CONFIG_USB_SERIAL_MOTOROLA=m
   CONFIG_USB_SERIAL_NAVMAN=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2397,2402 ----
-***************
-*** 2800,2808 ****
-=======
 --- 2470,2477 ----
   CONFIG_USB_SERIAL_KLSI=m
   CONFIG_USB_SERIAL_KOBIL_SCT=m
@@ -3167,7 +2905,6 @@
   CONFIG_USB_SERIAL_NAVMAN=m
 ***************
 *** 2861,2869 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # OTG and related infrastructure
   #
   # CONFIG_USB_GPIO_VBUS is not set
@@ -3177,11 +2914,7 @@
   # CONFIG_MEMSTICK is not set
   CONFIG_NEW_LEDS=y
   CONFIG_LEDS_CLASS=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2452,2488 ----
-=======
 --- 2527,2563 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # OTG and related infrastructure
   #
   # CONFIG_USB_GPIO_VBUS is not set
@@ -3220,18 +2953,7 @@
   CONFIG_NEW_LEDS=y
   CONFIG_LEDS_CLASS=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2811,2829 ****
-  # LED drivers
-  #
-  # CONFIG_LEDS_LM3530 is not set
-- CONFIG_LEDS_NET5501=m
-  CONFIG_LEDS_PCA9532=m
-  # CONFIG_LEDS_PCA9532_GPIO is not set
-  CONFIG_LEDS_GPIO=m
-=======
 *** 2878,2892 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_LEDS_LP3944=m
   CONFIG_LEDS_LP5521=m
   CONFIG_LEDS_LP5523=m
@@ -3247,17 +2969,7 @@
   CONFIG_LEDS_TRIGGERS=y
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2491,2507 ----
-  # LED drivers
-  #
-  # CONFIG_LEDS_LM3530 is not set
-  CONFIG_LEDS_PCA9532=m
-  # CONFIG_LEDS_PCA9532_GPIO is not set
-  CONFIG_LEDS_GPIO=m
-=======
 --- 2572,2585 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_LEDS_LP3944=m
   CONFIG_LEDS_LP5521=m
   CONFIG_LEDS_LP5523=m
@@ -3273,11 +2985,7 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2840,2846 ****
-=======
 *** 2903,2909 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # CONFIG_ACCESSIBILITY is not set
   # CONFIG_INFINIBAND is not set
@@ -3285,15 +2993,9 @@
   CONFIG_RTC_LIB=y
   CONFIG_RTC_CLASS=y
   CONFIG_RTC_HCTOSYS=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2518,2523 ----
-***************
-*** 2903,2927 ****
-=======
 --- 2596,2601 ----
 ***************
 *** 2966,2990 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # on-CPU RTC drivers
   #
@@ -3319,11 +3021,7 @@
   # CONFIG_AUXDISPLAY is not set
   CONFIG_UIO=m
   # CONFIG_UIO_CIF is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2580,2597 ----
-=======
 --- 2658,2675 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # on-CPU RTC drivers
   #
@@ -3343,18 +3041,11 @@
   CONFIG_UIO=m
   # CONFIG_UIO_CIF is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 2938,3007 ****
-  # CONFIG_VIRTIO_PCI is not set
-  # CONFIG_VIRTIO_BALLOON is not set
-  # CONFIG_VIRTIO_MMIO is not set
-=======
 *** 3005,3083 ****
   #
   # Microsoft Hyper-V guest support
   #
 ! # CONFIG_HYPERV is not set
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
 ! CONFIG_STAGING=y
 ! # CONFIG_ET131X is not set
 ! # CONFIG_SLICOSS is not set
@@ -3429,18 +3120,11 @@
 - CONFIG_INTEL_IOMMU_FLOPPY_WA=y
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2608,2623 ----
-  # CONFIG_VIRTIO_PCI is not set
-  # CONFIG_VIRTIO_BALLOON is not set
-  # CONFIG_VIRTIO_MMIO is not set
-=======
   # Remoteproc drivers (EXPERIMENTAL)
 --- 2690,2704 ----
   #
   # Microsoft Hyper-V guest support
   #
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
 ! # CONFIG_STAGING is not set
 ! CONFIG_CLKDEV_LOOKUP=y
 ! CONFIG_HAVE_MACH_CLKDEV=y
@@ -3454,11 +3138,7 @@
   #
   # Remoteproc drivers (EXPERIMENTAL)
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3017,3058 ****
-=======
 *** 3102,3143 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   
   #
@@ -3501,11 +3181,7 @@
   # CONFIG_REISERFS_FS is not set
   # CONFIG_JFS_FS is not set
   # CONFIG_XFS_FS is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2633,2645 ----
-=======
 --- 2723,2735 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   
   #
@@ -3520,11 +3196,7 @@
   # CONFIG_JFS_FS is not set
   # CONFIG_XFS_FS is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3061,3067 ****
-=======
 *** 3146,3152 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_BTRFS_FS is not set
   # CONFIG_NILFS2_FS is not set
   CONFIG_FS_POSIX_ACL=y
@@ -3532,11 +3204,7 @@
   CONFIG_FILE_LOCKING=y
   CONFIG_FSNOTIFY=y
   CONFIG_DNOTIFY=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2648,2654 ----
-=======
 --- 2738,2744 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_BTRFS_FS is not set
   # CONFIG_NILFS2_FS is not set
   CONFIG_FS_POSIX_ACL=y
@@ -3545,11 +3213,7 @@
   CONFIG_FSNOTIFY=y
   CONFIG_DNOTIFY=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3108,3123 ****
-=======
 *** 3193,3208 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Pseudo filesystems
   #
   CONFIG_PROC_FS=y
@@ -3566,11 +3230,7 @@
   CONFIG_MISC_FILESYSTEMS=y
   # CONFIG_ADFS_FS is not set
   # CONFIG_AFFS_FS is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2695,2708 ----
-=======
 --- 2785,2798 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Pseudo filesystems
   #
   CONFIG_PROC_FS=y
@@ -3586,11 +3246,7 @@
   # CONFIG_ADFS_FS is not set
   # CONFIG_AFFS_FS is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3127,3163 ****
-=======
 *** 3212,3249 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_BEFS_FS is not set
   # CONFIG_BFS_FS is not set
   # CONFIG_EFS_FS is not set
@@ -3629,12 +3285,7 @@
   CONFIG_RPCSEC_GSS_KRB5=m
   # CONFIG_SUNRPC_DEBUG is not set
   # CONFIG_CEPH_FS is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-  CONFIG_CIFS=m
---- 2712,2763 ----
-=======
 --- 2802,2854 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_BEFS_FS is not set
   # CONFIG_BFS_FS is not set
   # CONFIG_EFS_FS is not set
@@ -3689,18 +3340,7 @@
   # CONFIG_SUNRPC_DEBUG is not set
   # CONFIG_CEPH_FS is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3175,3188 ****
-  #
-  # Partition Types
-  #
-! # CONFIG_PARTITION_ADVANCED is not set
-  CONFIG_MSDOS_PARTITION=y
-  CONFIG_NLS=y
-  CONFIG_NLS_DEFAULT="utf8"
-=======
 *** 3263,3269 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_NLS_CODEPAGE_437=y
   # CONFIG_NLS_CODEPAGE_737 is not set
   # CONFIG_NLS_CODEPAGE_775 is not set
@@ -3708,34 +3348,7 @@
   # CONFIG_NLS_CODEPAGE_852 is not set
   # CONFIG_NLS_CODEPAGE_855 is not set
   # CONFIG_NLS_CODEPAGE_857 is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2775,2804 ----
-  #
-  # Partition Types
-  #
-! CONFIG_PARTITION_ADVANCED=y
-! # CONFIG_ACORN_PARTITION is not set
-! # CONFIG_OSF_PARTITION is not set
-! # CONFIG_AMIGA_PARTITION is not set
-! # CONFIG_ATARI_PARTITION is not set
-! # CONFIG_MAC_PARTITION is not set
-  CONFIG_MSDOS_PARTITION=y
-+ # CONFIG_BSD_DISKLABEL is not set
-+ # CONFIG_MINIX_SUBPARTITION is not set
-+ # CONFIG_SOLARIS_X86_PARTITION is not set
-+ # CONFIG_UNIXWARE_DISKLABEL is not set
-+ # CONFIG_LDM_PARTITION is not set
-+ # CONFIG_SGI_PARTITION is not set
-+ # CONFIG_ULTRIX_PARTITION is not set
-+ # CONFIG_SUN_PARTITION is not set
-+ # CONFIG_KARMA_PARTITION is not set
-+ # CONFIG_EFI_PARTITION is not set
-+ # CONFIG_SYSV68_PARTITION is not set
-  CONFIG_NLS=y
-  CONFIG_NLS_DEFAULT="utf8"
-=======
 --- 2868,2874 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_NLS_CODEPAGE_437=y
   # CONFIG_NLS_CODEPAGE_737 is not set
   # CONFIG_NLS_CODEPAGE_775 is not set
@@ -3744,11 +3357,7 @@
   # CONFIG_NLS_CODEPAGE_855 is not set
   # CONFIG_NLS_CODEPAGE_857 is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3203,3209 ****
-=======
 *** 3284,3290 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_NLS_CODEPAGE_1250 is not set
   CONFIG_NLS_CODEPAGE_1251=y
   CONFIG_NLS_ASCII=y
@@ -3756,11 +3365,7 @@
   # CONFIG_NLS_ISO8859_2 is not set
   # CONFIG_NLS_ISO8859_3 is not set
   # CONFIG_NLS_ISO8859_4 is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2819,2825 ----
-=======
 --- 2889,2895 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_NLS_CODEPAGE_1250 is not set
   CONFIG_NLS_CODEPAGE_1251=y
   CONFIG_NLS_ASCII=y
@@ -3769,11 +3374,7 @@
   # CONFIG_NLS_ISO8859_3 is not set
   # CONFIG_NLS_ISO8859_4 is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3223,3230 ****
-=======
 *** 3304,3311 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # Kernel hacking
   #
@@ -3782,11 +3383,7 @@
   CONFIG_DEFAULT_MESSAGE_LOGLEVEL=4
   # CONFIG_ENABLE_WARN_DEPRECATED is not set
   # CONFIG_ENABLE_MUST_CHECK is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2839,2845 ----
-=======
 --- 2909,2915 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   # Kernel hacking
   #
@@ -3795,11 +3392,7 @@
   # CONFIG_ENABLE_WARN_DEPRECATED is not set
   # CONFIG_ENABLE_MUST_CHECK is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3232,3248 ****
-=======
 *** 3313,3329 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_MAGIC_SYSRQ=y
   CONFIG_STRIP_ASM_SYMS=y
   # CONFIG_UNUSED_SYMBOLS is not set
@@ -3817,11 +3410,7 @@
   CONFIG_DETECT_HUNG_TASK=y
   CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=120
   # CONFIG_BOOTPARAM_HUNG_TASK_PANIC is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2847,2859 ----
-=======
 --- 2917,2929 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_MAGIC_SYSRQ=y
   CONFIG_STRIP_ASM_SYMS=y
   # CONFIG_UNUSED_SYMBOLS is not set
@@ -3836,11 +3425,7 @@
   CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=120
   # CONFIG_BOOTPARAM_HUNG_TASK_PANIC is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3251,3262 ****
-=======
 *** 3332,3343 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SCHEDSTATS is not set
   # CONFIG_TIMER_STATS is not set
   # CONFIG_DEBUG_OBJECTS is not set
@@ -3853,11 +3438,7 @@
   # CONFIG_DEBUG_RT_MUTEXES is not set
   # CONFIG_RT_MUTEX_TESTER is not set
   # CONFIG_DEBUG_SPINLOCK is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2862,2869 ----
-=======
 --- 2932,2939 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SCHEDSTATS is not set
   # CONFIG_TIMER_STATS is not set
   # CONFIG_DEBUG_OBJECTS is not set
@@ -3867,11 +3448,7 @@
   # CONFIG_RT_MUTEX_TESTER is not set
   # CONFIG_DEBUG_SPINLOCK is not set
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3267,3280 ****
-=======
 *** 3348,3361 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_LOCK_STAT is not set
   # CONFIG_DEBUG_ATOMIC_SLEEP is not set
   # CONFIG_DEBUG_LOCKING_API_SELFTESTS is not set
@@ -3886,15 +3463,9 @@
   # CONFIG_DEBUG_WRITECOUNT is not set
   # CONFIG_DEBUG_MEMORY_INIT is not set
   # CONFIG_DEBUG_LIST is not set
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2874,2885 ----
-***************
-*** 3282,3353 ****
-=======
 --- 2944,2955 ----
 ***************
 *** 3363,3436 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_DEBUG_SG is not set
   # CONFIG_DEBUG_NOTIFIERS is not set
   # CONFIG_DEBUG_CREDENTIALS is not set
@@ -3969,11 +3540,7 @@
   
   #
   # Security options
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2887,2926 ----
-=======
 --- 2957,2997 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_DEBUG_SG is not set
   # CONFIG_DEBUG_NOTIFIERS is not set
   # CONFIG_DEBUG_CREDENTIALS is not set
@@ -4016,11 +3583,7 @@
   #
   # Security options
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3358,3364 ****
-=======
 *** 3441,3447 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_SECURITY_DMESG_RESTRICT is not set
   # CONFIG_SECURITY is not set
   # CONFIG_SECURITYFS is not set
@@ -4028,15 +3591,9 @@
   CONFIG_DEFAULT_SECURITY_DAC=y
   CONFIG_DEFAULT_SECURITY=""
   CONFIG_XOR_BLOCKS=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2931,2936 ----
-***************
-*** 3367,3374 ****
-=======
 --- 3002,3007 ----
 ***************
 *** 3450,3457 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_ASYNC_XOR=m
   CONFIG_ASYNC_PQ=m
   CONFIG_ASYNC_RAID6_RECOV=m
@@ -4045,15 +3602,9 @@
   CONFIG_CRYPTO=y
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2939,2944 ----
-***************
-*** 3392,3398 ****
-=======
 --- 3010,3015 ----
 ***************
 *** 3475,3481 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=y
   CONFIG_CRYPTO_GF128MUL=m
   CONFIG_CRYPTO_NULL=m
@@ -4061,15 +3612,9 @@
   CONFIG_CRYPTO_WORKQUEUE=y
   CONFIG_CRYPTO_CRYPTD=m
   CONFIG_CRYPTO_AUTHENC=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2962,2967 ----
-***************
-*** 3427,3433 ****
-=======
 --- 3033,3038 ----
 ***************
 *** 3510,3516 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Digest
   #
   CONFIG_CRYPTO_CRC32C=m
@@ -4077,15 +3622,9 @@
   CONFIG_CRYPTO_GHASH=m
   CONFIG_CRYPTO_MD4=m
   CONFIG_CRYPTO_MD5=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 2996,3001 ----
-***************
-*** 3446,3453 ****
-=======
 --- 3067,3072 ----
 ***************
 *** 3529,3536 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # Ciphers
   #
   CONFIG_CRYPTO_AES=m
@@ -4094,15 +3633,9 @@
   CONFIG_CRYPTO_ANUBIS=m
   CONFIG_CRYPTO_ARC4=m
   CONFIG_CRYPTO_BLOWFISH=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 3014,3019 ----
-***************
-*** 3459,3471 ****
-=======
 --- 3085,3090 ----
 ***************
 *** 3542,3555 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_CRYPTO_FCRYPT=m
   CONFIG_CRYPTO_KHAZAD=m
   CONFIG_CRYPTO_SALSA20=m
@@ -4117,15 +3650,9 @@
   
   #
   # Compression
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 3025,3035 ----
-***************
-*** 3482,3491 ****
-=======
 --- 3096,3106 ----
 ***************
 *** 3566,3575 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_CRYPTO_USER_API_HASH=m
   CONFIG_CRYPTO_USER_API_SKCIPHER=m
   CONFIG_CRYPTO_HW=y
@@ -4136,11 +3663,7 @@
   # CONFIG_BINARY_PRINTF is not set
   
   #
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 3046,3052 ----
-=======
 --- 3117,3123 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_CRYPTO_USER_API_HASH=m
   CONFIG_CRYPTO_USER_API_SKCIPHER=m
   CONFIG_CRYPTO_HW=y
@@ -4149,11 +3672,7 @@
   
   #
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3493,3499 ****
-=======
 *** 3577,3592 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   #
   CONFIG_RAID6_PQ=m
   CONFIG_BITREVERSE=y
@@ -4164,11 +3683,6 @@
   CONFIG_CRC_CCITT=m
   CONFIG_CRC16=m
   CONFIG_CRC_T10DIF=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 3054,3059 ----
-***************
-*** 3503,3511 ****
-=======
   CONFIG_CRC_ITU_T=m
   CONFIG_CRC32=y
 ! CONFIG_CRC32_SELFTEST=y
@@ -4192,7 +3706,6 @@
   # CONFIG_CRC32_SARWATE is not set
 ***************
 *** 3595,3603 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_LIBCRC32C=m
   CONFIG_CRC8=m
   CONFIG_ZLIB_INFLATE=y
@@ -4202,11 +3715,7 @@
   CONFIG_XZ_DEC=m
   CONFIG_XZ_DEC_X86=y
   CONFIG_XZ_DEC_POWERPC=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 3063,3071 ----
-=======
 --- 3141,3149 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_LIBCRC32C=m
   CONFIG_CRC8=m
   CONFIG_ZLIB_INFLATE=y
@@ -4217,11 +3726,7 @@
   CONFIG_XZ_DEC_X86=y
   CONFIG_XZ_DEC_POWERPC=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-*** 3517,3523 ****
-=======
 *** 3609,3615 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   # CONFIG_XZ_DEC_TEST is not set
   CONFIG_DECOMPRESS_GZIP=y
   CONFIG_DECOMPRESS_LZMA=y
@@ -4229,15 +3734,9 @@
   CONFIG_TEXTSEARCH=y
   CONFIG_TEXTSEARCH_KMP=m
   CONFIG_TEXTSEARCH_BM=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
---- 3077,3082 ----
-***************
-*** 3525,3532 ****
-=======
 --- 3155,3160 ----
 ***************
 *** 3617,3625 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_HAS_IOMEM=y
   CONFIG_HAS_IOPORT=y
   CONFIG_HAS_DMA=y
@@ -4246,13 +3745,8 @@
   CONFIG_DQL=y
   CONFIG_NLATTR=y
   CONFIG_AVERAGE=y
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-versatile.patch
-  # CONFIG_CORDIC is not set
---- 3084,3090 ----
-=======
   CONFIG_CORDIC=m
 --- 3162,3169 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-versatile.patch
   CONFIG_HAS_IOMEM=y
   CONFIG_HAS_IOPORT=y
   CONFIG_HAS_DMA=y

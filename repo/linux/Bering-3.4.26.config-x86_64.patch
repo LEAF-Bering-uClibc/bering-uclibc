@@ -1,19 +1,10 @@
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** Bering-3.2.35.config	2013-01-04 14:01:27.429117404 +0100
---- Bering-3.2.35.config-x86_64	2013-01-04 14:00:13.669119763 +0100
-=======
 *** Bering-3.4.25.config	2013-01-13 11:33:53.795897262 +0100
 --- Bering-3.4.25.config-x86_64	2013-01-13 11:35:00.975900164 +0100
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
 ***************
 *** 1,17 ****
   #
   # Automatically generated file; DO NOT EDIT.
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-! # Linux/i386 3.2.35 Kernel Configuration
-=======
 ! # Linux/i386 3.4.24 Kernel Configuration
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   #
 ! # CONFIG_64BIT is not set
 ! CONFIG_X86_32=y
@@ -31,11 +22,7 @@
 --- 1,18 ----
   #
   # Automatically generated file; DO NOT EDIT.
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-! # Linux/x86_64 3.2.35 Kernel Configuration
-=======
 ! # Linux/x86_64 3.4.24 Kernel Configuration
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   #
 ! CONFIG_64BIT=y
 ! # CONFIG_X86_32 is not set
@@ -622,9 +609,6 @@
   CONFIG_HPET=y
 --- 1964,1969 ----
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 2052,2058 ****
-=======
 *** 2111,2122 ****
   # Other I2C/SMBus bus drivers
   #
@@ -639,7 +623,6 @@
   #
   # PPS support
 --- 2044,2060 ----
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   # Other I2C/SMBus bus drivers
   #
   # CONFIG_I2C_STUB is not set
@@ -733,11 +716,7 @@
   CONFIG_HWMON_VID=m
   CONFIG_HWMON_DEBUG_CHIP=y
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 2287,2296 ****
-=======
 *** 2352,2361 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   # CONFIG_SC1200_WDT is not set
   # CONFIG_PC87413_WDT is not set
   CONFIG_NV_TCO=m
@@ -750,11 +729,7 @@
   CONFIG_SMSC37B787_WDT=m
 --- 2316,2323 ----
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 2534,2540 ****
-=======
 *** 2595,2601 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   # CONFIG_SND_RME32 is not set
   # CONFIG_SND_RME96 is not set
   # CONFIG_SND_RME9652 is not set
@@ -798,9 +773,6 @@
   CONFIG_USB_SERIAL_IPW=m
   CONFIG_USB_SERIAL_IUU=m
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 2990,3005 ****
-=======
 *** 2803,2809 ****
   CONFIG_USB_SERIAL_KLSI=m
   CONFIG_USB_SERIAL_KOBIL_SCT=m
@@ -825,7 +797,6 @@
   # CONFIG_USB_WPAN_HCD is not set
   # CONFIG_X86_PLATFORM_DEVICES is not set
   
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   #
   # Hardware Spinlock drivers
   #
@@ -868,11 +839,7 @@
   #
   # Remoteproc drivers (EXPERIMENTAL)
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 3270,3276 ****
-=======
 *** 3351,3357 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   CONFIG_STACKTRACE=y
   # CONFIG_DEBUG_STACK_USAGE is not set
   # CONFIG_DEBUG_KOBJECT is not set
@@ -882,11 +849,7 @@
   # CONFIG_DEBUG_VM is not set
 --- 3314,3319 ----
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 3332,3338 ****
-=======
 *** 3414,3420 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   CONFIG_DEBUG_RODATA_TEST=y
   # CONFIG_DEBUG_SET_MODULE_RONX is not set
   # CONFIG_DEBUG_NX_TEST is not set
@@ -903,11 +866,7 @@
   CONFIG_HAVE_MMIOTRACE_SUPPORT=y
   CONFIG_IO_DELAY_TYPE_0X80=0
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 3437,3457 ****
-=======
 *** 3520,3555 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   CONFIG_CRYPTO_RMD256=m
   CONFIG_CRYPTO_RMD320=m
   CONFIG_CRYPTO_SHA1=m
@@ -970,26 +929,7 @@
 + CONFIG_CRYPTO_CAMELLIA_X86_64=m
   CONFIG_CRYPTO_CAST5=m
   CONFIG_CRYPTO_CAST6=m
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-***************
-*** 3459,3471 ****
-  CONFIG_CRYPTO_FCRYPT=m
-  CONFIG_CRYPTO_KHAZAD=m
-  CONFIG_CRYPTO_SALSA20=m
-! # CONFIG_CRYPTO_SALSA20_586 is not set
-  CONFIG_CRYPTO_SEED=m
-  CONFIG_CRYPTO_SERPENT=m
-  CONFIG_CRYPTO_TEA=m
-  CONFIG_CRYPTO_TWOFISH=m
-  CONFIG_CRYPTO_TWOFISH_COMMON=m
-! # CONFIG_CRYPTO_TWOFISH_586 is not set
-  
-  #
-  # Compression
---- 3395,3408 ----
-=======
   CONFIG_CRYPTO_DES=y
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   CONFIG_CRYPTO_FCRYPT=m
   CONFIG_CRYPTO_KHAZAD=m
   CONFIG_CRYPTO_SALSA20=m
@@ -1006,11 +946,7 @@
   #
   # Compression
 ***************
-<<<<<<< HEAD:repo/linux/Bering-3.2.35.config-x86_64.patch
-*** 3483,3489 ****
-=======
 *** 3567,3573 ****
->>>>>>> kernel34-branch:repo/linux/Bering-3.4.26.config-x86_64.patch
   CONFIG_CRYPTO_USER_API_SKCIPHER=m
   CONFIG_CRYPTO_HW=y
   # CONFIG_CRYPTO_DEV_PADLOCK is not set
