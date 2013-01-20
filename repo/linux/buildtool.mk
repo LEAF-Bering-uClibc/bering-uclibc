@@ -14,7 +14,7 @@ unexport CROSS_COMPILE
 	ln -s $(LINUX_DIR) linux
 	cat $(KERNEL_PATCH1) | patch -d $(LINUX_DIR)/lib -p0
 	cat $(KERNEL_PATCH2) | patch -d $(LINUX_DIR) -p1
-#	cat $(KERNEL_PATCH3) | patch -d $(LINUX_DIR) -p1
+	cat $(KERNEL_PATCH3) | patch -d $(LINUX_DIR) -p1
 	cat $(KERNEL_PATCH4) | patch -d $(LINUX_DIR) -p1
 #	cat $(KERNEL_PATCH6) | patch -d $(LINUX_DIR) -p1
 #	bzcat $(WIRELESS_REGDB) | tar -xvf -
