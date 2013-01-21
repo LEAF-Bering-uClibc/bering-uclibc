@@ -1,10 +1,9 @@
 *** Bering-3.4.25.config	2013-01-13 11:33:53.795897262 +0100
 --- Bering-3.4.25.config-versatile	2013-01-13 11:35:21.307901086 +0100
 ***************
-*** 1,53 ****
+*** 1,52 ****
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/i386 3.4.24 Kernel Configuration
   #
 ! # CONFIG_64BIT is not set
 ! CONFIG_X86_32=y
@@ -55,10 +54,9 @@
   CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
   CONFIG_HAVE_IRQ_WORK=y
   CONFIG_IRQ_WORK=y
---- 1,29 ----
+--- 1,28 ----
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/arm 3.4.24 Kernel Configuration
   #
 ! CONFIG_ARM=y
 ! CONFIG_MIGHT_HAVE_PCI=y
