@@ -27,7 +27,7 @@ $(OPENSSL_DIR)/.configured: $(OPENSSL_DIR)/.source
 		--openssldir=/usr/ssl \
 		-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib \
 		-I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include \
-		no-ssl3 no-tls1 no-idea no-mdc2 no-rc5 no-hw no-krb5 shared no-fips no-threads  \
+		no-idea no-mdc2 no-rc5 no-hw no-krb5 shared no-fips no-threads  \
 		 );	
 	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/domd 
 	perl -i -p -e 's,\s*gcc\s+,\t$(TARGET_CC) ,' $(OPENSSL_DIR)/util/pl/linux.pl 
