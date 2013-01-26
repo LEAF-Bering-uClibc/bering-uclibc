@@ -6,15 +6,10 @@
 
 
 BUSYBOX_DIR:=$(shell echo $(BUSYBOX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
-#BUSYBOX_BUILD_DIR=$(BT_BUILD_DIR)/busybox
-
-#export PREFIX=$(BUSYBOX_BUILD_DIR)
 
 $(BUSYBOX_DIR)/.source:
 	bzcat $(BUSYBOX_SOURCE) | tar -xvf -
 	cat $(BUSYBOX_PATCH1) | patch -d $(BUSYBOX_DIR) -p1
-#	cat $(BUSYBOX_PATCH2) | patch -d $(BUSYBOX_DIR) -p1
-#	cat $(BUSYBOX_PATCH3) | patch -d $(BUSYBOX_DIR) -p1
 	touch $(BUSYBOX_DIR)/.source
 
 $(BUSYBOX_DIR)/.build: $(BUSYBOX_DIR)/.source
