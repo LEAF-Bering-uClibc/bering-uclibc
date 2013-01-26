@@ -23,7 +23,7 @@ source: .source
 		--libdir=lib \
 		--install_prefix=$(TARGET_DIR) \
 		--cross-compile-prefix=$(CROSS_COMPILE) \
-		no-ssl3 no-idea no-mdc2 no-rc5  no-krb5 shared no-fips no-threads  \
+		no-idea no-mdc2 no-rc5  no-krb5 shared no-fips no-threads  \
 		-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib \
 		-I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include \
 		 );
