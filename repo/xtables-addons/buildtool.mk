@@ -1,10 +1,8 @@
 #############################################################
-#
-# iptables
-#
+# xtables-addons
 #############################################################
 
-DIR:=xtables-addons-1.41
+DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/xtables-addons
 
 #IPhash settings
@@ -14,7 +12,7 @@ IP_NF_SET_MAX=256
 IP_NF_SET_HASHSIZE=4096
 
 $(DIR)/.source:
-	xzcat $(SOURCE) |  tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(SOURCE)
 	perl -i -p -e 's,build_ipset6=.*,build_ipset6=,' $(DIR)/mconfig
 	touch $(DIR)/.source
 
