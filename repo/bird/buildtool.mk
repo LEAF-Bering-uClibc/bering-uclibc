@@ -1,10 +1,12 @@
-# makefile for squid
+#################################
+# makefile for bird
+#################################
 
-DIR:=bird-1.3.8
+DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/bird
 
 $(DIR)/.source:
-	zcat $(SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(SOURCE) 
 	touch $(DIR)/.source
 
 source: $(DIR)/.source
