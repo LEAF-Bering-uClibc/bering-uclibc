@@ -5,17 +5,18 @@ ULOGD_TARGET_DIR:=$(BT_BUILD_DIR)/ulogd
 
 #export LDFLAGS += $(EXTCCLDFLAGS)
 
+
 $(ULOGD_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(ULOGD_SOURCE)
-	cat $(ULOGD_PATCH1) | patch -d $(ULOGD_DIR) -p1
-	cat $(ULOGD_PATCH2) | patch -d $(ULOGD_DIR) -p1
-	cat $(ULOGD_PATCH3) | patch -d $(ULOGD_DIR) -p1
+#	cat $(ULOGD_PATCH1) | patch -d $(ULOGD_DIR) -p1
+#	cat $(ULOGD_PATCH2) | patch -d $(ULOGD_DIR) -p1
+#	cat $(ULOGD_PATCH3) | patch -d $(ULOGD_DIR) -p1
 	touch $(ULOGD_DIR)/.source
 
 source: $(ULOGD_DIR)/.source
 
 $(ULOGD_DIR)/.configured: $(ULOGD_DIR)/.source
-	(cd $(ULOGD_DIR) ; rm aclocal.m4; libtoolize -i -f && autoreconf -i -f && \
+	(cd $(ULOGD_DIR);  rm aclocal.m4; libtoolize -i -f && autoreconf -i -f && \
 	./configure --prefix=/usr --sysconfdir=/etc \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
@@ -29,7 +30,7 @@ $(ULOGD_DIR)/.build: $(ULOGD_DIR)/.configured
 	mkdir -p $(ULOGD_TARGET_DIR)/etc/cron.weekly
 	mkdir -p $(ULOGD_TARGET_DIR)/usr/lib/ulogd
 #multi-threaded make fails, build in single thread
-	make -C $(ULOGD_DIR) DESTDIR=$(ULOGD_TARGET_DIR) all
+	make -C  $(ULOGD_DIR) DESTDIR=$(ULOGD_TARGET_DIR) all
 	make DESTDIR=$(ULOGD_TARGET_DIR) -C $(ULOGD_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ULOGD_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ULOGD_TARGET_DIR)/usr/lib/ulogd/*
@@ -45,9 +46,9 @@ build: $(ULOGD_DIR)/.build
 clean:
 	make -C $(ULOGD_DIR) clean
 	rm -rf $(ULOGD_TARGET_DIR)
-	rm $(ULOGD_DIR)/.build
-	rm $(ULOGD_DIR)/.configured
+	rm -rf $(ULOGD_DIR)/.build
+	rm -rf $(ULOGD_DIR)/.configured
 
 srcclean: clean
 	rm -rf $(ULOGD_DIR)
-	rm $(ULOGD_DIR)/.source
+	rm -rf $(ULOGD_DIR)/.source
