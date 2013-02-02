@@ -4,14 +4,35 @@
 RCDLINKS="2,S60 3,S60 6,K60"
 
 DAEMON=/usr/bin/rngd
-DEVICE=/dev/hw_random
+DEVICELIST="hwrng hw_random hwrandom"
+HRNGDEVICE=/dev/hwrng
+
 VARRUN=/var/run/rngd.pid
+
+finddevice () {
+        [ -c "${HRNGDEVICE}" ] && return 0
+        for i in ${DEVICELIST} ; do
+                if [ -c "/dev/$i" ] ; then
+                        HRNGDEVICE="/dev/$i"
+                        return 0
+                fi
+                if [ -c "/dev/misc/$i" ] ; then
+                        HRNGDEVICE="/dev/misc/$i"
+                        return 0
+                fi
+        done
+ 
+        echo "(Hardware RNG device inode not found)"
+        echo "$0: Cannot find a hardware RNG device to use." >&2
+        exit 1
+}
 
 case "$1" in
 	start)
+		finddevice
 		[ -r $VARRUN ] && error "already running"
 		echo "Starting $DAEMON..."
-		$DAEMON -r $DEVICE -p $VARRUN
+		$DAEMON -r $HRNGDEVICE -p $VARRUN
 	;;
 	stop)
 		[ -r $VARRUN ] || error "already stopped"
