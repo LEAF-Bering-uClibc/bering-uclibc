@@ -4,10 +4,8 @@
 #
 ######################################
 
-
-MYSQL_DIR:=mysql-5.1.60
+MYSQL_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(MYSQL_SOURCE) 2>/dev/null )
 MYSQL_TARGET_DIR:=$(BT_BUILD_DIR)/mysql
-
 
 CONFFLAGS:= --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
@@ -51,7 +49,6 @@ $(MYSQL_DIR)/.build: $(MYSQL_DIR)/.configured
 
 build: $(MYSQL_DIR)/.build
 
-
 clean:
 	make -C $(MYSQL_DIR) clean
 	rm -rf $(MYSQL_TARGET_DIR)
@@ -71,4 +68,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(MYSQL_DIR)
-
