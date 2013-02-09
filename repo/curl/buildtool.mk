@@ -19,9 +19,11 @@ CONFOPTS:= --host=$(GNU_TARGET_NAME) \
 	 --prefix=/usr --with-libssh2 --disable-manual --disable-ldap --disable-libcurl-option
 
 export LDFLAGS += $(EXTCCLDFLAGS)
+export CFLAGS=-O2 $(ARCH_CFLAGS)
+export CPPFLAGS=-I$(BT_STAGING_DIR)/usr/include
 
 .source:
-	zcat $(CURL_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(CURL_SOURCE)
 	touch .source
 
 source: .source
@@ -34,11 +36,9 @@ build: .configure
 	mkdir -p $(CURL_TARGET_DIR)
 	$(MAKE) $(MAKEOPTS) -C $(CURL_DIR) 
 	$(MAKE) -C $(CURL_DIR) DESTDIR=$(CURL_TARGET_DIR) install
-#
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(CURL_TARGET_DIR)/usr/lib/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(CURL_TARGET_DIR)/usr/bin/*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(CURL_TARGET_DIR)/usr/lib/*.la
-#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(CURL_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(CURL_TARGET_DIR)/usr/share
 	cp -a -f $(CURL_TARGET_DIR)/* $(BT_STAGING_DIR)/
 
