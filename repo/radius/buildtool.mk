@@ -88,6 +88,8 @@ build: .configure
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radtest "$(BT_STAGING_DIR)"/usr/bin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radwho "$(BT_STAGING_DIR)"/usr/bin/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/bin/radzap "$(BT_STAGING_DIR)"/usr/bin/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/libfree* "$(BT_STAGING_DIR)"/usr/lib/
+	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/rlm* "$(BT_STAGING_DIR)"/usr/lib/
 	cp -f "$(RADIUS_TARGET_DIR)"/usr/lib/*.so.3.1.4 "$(BT_STAGING_DIR)"/usr/lib/
 	cp -a "$(RADIUS_TARGET_DIR)"/usr/include/* "$(BT_STAGING_DIR)"/usr/include/
 	cp -a "$(RADIUS_TARGET_DIR)"/usr/share/freeradius/* "$(BT_STAGING_DIR)"/usr/share/freeradius/
