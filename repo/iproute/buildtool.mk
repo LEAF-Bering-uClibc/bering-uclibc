@@ -1,12 +1,9 @@
 #############################################################
-#
 # iproute2
-#
 # Warning! Makefile is too ugly, be warn on version update!
-#
 #############################################################
 
-IPROUTE_DIR:=$(shell echo $(IPROUTE_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
+IPROUTE_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(IPROUTE_SOURCE) 2>/dev/null )
 IPROUTE_TARGET_DIR:=$(BT_BUILD_DIR)/iproute2
 
 # Dirty hacks for iproute2-2.6.35
@@ -17,9 +14,8 @@ export ADDLIB = dnet_ntop.o dnet_pton.o ipx_ntop.o ipx_pton.o
 export YACCFLAGS = -d -t -v
 
 $(IPROUTE_DIR)/.source:
-	bzcat $(IPROUTE_SOURCE) |  tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(IPROUTE_SOURCE)
 	cat $(IPROUTE_PATCH1) | patch -d $(IPROUTE_DIR) -p1
-	zcat $(IPROUTE_PATCH2) | patch -d $(IPROUTE_DIR) -p1
 	echo "TC_CONFIG_XT=y" > $(IPROUTE_DIR)/Config
 	touch $(IPROUTE_DIR)/.source
 
