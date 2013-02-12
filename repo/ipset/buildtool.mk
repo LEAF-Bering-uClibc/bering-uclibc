@@ -1,10 +1,11 @@
 #############################################################
 #
-# iptables
+# makefile for ipset
 #
 #############################################################
 
-DIR:=ipset-6.13
+#DIR:=ipset-6.13
+DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/ipset
 LINUX_BUILDDIR:=$(BT_BUILD_DIR)/kernel
 
