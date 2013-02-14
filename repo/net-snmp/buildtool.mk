@@ -5,7 +5,7 @@
 #############################################################
 
 
-SNMP_DIR:=net-snmp-5.7.1
+SNMP_DIR:=net-snmp-5.7.2
 SNMP_TARGET_DIR:=$(BT_BUILD_DIR)/net-snmp
 
 export CFLAGS += -D_REENTRANT
@@ -13,10 +13,7 @@ MIB_MODULES = host smux ucd-snmp/dlmod ucd-snmp/lmsensorsMib
 
 $(SNMP_DIR)/.source:
 	zcat $(SNMP_SOURCE) | tar -xvf -
-#	cat $(SNMP_PATCH2) | patch -d $(SNMP_DIR) -p0
 	cat $(SNMP_PATCH3) | patch -d $(SNMP_DIR) -p1
-#	cat $(SNMP_PATCH4) | patch -d $(SNMP_DIR) -p1
-#	cat $(SNMP_PATCH5) | patch -d $(SNMP_DIR) -p1
 	perl -i -p -e 's,\$$CPP\s+\$$PARTIALTARGETFLAGS,\$$CPP \$$CFLAGS,' $(SNMP_DIR)/configure
 	touch $@
 
