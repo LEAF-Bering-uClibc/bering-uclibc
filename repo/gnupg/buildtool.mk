@@ -16,7 +16,6 @@ $(GNUPG_DIR)/.configured: .source
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
 	--disable-asm \
-	--disable-gettext \
 	--disable-gnupg-iconv \
 	--disable-agent-support \
 	--disable-idea \
