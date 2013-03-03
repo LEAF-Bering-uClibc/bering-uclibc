@@ -1,0 +1,63 @@
+diff -urN igmpproxy-0.1.orig/src/igmp.c igmpproxy-0.1/src/igmp.c
+--- igmpproxy-0.1.orig/src/igmp.c	2009-05-13 21:43:18.000000000 +0200
++++ igmpproxy-0.1/src/igmp.c	2013-03-03 10:57:38.907375024 +0100
+@@ -67,7 +67,7 @@
+      * - Checksum (let the kernel fill it in)
+      */
+     ip->ip_v   = IPVERSION;
+-    ip->ip_hl  = sizeof(struct ip) >> 2;
++    ip->ip_hl  = (sizeof(struct ip) + 4) >> 2; /* +4 for Router Alert option */
+     ip->ip_tos = 0xc0;      /* Internet Control */
+     ip->ip_ttl = MAXTTL;    /* applies to unicasts only */
+     ip->ip_p   = IPPROTO_IGMP;
+@@ -213,7 +213,7 @@
+     ip                      = (struct ip *)send_buf;
+     ip->ip_src.s_addr       = src;
+     ip->ip_dst.s_addr       = dst;
+-    ip_set_len(ip, MIN_IP_HEADER_LEN + IGMP_MINLEN + datalen);
++    ip_set_len(ip, IP_HEADER_RAOPT_LEN + IGMP_MINLEN + datalen);
+ 
+     if (IN_MULTICAST(ntohl(dst))) {
+         ip->ip_ttl = curttl;
+@@ -221,13 +221,19 @@
+         ip->ip_ttl = MAXTTL;
+     }
+ 
+-    igmp                    = (struct igmp *)(send_buf + MIN_IP_HEADER_LEN);
++    /* Add Router Alert option */
++    ((u_char*)send_buf+MIN_IP_HEADER_LEN)[0] = IPOPT_RA;
++    ((u_char*)send_buf+MIN_IP_HEADER_LEN)[1] = 0x04;
++    ((u_char*)send_buf+MIN_IP_HEADER_LEN)[2] = 0x00;
++    ((u_char*)send_buf+MIN_IP_HEADER_LEN)[3] = 0x00;
++
++    igmp                    = (struct igmp *)(send_buf + IP_HEADER_RAOPT_LEN);
+     igmp->igmp_type         = type;
+     igmp->igmp_code         = code;
+     igmp->igmp_group.s_addr = group;
+     igmp->igmp_cksum        = 0;
+     igmp->igmp_cksum        = inetChksum((u_short *)igmp,
+-                                         IGMP_MINLEN + datalen);
++                                         IP_HEADER_RAOPT_LEN + datalen);
+ }
+ 
+ /* 
+@@ -257,7 +263,7 @@
+ #endif
+     sdst.sin_addr.s_addr = dst;
+     if (sendto(MRouterFD, send_buf,
+-               MIN_IP_HEADER_LEN + IGMP_MINLEN + datalen, 0,
++               IP_HEADER_RAOPT_LEN + IGMP_MINLEN + datalen, 0,
+                (struct sockaddr *)&sdst, sizeof(sdst)) < 0) {
+         if (errno == ENETDOWN)
+             my_log(LOG_ERR, errno, "Sender VIF was down.");
+diff -urN igmpproxy-0.1.orig/src/igmpproxy.h igmpproxy-0.1/src/igmpproxy.h
+--- igmpproxy-0.1.orig/src/igmpproxy.h	2009-10-05 20:19:26.000000000 +0200
++++ igmpproxy-0.1/src/igmpproxy.h	2013-03-03 10:58:08.435374344 +0100
+@@ -64,6 +64,7 @@
+ #define MAX_IP_PACKET_LEN	576
+ #define MIN_IP_HEADER_LEN	20
+ #define MAX_IP_HEADER_LEN	60
++#define IP_HEADER_RAOPT_LEN    24
+ 
+ #define MAX_MC_VIFS    32     // !!! check this const in the specific includes
+ 

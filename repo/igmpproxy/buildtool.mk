@@ -5,6 +5,8 @@ IGMPPROXY_TARGET_DIR:=$(BT_BUILD_DIR)/igmpproxy
 
 $(IGMPPROXY_DIR)/.source:
 	zcat $(IGMPPROXY_SOURCE) | tar -xvf -
+	cat $(RFC2113_PATCH) | patch -d $(IGMPPROXY_DIR) -p1
+	cat $(DISABLE_INTERFACE_PATCH) | patch -d $(IGMPPROXY_DIR) -p1
 	touch $(IGMPPROXY_DIR)/.source
 
 source: $(IGMPPROXY_DIR)/.source

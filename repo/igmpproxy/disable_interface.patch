@@ -1,0 +1,28 @@
+diff -urN igmpproxy-0.1.orig/src/ifvc.c igmpproxy-0.1/src/ifvc.c
+--- igmpproxy-0.1.orig/src/ifvc.c	2009-10-05 20:07:06.000000000 +0200
++++ igmpproxy-0.1/src/ifvc.c	2013-03-03 11:23:22.191325615 +0100
+@@ -139,7 +139,7 @@
+             IfDescEp->allowednets->subnet_addr = subnet;
+ 
+             // Set the default params for the IF...
+-            IfDescEp->state         = IF_STATE_DOWNSTREAM;
++            IfDescEp->state         = IF_STATE_DISABLED;
+             IfDescEp->robustness    = DEFAULT_ROBUSTNESS;
+             IfDescEp->threshold     = DEFAULT_THRESHOLD;   /* ttl limit */
+             IfDescEp->ratelimit     = DEFAULT_RATELIMIT; 
+diff -urN igmpproxy-0.1.orig/src/igmpproxy.c igmpproxy-0.1/src/igmpproxy.c
+--- igmpproxy-0.1.orig/src/igmpproxy.c	2009-08-27 21:32:28.000000000 +0200
++++ igmpproxy-0.1/src/igmpproxy.c	2013-03-03 11:25:20.463321832 +0100
+@@ -186,8 +186,10 @@
+                     }
+                 }
+ 
+-                addVIF( Dp );
+-                vifcount++;
++             if (Dp->state != IF_STATE_DISABLED) {
++                 addVIF( Dp );
++                 vifcount++;
++                }
+             }
+         }
+ 
