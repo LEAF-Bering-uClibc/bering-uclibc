@@ -1,7 +1,7 @@
 # makefile for quagga
 include $(MASTERMAKEFILE)
 
-QUAGGA_DIR:=quagga-0.99.21
+QUAGGA_DIR:=quagga-0.99.22
 QUAGGA_TARGET_DIR:=$(BT_BUILD_DIR)/quagga
 
 $(QUAGGA_DIR)/.source:
