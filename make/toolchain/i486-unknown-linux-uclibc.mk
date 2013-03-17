@@ -16,6 +16,10 @@ export KERN_IMAGE:=bzImage
 # Name of OpenSSL target
 export OPENSSL_TARGET:=linux-elf
 
+# Primary kernel architecture for U-Boot
+export UBOOT_ARCH:=x86
+export UBOOT_BOARDTYPE:=coreboot-x86
+
 # Set variables to "prime" the configure scripts' cache for cross-compiling
 # These are toolchain-specific settings - generic settings go above
 # Export vars only if this is not a toolchain building
