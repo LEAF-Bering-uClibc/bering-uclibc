@@ -43,7 +43,7 @@
 /* Setting this disables the fast exptmod bignum code. It saves ~5kB, but is
  * perhaps 20% slower for pubkey operations (it is probably worth experimenting
  * if you want to use this) */
-#define NO_FAST_EXPTMOD
+/*#define NO_FAST_EXPTMOD*/
 
 /* Set this if you want to use the DROPBEAR_SMALL_CODE option. This can save
 several kB in binary size however will make the symmetrical ciphers and hashes
@@ -64,7 +64,7 @@ much traffic. */
 #define ENABLE_SVR_LOCALTCPFWD
 #define ENABLE_SVR_REMOTETCPFWD
 
-/* Enable Authentication Agent Forwarding - server only for now */
+/* Enable Authentication Agent Forwarding */
 #define ENABLE_SVR_AGENTFWD
 #define ENABLE_CLI_AGENTFWD
 
@@ -79,6 +79,9 @@ much traffic. */
 /* Enable "Netcat mode" option. This will forward standard input/output
  * to a remote TCP-forwarded connection */
 #define ENABLE_CLI_NETCAT
+
+/* Whether to support "-c" and "-m" flags to choose ciphers/MACs at runtime */
+#define ENABLE_USER_ALGO_LIST
 
 /* Encryption - at least one required.
  * Protocol RFC requires 3DES and recommends AES128 for interoperability.
@@ -97,12 +100,18 @@ much traffic. */
  * size and is recommended for most cases */
 #define DROPBEAR_ENABLE_CTR_MODE
 
+/* You can compile with no encryption if you want. In some circumstances
+ * this could be safe security-wise, though make sure you know what
+ * you're doing. Anyone can see everything that goes over the wire, so
+ * the only safe auth method is public key. */
+/* #define DROPBEAR_NONE_CIPHER */
+
 /* Message Integrity - at least one required.
  * Protocol RFC requires sha1 and recommends sha1-96.
- * sha1-96 may be of use for slow links, as it has a smaller overhead.
+ * sha1-96 is of use for slow links as it has a smaller overhead.
  *
- * Note: there's no point disabling sha1 to save space, since it's used
- * for the random number generator and public-key cryptography anyway.
+ * There's no reason to disable sha1 or sha1-96 to save space since it's
+ * used for the random number generator and public-key cryptography anyway.
  * Disabling it here will just stop it from being used as the integrity portion
  * of the ssh protocol.
  *
@@ -110,8 +119,15 @@ much traffic. */
  * If you disable MD5, Dropbear will fall back to SHA1 fingerprints,
  * which are not the standard form. */
 #define DROPBEAR_SHA1_HMAC
-/*#define DROPBEAR_SHA1_96_HMAC*/
-/*#define DROPBEAR_MD5_HMAC*/
+#define DROPBEAR_SHA1_96_HMAC
+/*#define DROPBEAR_SHA2_256_HMAC*/
+/*#define DROPBEAR_SHA2_512_HMAC*/
+#define DROPBEAR_MD5_HMAC
+
+/* You can also disable integrity. Don't bother disabling this if you're
+ * still using a cipher, it's relatively cheap. If you disable this it's dead
+ * simple to run arbitrary commands on the remote host. Beware. */
+/* #define DROPBEAR_NONE_INTEGRITY */
 
 /* Hostkey/public key algorithms - at least one required, these are used
  * for hostkey as well as for verifying signatures with pubkey auth.
@@ -125,26 +141,15 @@ much traffic. */
  * signing operations slightly slower. */
 #define RSA_BLINDING
 
-/* Define DSS_PROTOK to use PuTTY's method of generating the value k for dss,
- * rather than just from the random byte source. Undefining this will save you
- * ~4k in binary size with static uclibc, but your DSS hostkey could be exposed
- * if the random number source isn't good. It happened to Sony. 
- * On systems with a decent random source this isn't required. */
-/* #define DSS_PROTOK */
-
 /* Control the memory/performance/compression tradeoff for zlib.
- * Set windowBits=8, memLevel=1 for least memory usage, see your system's
+ * Set windowBits=8 for least memory usage, see your system's
  * zlib.h for full details.
- * Default settings (windowBits=15, memLevel=8) will use 
- * 256kB for compression + 32kB for decompression.
- * windowBits=8, memLevel=1 will use 10kB compression + 32kB decompression.
- * Note that windowBits is only set for deflate() - inflate() always uses the
- * default of 15 so as to interoperate with other clients. */
+ * Default settings (windowBits=15) will use 256kB for compression
+ * windowBits=8 will use 129kB for compression.
+ * Both modes will use ~35kB for decompression (using windowBits=15 for
+ * interoperability) */
 #ifndef DROPBEAR_ZLIB_WINDOW_BITS
 #define DROPBEAR_ZLIB_WINDOW_BITS 15 
-#endif
-#ifndef DROPBEAR_ZLIB_MEM_LEVEL
-#define DROPBEAR_ZLIB_MEM_LEVEL 8
 #endif
 
 /* Whether to do reverse DNS lookups. */
@@ -162,10 +167,11 @@ much traffic. */
 /* Authentication Types - at least one required.
    RFC Draft requires pubkey auth, and recommends password */
 
-/* Note: PAM auth is quite simple, and only works for PAM modules which just do
+/* Note: PAM auth is quite simple and only works for PAM modules which just do
  * a simple "Login: " "Password: " (you can edit the strings in svr-authpam.c).
- * It's useful for systems like OS X where standard password crypts don't work,
- * but there's an interface via a PAM module - don't bother using it otherwise.
+ * It's useful for systems like OS X where standard password crypts don't work
+ * but there's an interface via a PAM module. It won't work for more complex
+ * PAM challenge/response.
  * You can't enable both PASSWORD and PAM. */
 
 #define ENABLE_SVR_PASSWORD_AUTH
@@ -198,20 +204,14 @@ much traffic. */
  * return the password on standard output */
 /*#define ENABLE_CLI_ASKPASS_HELPER*/
 
-/* Random device to use - define either DROPBEAR_RANDOM_DEV or
- * DROPBEAR_PRNGD_SOCKET.
- * DROPBEAR_RANDOM_DEV is recommended on hosts with a good /dev/(u)random,
- * otherwise use run prngd (or egd if you want), specifying the socket. 
- * The device will be queried for a few dozen bytes of seed a couple of times
- * per session (or more for very long-lived sessions). */
+/* Source for randomness. This must be able to provide hundreds of bytes per SSH
+ * connection without blocking. In addition /dev/random is used for seeding
+ * rsa/dss key generation */
+#define DROPBEAR_URANDOM_DEV "/dev/urandom"
 
-/* We'll use /dev/urandom by default, since /dev/random is too much hassle.
- * If system developers aren't keeping seeds between boots nor getting
- * any entropy from somewhere it's their own fault. */
-#define DROPBEAR_RANDOM_DEV "/dev/urandom"
-
-/* prngd must be manually set up to produce output */
+/* Set this to use PRNGD or EGD instead of /dev/urandom or /dev/random */
 /*#define DROPBEAR_PRNGD_SOCKET "/var/run/dropbear-rng"*/
+
 
 /* Specify the number of clients we will allow to be connected but
  * not yet authenticated. After this limit, connections are rejected */

@@ -4,7 +4,7 @@ DROPBEAR_DIR:=$(shell echo $(DROPBEAR_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\
 DROPBEAR_TARGET_DIR:=$(BT_BUILD_DIR)/dropbear
 
 $(DROPBEAR_DIR)/.source:
-	zcat $(DROPBEAR_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(DROPBEAR_SOURCE) 
 	touch $(DROPBEAR_DIR)/.source
 
 source: $(DROPBEAR_DIR)/.source
