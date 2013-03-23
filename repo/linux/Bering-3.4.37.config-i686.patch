@@ -1,0 +1,19 @@
+*** Bering-3.4.31.config	2013-02-19 18:28:38.580535281 +0100
+--- Bering-3.4.31.config-i686	2013-02-19 18:30:22.164531958 +0100
+***************
+*** 4,10 ****
+  #
+  # CONFIG_64BIT is not set
+  CONFIG_X86_32=y
+! # CONFIG_X86_64 is not set
+  CONFIG_X86=y
+  CONFIG_INSTRUCTION_DECODER=y
+  CONFIG_OUTPUT_FORMAT="elf32-i386"
+--- 4,10 ----
+  #
+  # CONFIG_64BIT is not set
+  CONFIG_X86_32=y
+! # CONFIG_X86_64 is not set 
+  CONFIG_X86=y
+  CONFIG_INSTRUCTION_DECODER=y
+  CONFIG_OUTPUT_FORMAT="elf32-i386"
