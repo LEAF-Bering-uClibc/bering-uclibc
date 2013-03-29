@@ -1,12 +1,10 @@
 # makefile for minicom
 
-MINICOM_DIR:=minicom-2.1
+MINICOM_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(MINICOM_SOURCE) 2>/dev/null )
 MINICOM_TARGET_DIR:=$(BT_BUILD_DIR)/minicom
 
 $(MINICOM_DIR)/.source:
-	zcat $(MINICOM_SOURCE) | tar -xvf -
-	cat $(MINICOM_PATCH) | patch -p1 -d $(MINICOM_DIR)
-	zcat $(BT_TOOLS_DIR)/config.sub.gz >$(MINICOM_DIR)/aux/config.sub
+	$(BT_SETUP_BUILDDIR) -v $(MINICOM_SOURCE)
 	touch $(MINICOM_DIR)/.source
 
 source: $(MINICOM_DIR)/.source
