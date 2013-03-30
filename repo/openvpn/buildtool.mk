@@ -1,5 +1,5 @@
 
-OPENVPN_DIR:=openvpn-2.3.0
+OPENVPN_DIR:=openvpn-2.3.1
 OPENVPN_TARGET_DIR=$(BT_BUILD_DIR)/openvpn
 
 $(OPENVPN_DIR)/.source:
