@@ -16,7 +16,7 @@ unexport CROSS_COMPILE
 	cat $(KERNEL_PATCH2) | patch -d $(LINUX_DIR) -p1
 #	cat $(KERNEL_PATCH3) | patch -d $(LINUX_DIR) -p1
 	cat $(KERNEL_PATCH4) | patch -d $(LINUX_DIR) -p1
-#	cat $(KERNEL_PATCH6) | patch -d $(LINUX_DIR) -p1
+	cat $(KERNEL_PATCH6) | patch -d $(LINUX_DIR) -p1
 #	bzcat $(WIRELESS_REGDB) | tar -xvf -
 #	cp $(WIRELESS_REGDB:.tar.bz2=)/db.txt linux/net/wireless
 	mkdir -p $(BT_TOOLCHAIN_DIR)/usr

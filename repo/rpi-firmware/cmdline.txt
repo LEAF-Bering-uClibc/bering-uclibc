@@ -1,0 +1,1 @@
+dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline LEAFCFG=/dev/mmcblk0p1:vfat init=/linuxrc root=/dev/ram0 rw rootwait reboot=bios
