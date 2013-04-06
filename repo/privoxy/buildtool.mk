@@ -1,8 +1,7 @@
 # makefile for privoxy
 
-PRIVOXY_DIR:=privoxy-3.0.19-stable
+PRIVOXY_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(PRIVOXY_SOURCE) 2>/dev/null )
 PRIVOXY_TARGET_DIR:=$(BT_BUILD_DIR)/privoxy
-
 
 $(PRIVOXY_DIR)/.source:
 	zcat $(PRIVOXY_SOURCE) | tar -xvf -
