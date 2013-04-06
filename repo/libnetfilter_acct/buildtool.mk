@@ -1,6 +1,6 @@
 ## makefile for libnetfilter_acct
 
-LIBNETFILTER_ACCT_DIR:=libnetfilter_acct-1.0.0
+LIBNETFILTER_ACCT_DIR:=libnetfilter_acct-1.0.2
 LIBNETFILTER_ACCT_TARGET_DIR:=$(BT_BUILD_DIR)/libnetfilter_acct
 
 $(LIBNETFILTER_ACCT_DIR)/.source:
