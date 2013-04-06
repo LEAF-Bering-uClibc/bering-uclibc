@@ -1,6 +1,10 @@
-LIBNFNETLINK_DIR:=libnfnetlink-1.0.0
+###################################
+# buildtool setup for libnfnetlink
+###################################
+
+#LIBNFNETLINK_DIR:=libnfnetlink-1.0.1
+LIBNFNETLINK_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LIBNFNETLINK_SOURCE) 2>/dev/null )
 LIBNFNETLINK_TARGET_DIR:=$(BT_BUILD_DIR)/libnfnetlink
-#export CC=$(TARGET_CC)
 
 $(LIBNFNETLINK_DIR)/.source:
 	bzcat $(LIBNFNETLINK_SOURCE) |  tar -xvf -
