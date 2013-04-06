@@ -22,7 +22,15 @@ build:
 	[ -f files.$$i ] && rm -f files.$$i ; \
 	for m in `cat mod.$$i`; do echo $(ESCKEY) "<File>\n\tSource\t\t= lib/modules/__KVER__-$$i/$$m \n\t\
 	Filename\t= lib/modules/$$(echo $$m|sed 's,\([a-z0-9_-]*/\)\+,,')\n\t\
-	Type\t\t= binary\n\t\tPermissions\t= 644\n</File>">>files.$$i; done; \
+	Type\t\t= binary\n\tPermissions\t= 644\n</File>">>files.$$i; done; \
+	for fw in `sed 's,#.*$$,\n,' firmware.common`; do [ -d $(BT_STAGING_DIR)/lib/firmware/$$fw ] && \
+	echo $(ESCKEY) "<File>\n\tSource\t\t= lib/firmware/$$fw/*.bin\n\t\
+	Filename\t= lib/firmware/$$fw/\n\t\
+	Type\t\t= binary\n\tPermissions\t= 644\n</File>">>files.$$i; \
+	[ -f $(BT_STAGING_DIR)/lib/firmware/$$fw ] && \
+	echo $(ESCKEY) "<File>\n\tSource\t\t= lib/firmware/$$fw\n\t\
+	Filename\t= lib/firmware/$$fw\n\t\
+	Type\t\t= binary\n\tPermissions\t= 644\n</File>">>files.$$i; done; \
 	echo $(ESCKEY) "?include <common.$$i>" >>package.cfg; \
 	sed 's,##KARCH##,'"$$i"',g' common.tpl >common.$$i ; \
 	done)

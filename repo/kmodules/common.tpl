@@ -20,11 +20,5 @@
 	</Owner>
 	<Contents>
 		?include <files.##KARCH##>
-		<File>
-			Source		= lib/firmware/e100/*.bin
-			Filename	= lib/firmware/e100/
-			Type		= binary
-			Permissions	= 644
-		</File>
 	</Contents>
 </moddb-##KARCH##>
