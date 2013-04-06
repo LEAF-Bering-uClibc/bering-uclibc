@@ -1,6 +1,6 @@
-## makefile for libnetfilter_conntrack
+# makefile for libnetfilter_conntrack
 
-LIBNETFILTER_CONNTRACK_DIR:=libnetfilter_conntrack-1.0.2
+LIBNETFILTER_CONNTRACK_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LIBNETFILTERCONNTRACK_SOURCE) 2>/dev/null )
 LIBNETFILTER_CONNTRACK_TARGET_DIR:=$(BT_BUILD_DIR)/libnetfilter_conntrack
 
 $(LIBNETFILTER_CONNTRACK_DIR)/.source:
