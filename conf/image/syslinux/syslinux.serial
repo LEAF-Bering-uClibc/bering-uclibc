@@ -2,4 +2,4 @@ SERIAL 0 19200
 DISPLAY syslinux.dpy
 TIMEOUT 0
 APPEND reboot=bios console=ttyS0,19200n8 VERBOSE=1
-DEFAULT {KERNEL} initrd=initrd.lrp,initmod.lrp rw root=/dev/ram0 LEAFCFG={LEAFCFG}
+DEFAULT {KERNEL} initrd=/initrd.lrp,/initmod.lrp rw root=/dev/ram0 LEAFCFG={LEAFCFG}
