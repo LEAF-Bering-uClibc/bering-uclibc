@@ -4,13 +4,11 @@
 #
 #############################################################
 
-
 DMI_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(DMI_SOURCE) 2>/dev/null )
 DMI_TARGET_DIR:=$(BT_BUILD_DIR)/dmidecode
 
 $(DMI_DIR)/.source:
-	zcat $(DMI_SOURCE) | tar -xvf -
-#	cat $(DMI_PATCH1) | patch -p1 -d $(DMI_DIR)
+	$(BT_SETUP_BUILDDIR) -v $(DMI_SOURCE)
 	touch $(DMI_DIR)/.source
 
 source: $(DMI_DIR)/.source
