@@ -19,7 +19,6 @@ CONFFLAGS:= --prefix=/usr \
 	--without-debug \
 	--enable-thread-safe-client
 
-
 $(MYSQL_DIR)/.source:
 	zcat $(MYSQL_SOURCE) | tar -xvf -
 	cat $(MYSQL_PATCH1) | patch -d $(MYSQL_DIR) -p1
@@ -27,13 +26,11 @@ $(MYSQL_DIR)/.source:
 
 source: $(MYSQL_DIR)/.source
 
-
 $(MYSQL_DIR)/.configured: $(MYSQL_DIR)/.source
 #	(cd $(MYSQL_DIR) ; find . -name Makefile.in -o -name aclocal.m4 -delete && \
 #	 autoreconf -i -f && ./configure $(CONFFLAGS) )
 	(cd $(MYSQL_DIR) ; ./configure $(CONFFLAGS) )
 	touch $(MYSQL_DIR)/.configured
-
 
 $(MYSQL_DIR)/.build: $(MYSQL_DIR)/.configured
 	mkdir -p $(MYSQL_TARGET_DIR)
@@ -45,7 +42,6 @@ $(MYSQL_DIR)/.build: $(MYSQL_DIR)/.configured
 	rm -rf $(MYSQL_TARGET_DIR)/usr/share $(MYSQL_TARGET_DIR)/usr/mysql-test
 	cp -a -f $(MYSQL_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(MYSQL_DIR)/.build
-
 
 build: $(MYSQL_DIR)/.build
 
@@ -64,7 +60,6 @@ clean:
 	rm -rf $(BT_STAGING_DIR)/usr/include/mysql
 	rm -f $(MYSQL_DIR)/.build
 	rm -f $(MYSQL_DIR)/.configured
-
 
 srcclean: clean
 	rm -rf $(MYSQL_DIR)
