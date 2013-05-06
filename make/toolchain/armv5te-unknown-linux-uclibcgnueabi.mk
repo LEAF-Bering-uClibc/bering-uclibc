@@ -5,6 +5,8 @@
 ifeq ($(GNU_TARGET_NAME),armv5te-unknown-linux-uclibcgnueabi)
 # Primary kernel architecture
 export ARCH:=arm
+# Arch for includes symlink
+export ARCH_INC:=arm
 # Space-separated list of kernel sub-archs to generate
 export KARCHS:=versatile
 # Arch-specific CFLAGS

@@ -37,7 +37,7 @@ build: 	.configured
 	echo "nothing done here right now, all done by buildenv and kernel package"
 
 headers: .configured
-	ARCH=$(ARCH) $(MAKE) -C linux$(FIRSTKARCH) headers_install INSTALL_HDR_PATH=$(BT_HEADERS_DIR)
+	ARCH=$(ARCH) $(MAKE) -C linux$(FIRSTKARCH) headers_install_all INSTALL_HDR_PATH=$(BT_HEADERS_DIR)
 
 clean:
 	-rm .configured
