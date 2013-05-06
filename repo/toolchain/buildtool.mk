@@ -52,7 +52,13 @@ $(DEPMOD_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) $(DEPMOD_SOURCE)
 	touch $(DEPMOD_DIR)/.source
 
-source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source $(DEPMOD_DIR)/.source
+$(BT_TOOLCHAIN_DIR)/.linux_headers:
+	mkdir -p $(BT_TOOLCHAIN_DIR)/usr/include
+	tar xjf $(HDR_COMMON) -C $(BT_TOOLCHAIN_DIR)/usr/include/
+	tar xjf $(HDR_$(ARCH)) -C $(BT_TOOLCHAIN_DIR)/usr/include/
+	touch $@
+
+source: $(UCLIBC_DIR)/.source $(GCC_DIR)/.source $(BINUTILS_DIR)/.source $(DEPMOD_DIR)/.source $(BT_TOOLCHAIN_DIR)/.linux_headers
 
 ###############################
 
