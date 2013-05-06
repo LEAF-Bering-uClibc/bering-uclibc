@@ -89,7 +89,8 @@ sub _makeCompleteList($) {
                 next;
             } else {
                 $self->debug("$deppack added to required $type list");
-                push @require_list, $deppack;
+                push @require_list, $deppack 
+                    if $self->_hasTarget($type, $deppack);
             }
         }
 
@@ -99,7 +100,8 @@ sub _makeCompleteList($) {
         if ( $self->{'CONFIG'}{'force'} ) {
             $self->debug("force enabled");
             push @require_list, $part
-              unless $self->isInList( $part, @require_list );
+              unless $self->isInList( $part, @require_list ) ||
+                    !$self->_hasTarget($type, $part);
         }
     }
 
@@ -420,6 +422,19 @@ sub _callMake {
     # everything is ok, print it:
     $self->print_ok();
     print "\n";
+}
+
+##############################################################################
+## internal method to check if package has required target
+sub _hasTarget {
+    my $self      = shift;
+    my $target    = shift || confess("no target rule given");
+    my $part      = shift || confess("no part given");
+
+    my $common_targets = $self->{'COMMON_TARGETS'};
+    return (grep { /$target/ } @$common_targets) ||
+	   ($self->{'FILECONF'}->{'source'}->{$part}->{$target}) ||
+	   ($self->{'FILECONF'}->{'package'}->{$part}->{$target});
 }
 
 1;
