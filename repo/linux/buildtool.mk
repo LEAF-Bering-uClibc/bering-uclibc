@@ -28,8 +28,7 @@ unexport CROSS_COMPILE
 	patch -i $(LINUX_CONFIG)-$$i.patch -o $(LINUX_CONFIG)-$$i $(LINUX_CONFIG) && \
 	mkdir -p linux-$$i && cp $(LINUX_CONFIG)-$$i linux-$$i/.config && \
 	ARCH=$(ARCH) $(MAKE) -C $(LINUX_DIR) O=../linux-$$i oldconfig || \
-	exit 1; done;
-	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h)
+	exit 1; done)
 	touch .configured
 
 source: .source
