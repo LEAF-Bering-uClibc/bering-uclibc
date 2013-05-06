@@ -44,6 +44,9 @@ sub make () {
     $self->print_ok();
     print "\n";
 
+    my $make = buildtool::Make::Source->new($self->{'CONFIG'}, $self->{'FILECONF'});
+    $make->make(@dllist);
+
 
     #######################################
     # now call buildFiles for everything here:
