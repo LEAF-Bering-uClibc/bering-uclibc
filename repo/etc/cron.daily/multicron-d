@@ -151,7 +151,7 @@ updatetime () {
 	OK=""
 	[ -f /etc/default/rcS ] && . /etc/default/rcS
 	[ "$GMT" = "-u" ] && GMT="--utc"
-        [ -n "`ps axc | grep [n]tpd`" ]  && hwclock --systohc $GMT && OK=ntpd
+        [ -n "`ps | grep [n]tpd`" ]  && hwclock --systohc $GMT && OK=ntpd
 	if [ "$OK" = "" ]; then
 		logger "Warning ! System time was not updated"
 	else
