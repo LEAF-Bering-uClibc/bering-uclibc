@@ -20,6 +20,8 @@ $(ULOGD_DIR)/.configured: $(ULOGD_DIR)/.source
 	./configure --prefix=/usr --sysconfdir=/etc \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
+	--without-pgsql \
+	--without-dbi \
 	--with-mysql=$(BT_STAGING_DIR)/usr/ )
 	touch $(ULOGD_DIR)/.configured
 
