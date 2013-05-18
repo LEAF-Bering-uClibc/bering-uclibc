@@ -29,6 +29,7 @@ $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
 	--enable-default-err-language=English \
 	--enable-err-languages="English" \
 	--disable-strict-error-checking \
+	--disable-external-acl-helpers \
 	--disable-auth \
 	--enable-removal-policies="lru,heap" \
 	--enable-digest-auth-helpers="password" \
