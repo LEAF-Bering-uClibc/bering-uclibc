@@ -7,6 +7,7 @@ $(SNARF_DIR)/.source:
 	zcat $(SNARF_SOURCE) | tar -xvf -
 	zcat $(SNARF_PATCH1) | patch -d $(SNARF_DIR) -p1
 	cat $(SNARF_PATCH2) | patch -d $(SNARF_DIR) -p1
+	cat $(SNARF_PATCH3) | patch -d $(SNARF_DIR) -p1
 	touch $(SNARF_DIR)/.source
 
 source: $(SNARF_DIR)/.source

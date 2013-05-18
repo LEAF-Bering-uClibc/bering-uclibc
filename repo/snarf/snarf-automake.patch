@@ -1,0 +1,32 @@
+diff -urN snarf-7.0.orig.orig/configure.in snarf-7.0.orig/configure.in
+--- snarf-7.0.orig.orig/configure.in	2000-08-09 02:35:29.000000000 +0200
++++ snarf-7.0.orig/configure.in	2013-05-18 19:48:57.280986932 +0200
+@@ -19,7 +19,6 @@
+ 
+ dnl Checks for programs.
+ AC_PROG_CC
+-AM_C_PROTOTYPES
+ AM_PROG_CC_STDC
+ AC_C_CONST
+ AC_PROG_INSTALL
+diff -urN snarf-7.0.orig.orig/Makefile.am snarf-7.0.orig/Makefile.am
+--- snarf-7.0.orig.orig/Makefile.am	1999-07-28 22:56:39.000000000 +0200
++++ snarf-7.0.orig/Makefile.am	2013-05-18 20:05:13.464938595 +0200
+@@ -1,5 +1,5 @@
+ 
+-AUTOMAKE_OPTIONS = foreign ansi2knr
++AUTOMAKE_OPTIONS = foreign
+ 
+ bin_PROGRAMS = snarf
+ 
+--- snarf-7.0.orig.orig/util.c	2000-08-09 02:12:39.000000000 +0200
++++ snarf-7.0.orig/util.c	2013-05-18 20:29:35.088866250 +0200
+@@ -38,6 +38,8 @@
+ 
+ char output_buf[BUFSIZ];
+ 
++Progress *
++progress_new(void);
+ 
+ #ifndef HAVE_STRERROR
+ 
