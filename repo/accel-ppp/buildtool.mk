@@ -5,35 +5,37 @@ ACCEL_TARGET_DIR:=$(BT_BUILD_DIR)/accel-ppp
 
 $(ACCEL_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(ACCEL_SOURCE)
-#	perl -i -p -e 's,#include\s*\<printf.h\>,,' $(ACCEL_DIR)/accel-pppd/ctrl/pppoe/pppoe.c
+	perl -i -p -e 's,#include\s*\<printf.h\>,,' $(ACCEL_DIR)/accel-pppd/ctrl/pppoe/pppoe.c
 #	cat $(PATCH1) | patch -p1 -d $(ACCEL_DIR)
 	touch $@
 
 source: $(ACCEL_DIR)/.source
 
-$(ACCEL_DIR)/.configured: $(ACCEL_DIR)/.source
-	(cd $(ACCEL_DIR); cmake \
+$(ACCEL_DIR)/.kbuild: $(ACCEL_DIR)/.source
+	for i in $(KARCHS); do \
+	    mkdir -p $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/extra && \
+	    KDIR=$(BT_SOURCE_DIR)/linux/linux make -C $(BT_SOURCE_DIR)/linux/linux-$$i M=$(ACCEL_DIR)/drivers/ipoe && \
+	    gzip -9 $(ACCEL_DIR)/drivers/ipoe/ipoe.ko && \
+	    mv -f $(ACCEL_DIR)/drivers/ipoe/ipoe.ko.gz $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/extra && \
+	    depmod -ae -b $(BT_STAGING_DIR) -r -F $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/build/System.map $(BT_KERNEL_RELEASE)-$$i; \
+	done
+
+$(ACCEL_DIR)/.build: $(ACCEL_DIR)/.source
+	mkdir -p $(ACCEL_TARGET_DIR)/etc/init.d
+
+	(cd $(ACCEL_DIR); rm -rf CMakeFiles; cmake \
 	    -DCMAKE_C_COMPILER=$(CROSS_COMPILE)gcc \
-	    -DCMAKE_CXX_COMPILER=$(CROSS_COMPILE)g++ \
 	    -DCMAKE_FIND_ROOT_PATH="$(BT_TOOLCHAIN_DIR) $(BT_STAGING_DIR)" \
 	    -DCMAKE_SYSTEM_NAME=Linux \
-	    -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
-	    -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
-	    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
-	    -DKDIR=$(BT_SOURCE_DIR)/linux/linux \
 	    -DCMAKE_BUILD_TYPE=Release \
 	    -DLOG_FILE=FALSE \
 	    -DSHAPER=TRUE \
 	    -DRADIUS=TRUE \
 	    -DNETSNMP=TRUE \
 	    -DCMAKE_INSTALL_PREFIX=/usr \
+	    -DLIB_SUFFIX="" \
 	    .)
-	touch $@
-
-$(ACCEL_DIR)/.build: $(ACCEL_DIR)/.configured
-	mkdir -p $(ACCEL_TARGET_DIR)/etc/init.d
-
-	$(MAKE) -C $(ACCEL_DIR)
+	$(MAKE) $(MAKEOPTS) -C $(ACCEL_DIR)
 	$(MAKE) -C $(ACCEL_DIR) install DESTDIR=$(ACCEL_TARGET_DIR)
 	cp -aL accel-ppp.conf $(ACCEL_TARGET_DIR)/etc
 	cp -aL accel-ppp.init $(ACCEL_TARGET_DIR)/etc/init.d/accel-ppp
@@ -44,7 +46,9 @@ $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.configured
 	cp -a $(ACCEL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(ACCEL_DIR)/.build
 
-build: $(ACCEL_DIR)/.build
+build: $(ACCEL_DIR)/.build $(ACCEL_DIR)/.kbuild
+
+kbuild: $(ACCEL_DIR)/.kbuild
 
 clean:
 	rm -rf $(ACCEL_TARGET_DIR)
