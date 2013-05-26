@@ -1,6 +1,6 @@
 # makefile for pmacctd
 
-PMACCTD_DIR:=pmacct-0.14.0
+PMACCTD_DIR:=pmacct-0.14.3
 PMACCTD_TARGET_DIR:=$(BT_BUILD_DIR)/pmacctd
 
 $(PMACCTD_DIR)/.source:
@@ -16,7 +16,8 @@ $(PMACCTD_DIR)/.configured: $(PMACCTD_DIR)/.source
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
 	--enable-ipv6 \
-	--enable-threads \
+	--disable-64bit \
+	--enable-ulog \
 	--with-pcap-includes=$(BT_STAGING_DIR)/usr/include/ )
 	touch $(PMACCTD_DIR)/.configured
 
