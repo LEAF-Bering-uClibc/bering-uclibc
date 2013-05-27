@@ -8,6 +8,8 @@
 ISCSI_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(ISCSI_SOURCE) 2>/dev/null )
 ISCSI_TARGET_DIR:=$(BT_BUILD_DIR)/iscsi
 
+export CC=$(TARGET_CC)
+
 source:
 	-rm -rf $(ISCSI_DIR)
 	zcat $(ISCSI_SOURCE) | tar -xvf -
@@ -24,11 +26,11 @@ build:
 	mkdir -p $(ISCSI_TARGET_DIR)/usr/sbin
 	mkdir -p $(ISCSI_TARGET_DIR)/etc/init.d
 	mkdir -p $(ISCSI_TARGET_DIR)/etc/modules.d
-	$(MAKE) $(MAKEOPTS) -C $(ISCSI_DIR) CC=$(TARGET_CC) usr
+	$(MAKE) $(MAKEOPTS) -C $(ISCSI_DIR) usr
 	(for i in $(KARCHS); do \
 	mkdir -p $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/iscsi && \
-	$(MAKE) $(MAKEOPTS) KSRC=$(BT_LINUX_DIR)-$$i -C $(ISCSI_DIR) CC=$(TARGET_CC) unpatch && \
-	$(MAKE) $(MAKEOPTS) KSRC=$(BT_LINUX_DIR)-$$i -C $(ISCSI_DIR) CC=$(TARGET_CC) kernel && \
+	$(MAKE) $(MAKEOPTS) KSRC=$(BT_LINUX_DIR)-$$i -C $(ISCSI_DIR) unpatch && \
+	$(MAKE) $(MAKEOPTS) KSRC=$(BT_LINUX_DIR)-$$i -C $(ISCSI_DIR) kernel && \
 	gzip -9 $(ISCSI_DIR)/kernel/iscsi_trgt.ko && \
 	cp -a $(ISCSI_DIR)/kernel/iscsi_trgt.ko.gz $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/iscsi && \
 	rm -f $(ISCSI_DIR)/kernel/iscsi_trgt.ko.gz && \
