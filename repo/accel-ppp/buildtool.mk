@@ -32,12 +32,13 @@ $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.source
 	    -DSHAPER=TRUE \
 	    -DRADIUS=TRUE \
 	    -DNETSNMP=TRUE \
+	    -DLUA=TRUE \
 	    -DCMAKE_INSTALL_PREFIX=/usr \
 	    -DLIB_SUFFIX="" \
 	    .)
 	$(MAKE) $(MAKEOPTS) -C $(ACCEL_DIR)
 	$(MAKE) -C $(ACCEL_DIR) install DESTDIR=$(ACCEL_TARGET_DIR)
-	cp -aL accel-ppp.conf $(ACCEL_TARGET_DIR)/etc
+	cp -aL accel-ppp.conf accel-ppp.lua $(ACCEL_TARGET_DIR)/etc
 	cp -aL accel-ppp.init $(ACCEL_TARGET_DIR)/etc/init.d/accel-ppp
 	cp -aL dictionary.abills $(ACCEL_TARGET_DIR)/usr/share/accel-ppp/radius
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ACCEL_TARGET_DIR)/usr/sbin/*
