@@ -19,6 +19,7 @@ $(ACCEL_DIR)/.kbuild: $(ACCEL_DIR)/.source
 	    mv -f $(ACCEL_DIR)/drivers/ipoe/ipoe.ko.gz $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/kernel/extra && \
 	    depmod -ae -b $(BT_STAGING_DIR) -r -F $(BT_STAGING_DIR)/lib/modules/$(BT_KERNEL_RELEASE)-$$i/build/System.map $(BT_KERNEL_RELEASE)-$$i; \
 	done
+	touch $(ACCEL_DIR)/.kbuild
 
 $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.source
 	mkdir -p $(ACCEL_TARGET_DIR)/etc/init.d
@@ -33,6 +34,8 @@ $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.source
 	    -DRADIUS=TRUE \
 	    -DNETSNMP=TRUE \
 	    -DLUA=TRUE \
+	    -DLUA_INCLUDE_DIR="$(BT_STAGING_DIR)/usr/include" \
+	    -DLUA_LIBRARIES="$(BT_STAGING_DIR)/usr/lib/liblua.a" \
 	    -DCMAKE_INSTALL_PREFIX=/usr \
 	    -DLIB_SUFFIX="" \
 	    .)
