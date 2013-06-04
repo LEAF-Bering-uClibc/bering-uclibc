@@ -130,6 +130,7 @@ for i in `cat /proc/cmdline` ; do
 		*.*=*)	;;	#ignore parameters like foo.bar=123
 		*=*)	eval KCMD_$i ;;
 		*.*)	;;	#ignore parameters like foo.bar
+		*/*)	;;	#ignore parameters like foo/bar
 		*)	eval KCMD_$i=$i ;;
 	esac
 done
