@@ -1,5 +1,4 @@
-
-OPENVPN_DIR:=openvpn-2.3.1
+OPENVPN_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(OPENVPN_SOURCE) 2>/dev/null )
 OPENVPN_TARGET_DIR=$(BT_BUILD_DIR)/openvpn
 
 $(OPENVPN_DIR)/.source:
