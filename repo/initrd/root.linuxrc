@@ -298,8 +298,10 @@ if [ -n "$PKGPATH" ];  then
 				echo "$dev $t" >>$PFX/pkgpath.disks
 				devlist="$dev:+/mnt$devcount:-$t,$devlist"
 				rdevlist="$rdevlist,$dev:+/mnt$devcount:-$t"
-				if [ $devcount -eq 1 ] ; then 
-					echo "${KCMD_initrd%.lrp}">$PFX/packages
+				if [ $devcount -eq 1 ] ; then
+					for i in $(echo "$KCMD_initrd" | sed 's/,/ /g'); do
+						echo $i | sed 's,^.*/,,;s,\.lrp,,' >>$PFX/packages
+					done
 				fi
 				break
 			fi
