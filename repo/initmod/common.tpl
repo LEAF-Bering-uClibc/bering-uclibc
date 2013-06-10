@@ -2,7 +2,7 @@
 	packagetype = initrd
 	packagename = initmod
 
-	Version = 5.0-rc1
+	Version =  __KVER__-##ARCH##
 	Revision = 4
 	License = LEAF-INITRD
 
