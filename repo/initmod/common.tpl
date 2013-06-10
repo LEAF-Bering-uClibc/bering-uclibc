@@ -2,7 +2,7 @@
 	packagetype = initrd
 	packagename = initmod
 
-	Version = 5.0-prealpha
+	Version = 5.0-rc1
 	Revision = 4
 	License = LEAF-INITRD
 
