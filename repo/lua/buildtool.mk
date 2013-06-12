@@ -14,8 +14,8 @@ $(LUA_DIR)/.source:
 $(LUA_DIR)/.build: $(LUA_DIR)/.source
 	mkdir -p $(LUA_TARGET_DIR)
 	$(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) AR="$(TARGET_AR) rcu " \
-	 RANLIB=$(TARGET_RANLIB) MYLIBS="-lncurses" MYCFLAGS="$(CFLAGS) -fPIC" MYLDFLAGS="$(LDFLAGS)" \
-	 $(MAKEOPTS) -C $(LUA_DIR) linux
+	 RANLIB=$(TARGET_RANLIB) MYLIBS="-lncurses" CFLAGS="$(CFLAGS) -fPIC" \
+	 MYLDFLAGS="$(LDFLAGS)" $(MAKEOPTS) -C $(LUA_DIR) linux
 	$(MAKE) INSTALL_TOP=$(LUA_TARGET_DIR) $(MAKEOPTS) -C $(LUA_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LUA_TARGET_DIR)/bin/*
 	-rm -rf $(LUA_TARGET_DIR)/share
