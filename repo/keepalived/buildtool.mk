@@ -11,10 +11,12 @@ KEEPALIVED_TARGET_DIR:=$(BT_BUILD_DIR)/keepalived
 
 $(KEEPALIVED_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(KEEPALIVED_SOURCE)
+	cat $(LIBNL3_PATCH)  | patch -d $(KEEPALIVED_DIR) -p1
 	touch $(KEEPALIVED_DIR)/.source
 
 $(KEEPALIVED_DIR)/.configured: $(KEEPALIVED_DIR)/.source
 	(cd $(KEEPALIVED_DIR); rm -rf config.cache; autoreconf -i -f; \
+	CFLAGS="$(CFLAGS) -I$(BT_STAGING_DIR)/usr/include/libnl3" \
 		./configure \
 		--prefix=/usr \
 		--host=$(GNU_TARGET_NAME) \

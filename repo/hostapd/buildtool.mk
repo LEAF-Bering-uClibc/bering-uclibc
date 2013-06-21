@@ -11,6 +11,9 @@ $(HOSTAPD_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(HOSTAPD_SOURCE)
 #	cat $(HOSTAPD_PATCH1) | patch -d $(HOSTAPD_DIR)/hostapd -p1
 	cat $(HOSTAPD_PATCH2) | patch -d $(HOSTAPD_DIR) -p1
+	cp defconfig .config
+	echo "CFLAGS += -I/opt/buildtool-5/staging/i486-unknown-linux-uclibc/usr/include/libnl3/" >> .config
+	echo "CONFIG_LIBNL32=y" >> .config
 	touch $(HOSTAPD_DIR)/.source
 
 $(HOSTAPD_DIR)/.build: $(HOSTAPD_DIR)/.source
@@ -19,8 +22,8 @@ $(HOSTAPD_DIR)/.build: $(HOSTAPD_DIR)/.source
 	-mkdir -p $(HOSTAPD_TARGET_DIR)/etc/hostapd
 	-mkdir -p $(HOSTAPD_TARGET_DIR)/etc/default
 	-mkdir -p $(HOSTAPD_TARGET_DIR)/etc/init.d
-	cp -a .config $(HOSTAPD_DIR)/hostapd
-	make $(MAKEOPTS) CC=$(TARGET_CC) -C $(HOSTAPD_DIR)/hostapd
+	cp -a .config $(HOSTAPD_DIR)/hostapd/
+	make $(MAKEOPTS) CC=$(TARGET_CC) -I$(BT_STAGING_DIR)/usr/include/libnl3/ -C $(HOSTAPD_DIR)/hostapd
 	cp $(HOSTAPD_DIR)/hostapd/hostapd $(HOSTAPD_TARGET_DIR)/usr/sbin/
 	cp $(HOSTAPD_DIR)/hostapd/hostapd_cli $(HOSTAPD_TARGET_DIR)/usr/bin/
 	cp $(HOSTAPD_DIR)/hostapd/hostapd.deny $(HOSTAPD_TARGET_DIR)/etc/hostapd/deny
@@ -44,3 +47,4 @@ clean:
 
 srcclean:
 	rm -rf $(HOSTAPD_DIR)
+	rm -rf .config
