@@ -12,8 +12,9 @@ $(HOSTAPD_DIR)/.source:
 #	cat $(HOSTAPD_PATCH1) | patch -d $(HOSTAPD_DIR)/hostapd -p1
 	cat $(HOSTAPD_PATCH2) | patch -d $(HOSTAPD_DIR) -p1
 	cp defconfig .config
-	echo "CFLAGS += -I/opt/buildtool-5/staging/i486-unknown-linux-uclibc/usr/include/libnl3/" >> .config
+	echo "CFLAGS += -I$(BT_STAGING_DIR)/usr/include/libnl3/" >> .config
 	echo "CONFIG_LIBNL32=y" >> .config
+	sed -i 's:/usr/include/libnl3:$(BT_STAGING_DIR)/usr/include/libnl3:' $(HOSTAPD_DIR)/src/drivers/drivers.mak 
 	touch $(HOSTAPD_DIR)/.source
 
 $(HOSTAPD_DIR)/.build: $(HOSTAPD_DIR)/.source
