@@ -1,10 +1,10 @@
-*** Bering-3.4.41.config	2013-04-27 00:15:28.224063869 +0200
---- Bering-3.4.41.config-versatile	2013-04-27 09:43:19.178973331 +0200
+*** Bering-3.4.51.config	2013-06-29 14:56:40.673463588 +0200
+--- Bering-3.4.51.config-versatile	2013-06-29 15:01:16.949475958 +0200
 ***************
 *** 1,53 ****
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/i386 3.4.37 Kernel Configuration
+! # Linux/i386 3.4.51 Kernel Configuration
   #
 ! # CONFIG_64BIT is not set
 ! CONFIG_X86_32=y
@@ -58,7 +58,7 @@
 --- 1,29 ----
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/arm 3.4.41 Kernel Configuration
+! # Linux/arm 3.4.51 Kernel Configuration
   #
 ! CONFIG_ARM=y
 ! CONFIG_MIGHT_HAVE_PCI=y
@@ -1999,7 +1999,7 @@
   # CONFIG_ATH9K_AHB is not set
 - # CONFIG_ATH9K_DEBUGFS is not set
   # CONFIG_ATH9K_DFS_CERTIFIED is not set
-  CONFIG_ATH9K_RATE_CONTROL=y
+  # CONFIG_ATH9K_LEGACY_RATE_CONTROL is not set
   CONFIG_ATH9K_HTC=m
 - # CONFIG_ATH9K_HTC_DEBUGFS is not set
   CONFIG_CARL9170=m
@@ -2021,7 +2021,7 @@
   CONFIG_ATH9K_PCI=y
   # CONFIG_ATH9K_AHB is not set
   # CONFIG_ATH9K_DFS_CERTIFIED is not set
-  CONFIG_ATH9K_RATE_CONTROL=y
+  # CONFIG_ATH9K_LEGACY_RATE_CONTROL is not set
   CONFIG_ATH9K_HTC=m
   CONFIG_CARL9170=m
   CONFIG_CARL9170_LEDS=y

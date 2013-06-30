@@ -1,10 +1,10 @@
-*** Bering-3.4.37.config	2013-03-24 14:17:42.813933876 +0100
---- Bering-3.4.37.config-x86_64	2013-03-24 14:33:58.613978311 +0100
+*** Bering-3.4.51.config	2013-06-29 14:56:40.673463588 +0200
+--- Bering-3.4.51.config-x86_64	2013-06-29 15:00:11.425472984 +0200
 ***************
 *** 1,17 ****
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/i386 3.4.37 Kernel Configuration
+! # Linux/i386 3.4.51 Kernel Configuration
   #
 ! # CONFIG_64BIT is not set
 ! CONFIG_X86_32=y
@@ -22,7 +22,7 @@
 --- 1,18 ----
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/x86 3.4.37 Kernel Configuration
+! # Linux/x86_64 3.4.51 Kernel Configuration
   #
 ! CONFIG_64BIT=y
 ! # CONFIG_X86_32 is not set
