@@ -18,5 +18,5 @@ if [ "`cat /tmp/bk.res`" -ne 0 ]; then
 else
     echo `date`": Backup successful" >>/var/log/backup.log
 fi
-kill `ps ax|grep "$STORAGE_MEDIA"|awk '{print $1}'`
-rm /tmp/bk.res 
+kill `ps |grep "$STORAGE_MEDIA"|awk '{print $1}'`
+rm /tmp/bk.res
