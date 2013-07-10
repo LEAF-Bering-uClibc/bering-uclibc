@@ -17,6 +17,7 @@ build:
 	mkdir -p $(ROOT_TARGET_DIR)/var/lib
 	mkdir -p $(ROOT_TARGET_DIR)/var/lib/lrpkg
 	cp -aL edit $(ROOT_TARGET_DIR)/bin
+	cp -aL usbpriv $(ROOT_TARGET_DIR)/sbin
 	cp -aL ticker $(ROOT_TARGET_DIR)/usr/sbin
 	cp -aL savelog $(ROOT_TARGET_DIR)/usr/bin
 	cp -aL getservbyname $(ROOT_TARGET_DIR)/usr/sbin

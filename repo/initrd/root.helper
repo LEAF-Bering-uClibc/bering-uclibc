@@ -11,6 +11,7 @@ mkdir /sys
 mount -nt sysfs sysfs /sys
 [ -d /sys/kernel/debug/ ] && mount -t debugfs debugfs /sys/kernel/debug/
 [ -d /sys/kernel/config/ ] && mount -t configfs configfs /sys/kernel/config/
+[ -d /proc/bus/usb ] && mount usbfs /proc/bus/usb/ -t usbfs
 
 [ "$(cat /sys/block/zram0/size)" -gt 0 ] && swapon -p 100 /dev/zram0
 

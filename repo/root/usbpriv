@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DEV=$(for i in `echo $PHYSDEVPATH | sed 's,.*usb[0-9]\+/\([0-9]\+\)-\([0-9]\+\)/.*,\1 \2,'`; do printf /%.3d $i; done)
+chown $1:$2 /proc/bus/usb$DEV
+chmod $3 /proc/bus/usb$DEV
