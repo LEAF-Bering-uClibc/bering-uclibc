@@ -10,9 +10,8 @@ PCRE_TARGET_DIR:=$(BT_BUILD_DIR)/pcre
 
 CONFFLAGS:= --prefix=/usr --disable-cpp
 
-
 $(PCRE_DIR)/.source:
-	zcat $(PCRE_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(PCRE_SOURCE)
 	touch $(PCRE_DIR)/.source
 
 source: $(PCRE_DIR)/.source
@@ -22,6 +21,7 @@ $(PCRE_DIR)/.configured: $(PCRE_DIR)/.source
 	./configure \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
+	--disable-static \
 	--prefix=/usr )
 	touch $(PCRE_DIR)/.configured
 
