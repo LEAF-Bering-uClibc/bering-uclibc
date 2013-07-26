@@ -4,15 +4,13 @@
 #
 #############################################################
 
-
-ZLIB_DIR=zlib-1.2.7
+ZLIB_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(ZLIB_SOURCE) 2>/dev/null )
 ZLIB_BUILD_DIR=$(BT_BUILD_DIR)/zlib
 
 export CFLAGS += -g -fPIC
 
-
 $(ZLIB_DIR)/.source:
-	zcat $(ZLIB_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(ZLIB_SOURCE)
 	touch $(ZLIB_DIR)/.source
 
 $(ZLIB_DIR)/.configured: $(ZLIB_DIR)/.source
@@ -21,13 +19,11 @@ $(ZLIB_DIR)/.configured: $(ZLIB_DIR)/.source
 		--prefix=/usr );
 	touch $(ZLIB_DIR)/.configured
 
-
 $(ZLIB_DIR)/.build: $(ZLIB_DIR)/.configured
 	mkdir -p $(ZLIB_BUILD_DIR)/usr
 	make $(MAKEOPTS) -C $(ZLIB_DIR) all libz.a;
 	make -C $(ZLIB_DIR) install prefix=$(ZLIB_BUILD_DIR)/usr
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ZLIB_BUILD_DIR)/usr/lib/*
-#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(ZLIB_BUILD_DIR)/usr/lib/pkgconfig/*.pc
 	rm -rf $(ZLIB_BUILD_DIR)/usr/share
 	cp -a $(ZLIB_BUILD_DIR)/* $(BT_STAGING_DIR)
 	touch $(ZLIB_DIR)/.build
