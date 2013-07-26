@@ -9,7 +9,8 @@ E2FSPROGS_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(E2FSPROGS_SOURCE) 2>/dev/null )
 E2FSPROGS_TARGET_DIR:=$(BT_BUILD_DIR)/e2fsprogs
 
 $(E2FSPROGS_DIR)/.source:
-	zcat $(E2FSPROGS_SOURCE) | tar -xvf -
+#	zcat $(E2FSPROGS_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(E2FSPROGS_SOURCE)
 	touch $(E2FSPROGS_DIR)/.source
 
 $(E2FSPROGS_DIR)/.configured: $(E2FSPROGS_DIR)/.source
@@ -20,6 +21,7 @@ $(E2FSPROGS_DIR)/.configured: $(E2FSPROGS_DIR)/.source
 	--disable-debugfs \
 	--disable-imager \
 	--disable-resizer \
+	--disable-defrag \
 	--disable-uuidd \
 	--disable-nls \
 	--disable-tls \
