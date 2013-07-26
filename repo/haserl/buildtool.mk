@@ -4,11 +4,6 @@
 #
 #####################################################
 
-#####################################################
-
-#####################################################
-# Build haserl
-
 SOURCE_DIR:=$(shell basename `tar tzf $(SOURCE_TARBALL) | head -1`)
 HASERL_TARGET_DIR:=$(BT_BUILD_DIR)/haserl
 
@@ -32,7 +27,6 @@ source: .source
 	touch .build
 
 build: .build
-
 
 clean:
 	make -C `cat .source` clean
