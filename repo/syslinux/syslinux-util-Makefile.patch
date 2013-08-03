@@ -1,12 +1,16 @@
-diff -urN syslinux-4.06.orig/utils/Makefile syslinux-4.06/utils/Makefile
---- syslinux-4.06.orig/utils/Makefile	2012-10-23 11:53:17.000000000 +0200
-+++ syslinux-4.06/utils/Makefile	2013-01-07 19:28:21.300193171 +0100
-@@ -21,7 +21,7 @@
- CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
- LDFLAGS  = -O2
+diff -urN syslinux-5.10.orig/utils/Makefile syslinux-5.10/utils/Makefile
+--- syslinux-5.10.orig/utils/Makefile	2013-06-04 14:56:30.000000000 +0200
++++ syslinux-5.10/utils/Makefile	2013-08-03 15:24:21.103163231 +0200
+@@ -18,8 +18,10 @@
+ MAKEDIR = $(topdir)/mk
+ include $(MAKEDIR)/syslinux.mk
  
--C_TARGETS	 = isohybrid gethostip memdiskfind
-+C_TARGETS	 = gethostip memdiskfind
+-CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
+-LDFLAGS  = -O2
++INCLUDES   =  -I$(BT_STAGING_DIR)/usr/include
++
++CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 $(INCLUDES)
++LDFLAGS  = -O2 -L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib 
+ 
+ C_TARGETS	 = isohybrid gethostip memdiskfind
  SCRIPT_TARGETS	 = mkdiskimage
- SCRIPT_TARGETS	+= isohybrid.pl  # about to be obsoleted
- ASIS		 = keytab-lilo lss16toppm md5pass ppmtolss16 sha1pass \
