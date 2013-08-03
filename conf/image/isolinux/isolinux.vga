@@ -37,3 +37,8 @@ LABEL Hardware Test
   MENU CLEAR
   KERNEL hdt.c32
 MENU END
+
+LABEL memtest
+  linux memtest.bin
+
+

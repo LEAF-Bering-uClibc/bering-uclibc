@@ -32,3 +32,12 @@ LABEL Bering-uClibc
   KERNEL {KERNEL} initrd=/initrd.lrp,/initmod.lrp LEAFCFG={LEAFCFG} quiet
   APPEND reboot=bios
 MENU END
+
+LABEL Hardware Test
+  MENU LABEL Hardware Test
+  MENU CLEAR
+  KERNEL hdt.c32
+MENU END
+
+LABEL memtest
+ linux memtest.bin
