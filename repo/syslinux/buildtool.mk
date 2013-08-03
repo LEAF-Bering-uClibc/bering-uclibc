@@ -8,7 +8,6 @@ SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
 $(SYSLINUX_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(SYSLINUX_SOURCE)
 	cat $(SYSLINUX_PATCH1) | patch -d $(SYSLINUX_DIR) -p1 
-	sed -i 's:INCLUDES = -I. -I.. -I../libinstaller:INCLUDES = -I. -I.. -I../libinstaller -I$(BT_STAGING_DIR)/usr/include :' $(SYSLINUX_DIR)/extlinux/Makefile 
 	touch $(SYSLINUX_DIR)/.source
 
 $(SYSLINUX_DIR)/.build: $(SYSLINUX_DIR)/.source
@@ -23,14 +22,7 @@ $(SYSLINUX_DIR)/.build: $(SYSLINUX_DIR)/.source
 	cp -a $(SYSLINUX_DIR)/mbr/mbr.bin $(SYSLINUX_TARGET_DIR)/usr/share/syslinux/
 	cp -a $(SYSLINUX_DIR)/com32/menu/vesamenu.c32 $(SYSLINUX_TARGET_DIR)/com32
 	cp -a $(SYSLINUX_DIR)/com32/menu/menu.c32 $(SYSLINUX_TARGET_DIR)/com32
-
 	cp -a $(SYSLINUX_DIR)/com32/hdt/hdt.c32 $(SYSLINUX_TARGET_DIR)/com32
-	cp -a $(SYSLINUX_DIR)/com32/elflink/ldlinux/ldlinux.c32 $(SYSLINUX_TARGET_DIR)/com32
-	cp -a $(SYSLINUX_DIR)/com32/lib/libcom32.c32 $(SYSLINUX_TARGET_DIR)/com32
-	cp -a $(SYSLINUX_DIR)/com32/libutil/libutil.c32 $(SYSLINUX_TARGET_DIR)/com32
-	cp -a $(SYSLINUX_DIR)/com32/cmenu/libmenu/libmenu.c32 $(SYSLINUX_TARGET_DIR)/com32
-	cp -a $(SYSLINUX_DIR)/com32/gpllib/libgpl.c32 $(SYSLINUX_TARGET_DIR)/com32
-
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SYSLINUX_TARGET_DIR)/usr/bin/*
 	cp -a $(SYSLINUX_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(SYSLINUX_DIR)/.build
