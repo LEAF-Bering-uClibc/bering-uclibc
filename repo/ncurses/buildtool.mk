@@ -58,7 +58,7 @@ clean:
 	-rm -r $(NCURSES_BUILD_DIR)
 	-make -C $(NCURSES_DIR) clean
 
-srcclean:
+srcclean: clean
 	rm -rf $(NCURSES_DIR)
 
 
