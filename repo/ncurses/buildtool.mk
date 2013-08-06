@@ -5,7 +5,7 @@
 #############################################################
 
 
-NCURSES_DIR=ncurses-5.5
+NCURSES_DIR=ncurses-5.9
 NCURSES_BUILD_DIR=$(BT_BUILD_DIR)/ncurses
 
 $(NCURSES_DIR)/.source:
@@ -21,9 +21,12 @@ $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 		--with-shared \
 		--mandir='$${datadir}/man' \
 		--without-profile \
+		--without-tests \
 		--without-xterm-new \
 		--without-debug \
+		--without-manpages \
 		--disable-rpath \
+		--disable-rpath-hack \
 		--enable-echo \
 		--enable-const \
 		--disable-big-core \
@@ -31,6 +34,7 @@ $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 		--without-libtool \
 		--disable-termcap \
 		--with-terminfo-dirs="/etc/terminfo:/usr/share/terminfo" \
+		--without-cxx \
 		--without-cxx-binding \
 		--enable-overwrite;)
 	touch $(NCURSES_DIR)/.configured
