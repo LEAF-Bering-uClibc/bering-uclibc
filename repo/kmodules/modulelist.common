@@ -3,6 +3,7 @@ softdog
 pppoe pptp l2tp_.* ppp_.*
 e100 e1000 r8169 skge sky2 8139too via-rhine
 sha1_generic arc4 ecb
+usbhid
 # string matchers
 ts_.*
 # shaper-related modules
