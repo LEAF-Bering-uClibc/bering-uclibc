@@ -1,10 +1,10 @@
 #############################################################
-#
-# $Id:
-#
+# makefile for gettext
 #############################################################
 
-DIR:=gettext-0.18.1.1
+#DIR:=gettext-0.18.3.1
+DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null)
+
 TARGET_DIR:=$(BT_BUILD_DIR)/gettext
 export CC=$(TARGET_CC)
 PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
