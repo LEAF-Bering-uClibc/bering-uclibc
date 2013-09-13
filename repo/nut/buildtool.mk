@@ -4,13 +4,13 @@
 #
 #############################################################
 
-NUT_DIR:=nut-2.6.2
+NUT_DIR:=nut-2.6.5
 NUT_TARGET_DIR:=$(BT_BUILD_DIR)/nut
 
+export LDFLAGS += $(EXTCCLDFLAGS)
 
 .source:
 	zcat $(SOURCE) |  tar -xvf -
-#	cat $(PATCH1) | patch -d $(NUT_DIR) -p1
 	cat $(PATCH2) | patch -d $(NUT_DIR) -p1
 	touch .source
 #	cp $(MKFILE) $(NUT_DIR)/Makefile
@@ -18,7 +18,7 @@ NUT_TARGET_DIR:=$(BT_BUILD_DIR)/nut
 source: .source
 # LIBC_INCLUDE=$(BT_STAGING_DIR)/usr/include
 $(NUT_DIR)/Makefile: .source
-	(cd $(NUT_DIR) ; PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib LIBS=-lm \
+	(cd $(NUT_DIR) ;  PKG_CONFIG_LIBDIR=$(BT_STAGING_DIR)/usr/lib LIBS=-lm \
 	KERNEL_INCLUDE=$(BT_LINUX_DIR)/include \
 	./configure --prefix=/usr \
 	--host=$(GNU_TARGET_NAME) \
@@ -43,10 +43,13 @@ $(NUT_DIR)/Makefile: .source
 build: $(NUT_DIR)/Makefile
 	mkdir -p $(NUT_TARGET_DIR)
 	mkdir -p $(NUT_TARGET_DIR)/etc/
+	$(MAKE) $(MAKEOPTS) -C $(NUT_DIR)
+# are these commands needed
 	$(MAKE) $(MAKEOPTS) -C $(NUT_DIR)/common
 	$(MAKE) $(MAKEOPTS) -C $(NUT_DIR)/clients
 	$(MAKE) $(MAKEOPTS) -C $(NUT_DIR)/server
 	$(MAKE) $(MAKEOPTS) -C $(NUT_DIR)/drivers
+#
 	$(MAKE) DESTDIR=$(NUT_TARGET_DIR) -C $(NUT_DIR)/common install
 	$(MAKE) DESTDIR=$(NUT_TARGET_DIR) -C $(NUT_DIR)/clients install
 	$(MAKE) DESTDIR=$(NUT_TARGET_DIR) -C $(NUT_DIR)/server install
