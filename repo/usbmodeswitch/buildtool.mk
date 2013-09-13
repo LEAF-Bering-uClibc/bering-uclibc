@@ -3,7 +3,7 @@
 include $(MASTERMAKEFILE)
 ################################
 
-USBMODESWITCH_DIR:=usb-modeswitch-1.2.6
+USBMODESWITCH_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(USBMODESWITCH_SOURCE) 2>/dev/null )
 USBMODESWITCH_TARGET_DIR:=$(BT_BUILD_DIR)/usbmodeswitch
 
 $(USBMODESWITCH_DIR)/.source:

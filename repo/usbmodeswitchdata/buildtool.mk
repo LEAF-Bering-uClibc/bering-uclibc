@@ -4,7 +4,7 @@
 #
 #################################
 
-USBMODESWITCHDATA_DIR:=usb-modeswitch-data-20130610
+USBMODESWITCHDATA_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(USBMODESWITCHDATA_SOURCE) 2>/dev/null )
 USBMODESWITCHDATA_TARGET_DIR:=$(BT_BUILD_DIR)/usbmodeswitchdata
 
 $(USBMODESWITCHDATA_DIR)/.source:
