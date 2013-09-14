@@ -8,6 +8,7 @@ SYSLINUX_TARGET_DIR:=$(BT_BUILD_DIR)/syslinux
 $(SYSLINUX_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(SYSLINUX_SOURCE)
 	cat $(SYSLINUX_PATCH1) | patch -d $(SYSLINUX_DIR) -p1 
+#	sed -i 's:INCLUDES = -I. -I.. -I../libinstaller:INCLUDES = -I. -I.. -I../libinstaller -I$(BT_STAGING_DIR)/usr/include :' $(SYSLINUX_DIR)/extlinux/Makefile 
 	touch $(SYSLINUX_DIR)/.source
 
 $(SYSLINUX_DIR)/.build: $(SYSLINUX_DIR)/.source
