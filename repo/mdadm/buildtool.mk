@@ -1,11 +1,12 @@
 # makefile for mdadm
 
-MDADM_DIR:=mdadm-3.2.2
+MDADM_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(MDADM_SOURCE) 2>/dev/null )
+#MDADM_DIR:=mdadm-3.2.2
 MDADM_TARGET_DIR:=$(BT_BUILD_DIR)/mdadm
 
 $(MDADM_DIR)/.source:
-	zcat $(MDADM_SOURCE) | tar -xvf -
-#	cat $(MDADM_PATCH1) | patch -d $(MDADM_DIR) -p1
+#	zcat $(MDADM_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(MDADM_SOURCE)
 	touch $(MDADM_DIR)/.source
 
 source: $(MDADM_DIR)/.source
