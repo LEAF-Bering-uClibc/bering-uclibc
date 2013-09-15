@@ -26,6 +26,8 @@ $(UTIL_LINUX_DIR)/.configured: $(UTIL_LINUX_DIR)/.source
 $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 	mkdir -p $(UTIL_LINUX_TARGET_DIR)/sbin
 	mkdir -p $(UTIL_LINUX_TARGET_DIR)/lib
+	mkdir -p $(UTIL_LINUX_TARGET_DIR)/usr/include/uuid
+
 	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/fdisk fdisk
 	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/mount losetup
 	$(MAKE) $(MAKEOPTS) -C $(UTIL_LINUX_DIR)/misc-utils blkid findfs
@@ -39,6 +41,7 @@ $(UTIL_LINUX_DIR)/.build: $(UTIL_LINUX_DIR)/.configured
 	cp -a $(UTIL_LINUX_DIR)/shlibs/uuid/src/.libs/libuuid.* $(UTIL_LINUX_TARGET_DIR)/lib/
 	rm -f $(UTIL_LINUX_TARGET_DIR)/lib/libuuid.la
 	cp -a $(UTIL_LINUX_DIR)/shlibs/uuid/src/libuuid.la $(UTIL_LINUX_TARGET_DIR)/lib/
+	cp -a $(UTIL_LINUX_DIR)/shlibs/uuid/src/uuid.h $(UTIL_LINUX_TARGET_DIR)/usr/include/uuid/
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/lib\'," $(UTIL_LINUX_TARGET_DIR)/lib/*.la
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(UTIL_LINUX_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(UTIL_LINUX_TARGET_DIR)/lib/*
