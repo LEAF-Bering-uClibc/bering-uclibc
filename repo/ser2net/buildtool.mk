@@ -1,6 +1,9 @@
+##############################
 # makefile for ser2net
+##############################
 
-SER2NET_DIR:=ser2net-2.3
+#SER2NET_DIR:=ser2net-2.3
+SER2NET_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SER2NET_SOURCE) 2>/dev/null )
 SER2NET_TARGET_DIR:=$(BT_BUILD_DIR)/ser2net
 
 $(SER2NET_DIR)/.source:
