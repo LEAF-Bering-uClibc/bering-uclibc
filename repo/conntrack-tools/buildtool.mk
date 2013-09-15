@@ -1,4 +1,8 @@
-CONNTRACK-TOOLS_DIR:=conntrack-tools-1.0.1
+#########################################
+# makefile for conntrack-tools
+#########################################
+
+CONNTRACK-TOOLS_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(CONNTRACK-TOOLS_SOURCE) 2>/dev/null )
 CONNTRACK-TOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/conntrack-tools
 
 $(CONNTRACK-TOOLS_DIR)/.source:
