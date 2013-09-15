@@ -1,4 +1,6 @@
+###########################################
 # makefile for libnetfilter_conntrack
+###########################################
 
 LIBNETFILTER_CONNTRACK_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LIBNETFILTERCONNTRACK_SOURCE) 2>/dev/null )
 LIBNETFILTER_CONNTRACK_TARGET_DIR:=$(BT_BUILD_DIR)/libnetfilter_conntrack
@@ -21,7 +23,6 @@ $(LIBNETFILTER_CONNTRACK_DIR)/.build: $(LIBNETFILTER_CONNTRACK_DIR)/.configured
 	$(MAKE) DESTDIR=$(LIBNETFILTER_CONNTRACK_TARGET_DIR) -C $(LIBNETFILTER_CONNTRACK_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/lib/libnetfilter_conntrack.so*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/lib/*.la
-#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	cp -a $(LIBNETFILTER_CONNTRACK_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(LIBNETFILTER_CONNTRACK_DIR)/.build
 
