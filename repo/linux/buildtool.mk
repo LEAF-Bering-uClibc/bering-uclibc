@@ -10,7 +10,7 @@ unexport CROSS_COMPILE
 
 .source:
 	$(BT_SETUP_BUILDDIR) -v $(KERNEL_BASE_SOURCE)
-	xzcat $(UPDATE_KERNEL_SOURCE_PATCH) | patch -p1 -s -d $(LINUX_DIR)
+#	xzcat $(UPDATE_KERNEL_SOURCE_PATCH) | patch -p1 -s -d $(LINUX_DIR)
 	ln -s $(LINUX_DIR) linux
 	cat $(KERNEL_PATCH1) | patch -d $(LINUX_DIR)/lib -p0
 	cat $(KERNEL_PATCH2) | patch -d $(LINUX_DIR) -p1
@@ -22,14 +22,16 @@ unexport CROSS_COMPILE
 	mkdir -p $(BT_TOOLCHAIN_DIR)/usr
 	touch .source
 
+#	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
 
 .configured: .source
 	(for i in $(KARCHS); do \
+	echo $$i && \
 	patch -i $(LINUX_CONFIG)-$$i.patch -o $(LINUX_CONFIG)-$$i $(LINUX_CONFIG) && \
 	mkdir -p linux-$$i && cp $(LINUX_CONFIG)-$$i linux-$$i/.config && \
 	ARCH=$(ARCH) $(MAKE) -C $(LINUX_DIR) O=../linux-$$i oldconfig || \
 	exit 1; done ; \
-	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
+	ARCH=$(ARCH) $(MAKE) -C linux-$$i headers_install && \
 	cp -r linux-$$i/usr/include $(BT_TOOLCHAIN_DIR)/usr)
 	touch .configured
 

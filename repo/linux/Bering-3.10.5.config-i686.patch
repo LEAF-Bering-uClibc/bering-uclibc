@@ -1,0 +1,19 @@
+*** Bering-3.10.5.config	2013-09-16 16:54:42.577157563 +0200
+--- Bering-3.10.5.config-i686	2013-09-16 16:56:28.257154179 +0200
+***************
+*** 2,8 ****
+  # Automatically generated file; DO NOT EDIT.
+  # Linux/x86 3.10.0 Kernel Configuration
+  #
+! # CONFIG_64BIT is not set
+  CONFIG_X86_32=y
+  CONFIG_X86=y
+  CONFIG_INSTRUCTION_DECODER=y
+--- 2,8 ----
+  # Automatically generated file; DO NOT EDIT.
+  # Linux/x86 3.10.0 Kernel Configuration
+  #
+! # CONFIG_64BIT is not set 
+  CONFIG_X86_32=y
+  CONFIG_X86=y
+  CONFIG_INSTRUCTION_DECODER=y
