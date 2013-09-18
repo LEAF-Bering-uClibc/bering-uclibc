@@ -22,7 +22,7 @@ $(LIBUSBCOMPAT_DIR)/.build: $(LIBUSBCOMPAT_DIR)/.configured
 	$(MAKE) $(MAKEOPTS) -C $(LIBUSBCOMPAT_DIR)
 	$(MAKE) DESTDIR=$(LIBUSBCOMPAT_TARGET_DIR) -C $(LIBUSBCOMPAT_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBUSBCOMPAT_TARGET_DIR)/usr/lib/*
-	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBUSB_TARGET_DIR)/usr/lib/*.la
+	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBUSBCOMPAT_TARGET_DIR)/usr/lib/*.la
 #	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(LIBUSB_TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	cp -a -f $(LIBUSBCOMPAT_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	touch $(LIBUSBCOMPAT_DIR)/.build
