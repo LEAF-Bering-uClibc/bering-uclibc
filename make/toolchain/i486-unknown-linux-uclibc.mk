@@ -16,6 +16,9 @@ export KERN_IMAGE:=bzImage
 # Name of OpenSSL target
 export OPENSSL_TARGET:=linux-elf
 
+# export maketarget for e3 (32 for 32bit and 64 for 64-bit CPU)
+export E3_MAKETARGET=32
+
 # Primary kernel architecture for U-Boot
 export UBOOT_ARCH:=x86
 export UBOOT_BOARDTYPE:=coreboot-x86

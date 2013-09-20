@@ -14,6 +14,9 @@ export KERN_IMAGE:=zImage
 # Name of OpenSSL target
 export OPENSSL_TARGET:=linux-armv4
 
+# export maketarget for e3 (32 for 32bit and 64 for 64-bit CPU)                                                                 
+export E3_MAKETARGET=64
+
 # Set variables to "prime" the configure scripts' cache for cross-compiling
 # These are toolchain-specific settings - generic settings go above
 # Export vars only if this is not a toolchain building

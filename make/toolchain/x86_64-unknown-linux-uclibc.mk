@@ -18,6 +18,9 @@ export OPENSSL_TARGET:=linux-x86_64
 # Compile a pure 64bits toolchain
 export GCC_PURE64:=yes
 
+# export maketarget for e3 (32 for 32bit and 64 for 64-bit CPU)
+export E3_MAKETARGET:=64
+
 # Set variables to "prime" the configure scripts' cache for cross-compiling
 # These are toolchain-specific settings - generic settings go above
 # Export vars only if this is not a toolchain building
