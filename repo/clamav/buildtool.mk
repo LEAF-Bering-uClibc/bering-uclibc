@@ -6,7 +6,7 @@ export LDFLAGS += $(EXTCCLDFLAGS)
 
 $(CLAMAV_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(CLAMAV_SOURCE)
-	cat $(CLAMAV_PATCH1) | patch -d $(CLAMAV_DIR) -p1
+#	cat $(CLAMAV_PATCH1) | patch -d $(CLAMAV_DIR) -p1
 	touch $(CLAMAV_DIR)/.source
 
 source: $(CLAMAV_DIR)/.source
@@ -19,6 +19,7 @@ $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
 	--sysconfdir=/etc/clamav --prefix=/ \
 	--includedir=/usr/include \
 	--exec-prefix=/usr --libexecdir=/usr/bin \
+	--datarootdir=/var/lib/clamav \
 	--disable-clamav \
 	--disable-clamuko \
 	--disable-dsig \
@@ -47,8 +48,6 @@ $(CLAMAV_DIR)/.build: $(CLAMAV_DIR)/.configured
 	make $(MAKEOPTS) -C $(CLAMAV_DIR) all
 	make -C $(CLAMAV_DIR) DESTDIR=$(CLAMAV_TARGET_DIR) install
 	rm -rf $(CLAMAV_TARGET_DIR)/share/man
-	cp -aL clamd.conf $(CLAMAV_TARGET_DIR)/etc/clamav
-	cp -aL freshclam.conf $(CLAMAV_TARGET_DIR)/etc/clamav
 	cp -aL rc.freshclam $(CLAMAV_TARGET_DIR)/etc/init.d/freshclam
 	cp -aL rc.clamd $(CLAMAV_TARGET_DIR)/etc/init.d/clamd
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(CLAMAV_TARGET_DIR)/usr/lib/*
