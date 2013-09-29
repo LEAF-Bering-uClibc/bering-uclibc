@@ -12,9 +12,16 @@ NFSUTILS_TARGET_DIR:=$(BT_BUILD_DIR)/nfs-utils
 #   Disable tiprc to avoid build failure checking for clnt_tli_create()
 #   Disable uuid to avoid the need for libblkid
 #   Disable gss to avoid the need for libgssglue etc.
+#   Disable nfsv4 to avoid the need for sqlite3
+#   Disable nfsv41 to avoid the need for libdevmapper
+
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
-	--disable-tirpc --disable-uuid --disable-gss
+	--disable-tirpc \
+	--disable-uuid \
+	--disable-gss \
+	--disable-nfsv4 \
+	--disable-nfsv41	
 
 $(NFSUTILS_DIR)/.source:
 	bzcat $(NFSUTILS_SOURCE) | tar -xvf -
@@ -38,7 +45,7 @@ build: $(NFSUTILS_DIR)/.configure
 	$(MAKE) $(MAKEOPTS) -C $(NFSUTILS_DIR)/support
 	$(MAKE) $(MAKEOPTS) -C $(NFSUTILS_DIR)/utils
 	$(MAKE) -C $(NFSUTILS_DIR)/utils DESTDIR=$(NFSUTILS_TARGET_DIR) install
-#
+
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NFSUTILS_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NFSUTILS_TARGET_DIR)/sbin/*
 	cp -aL nfs-utils.default $(NFSUTILS_TARGET_DIR)/etc/default/nfs-utils
