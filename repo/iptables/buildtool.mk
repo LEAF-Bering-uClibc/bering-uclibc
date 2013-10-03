@@ -4,7 +4,7 @@
 #
 #############################################################
 
-IPTABLES_VER=1.4.16.3
+IPTABLES_VER=1.4.20
 IPTABLES_DIR:=iptables-$(IPTABLES_VER)
 IPT_NF_DIR:=ipt_netflow-1.7.1
 IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
@@ -55,7 +55,7 @@ $(IPTABLES_DIR)/.build: $(IPTABLES_DIR)/Makefile
 	cp -a $(IPTABLES_DIR)/include/ip*.h $(IPTABLES_TARGET_DIR)/usr/include
 	cp -a $(IPTABLES_DIR)/include/iptables/*.h $(IPTABLES_TARGET_DIR)/usr/include/iptables
 	cp -a $(IPTABLES_DIR)/include/linux/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/linux/netfilter
-	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
+#	cp -a $(IPTABLES_DIR)/include/net/netfilter/*.h $(IPTABLES_TARGET_DIR)/usr/include/net/netfilter
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(IPTABLES_TARGET_DIR)/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(IPTABLES_TARGET_DIR)/lib/xtables/*
@@ -90,8 +90,12 @@ $(IPT_NF_DIR)/.build: $(IPT_NF_DIR)/configure $(IPTABLES_DIR)/.build
 
 source: $(IPTABLES_DIR)/.source $(IPT_NF_DIR)/.source
 
-build: $(IPTABLES_DIR)/.build $(IPT_NF_DIR)/.build $(IPTABLES_TARGET_DIR)/sbin/iptables
+#build: $(IPTABLES_DIR)/.build $(IPT_NF_DIR)/.build $(IPTABLES_TARGET_DIR)/sbin/iptables
+#	cp -a $(IPTABLES_TARGET_DIR)/* $(BT_STAGING_DIR)
+
+build: $(IPTABLES_DIR)/.build $(IPTABLES_TARGET_DIR)/sbin/iptables
 	cp -a $(IPTABLES_TARGET_DIR)/* $(BT_STAGING_DIR)
+
 
 clean:
 	-rm $(IPTABLES_DIR)/.build
