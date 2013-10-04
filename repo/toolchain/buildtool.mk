@@ -34,6 +34,12 @@ $(UCLIBC_DIR)/.source:
 #	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
 #	cat $(UC_PATCH3) | patch -p1 -d $(UCLIBC_DIR)
 #	cat $(UC_PATCH4) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH5) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH6) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH7) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH8) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH9) | patch -p1 -d $(UCLIBC_DIR)
+	cat $(UC_PATCH10) | patch -p1 -d $(UCLIBC_DIR)
 
 	touch $(UCLIBC_DIR)/.source
 
