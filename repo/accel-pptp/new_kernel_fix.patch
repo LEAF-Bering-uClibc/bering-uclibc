@@ -1,0 +1,24 @@
+diff -ur accel-pptp-0.8.5/pppd_plugin/configure.in accel-pptp-0.8.5.new/pppd_plugin/configure.in
+--- accel-pptp-0.8.5/pppd_plugin/configure.in	2013-10-05 14:11:38.766304269 +0300
++++ accel-pptp-0.8.5.new/pppd_plugin/configure.in	2013-10-05 14:10:46.000000000 +0300
+@@ -17,6 +17,8 @@
+ if test -n "${KDIR}"; then
+     if test -f ${KDIR}/include/linux/version.h; then 
+ 	header=${KDIR}/include
++    elif test -f ${KDIR}/include/generated/uapi/linux/version.h; then 
++	header=${KDIR}/include
+     else
+ 	AC_MSG_RESULT(not found)
+ 	AC_MSG_ERROR(Could not find linux kernel headers)
+diff -ur accel-pptp-0.8.5/pptpd-1.3.3/configure.in accel-pptp-0.8.5.new/pptpd-1.3.3/configure.in
+--- accel-pptp-0.8.5/pptpd-1.3.3/configure.in	2013-10-05 14:11:38.767304232 +0300
++++ accel-pptp-0.8.5.new/pptpd-1.3.3/configure.in	2013-10-05 14:11:05.000000000 +0300
+@@ -175,6 +175,8 @@
+ if test -n "${KDIR}"; then
+ 	if test -f ${KDIR}/include/linux/version.h; then
+ 		header=${KDIR}/include
++	elif test -f ${KDIR}/include/generated/uapi/linux/version.h; then
++		header=${KDIR}/include
+ 	else
+ 		AC_MSG_RESULT(not found)
+ 		AC_MSG_ERROR(Could not find linux kernel headers)

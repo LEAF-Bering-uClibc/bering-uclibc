@@ -9,6 +9,7 @@ export PPPD_VER=2.4.5
 $(PPTP_DIR)/.source:
 	bzcat $(PPTP_SOURCE) | tar -xvf -
 	cat $(PPTP_PATCH1) | patch -p1 -d $(PPTP_DIR)
+	cat $(PPTP_PATCH2) | patch -p1 -d $(PPTP_DIR)
 	touch $(PPTP_DIR)/.source
 
 source: $(PPTP_DIR)/.source
