@@ -5,20 +5,20 @@
 #############################################################
 
 
-ISCSI_DIR:=iscsitarget-1.4.20.2
+ISCSI_DIR:=iscsitarget-code-496-trunk
 ISCSI_TARGET_DIR:=$(BT_BUILD_DIR)/iscsi
 
 source:
 	-rm -rf $(ISCSI_DIR)
 	zcat $(ISCSI_SOURCE) | tar -xvf -
-	cat $(ISCSI_PATCH1) | patch -d $(ISCSI_DIR) -p0
-	cat $(ISCSI_PATCH2) | patch -d $(ISCSI_DIR) -p0
-	cat $(ISCSI_PATCH3) | patch -d $(ISCSI_DIR) -p1
-	cat $(ISCSI_PATCH4) | patch -d $(ISCSI_DIR) -p0
-	cat $(ISCSI_PATCH5) | patch -d $(ISCSI_DIR) -p1
-	cat $(ISCSI_PATCH6) | patch -d $(ISCSI_DIR) -p0
-	cat $(ISCSI_PATCH7) | patch -d $(ISCSI_DIR) -p0
-	cat $(ISCSI_PATCH8) | patch -d $(ISCSI_DIR) -p1
+#	cat $(ISCSI_PATCH1) | patch -d $(ISCSI_DIR) -p0
+#	cat $(ISCSI_PATCH2) | patch -d $(ISCSI_DIR) -p0
+#	cat $(ISCSI_PATCH3) | patch -d $(ISCSI_DIR) -p1
+#	cat $(ISCSI_PATCH4) | patch -d $(ISCSI_DIR) -p0
+#	cat $(ISCSI_PATCH5) | patch -d $(ISCSI_DIR) -p1
+#	cat $(ISCSI_PATCH6) | patch -d $(ISCSI_DIR) -p0
+#	cat $(ISCSI_PATCH7) | patch -d $(ISCSI_DIR) -p0
+#	cat $(ISCSI_PATCH8) | patch -d $(ISCSI_DIR) -p1
 
 build:
 	mkdir -p $(ISCSI_TARGET_DIR)/usr/sbin
