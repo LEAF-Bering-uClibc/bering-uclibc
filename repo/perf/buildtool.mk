@@ -11,7 +11,7 @@ $(DIR)/.build: $(DIR)/.source
 	mkdir -p $(TARGET_DIR)
 	(OUTPUT=$(BT_SOURCE_DIR)/perf/perf/ NO_PERL=1 NO_LIBPERL=1 \
 	NO_LIBPYTHON=1 NO_CURL=1 NO_ICONV=1 NO_DWARF=1 \
-	WERROR=0 EXTRA_CFLAGS="$(CFLAGS)" \
+	WERROR=0 EXTRA_CFLAGS="$(CFLAGS)" CC=$(TARGET_CC) \
 	make DESTDIR=$(TARGET_DIR)/usr -C $(SRCDIR) install)
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	-rm -rf $(TARGET_DIR)/usr/libexec
