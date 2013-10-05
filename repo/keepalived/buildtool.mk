@@ -11,6 +11,7 @@ KEEPALIVED_TARGET_DIR:=$(BT_BUILD_DIR)/keepalived
 
 $(KEEPALIVED_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(KEEPALIVED_SOURCE)
+	cat $(INCLUDES_PATCH) | patch -p1 -d $(KEEPALIVED_DIR)
 	touch $(KEEPALIVED_DIR)/.source
 
 $(KEEPALIVED_DIR)/.configured: $(KEEPALIVED_DIR)/.source

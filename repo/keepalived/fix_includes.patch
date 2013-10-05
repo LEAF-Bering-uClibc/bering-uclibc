@@ -1,0 +1,20 @@
+--- keepalived-1.2.4/configure.in	2012-07-26 17:53:57.000000000 +0300
++++ keepalived-1.2.4/configure.in	2013-10-05 11:59:25.000000000 +0300
+@@ -62,7 +62,7 @@
+   ])
+ 
+ dnl ----[ Kernel version check ]----
+-CPPFLAGS="$CPPFLAGS -I$kernelinc"
++CPPFLAGS="$CPPFLAGS"
+ AC_MSG_CHECKING([for kernel version])
+ AC_TRY_RUN([
+     #include <stdlib.h>
+@@ -172,7 +172,7 @@
+ fi
+ 
+ dnl ----[ Checks for kernel VMAC support ]----
+-CPPFLAGS="$CPPFLAGS -I$kernelinc"
++CPPFLAGS="$CPPFLAGS"
+ AC_MSG_CHECKING([for kernel macvlan support])
+ AC_TRY_COMPILE([
+     #include <bits/sockaddr.h>
