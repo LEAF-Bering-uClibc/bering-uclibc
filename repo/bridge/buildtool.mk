@@ -1,11 +1,11 @@
 # makefile for bridge
 
-BRIDGE-UTILS_DIR:=bridge-utils-1.2
+BRIDGE-UTILS_DIR:=bridge-utils-1.5
 BRIDGE-UTILS_TARGET_DIR:=$(BT_BUILD_DIR)/bridge
 
 $(BRIDGE-UTILS_DIR)/.source:
 	zcat $(BRIDGE-UTILS_SOURCE) | tar -xvf -
-#	zcat $(BRIDGE-UTILS_PATCH1) | patch -d $(BRIDGE-UTILS_DIR) -p1
+	cat $(PATCH1) | patch -d $(BRIDGE-UTILS_DIR) -p1
 	touch $(BRIDGE-UTILS_DIR)/.source
 
 source: $(BRIDGE-UTILS_DIR)/.source
@@ -14,7 +14,7 @@ $(BRIDGE-UTILS_DIR)/.configured: $(BRIDGE-UTILS_DIR)/.source
 	(cd $(BRIDGE-UTILS_DIR) ; autoreconf -i -f ;\
 	./configure --prefix=/usr --host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
-	--with-linux-headers=$(BT_LINUX_DIR)/include )
+	--with-linux-headers=$(BT_TOOLCHAIN_DIR)/include )
 	touch $(BRIDGE-UTILS_DIR)/.configured
 
 $(BRIDGE-UTILS_DIR)/.build: $(BRIDGE-UTILS_DIR)/.configured
