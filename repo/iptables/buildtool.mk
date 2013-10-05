@@ -6,7 +6,7 @@
 
 IPTABLES_VER=1.4.20
 IPTABLES_DIR:=iptables-$(IPTABLES_VER)
-IPT_NF_DIR:=ipt_netflow-1.7.1
+IPT_NF_DIR:=ipt-netflow-1.8
 IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
 
 EXTRA_VARS := BINDIR=/sbin \
@@ -31,6 +31,7 @@ $(IPTABLES_DIR)/.source:
 $(IPT_NF_DIR)/.source:
 	zcat $(IPT_NF_SOURCE) |  tar -xvf -
 	perl -i -p -e 's/gcc/\$$(CC)/' $(IPT_NF_DIR)/Makefile.in
+	cat $(IPT_NF_PATCH1) | patch -l -d $(IPT_NF_DIR) -p1
 	touch $(IPT_NF_DIR)/.source
 
 $(IPTABLES_DIR)/Makefile: $(IPTABLES_DIR)/.source
@@ -90,11 +91,11 @@ $(IPT_NF_DIR)/.build: $(IPT_NF_DIR)/configure $(IPTABLES_DIR)/.build
 
 source: $(IPTABLES_DIR)/.source $(IPT_NF_DIR)/.source
 
-#build: $(IPTABLES_DIR)/.build $(IPT_NF_DIR)/.build $(IPTABLES_TARGET_DIR)/sbin/iptables
-#	cp -a $(IPTABLES_TARGET_DIR)/* $(BT_STAGING_DIR)
-
-build: $(IPTABLES_DIR)/.build $(IPTABLES_TARGET_DIR)/sbin/iptables
+build: $(IPTABLES_DIR)/.build $(IPT_NF_DIR)/.build $(IPTABLES_TARGET_DIR)/sbin/iptables
 	cp -a $(IPTABLES_TARGET_DIR)/* $(BT_STAGING_DIR)
+
+#build: $(IPTABLES_DIR)/.build $(IPTABLES_TARGET_DIR)/sbin/iptables
+#	cp -a $(IPTABLES_TARGET_DIR)/* $(BT_STAGING_DIR)
 
 
 clean:
