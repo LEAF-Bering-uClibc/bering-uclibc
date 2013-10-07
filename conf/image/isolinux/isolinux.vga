@@ -1,4 +1,4 @@
 DISPLAY isolinux.dpy
 TIMEOUT 0
 APPEND reboot=bios KMODULES=floppy,i2c-core
-DEFAULT {KERNEL} initrd=initrd.lrp,initmod.lrp LEAFCFG={LEAFCFG}
+DEFAULT {KERNEL} initrd=/initrd.lrp,/initmod.lrp LEAFCFG={LEAFCFG}
