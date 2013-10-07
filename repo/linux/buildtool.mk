@@ -10,7 +10,7 @@ unexport CROSS_COMPILE
 
 .source:
 	$(BT_SETUP_BUILDDIR) -v $(KERNEL_BASE_SOURCE)
-#	xzcat $(UPDATE_KERNEL_SOURCE_PATCH) | patch -p1 -s -d $(LINUX_DIR)
+	xzcat $(UPDATE_KERNEL_SOURCE_PATCH) | patch -p1 -s -d $(LINUX_DIR)
 	ln -s $(LINUX_DIR) linux
 	cat $(KERNEL_PATCH1) | patch -d $(LINUX_DIR)/lib -p0
 	cat $(KERNEL_PATCH2) | patch -d $(LINUX_DIR) -p1
