@@ -1,10 +1,10 @@
 # makefile for quagga
 
-QUAGGA_DIR:=quagga-0.99.22
+QUAGGA_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(QUAGGA_SOURCE) 2>/dev/null )
 QUAGGA_TARGET_DIR:=$(BT_BUILD_DIR)/quagga
 
 $(QUAGGA_DIR)/.source:
-	zcat $(QUAGGA_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(QUAGGA_SOURCE)
 	touch $(QUAGGA_DIR)/.source
 
 source: $(QUAGGA_DIR)/.source
