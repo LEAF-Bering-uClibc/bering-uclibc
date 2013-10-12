@@ -15,7 +15,6 @@ $(NCURSES_DIR)/.source:
 #	zcat $(NCURSES_PATCH1) | patch -d $(NCURSES_DIR) -p1
 	touch $(NCURSES_DIR)/.source
 
-#		--with-build-libs="$(BT_STAGING_DIR)/lib" \
 $(NCURSES_DIR)/.configured: $(NCURSES_DIR)/.source
 	(cd $(NCURSES_DIR); \
 		DESTDIR=$(NCURSES_BUILD_DIR) \
