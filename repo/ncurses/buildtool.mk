@@ -46,8 +46,6 @@ $(NCURSES_DIR)/.build: $(NCURSES_DIR)/.configured
 	make $(MAKEOPTS) -C $(NCURSES_DIR) all
 	make -C $(NCURSES_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(NCURSES_BUILD_DIR)/usr/lib/*
-	ln -s $(NCURSES_BUILD_DIR)/usr/lib/libncurses.so.5 $(NCURSES_BUILD_DIR)/usr/lib/libtinfo.so.5
-	ln -s $(NCURSES_BUILD_DIR)/usr/lib/libtinfo.so.5 $(NCURSES_BUILD_DIR)/usr/lib/libtinfo.so
 	cp -a $(NCURSES_BUILD_DIR)/* $(BT_STAGING_DIR)
 	touch $(NCURSES_DIR)/.build
 
