@@ -8,7 +8,12 @@ $(LIBNETFILTER_LOG_DIR)/.source:
 	touch $(LIBNETFILTER_LOG_DIR)/.source
 
 $(LIBNETFILTER_LOG_DIR)/.configured: $(LIBNETFILTER_LOG_DIR)/.source
-	(cd $(LIBNETFILTER_LOG_DIR) ; ./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) --prefix=/usr )
+	(cd $(LIBNETFILTER_LOG_DIR) ; \
+	    ./configure \
+	    --host=$(GNU_TARGET_NAME) \
+	    --target=$(GNU_TARGET_NAME) \
+	    --build=$(GNU_BUILD_NAME) \
+	    --prefix=/usr )
 	touch $(LIBNETFILTER_LOG_DIR)/.configured
 
 source: $(LIBNETFILTER_LOG_DIR)/.source
@@ -18,6 +23,8 @@ $(LIBNETFILTER_LOG_DIR)/.build: $(LIBNETFILTER_LOG_DIR)/.configured
 	mkdir -p $(BT_STAGING_DIR)/usr/lib
 	mkdir -p $(BT_STAGING_DIR)/usr/include/libnetfilter_log
 	$(MAKE) -C $(LIBNETFILTER_LOG_DIR)
+	perl -i -p -e "s,-rpath /usr/lib,," $(LIBNETFILTER_LOG_DIR)/src/*.la
+	cp $(LIBNETFILTER_LOG_DIR)/src/.libs/libnetfilter_log_libipulog.so.1.0.0 $(LIBNETFILTER_LOG_DIR)/src/.libs/libnetfilter_log_libipulog.so.1.0.0T
 	$(MAKE) DESTDIR=$(LIBNETFILTER_LOG_TARGET_DIR) -C $(LIBNETFILTER_LOG_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(LIBNETFILTER_LOG_TARGET_DIR)/usr/lib/libnetfilter_log.so*
 	perl -i -p -e "s,^libdir=.*$$,libdir='$(BT_STAGING_DIR)/usr/lib\'," $(LIBNETFILTER_LOG_TARGET_DIR)/usr/lib/*.la
