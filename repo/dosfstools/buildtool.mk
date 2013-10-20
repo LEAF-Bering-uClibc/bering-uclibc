@@ -4,18 +4,18 @@
 #
 #############################################################
 
-DOSFSTOOLS_DIR:=dosfstools-3.0.9
+DOSFSTOOLS_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(DOSFSTOOLS_SOURCE) 2>/dev/null)
 DOSFSTOOLS_TARGET_DIR:=$(BT_BUILD_DIR)/dosfstools
 export CC=$(TARGET_CC)
 
 $(DOSFSTOOLS_DIR)/.source:
-	zcat $(DOSFSTOOLS_SOURCE) |  tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(DOSFSTOOLS_SOURCE)
 	touch $(DOSFSTOOLS_DIR)/.source
 
 $(DOSFSTOOLS_DIR)/.build: $(DOSFSTOOLS_DIR)/.source
 	mkdir -p $(DOSFSTOOLS_TARGET_DIR)
 	export PREFIX=$(DOSFSTOOLS_TARGET_DIR)
-	$(MAKE) $(MAKEOPTS) -C $(DOSFSTOOLS_DIR)
+	$(MAKE) $(MAKEOPTS)  LDFLAGS="-liconv $(LDFLAGS)" -C $(DOSFSTOOLS_DIR)
 	$(MAKE) -C $(DOSFSTOOLS_DIR) install DESTDIR=$(DOSFSTOOLS_TARGET_DIR) PREFIX=/
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DOSFSTOOLS_TARGET_DIR)/sbin/*
 	-rm -rf $(DOSFSTOOLS_TARGET_DIR)/share
