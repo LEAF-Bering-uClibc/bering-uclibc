@@ -6,6 +6,7 @@ PUMP_TARGET_DIR:=$(BT_BUILD_DIR)/pump
 $(PUMP_DIR)/.source:
 	tar xvzf $(PUMP_SOURCE)
 	zcat $(PUMP_PATCH1) | patch -d $(PUMP_DIR) -p1
+	perl -i -p -e 's,-Wl\S+,,g' $(PUMP_DIR)/Makefile
 	touch $(PUMP_DIR)/.source
 
 source: $(PUMP_DIR)/.source
