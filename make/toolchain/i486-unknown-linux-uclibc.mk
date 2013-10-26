@@ -23,6 +23,12 @@ export E3_MAKETARGET=32
 export UBOOT_ARCH:=x86
 export UBOOT_BOARDTYPE:=coreboot-x86
 
+# Default ld flags
+EXTCCLDFLAGS=-Wl,-rpath,$(BT_STAGING_DIR)/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib -Wl,-z,nodeflib
+EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib -z nodeflib
+export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(EXTCCLDFLAGS)
+
+
 # Set variables to "prime" the configure scripts' cache for cross-compiling
 # These are toolchain-specific settings - generic settings go above
 # Export vars only if this is not a toolchain building

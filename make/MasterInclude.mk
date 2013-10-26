@@ -87,12 +87,13 @@ export LANG=en_US
 export CFLAGS=-O2 $(ARCH_CFLAGS) -I$(BT_STAGING_DIR)/usr/include
 export CPPFLAGS=-I$(BT_STAGING_DIR)/usr/include
 
-# Default ld flags
-EXTCCLDFLAGS=-Wl,-rpath,$(BT_STAGING_DIR)/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib -Wl,-z,nodeflib
-EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib -z nodeflib
-export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(EXTCCLDFLAGS)
+# Default ld flags moved to toolchain/*.mk
+#EXTCCLDFLAGS=-Wl,-rpath,$(BT_STAGING_DIR)/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib -Wl,-z,nodeflib
+#EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib -z nodeflib
+#export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib $(EXTCCLDFLAGS)
 
 # Check for linux version
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
 export BT_KERNEL_RELEASE=$(shell $(BT_GET_KERNEL_VERSION) $(BT_LINUX_DIR))
 export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
+
