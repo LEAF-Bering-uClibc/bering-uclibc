@@ -4,7 +4,6 @@
 #
 #############################################################
 
-
 LIBPCAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(LIBPCAP_SOURCE) 2>/dev/null )
 LIBPCAP_TARGET_DIR:=$(BT_BUILD_DIR)/libpcap
 export CC=$(TARGET_CC)
@@ -20,6 +19,7 @@ $(LIBPCAP_DIR)/.configured: $(LIBPCAP_DIR)/.source
 			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			--enable-ipv6 \
+			--without-libnl \
 			--with-pcap=linux \
 			--with-dag=no \
 			--with-septel=no );
