@@ -3,6 +3,8 @@
 PUMP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(PUMP_SOURCE) 2>/dev/null )
 PUMP_TARGET_DIR:=$(BT_BUILD_DIR)/pump
 
+export LDFLAGS += $(EXTCCLDFLAGS)
+
 $(PUMP_DIR)/.source:
 	tar xvzf $(PUMP_SOURCE)
 	zcat $(PUMP_PATCH1) | patch -d $(PUMP_DIR) -p1
