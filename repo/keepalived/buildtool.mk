@@ -4,10 +4,10 @@
 #
 #############################################################
 
-
 KEEPALIVED_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(KEEPALIVED_SOURCE) 2>/dev/null )
 KEEPALIVED_TARGET_DIR:=$(BT_BUILD_DIR)/keepalived
 
+export LDFLAGS += $(EXTCCLDFLAGS)
 
 $(KEEPALIVED_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(KEEPALIVED_SOURCE)
