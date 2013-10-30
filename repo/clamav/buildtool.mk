@@ -6,7 +6,7 @@ export LDFLAGS += $(EXTCCLDFLAGS)
 
 $(CLAMAV_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(CLAMAV_SOURCE)
-#	cat $(CLAMAV_PATCH1) | patch -d $(CLAMAV_DIR) -p1
+	cat $(CLAMAV_PATCH1) | patch -d $(CLAMAV_DIR) -p1
 	touch $(CLAMAV_DIR)/.source
 
 source: $(CLAMAV_DIR)/.source
