@@ -14,8 +14,15 @@ OPENLDAP_TARGET_DIR:=$(BT_BUILD_DIR)/openldap
 #  Explicitly disable Cyrus SASL support
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
-	--prefix=/usr --disable-slapd --without-cyrus-sasl --with-tls=openssl \
-	--with-threads --with-mp=gmp --with-yielding-select=yes
+	--prefix=/usr \
+	--disable-static \
+	--disable-slapd \
+	--without-cyrus-sasl \
+	--with-tls=openssl \
+	--with-threads \
+	--with-mp=gmp \
+	--with-yielding-select=yes
+	
 export CC=$(TARGET_CC)
 export AR=$(TARGET_AR)
 
@@ -36,7 +43,7 @@ build: $(OPENLDAP_DIR)/.configure
 	$(MAKE) $(MAKEOPTS) -C $(OPENLDAP_DIR)
 	$(MAKE) -C $(OPENLDAP_DIR)/include DESTDIR=$(OPENLDAP_TARGET_DIR) install
 	$(MAKE) -C $(OPENLDAP_DIR)/libraries DESTDIR=$(OPENLDAP_TARGET_DIR) install
-#
+
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(OPENLDAP_TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(OPENLDAP_TARGET_DIR)/usr/lib/*.so
 	# Fix libdir path for libtool
@@ -56,4 +63,3 @@ clean:
 
 srcclean: clean
 	rm -rf $(OPENLDAP_DIR)
-
