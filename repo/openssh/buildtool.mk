@@ -4,8 +4,7 @@
 #
 #############################################################
 
-
-OPENSSH_DIR:=openssh-5.8p1
+OPENSSH_DIR:=openssh-6.4p1
 OPENSSH_TARGET_DIR:=$(BT_BUILD_DIR)/openssh
 
 $(OPENSSH_DIR)/.source:
@@ -71,5 +70,3 @@ clean:
 
 srcclean:
 	rm -rf $(OPENSSH_DIR)
-
-
