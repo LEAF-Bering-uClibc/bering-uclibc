@@ -132,15 +132,15 @@ case "$1" in
     init)
 	TEMPFILE=$(mktemp)
 	for iface in $UPDEVS; do
-            echo -n "Init $iface... "
+            echo -n "Init $iface..."
 	    initdev $iface
 	    tctr=1
 	    for i in $NPOOLS; do
-		echo -n "$i "
+		echo -n " $i"
 		addtable $i $iface
 		tctr=$(($tctr+1))
 	    done
-	    echo ", tc: "
+	    echo -n ", tc: "
 	    cat $TEMPFILE | $tc -batch && echo "done." || echo "failed!"
 	    rm $TEMPFILE
 	done;;
