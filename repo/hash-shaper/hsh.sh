@@ -2,7 +2,6 @@
 
 . /etc/hsh.conf
 
-TCRULES=''
 #convert ip to integer
 ip2int() {
     echo $@|$awk 'BEGIN{FS = "[./]"}
@@ -48,11 +47,11 @@ lseq() {
 initdev() {
     echo $UPDEVINIT|sh
     $tc q d root dev $1 2>/dev/null
-    TCRULES="q a root dev $1 handle 1: htb default 2
-	     c a dev $1 parent 1: classid 1:1 htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
-	     c a dev $1 parent 1: classid 1:2 htb rate $URATE ceil $UCEIL $UBURST prio 2 quantum 1514
-	     q a dev $1 parent 1:2 handle 2: sfq perturb 10 quantum 1514
-	     f a dev $1 parent 1: prio 10 protocol ip u32"
+    echo "q a root dev $1 handle 1: htb default 2
+	  c a dev $1 parent 1: classid 1:1 htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
+	  c a dev $1 parent 1: classid 1:2 htb rate $URATE ceil $UCEIL $UBURST prio 2 quantum 1514
+	  q a dev $1 parent 1:2 handle 2: sfq perturb 10 quantum 1514
+	  f a dev $1 parent 1: prio 10 protocol ip u32" >$TEMPFILE
 }
 
 #add rule $1 with addr $2 for table $3 with default speed on device $4
@@ -61,7 +60,7 @@ addrule() {
     ar_id1=$(($RULECOUNT+$ar_id))
     ar_id2=$(($RULECOUNT*2+$ar_id))
     ar_h1=$(printf %x $1)
-    TCRULES="$TCRULES\n c a dev $4 parent 1:1 classid 1:$ar_id htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
+    echo "c a dev $4 parent 1:1 classid 1:$ar_id htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
 	c a dev $4 parent 1:$ar_id classid 1:$ar_id1 htb rate $UHRATE ceil $UCEIL $UBURST prio 2 quantum 1514
 	c a dev $4 parent 1:$ar_id classid 1:$ar_id2 htb rate $UHRATE ceil $UCEIL $UBURST prio 1 quantum 1514
 	q a dev $4 parent 1:$ar_id1 handle $ar_id1: sfq perturb 10 quantum 1514
@@ -71,7 +70,7 @@ addrule() {
 	match ip protocol 6 0xff match u8 0x45 0xff at 0 match u16 0x0000 0xffc0 at 2 \
 	match u8 0x10 0xff at 33 flowid 1:$ar_id2
 	f a dev $4 parent 1: protocol ip prio 3 u32 ht $3:$ar_h1: match ip protocol 1 0xff flowid 1:$ar_id2
-	f a dev $4 parent 1: protocol ip prio 4 u32 ht $3:$ar_h1: match ip src $2 flowid 1:$ar_id1"
+	f a dev $4 parent 1: protocol ip prio 4 u32 ht $3:$ar_h1: match ip src $2 flowid 1:$ar_id1" >>$TEMPFILE
 }
 
 #set speed for rule $1 in table $2 with rate $3 kbit on device $4
@@ -88,11 +87,11 @@ setspeed() {
 #fill table for subnet addr $1, device $2
 addtable() {
     nwidth=$(netwidth $1)
-    TCRULES="$TCRULES\n f a dev $2 parent 1:1 prio 10 handle $tctr: protocol ip u32 divisor $nwidth
-	f a dev $2 parent 1: protocol ip prio 10 u32 ht 800:: \
-        match ip src $(subnet $1) \
-        hashkey mask 0x$(printf %x $(($nwidth-1))) at 12 \
-	link $tctr:"
+    echo "f a dev $2 parent 1:1 prio 10 handle $tctr: protocol ip u32 divisor $nwidth
+	  f a dev $2 parent 1: protocol ip prio 10 u32 ht 800:: \
+	    match ip src $(subnet $1) \
+	    hashkey mask 0x$(printf %x $(($nwidth-1))) at 12 \
+	    link $tctr:" >>$TEMPFILE
     at_t=0
     for at_i in $(lseq $(ip2int $1) $nwidth); do
 	addrule $at_t $(int2ip $at_i) $tctr $2
@@ -131,16 +130,19 @@ RULECOUNT=$(($POOLWIDTH*$NETCOUNT))
 tctr=1
 case "$1" in
     init)
+	TEMPFILE=$(mktemp)
 	for iface in $UPDEVS; do
-            echo -n "Init interface $iface... "
+            echo -n "Init $iface... "
 	    initdev $iface
 	    tctr=1
 	    for i in $NPOOLS; do
-		addtable $i $iface
 		echo -n "$i "
+		addtable $i $iface
 		tctr=$(($tctr+1))
 	    done
-	    echo -e "$TCRULES" | $tc -batch && echo "Done." || echo "Failed."
+	    echo ", tc: "
+	    cat $TEMPFILE | $tc -batch && echo "done." || echo "failed!"
+	    rm $TEMPFILE
 	done;;
     set)
 	for i in $NPOOLS; do
