@@ -1,6 +1,6 @@
 # makefile for ethtool
 
-ETHTOOL_DIR:=ethtool-3.2
+ETHTOOL_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(ETHTOOL_SOURCE) 2>/dev/null )
 ETHTOOL_TARGET_DIR:=$(BT_BUILD_DIR)/ethtool
 
 $(ETHTOOL_DIR)/.source:
