@@ -2,44 +2,41 @@
 
 . /etc/hsh.conf
 
+TCRULES=''
 #convert ip to integer
 ip2int() {
-    echo $@|$sed 's/\(\.\|\/\)/ /g'|$awk '{if ((NF==4)||(NF==5)) {OFMT = "%.0f"; 
-	print $1*2^24+$2*2^16+$3*2^8+$4}}'
+    echo $@|$awk 'BEGIN{FS = "[./]"}
+		       {if ((NF==4)||(NF==5)) {OFMT = "%.0f"; 
+			print $1*256^3+$2*256^2+$3*256+$4}}'
 }
 
 #convert integer to ip
 int2ip() {
-    echo $@|$awk '{if (NF==1) {s1=$1%2^24; s2=$1%2^16; OFMT = "%.0f";\
-    print int($1/2^24)"."int(s1/2^16)"."int(s2/2^8)"."$1%256}}'
+    echo $@|$awk '{if (NF==1) {s1=$1%256^3; s2=$1%256^2; OFMT = "%.0f";
+	print int($1/256^3)"."int(s1/256^2)"."int(s2/256)"."$1%256}}'
 }
 
 #get subnet addr for ip/mask
 subnet() {
-    echo $@|$sed 's/\(\.\|\/\)/ /g'|$awk '{if (NF==5) {ip=$1*2^24+$2*2^16+$3*2^8+$4; \
-    subnet=ip-ip%2^(32-$5); s1=subnet%2^24; s2=subnet%2^16; OFMT = "%.0f";\
-    print int(subnet/2^24)"."int(s1/2^16)"."int(s2/2^8)"."subnet%256"/"$5}}'
+    echo $@|$awk 'BEGIN{FS = "[./]"}{if (NF==5) {ip=$1*256^3+$2*256^2+$3*256+$4;
+	subnet=ip-ip%2^(32-$5); s1=subnet%256^3; s2=subnet%256^2; OFMT = "%.0f";
+	print int(subnet/256^3)"."int(s1/256^2)"."int(s2/256)"."subnet%256"/"$5}}'
 }
 
 #get width of subnet
 netwidth() {
-    echo $@|$sed 's/\(\.\|\/\)/ /g'|$awk '{if (NF==5) {OFMT = "%.0f"; print 2^(32-$5)}}'
+    echo $@|$awk 'BEGIN{FS = "[./]"}{if (NF==5) {OFMT = "%.0f"; print 2^(32-$5)}}'
 }
 
 #get # of 256-byte subnets of network
 subcnt() {
-    echo $@|$sed 's/\(\.\|\/\)/ /g'|$awk '{if (NF==5) {width=2^(32-$5); i=(width%256>0); 
+    echo $@|$awk 'BEGIN{FS = "[./]"}{if (NF==5) {width=2^(32-$5); i=(width%256>0);
 	OFMT = "%.0f"; print int(width/256)+i }}'
 }
 
 #return max of 2 ints
 max() {
     echo $@|$awk '{OFMT = "%.0f"; if (NF==2) {if ($1>$2) {print $1} else {print $2}}}'
-}
-
-#print as hex
-hex() {
-    echo $@|$awk '{if (NF==1) {printf "%x", $1}}'
 }
 
 #sequence from $1 to $1+$2-1
@@ -51,11 +48,11 @@ lseq() {
 initdev() {
     echo $UPDEVINIT|sh
     $tc q d root dev $1 2>/dev/null
-    $tc q a root dev $1 handle 1: htb default 2
-    $tc c a dev $1 parent 1: classid 1:1 htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
-    $tc c a dev $1 parent 1: classid 1:2 htb rate $URATE ceil $UCEIL $UBURST prio 2 quantum 1514
-    $tc q a dev $1 parent 1:2 handle 2: sfq perturb 10 quantum 1514
-    $tc f a dev $1 parent 1: prio 10 protocol ip u32
+    TCRULES="q a root dev $1 handle 1: htb default 2
+	     c a dev $1 parent 1: classid 1:1 htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
+	     c a dev $1 parent 1: classid 1:2 htb rate $URATE ceil $UCEIL $UBURST prio 2 quantum 1514
+	     q a dev $1 parent 1:2 handle 2: sfq perturb 10 quantum 1514
+	     f a dev $1 parent 1: prio 10 protocol ip u32"
 }
 
 #add rule $1 with addr $2 for table $3 with default speed on device $4
@@ -63,21 +60,18 @@ addrule() {
     ar_id=$(($POOLWIDTH*($3+1)+$1))
     ar_id1=$(($RULECOUNT+$ar_id))
     ar_id2=$(($RULECOUNT*2+$ar_id))
-    ar_h1=$(hex $1)
-    $tc c a dev $4 parent 1:1 classid 1:$ar_id htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
-    $tc c a dev $4 parent 1:$ar_id classid 1:$ar_id1 htb rate $UHRATE ceil $UCEIL $UBURST prio 2 quantum 1514
-    $tc c a dev $4 parent 1:$ar_id classid 1:$ar_id2 htb rate $UHRATE ceil $UCEIL $UBURST prio 1 quantum 1514
-    $tc q a dev $4 parent 1:$ar_id1 handle $ar_id1: sfq perturb 10 quantum 1514
-    $tc q a dev $4 parent 1:$ar_id2 handle $ar_id2: sfq perturb 10 quantum 1514
-    $tc f a dev $4 parent 1: protocol ip prio 1 u32 ht $3:$ar_h1: \
-	match ip tos 0x10 0xff flowid 1:$ar_id2
-    $tc f a dev $4 parent 1: protocol ip prio 2 u32 ht $3:$ar_h1: \
+    ar_h1=$(printf %x $1)
+    TCRULES="$TCRULES\n c a dev $4 parent 1:1 classid 1:$ar_id htb rate $URATE ceil $UCEIL $UBURST prio 1 quantum 1514
+	c a dev $4 parent 1:$ar_id classid 1:$ar_id1 htb rate $UHRATE ceil $UCEIL $UBURST prio 2 quantum 1514
+	c a dev $4 parent 1:$ar_id classid 1:$ar_id2 htb rate $UHRATE ceil $UCEIL $UBURST prio 1 quantum 1514
+	q a dev $4 parent 1:$ar_id1 handle $ar_id1: sfq perturb 10 quantum 1514
+	q a dev $4 parent 1:$ar_id2 handle $ar_id2: sfq perturb 10 quantum 1514
+	f a dev $4 parent 1: protocol ip prio 1 u32 ht $3:$ar_h1: match ip tos 0x10 0xff flowid 1:$ar_id2
+	f a dev $4 parent 1: protocol ip prio 2 u32 ht $3:$ar_h1: \
 	match ip protocol 6 0xff match u8 0x45 0xff at 0 match u16 0x0000 0xffc0 at 2 \
 	match u8 0x10 0xff at 33 flowid 1:$ar_id2
-    $tc f a dev $4 parent 1: protocol ip prio 3 u32 ht $3:$ar_h1: \
-	match ip protocol 1 0xff flowid 1:$ar_id2
-    $tc f a dev $4 parent 1: protocol ip prio 4 u32 ht $3:$ar_h1: match ip src $2 \
-	flowid 1:$ar_id1
+	f a dev $4 parent 1: protocol ip prio 3 u32 ht $3:$ar_h1: match ip protocol 1 0xff flowid 1:$ar_id2
+	f a dev $4 parent 1: protocol ip prio 4 u32 ht $3:$ar_h1: match ip src $2 flowid 1:$ar_id1"
 }
 
 #set speed for rule $1 in table $2 with rate $3 kbit on device $4
@@ -94,16 +88,16 @@ setspeed() {
 #fill table for subnet addr $1, device $2
 addtable() {
     nwidth=$(netwidth $1)
-    $tc f a dev $2 parent 1:1 prio 10 handle $tctr: protocol ip u32 divisor $nwidth
-    $tc f a dev $2 parent 1: protocol ip prio 10 u32 ht 800:: \
+    TCRULES="$TCRULES\n f a dev $2 parent 1:1 prio 10 handle $tctr: protocol ip u32 divisor $nwidth
+	f a dev $2 parent 1: protocol ip prio 10 u32 ht 800:: \
         match ip src $(subnet $1) \
-        hashkey mask 0x$(hex $(($nwidth-1))) at 12 \
-	link $tctr:
+        hashkey mask 0x$(printf %x $(($nwidth-1))) at 12 \
+	link $tctr:"
     at_t=0
     for at_i in $(lseq $(ip2int $1) $nwidth); do
 	addrule $at_t $(int2ip $at_i) $tctr $2
 	at_t=$(($at_t+1))
-    done    
+    done
 }
 
 #divide network $1 by subnets
@@ -138,12 +132,15 @@ tctr=1
 case "$1" in
     init)
 	for iface in $UPDEVS; do
+            echo -n "Init interface $iface... "
 	    initdev $iface
 	    tctr=1
 	    for i in $NPOOLS; do
 		addtable $i $iface
+		echo -n "$i "
 		tctr=$(($tctr+1))
 	    done
+	    echo -e "$TCRULES" | $tc -batch && echo "Done." || echo "Failed."
 	done;;
     set)
 	for i in $NPOOLS; do
