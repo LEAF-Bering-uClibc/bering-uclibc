@@ -5,10 +5,10 @@
 #ifndef _OPTIONS_H_
 #define _OPTIONS_H_
 
-/******************************************************************
- * Define compile-time options below - the "#ifndef DROPBEAR_XXX .... #endif"
- * parts are to allow for commandline -DDROPBEAR_XXX options etc.
- ******************************************************************/
+/* Define compile-time options below - the "#ifndef DROPBEAR_XXX .... #endif"
+ * parts are to allow for commandline -DDROPBEAR_XXX options etc. */
+
+/* IMPORTANT: Many options will require "make clean" after changes */
 
 #ifndef DROPBEAR_DEFPORT
 #define DROPBEAR_DEFPORT "22"
@@ -25,6 +25,9 @@
 #endif
 #ifndef RSA_PRIV_FILENAME
 #define RSA_PRIV_FILENAME "/etc/dropbear/dropbear_rsa_host_key"
+#endif
+#ifndef ECDSA_PRIV_FILENAME
+#define ECDSA_PRIV_FILENAME "/etc/dropbear/dropbear_ecdsa_host_key"
 #endif
 
 /* Set NON_INETD_MODE if you require daemon functionality (ie Dropbear listens
@@ -92,8 +95,8 @@ much traffic. */
 #define DROPBEAR_AES256
 /* Compiling in Blowfish will add ~6kB to runtime heap memory usage */
 /*#define DROPBEAR_BLOWFISH*/
-/*#define DROPBEAR_TWOFISH256*/
-/*#define DROPBEAR_TWOFISH128*/
+#define DROPBEAR_TWOFISH256
+#define DROPBEAR_TWOFISH128
 
 /* Enable "Counter Mode" for ciphers. This is more secure than normal
  * CBC mode against certain attacks. This adds around 1kB to binary 
@@ -126,7 +129,7 @@ much traffic. */
 
 /* You can also disable integrity. Don't bother disabling this if you're
  * still using a cipher, it's relatively cheap. If you disable this it's dead
- * simple to run arbitrary commands on the remote host. Beware. */
+ * simple for an attacker to run arbitrary commands on the remote host. Beware. */
 /* #define DROPBEAR_NONE_INTEGRITY */
 
 /* Hostkey/public key algorithms - at least one required, these are used
@@ -135,11 +138,26 @@ much traffic. */
  * SSH2 RFC Draft requires dss, recommends rsa */
 #define DROPBEAR_RSA
 #define DROPBEAR_DSS
+/* ECDSA is significantly faster than RSA or DSS. Compiling in ECC
+ * code (either ECDSA or ECDH) increases binary size - around 30kB
+ * on x86-64 */
+#define DROPBEAR_ECDSA
 
-/* RSA can be vulnerable to timing attacks which use the time required for
- * signing to guess the private key. Blinding avoids this attack, though makes
- * signing operations slightly slower. */
-#define RSA_BLINDING
+/* Generate hostkeys as-needed when the first connection using that key type occurs.
+   This avoids the need to otherwise run "dropbearkey" and avoids some problems
+   with badly seeded /dev/urandom when systems first boot.
+   This also requires a runtime flag "-R". This adds ~4kB to binary size (or hardly 
+   anything if dropbearkey is linked in a "dropbearmulti" binary) */
+#define DROPBEAR_DELAY_HOSTKEY
+
+/* Enable Curve25519 for key exchange. This is another elliptic
+ * curve method with good security properties. Increases binary size
+ * by ~8kB on x86-64 */
+#define DROPBEAR_CURVE25519
+
+/* Enable elliptic curve Diffie Hellman key exchange, see note about
+ * ECDSA above */
+#define DROPBEAR_ECDH
 
 /* Control the memory/performance/compression tradeoff for zlib.
  * Set windowBits=8 for least memory usage, see your system's
@@ -176,7 +194,7 @@ much traffic. */
 
 #define ENABLE_SVR_PASSWORD_AUTH
 /* PAM requires ./configure --enable-pam */
-/*#define ENABLE_SVR_PAM_AUTH*/
+/*#define ENABLE_SVR_PAM_AUTH */
 #define ENABLE_SVR_PUBKEY_AUTH
 
 /* Whether to take public key options in 
@@ -203,6 +221,13 @@ much traffic. */
  * should be run with DISPLAY set and no tty. The program should
  * return the password on standard output */
 /*#define ENABLE_CLI_ASKPASS_HELPER*/
+
+/* Send a real auth request first rather than requesting a list of available methods.
+ * It saves a network round trip at login but prevents immediate login to
+ * accounts with no password, and might be rejected by some strict servers (none
+ * encountered yet) - hence it isn't enabled by default. */
+/* #define CLI_IMMEDIATE_AUTH */
+
 
 /* Source for randomness. This must be able to provide hundreds of bytes per SSH
  * connection without blocking. In addition /dev/random is used for seeding
