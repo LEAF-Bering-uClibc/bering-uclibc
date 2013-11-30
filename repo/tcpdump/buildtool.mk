@@ -4,11 +4,10 @@
 #
 ######################################
 
-
-TCPDUMP_DIR:=tcpdump-4.4.0
+TCPDUMP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(TCPDUMP_SOURCE) 2>/dev/null )
 TCPDUMP_TARGET_DIR:=$(BT_BUILD_DIR)/tcpdump
-export td_cv_buggygetaddrinfo=no
 
+export td_cv_buggygetaddrinfo=no
 
 $(TCPDUMP_DIR)/.source:
 	zcat $(TCPDUMP_SOURCE) | tar -xvf -
