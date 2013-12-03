@@ -1,5 +1,5 @@
 *** Bering-3.10.18.config	2013-10-06 11:14:19.514501705 +0200
---- Bering-3.10.18.config-bcmrpi	2013-12-02 15:14:03.111537758 +0100
+--- Bering-3.10.18.config-bcmrpi	2013-12-03 14:33:58.139362719 +0100
 ***************
 *** 1,43 ****
   #
@@ -997,7 +997,7 @@
 ! # CONFIG_DEPRECATED_PARAM_STRUCT is not set
 ! CONFIG_ZBOOT_ROM_TEXT=0x0
 ! CONFIG_ZBOOT_ROM_BSS=0x0
-! CONFIG_CMDLINE="console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=/dev/mmcblk0p2 rootfstype=vfat rootwait"
+! CONFIG_CMDLINE=""
 ! CONFIG_CMDLINE_FROM_BOOTLOADER=y
 ! # CONFIG_CMDLINE_EXTEND is not set
 ! # CONFIG_CMDLINE_FORCE is not set
