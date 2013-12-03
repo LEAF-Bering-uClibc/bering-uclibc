@@ -1,7 +1,7 @@
-# LEAF
+# LEAF specific
 kernel=linux.img
 initramfs initrd-rpi.lrp 0x00800000
-# LEAF
+# LEAF specific
 
 # uncomment if you get no picture on HDMI for a default "safe" mode
 #hdmi_safe=1
