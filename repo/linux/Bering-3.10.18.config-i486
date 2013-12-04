@@ -1995,7 +1995,7 @@ CONFIG_ZD1211RW=m
 CONFIG_MWIFIEX=m
 CONFIG_MWIFIEX_PCIE=m
 CONFIG_MWIFIEX_USB=m
-CONFIG_RTL8192CU=m
+# CONFIG_RTL8192CU is not set
 
 #
 # Enable WiMAX (Networking options) to see the WiMAX drivers

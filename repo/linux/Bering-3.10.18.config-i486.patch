@@ -1,10 +1,10 @@
-*** Bering-3.10.15.config	2013-10-06 11:14:19.514501705 +0200
---- Bering-3.10.15.config-i486	2013-10-09 20:30:31.746133654 +0200
+*** Bering-3.10.18.config	2013-12-04 14:44:57.055327202 +0100
+--- Bering-3.10.18.config-i486	2013-12-04 13:55:49.203192964 +0100
 ***************
 *** 1,6 ****
   #
   # Automatically generated file; DO NOT EDIT.
-! # Linux/x86 3.10.0 Kernel Configuration
+! # Linux/i386 3.10.18 Kernel Configuration
   #
   # CONFIG_64BIT is not set
   CONFIG_X86_32=y
@@ -641,35 +641,7 @@
   CONFIG_IPW2100_MONITOR=y
   # CONFIG_IPW2100_DEBUG is not set
 ***************
-*** 1971,1985 ****
-  CONFIG_RT2X00_LIB_CRYPTO=y
-  CONFIG_RT2X00_LIB_LEDS=y
-  # CONFIG_RT2X00_DEBUG is not set
-- CONFIG_RTLWIFI=m
-- # CONFIG_RTLWIFI_DEBUG is not set
-- CONFIG_RTL8192CE=m
-- CONFIG_RTL8192SE=m
-- CONFIG_RTL8192DE=m
-- # CONFIG_RTL8723AE is not set
-- # CONFIG_RTL8188EE is not set
-- CONFIG_RTL8192CU=m
-- CONFIG_RTL8192C_COMMON=m
-  CONFIG_WL_TI=y
-  CONFIG_WL1251=m
-  CONFIG_WL12XX=m
---- 1985,1990 ----
-***************
-*** 1990,1995 ****
---- 1995,2001 ----
-  CONFIG_MWIFIEX=m
-  CONFIG_MWIFIEX_PCIE=m
-  CONFIG_MWIFIEX_USB=m
-+ CONFIG_RTL8192CU=m
-  
-  #
-  # Enable WiMAX (Networking options) to see the WiMAX drivers
-***************
-*** 2018,2023 ****
+*** 2010,2015 ****
 --- 2024,2033 ----
   #
   # Active cards
@@ -682,7 +654,7 @@
   # CONFIG_ISDN_DRV_GIGASET is not set
   # CONFIG_HYSDN is not set
 ***************
-*** 2095,2101 ****
+*** 2087,2093 ****
   # CONFIG_INPUT_MPU3050 is not set
   # CONFIG_INPUT_APANEL is not set
   # CONFIG_INPUT_GP2A is not set
@@ -699,7 +671,7 @@
   # CONFIG_INPUT_ATLAS_BTNS is not set
   # CONFIG_INPUT_ATI_REMOTE2 is not set
 ***************
-*** 2118,2124 ****
+*** 2110,2116 ****
   CONFIG_SERIO_I8042=y
   # CONFIG_SERIO_SERPORT is not set
   # CONFIG_SERIO_CT82C710 is not set
@@ -716,7 +688,7 @@
   CONFIG_SERIO_LIBPS2=y
   # CONFIG_SERIO_RAW is not set
 ***************
-*** 2187,2192 ****
+*** 2179,2184 ****
 --- 2197,2203 ----
   CONFIG_HW_RANDOM_GEODE=m
   CONFIG_HW_RANDOM_VIA=m
@@ -726,7 +698,7 @@
   # CONFIG_APPLICOM is not set
   # CONFIG_SONYPI is not set
 ***************
-*** 2199,2206 ****
+*** 2191,2198 ****
   # CONFIG_CARDMAN_4040 is not set
   # CONFIG_IPWIRELESS is not set
   # CONFIG_MWAVE is not set
@@ -746,11 +718,7 @@
   CONFIG_MAX_RAW_DEVS=256
   CONFIG_HPET=y
 ***************
-*** 2209,2228 ****
-  # CONFIG_TCG_TPM is not set
-  # CONFIG_TELCLOCK is not set
-  CONFIG_DEVPORT=y
-  CONFIG_I2C=m
+*** 2206,2221 ****
   CONFIG_I2C_BOARDINFO=y
   CONFIG_I2C_COMPAT=y
   CONFIG_I2C_CHARDEV=m
@@ -767,12 +735,7 @@
   
   #
   # I2C Hardware Bus support
---- 2221,2235 ----
-  # CONFIG_TCG_TPM is not set
-  # CONFIG_TELCLOCK is not set
-  CONFIG_DEVPORT=y
-+ # CONFIG_BRCM_CHAR_DRIVERS is not set
-  CONFIG_I2C=m
+--- 2226,2235 ----
   CONFIG_I2C_BOARDINFO=y
   CONFIG_I2C_COMPAT=y
   CONFIG_I2C_CHARDEV=m
@@ -784,7 +747,7 @@
   #
   # I2C Hardware Bus support
 ***************
-*** 2272,2278 ****
+*** 2265,2271 ****
   #
   # External I2C/SMBus adapter drivers
   #
@@ -801,7 +764,7 @@
   # CONFIG_I2C_PARPORT_LIGHT is not set
   # CONFIG_I2C_TAOS_EVM is not set
 ***************
-*** 2281,2286 ****
+*** 2274,2279 ****
 --- 2288,2297 ----
   #
   # Other I2C/SMBus bus drivers
@@ -814,7 +777,7 @@
   # CONFIG_I2C_STUB is not set
   # CONFIG_I2C_DEBUG_CORE is not set
 ***************
-*** 2424,2433 ****
+*** 2417,2426 ****
   CONFIG_SENSORS_ASC7621=m
   CONFIG_SENSORS_K8TEMP=m
   CONFIG_SENSORS_K10TEMP=m
@@ -837,7 +800,7 @@
   CONFIG_SENSORS_I5K_AMB=m
   CONFIG_SENSORS_F71805F=m
 ***************
-*** 2437,2448 ****
+*** 2430,2441 ****
   CONFIG_SENSORS_G760A=m
   CONFIG_SENSORS_GL518SM=m
   CONFIG_SENSORS_GL520SM=m
@@ -864,7 +827,7 @@
   CONFIG_SENSORS_LM73=m
   CONFIG_SENSORS_LM75=m
 ***************
-*** 2518,2536 ****
+*** 2511,2530 ****
   CONFIG_SENSORS_W83791D=m
   CONFIG_SENSORS_W83792D=m
   CONFIG_SENSORS_W83793=m
@@ -876,6 +839,7 @@
   CONFIG_SENSORS_W83627EHF=m
   CONFIG_SENSORS_APPLESMC=m
 ! CONFIG_SENSORS_MC13783_ADC=m
+  # CONFIG_SENSORS_BCM2835 is not set
   
   #
   # ACPI drivers
@@ -895,7 +859,7 @@
   CONFIG_SENSORS_W83627EHF=m
   CONFIG_SENSORS_APPLESMC=m
 ! # CONFIG_SENSORS_MC13783_ADC is not set
-! # CONFIG_SENSORS_BCM2835 is not set
+  # CONFIG_SENSORS_BCM2835 is not set
   
   #
   # ACPI drivers
@@ -905,17 +869,7 @@
   CONFIG_THERMAL=m
   CONFIG_THERMAL_HWMON=y
 ***************
-*** 2543,2548 ****
---- 2554,2560 ----
-  # CONFIG_CPU_THERMAL is not set
-  # CONFIG_THERMAL_EMULATION is not set
-  # CONFIG_INTEL_POWERCLAMP is not set
-+ # CONFIG_THERMAL_BCM2835 is not set
-  CONFIG_WATCHDOG=y
-  CONFIG_WATCHDOG_CORE=y
-  # CONFIG_WATCHDOG_NOWAYOUT is not set
-***************
-*** 2553,2562 ****
+*** 2548,2557 ****
   CONFIG_SOFT_WATCHDOG=m
   # CONFIG_ACQUIRE_WDT is not set
   CONFIG_ADVANTECH_WDT=m
@@ -938,7 +892,7 @@
   # CONFIG_SBC_FITPC2_WATCHDOG is not set
   # CONFIG_EUROTECH_WDT is not set
 ***************
-*** 2567,2578 ****
+*** 2562,2573 ****
   CONFIG_IE6XX_WDT=m
   CONFIG_ITCO_WDT=m
   CONFIG_ITCO_VENDOR_SUPPORT=y
@@ -966,7 +920,7 @@
   # CONFIG_60XX_WDT is not set
   # CONFIG_SBC8360_WDT is not set
 ***************
-*** 2590,2595 ****
+*** 2585,2590 ****
 --- 2603,2615 ----
   # CONFIG_SBC_EPX_C3_WATCHDOG is not set
   
@@ -982,7 +936,7 @@
   #
   # CONFIG_PCIPCWATCHDOG is not set
 ***************
-*** 2716,2721 ****
+*** 2711,2716 ****
 --- 2736,2742 ----
   CONFIG_VGA_CONSOLE=y
   CONFIG_VGACON_SOFT_SCROLLBACK=y
@@ -992,7 +946,7 @@
   CONFIG_SOUND=m
   CONFIG_SOUND_OSS_CORE=y
 ***************
-*** 2761,2766 ****
+*** 2756,2761 ****
 --- 2782,2821 ----
   # CONFIG_SND_MPU401 is not set
   # CONFIG_SND_PORTMAN2X4 is not set
@@ -1035,7 +989,7 @@
   # CONFIG_SND_AD1889 is not set
   # CONFIG_SND_ALS300 is not set
 ***************
-*** 2849,2858 ****
+*** 2844,2853 ****
   # CONFIG_SND_VX222 is not set
   # CONFIG_SND_YMFPCI is not set
   # CONFIG_SND_USB is not set
@@ -1048,7 +1002,7 @@
   # CONFIG_SND_PDAUDIOCF is not set
 --- 2904,2909 ----
 ***************
-*** 2865,2871 ****
+*** 2860,2866 ****
   #
   CONFIG_HID=m
   CONFIG_HIDRAW=y
@@ -1065,17 +1019,7 @@
   
   #
 ***************
-*** 2988,2993 ****
---- 3039,3045 ----
-  CONFIG_USB_UHCI_HCD=m
-  # CONFIG_USB_SL811_HCD is not set
-  # CONFIG_USB_R8A66597_HCD is not set
-+ # CONFIG_USB_DWCOTG is not set
-  CONFIG_USB_HCD_BCMA=m
-  CONFIG_USB_HCD_SSB=m
-  
-***************
-*** 3008,3014 ****
+*** 3004,3010 ****
   #
   CONFIG_USB_STORAGE=m
   # CONFIG_USB_STORAGE_DEBUG is not set
@@ -1092,7 +1036,7 @@
   CONFIG_USB_STORAGE_FREECOM=m
   CONFIG_USB_STORAGE_ISD200=m
 ***************
-*** 3053,3059 ****
+*** 3049,3055 ****
   CONFIG_USB_SERIAL_IR=m
   CONFIG_USB_SERIAL_EDGEPORT=m
   CONFIG_USB_SERIAL_EDGEPORT_TI=m
@@ -1109,7 +1053,7 @@
   CONFIG_USB_SERIAL_IPW=m
   CONFIG_USB_SERIAL_IUU=m
 ***************
-*** 3074,3080 ****
+*** 3070,3076 ****
   CONFIG_USB_SERIAL_KLSI=m
   CONFIG_USB_SERIAL_KOBIL_SCT=m
   CONFIG_USB_SERIAL_MCT_U232=m
@@ -1126,7 +1070,7 @@
   # CONFIG_USB_SERIAL_MOS7715_PARPORT is not set
   CONFIG_USB_SERIAL_MOS7840=m
 ***************
-*** 3146,3151 ****
+*** 3142,3147 ****
 --- 3198,3205 ----
   # CONFIG_LEDS_LM3530 is not set
   CONFIG_LEDS_LM3533=m
@@ -1137,7 +1081,7 @@
   # CONFIG_LEDS_PCA9532_GPIO is not set
   CONFIG_LEDS_GPIO=m
 ***************
-*** 3209,3219 ****
+*** 3205,3215 ****
   # CONFIG_RTC_DRV_DS1307 is not set
   # CONFIG_RTC_DRV_DS1374 is not set
   # CONFIG_RTC_DRV_DS1672 is not set
@@ -1162,7 +1106,7 @@
   # CONFIG_RTC_DRV_PCF8523 is not set
   # CONFIG_RTC_DRV_PCF8563 is not set
 ***************
-*** 3224,3231 ****
+*** 3220,3227 ****
   # CONFIG_RTC_DRV_FM3130 is not set
   # CONFIG_RTC_DRV_RX8581 is not set
   # CONFIG_RTC_DRV_RX8025 is not set
@@ -1181,7 +1125,24 @@
   #
   # SPI RTC drivers
 ***************
-*** 3364,3370 ****
+*** 3311,3317 ****
+  # CONFIG_ASUS_OLED is not set
+  # CONFIG_PANEL is not set
+  CONFIG_R8187SE=m
+! # CONFIG_RTL8192U is not set
+  CONFIG_RTLLIB=m
+  CONFIG_RTLLIB_CRYPTO_CCMP=m
+  CONFIG_RTLLIB_CRYPTO_TKIP=m
+--- 3369,3375 ----
+  # CONFIG_ASUS_OLED is not set
+  # CONFIG_PANEL is not set
+  CONFIG_R8187SE=m
+! CONFIG_RTL8192U=m
+  CONFIG_RTLLIB=m
+  CONFIG_RTLLIB_CRYPTO_CCMP=m
+  CONFIG_RTLLIB_CRYPTO_TKIP=m
+***************
+*** 3360,3366 ****
   # CONFIG_BPCTL is not set
   # CONFIG_CED1401 is not set
   # CONFIG_DGRP is not set
@@ -1191,7 +1152,7 @@
   
 --- 3418,3423 ----
 ***************
-*** 3404,3410 ****
+*** 3400,3406 ****
   #
   # DEVFREQ Drivers
   #
@@ -1213,7 +1174,7 @@
   # CONFIG_IIO is not set
   # CONFIG_VME_BUS is not set
 ***************
-*** 3705,3711 ****
+*** 3701,3707 ****
   #
   # CONFIG_SPARSE_RCU_POINTER is not set
   # CONFIG_RCU_TORTURE_TEST is not set
@@ -1230,7 +1191,7 @@
   # CONFIG_RCU_TRACE is not set
   # CONFIG_BACKTRACE_SELF_TEST is not set
 ***************
-*** 3737,3743 ****
+*** 3733,3739 ****
   # CONFIG_RBTREE_TEST is not set
   # CONFIG_INTERVAL_TREE_TEST is not set
   # CONFIG_PROVIDE_OHCI1394_DMA_INIT is not set
@@ -1240,7 +1201,7 @@
   # CONFIG_ATOMIC64_SELFTEST is not set
 --- 3795,3800 ----
 ***************
-*** 3746,3752 ****
+*** 3742,3748 ****
   CONFIG_HAVE_ARCH_KGDB=y
   # CONFIG_KGDB is not set
   CONFIG_HAVE_ARCH_KMEMCHECK=y
@@ -1250,7 +1211,7 @@
   # CONFIG_STRICT_DEVMEM is not set
 --- 3803,3808 ----
 ***************
-*** 3814,3824 ****
+*** 3810,3820 ****
   CONFIG_CRYPTO_PCOMP2=y
   CONFIG_CRYPTO_MANAGER=y
   CONFIG_CRYPTO_MANAGER2=y
@@ -1275,7 +1236,7 @@
   CONFIG_CRYPTO_CRYPTD=m
   CONFIG_CRYPTO_AUTHENC=m
 ***************
-*** 3938,3944 ****
+*** 3934,3940 ****
   CONFIG_CRC_T10DIF=m
   CONFIG_CRC_ITU_T=m
   CONFIG_CRC32=y
@@ -1292,7 +1253,7 @@
   # CONFIG_CRC32_SLICEBY4 is not set
   # CONFIG_CRC32_SARWATE is not set
 ***************
-*** 3950,3966 ****
+*** 3946,3962 ****
   CONFIG_ZLIB_DEFLATE=m
   CONFIG_LZO_COMPRESS=y
   CONFIG_LZO_DECOMPRESS=y
@@ -1323,7 +1284,7 @@
   CONFIG_REED_SOLOMON=m
   CONFIG_REED_SOLOMON_ENC8=y
 ***************
-*** 3969,3975 ****
+*** 3965,3971 ****
   CONFIG_TEXTSEARCH_KMP=m
   CONFIG_TEXTSEARCH_BM=m
   CONFIG_TEXTSEARCH_FSM=m
