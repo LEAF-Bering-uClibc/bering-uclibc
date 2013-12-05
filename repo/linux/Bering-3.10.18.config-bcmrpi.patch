@@ -1,4 +1,4 @@
-*** Bering-3.10.18.config	2013-12-04 14:44:57.055327202 +0100
+*** Bering-3.10.18.config	2013-12-05 14:08:37.555162431 +0100
 --- Bering-3.10.18.config-bcmrpi	2013-12-04 07:37:25.270159074 +0100
 ***************
 *** 1,43 ****
@@ -1266,30 +1266,20 @@
 ! CONFIG_NF_CT_NETLINK_TIMEOUT=m
 ! CONFIG_NF_CT_NETLINK_HELPER=m
 ! CONFIG_NETFILTER_NETLINK_QUEUE_CT=y
-  CONFIG_NETFILTER_TPROXY=m
-  CONFIG_NETFILTER_XTABLES=m
-  
---- 623,640 ----
+  CONFIG_NF_NAT=m
+  CONFIG_NF_NAT_NEEDED=y
+  CONFIG_NF_NAT_PROTO_DCCP=m
+--- 623,630 ----
   CONFIG_NF_CONNTRACK_SIP=m
   CONFIG_NF_CONNTRACK_TFTP=m
   CONFIG_NF_CT_NETLINK=m
 ! # CONFIG_NF_CT_NETLINK_TIMEOUT is not set
 ! # CONFIG_NETFILTER_NETLINK_QUEUE_CT is not set
-! CONFIG_NF_NAT=m
-! CONFIG_NF_NAT_NEEDED=y
-! CONFIG_NF_NAT_PROTO_DCCP=m
-! CONFIG_NF_NAT_PROTO_UDPLITE=m
-! CONFIG_NF_NAT_PROTO_SCTP=m
-! CONFIG_NF_NAT_AMANDA=m
-! CONFIG_NF_NAT_FTP=m
-! CONFIG_NF_NAT_IRC=m
-! CONFIG_NF_NAT_SIP=m
-! CONFIG_NF_NAT_TFTP=m
-  CONFIG_NETFILTER_TPROXY=m
-  CONFIG_NETFILTER_XTABLES=m
-  
+  CONFIG_NF_NAT=m
+  CONFIG_NF_NAT_NEEDED=y
+  CONFIG_NF_NAT_PROTO_DCCP=m
 ***************
-*** 760,765 ****
+*** 770,775 ****
 --- 648,654 ----
   #
   # Xtables targets
@@ -1299,22 +1289,7 @@
   CONFIG_NETFILTER_XT_TARGET_CLASSIFY=m
   CONFIG_NETFILTER_XT_TARGET_CONNMARK=m
 ***************
-*** 771,780 ****
---- 660,671 ----
-  CONFIG_NETFILTER_XT_TARGET_LED=m
-  CONFIG_NETFILTER_XT_TARGET_LOG=m
-  CONFIG_NETFILTER_XT_TARGET_MARK=m
-+ CONFIG_NETFILTER_XT_TARGET_NETMAP=m
-  CONFIG_NETFILTER_XT_TARGET_NFLOG=m
-  CONFIG_NETFILTER_XT_TARGET_NFQUEUE=m
-  CONFIG_NETFILTER_XT_TARGET_NOTRACK=m
-  CONFIG_NETFILTER_XT_TARGET_RATEEST=m
-+ CONFIG_NETFILTER_XT_TARGET_REDIRECT=m
-  CONFIG_NETFILTER_XT_TARGET_TEE=m
-  CONFIG_NETFILTER_XT_TARGET_TPROXY=m
-  CONFIG_NETFILTER_XT_TARGET_TRACE=m
-***************
-*** 785,795 ****
+*** 797,807 ****
   # Xtables matches
   #
   CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=m
@@ -1339,7 +1314,7 @@
   CONFIG_NETFILTER_XT_MATCH_CONNMARK=m
   CONFIG_NETFILTER_XT_MATCH_CONNTRACK=m
 ***************
-*** 803,815 ****
+*** 815,827 ****
   CONFIG_NETFILTER_XT_MATCH_HELPER=m
   CONFIG_NETFILTER_XT_MATCH_HL=m
   CONFIG_NETFILTER_XT_MATCH_IPRANGE=m
@@ -1367,7 +1342,7 @@
   CONFIG_NETFILTER_XT_MATCH_OWNER=m
   CONFIG_NETFILTER_XT_MATCH_POLICY=m
 ***************
-*** 828,834 ****
+*** 840,846 ****
   CONFIG_NETFILTER_XT_MATCH_TIME=m
   CONFIG_NETFILTER_XT_MATCH_U32=m
   CONFIG_IP_SET=m
@@ -1384,7 +1359,7 @@
   CONFIG_IP_SET_BITMAP_IPMAC=m
   CONFIG_IP_SET_BITMAP_PORT=m
 ***************
-*** 840,884 ****
+*** 852,897 ****
   CONFIG_IP_SET_HASH_NETPORT=m
   CONFIG_IP_SET_HASH_NETIFACE=m
   CONFIG_IP_SET_LIST_SET=m
@@ -1425,6 +1400,7 @@
 ! #
 ! # IPVS application helper
 ! #
+! # CONFIG_IP_VS_FTP is not set
 ! CONFIG_IP_VS_NFCT=y
 ! CONFIG_IP_VS_PE_SIP=m
   
@@ -1439,35 +1415,24 @@
   #
   # IP: Netfilter Configuration
 ***************
-*** 894,902 ****
-  CONFIG_IP_NF_FILTER=m
-  CONFIG_IP_NF_TARGET_REJECT=m
-  CONFIG_IP_NF_TARGET_ULOG=m
-! # CONFIG_NF_NAT_IPV4 is not set
+*** 916,922 ****
+  CONFIG_NF_NAT_PPTP=m
+  CONFIG_NF_NAT_H323=m
   CONFIG_IP_NF_MANGLE=m
 ! CONFIG_IP_NF_TARGET_CLUSTERIP=m
   CONFIG_IP_NF_TARGET_ECN=m
   CONFIG_IP_NF_TARGET_TTL=m
   CONFIG_IP_NF_RAW=m
---- 746,761 ----
-  CONFIG_IP_NF_FILTER=m
-  CONFIG_IP_NF_TARGET_REJECT=m
-  CONFIG_IP_NF_TARGET_ULOG=m
-! CONFIG_NF_NAT_IPV4=m
-! CONFIG_IP_NF_TARGET_MASQUERADE=m
-! CONFIG_IP_NF_TARGET_NETMAP=m
-! CONFIG_IP_NF_TARGET_REDIRECT=m
-! CONFIG_NF_NAT_SNMP_BASIC=m
-! CONFIG_NF_NAT_PROTO_GRE=m
-! CONFIG_NF_NAT_PPTP=m
-! CONFIG_NF_NAT_H323=m
+--- 755,761 ----
+  CONFIG_NF_NAT_PPTP=m
+  CONFIG_NF_NAT_H323=m
   CONFIG_IP_NF_MANGLE=m
 ! # CONFIG_IP_NF_TARGET_CLUSTERIP is not set
   CONFIG_IP_NF_TARGET_ECN=m
   CONFIG_IP_NF_TARGET_TTL=m
   CONFIG_IP_NF_RAW=m
 ***************
-*** 917,930 ****
+*** 937,943 ****
   CONFIG_IP6_NF_MATCH_HL=m
   CONFIG_IP6_NF_MATCH_IPV6HEADER=m
   CONFIG_IP6_NF_MATCH_MH=m
@@ -1475,14 +1440,7 @@
   CONFIG_IP6_NF_MATCH_RT=m
   CONFIG_IP6_NF_TARGET_HL=m
   CONFIG_IP6_NF_FILTER=m
-  CONFIG_IP6_NF_TARGET_REJECT=m
-  CONFIG_IP6_NF_MANGLE=m
-  CONFIG_IP6_NF_RAW=m
-! # CONFIG_NF_NAT_IPV6 is not set
-  CONFIG_BRIDGE_NF_EBTABLES=m
-  CONFIG_BRIDGE_EBT_BROUTE=m
-  CONFIG_BRIDGE_EBT_T_FILTER=m
---- 776,791 ----
+--- 776,782 ----
   CONFIG_IP6_NF_MATCH_HL=m
   CONFIG_IP6_NF_MATCH_IPV6HEADER=m
   CONFIG_IP6_NF_MATCH_MH=m
@@ -1490,17 +1448,8 @@
   CONFIG_IP6_NF_MATCH_RT=m
   CONFIG_IP6_NF_TARGET_HL=m
   CONFIG_IP6_NF_FILTER=m
-  CONFIG_IP6_NF_TARGET_REJECT=m
-  CONFIG_IP6_NF_MANGLE=m
-  CONFIG_IP6_NF_RAW=m
-! CONFIG_NF_NAT_IPV6=m
-! CONFIG_IP6_NF_TARGET_MASQUERADE=m
-! CONFIG_IP6_NF_TARGET_NPT=m
-  CONFIG_BRIDGE_NF_EBTABLES=m
-  CONFIG_BRIDGE_EBT_BROUTE=m
-  CONFIG_BRIDGE_EBT_T_FILTER=m
 ***************
-*** 949,954 ****
+*** 971,976 ****
 --- 810,816 ----
   CONFIG_BRIDGE_EBT_NFLOG=m
   # CONFIG_IP_DCCP is not set
@@ -1510,7 +1459,7 @@
   # CONFIG_SCTP_DBG_OBJCNT is not set
   CONFIG_SCTP_DEFAULT_COOKIE_HMAC_MD5=y
 ***************
-*** 961,977 ****
+*** 983,999 ****
   # CONFIG_ATM is not set
   CONFIG_L2TP=m
   # CONFIG_L2TP_DEBUGFS is not set
@@ -1547,7 +1496,7 @@
   CONFIG_LLC=m
   # CONFIG_LLC2 is not set
 ***************
-*** 1017,1027 ****
+*** 1039,1049 ****
   CONFIG_NET_CLS_ROUTE4=m
   CONFIG_NET_CLS_FW=m
   CONFIG_NET_CLS_U32=m
@@ -1573,7 +1522,7 @@
   CONFIG_NET_EMATCH_STACK=32
   CONFIG_NET_EMATCH_CMP=m
 ***************
-*** 1029,1035 ****
+*** 1051,1057 ****
   CONFIG_NET_EMATCH_U32=m
   CONFIG_NET_EMATCH_META=m
   CONFIG_NET_EMATCH_TEXT=m
@@ -1590,7 +1539,7 @@
   CONFIG_NET_ACT_POLICE=m
   CONFIG_NET_ACT_GACT=m
 ***************
-*** 1042,1073 ****
+*** 1064,1095 ****
   CONFIG_NET_ACT_SKBEDIT=m
   CONFIG_NET_ACT_CSUM=m
   CONFIG_NET_ACT_CONNMARK=m
@@ -1734,7 +1683,7 @@
   CONFIG_FIB_RULES=y
   CONFIG_WIRELESS=y
 ***************
-*** 1078,1095 ****
+*** 1100,1117 ****
   CONFIG_WEXT_PRIV=y
   CONFIG_CFG80211=m
   # CONFIG_NL80211_TESTMODE is not set
@@ -1773,7 +1722,7 @@
   CONFIG_MAC80211_HAS_RC=y
   CONFIG_MAC80211_RC_PID=y
 ***************
-*** 1098,1127 ****
+*** 1120,1149 ****
   # CONFIG_MAC80211_RC_DEFAULT_PID is not set
   CONFIG_MAC80211_RC_DEFAULT_MINSTREL=y
   CONFIG_MAC80211_RC_DEFAULT="minstrel_ht"
@@ -1836,7 +1785,7 @@
   #
   # Device Drivers
 ***************
-*** 1130,1137 ****
+*** 1152,1159 ****
   #
   # Generic Driver Options
   #
@@ -1856,7 +1805,7 @@
   CONFIG_PREVENT_FIRMWARE_BUILD=y
   CONFIG_FW_LOADER=y
 ***************
-*** 1142,1216 ****
+*** 1164,1238 ****
   # CONFIG_DEBUG_DEVRES is not set
   # CONFIG_SYS_HYPERVISOR is not set
   # CONFIG_GENERIC_CPU_DEVICES is not set
@@ -1990,7 +1939,7 @@
   # CONFIG_ISL29003 is not set
   # CONFIG_ISL29020 is not set
 ***************
-*** 1220,1229 ****
+*** 1242,1251 ****
   # CONFIG_SENSORS_APDS990X is not set
   # CONFIG_HMC6352 is not set
   # CONFIG_DS1682 is not set
@@ -2014,7 +1963,7 @@
   # CONFIG_C2PORT is not set
   
 ***************
-*** 1231,1493 ****
+*** 1253,1515 ****
   # EEPROM support
   #
   # CONFIG_EEPROM_AT24 is not set
@@ -2350,7 +2299,7 @@
   CONFIG_BLK_DEV_MD=m
   CONFIG_MD_LINEAR=m
 ***************
-*** 1495,1578 ****
+*** 1517,1600 ****
   CONFIG_MD_RAID1=m
   CONFIG_MD_RAID10=m
   CONFIG_MD_RAID456=m
@@ -2480,7 +2429,7 @@
   #
   # CAIF transport drivers
 ***************
-*** 1587,1786 ****
+*** 1609,1808 ****
   # CONFIG_NET_DSA_MV88E6131 is not set
   # CONFIG_NET_DSA_MV88E6123_61_65 is not set
   CONFIG_ETHERNET=y
@@ -2751,7 +2700,7 @@
   CONFIG_PPP_BSDCOMP=m
   CONFIG_PPP_DEFLATE=m
 ***************
-*** 1788,1802 ****
+*** 1810,1824 ****
   CONFIG_PPP_MPPE=m
   CONFIG_PPP_MULTILINK=y
   CONFIG_PPPOE=m
@@ -2781,7 +2730,7 @@
   #
   # USB Network Adapters
 ***************
-*** 1805,1821 ****
+*** 1827,1843 ****
   CONFIG_USB_KAWETH=m
   CONFIG_USB_PEGASUS=m
   CONFIG_USB_RTL8150=m
@@ -2818,7 +2767,7 @@
   CONFIG_USB_NET_NET1080=m
   CONFIG_USB_NET_PLUSB=m
 ***************
-*** 1832,1882 ****
+*** 1854,1904 ****
   CONFIG_USB_NET_CX82310_ETH=m
   CONFIG_USB_NET_KALMIA=m
   CONFIG_USB_NET_QMI_WWAN=m
@@ -2929,7 +2878,7 @@
   CONFIG_B43LEGACY_HWRNG=y
   CONFIG_B43LEGACY_DEBUG=y
 ***************
-*** 1885,1959 ****
+*** 1907,1981 ****
   CONFIG_B43LEGACY_DMA_AND_PIO_MODE=y
   # CONFIG_B43LEGACY_DMA_MODE is not set
   # CONFIG_B43LEGACY_PIO_MODE is not set
@@ -3028,7 +2977,7 @@
   CONFIG_RT73USB=m
   CONFIG_RT2800USB=m
 ***************
-*** 1963,2122 ****
+*** 1985,2144 ****
   # CONFIG_RT2800USB_RT55XX is not set
   CONFIG_RT2800USB_UNKNOWN=y
   CONFIG_RT2800_LIB=m
@@ -3310,7 +3259,7 @@
   
   #
 ***************
-*** 2126,2261 ****
+*** 2148,2283 ****
   CONFIG_VT=y
   CONFIG_CONSOLE_TRANSLATIONS=y
   CONFIG_VT_CONSOLE=y
@@ -3523,7 +3472,7 @@
   # CONFIG_I2C_PCA_PLATFORM is not set
   # CONFIG_I2C_PXA_PCI is not set
 ***************
-*** 2265,2272 ****
+*** 2287,2294 ****
   #
   # External I2C/SMBus adapter drivers
   #
@@ -3541,7 +3490,7 @@
   # CONFIG_I2C_TAOS_EVM is not set
   # CONFIG_I2C_TINY_USB is not set
 ***************
-*** 2274,2290 ****
+*** 2296,2312 ****
   #
   # Other I2C/SMBus bus drivers
   #
@@ -3600,7 +3549,7 @@
   
   #
 ***************
-*** 2298,2304 ****
+*** 2320,2326 ****
   #
   # CONFIG_PPS_CLIENT_KTIMER is not set
   # CONFIG_PPS_CLIENT_LDISC is not set
@@ -3610,7 +3559,7 @@
   #
 --- 1722,1727 ----
 ***************
-*** 2308,2364 ****
+*** 2330,2386 ****
   #
   # PTP clock support
   #
@@ -3718,7 +3667,7 @@
   #
   # AC97 GPIO expanders:
 ***************
-*** 2383,2533 ****
+*** 2405,2555 ****
   # CONFIG_BATTERY_BQ27x00 is not set
   # CONFIG_BATTERY_MAX17040 is not set
   # CONFIG_BATTERY_MAX17042 is not set
@@ -3890,7 +3839,7 @@
   # CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE is not set
   # CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE is not set
 ***************
-*** 2536,2594 ****
+*** 2558,2616 ****
   # CONFIG_THERMAL_GOV_USER_SPACE is not set
   # CONFIG_CPU_THERMAL is not set
   # CONFIG_THERMAL_EMULATION is not set
@@ -3971,7 +3920,7 @@
   #
   # USB-based Watchdog Cards
 ***************
-*** 2600,2616 ****
+*** 2622,2638 ****
   # Sonics Silicon Backplane
   #
   CONFIG_SSB=m
@@ -4002,7 +3951,7 @@
   CONFIG_BCMA_POSSIBLE=y
   
 ***************
-*** 2619,2718 ****
+*** 2641,2740 ****
   #
   CONFIG_BCMA=m
   CONFIG_BCMA_BLOCKIO=y
@@ -4444,7 +4393,7 @@
   CONFIG_SOUND_OSS_CORE_PRECLAIM=y
   CONFIG_SND=m
 ***************
-*** 2721,2997 ****
+*** 2743,3019 ****
   CONFIG_SND_HWDEP=m
   CONFIG_SND_RAWMIDI=m
   CONFIG_SND_SEQUENCER=m
@@ -4910,7 +4859,7 @@
   # CONFIG_USB_TMC is not set
   
 ***************
-*** 3002,3036 ****
+*** 3024,3058 ****
   #
   # also be needed; see USB_STORAGE Help for more info
   #
@@ -4983,7 +4932,7 @@
   CONFIG_USB_SERIAL_GENERIC=y
   CONFIG_USB_SERIAL_AIRCABLE=m
 ***************
-*** 3055,3089 ****
+*** 3077,3111 ****
   CONFIG_USB_SERIAL_IUU=m
   CONFIG_USB_SERIAL_KEYSPAN_PDA=m
   CONFIG_USB_SERIAL_KEYSPAN=m
@@ -5055,7 +5004,7 @@
   CONFIG_USB_SERIAL_SIERRAWIRELESS=m
   CONFIG_USB_SERIAL_SYMBOL=m
 ***************
-*** 3094,3104 ****
+*** 3116,3126 ****
   CONFIG_USB_SERIAL_OPTION=m
   CONFIG_USB_SERIAL_OMNINET=m
   CONFIG_USB_SERIAL_OPTICON=m
@@ -5080,7 +5029,7 @@
   CONFIG_USB_SERIAL_QT2=m
   CONFIG_USB_SERIAL_DEBUG=m
 ***************
-*** 3106,3187 ****
+*** 3128,3209 ****
   #
   # USB Miscellaneous drivers
   #
@@ -5309,7 +5258,7 @@
   CONFIG_RTC_LIB=y
   CONFIG_RTC_CLASS=y
 ***************
-*** 3196,3202 ****
+*** 3218,3224 ****
   CONFIG_RTC_INTF_SYSFS=y
   CONFIG_RTC_INTF_PROC=y
   CONFIG_RTC_INTF_DEV=y
@@ -5326,7 +5275,7 @@
   
   #
 ***************
-*** 3205,3215 ****
+*** 3227,3237 ****
   # CONFIG_RTC_DRV_DS1307 is not set
   # CONFIG_RTC_DRV_DS1374 is not set
   # CONFIG_RTC_DRV_DS1672 is not set
@@ -5351,7 +5300,7 @@
   # CONFIG_RTC_DRV_PCF8523 is not set
   # CONFIG_RTC_DRV_PCF8563 is not set
 ***************
-*** 3220,3236 ****
+*** 3242,3258 ****
   # CONFIG_RTC_DRV_FM3130 is not set
   # CONFIG_RTC_DRV_RX8581 is not set
   # CONFIG_RTC_DRV_RX8025 is not set
@@ -5398,7 +5347,7 @@
   # CONFIG_RTC_DRV_DS1511 is not set
   # CONFIG_RTC_DRV_DS1553 is not set
 ***************
-*** 3248,3383 ****
+*** 3270,3405 ****
   #
   # on-CPU RTC drivers
   #
@@ -5629,7 +5578,7 @@
   #
   # Remoteproc drivers
 ***************
-*** 3387,3468 ****
+*** 3409,3490 ****
   #
   # Rpmsg drivers
   #
@@ -5770,7 +5719,7 @@
   CONFIG_CUSE=m
   CONFIG_GENERIC_ACL=y
 ***************
-*** 3470,3528 ****
+*** 3492,3550 ****
   #
   # Caches
   #
@@ -5898,7 +5847,7 @@
   # CONFIG_MINIX_FS is not set
   # CONFIG_OMFS_FS is not set
 ***************
-*** 3530,3538 ****
+*** 3552,3560 ****
   # CONFIG_QNX4FS_FS is not set
   # CONFIG_QNX6FS_FS is not set
   # CONFIG_ROMFS_FS is not set
@@ -5917,7 +5866,7 @@
   # CONFIG_UFS_FS is not set
   # CONFIG_F2FS_FS is not set
 ***************
-*** 3540,3570 ****
+*** 3562,3592 ****
   CONFIG_NFS_FS=m
   CONFIG_NFS_V2=m
   CONFIG_NFS_V3=m
@@ -5989,7 +5938,7 @@
   # CONFIG_CIFS_DEBUG2 is not set
   # CONFIG_CIFS_DFS_UPCALL is not set
 ***************
-*** 3573,3617 ****
+*** 3595,3639 ****
   # CONFIG_NCP_FS is not set
   # CONFIG_CODA_FS is not set
   # CONFIG_AFS_FS is not set
@@ -6085,7 +6034,7 @@
   # CONFIG_NLS_MAC_CELTIC is not set
   # CONFIG_NLS_MAC_CENTEURO is not set
 ***************
-*** 3623,3643 ****
+*** 3645,3665 ****
   # CONFIG_NLS_MAC_INUIT is not set
   # CONFIG_NLS_MAC_ROMANIAN is not set
   # CONFIG_NLS_MAC_TURKISH is not set
@@ -6128,7 +6077,7 @@
   # CONFIG_UNUSED_SYMBOLS is not set
   CONFIG_DEBUG_FS=y
 ***************
-*** 3645,3673 ****
+*** 3667,3695 ****
   # CONFIG_DEBUG_SECTION_MISMATCH is not set
   CONFIG_DEBUG_KERNEL=y
   # CONFIG_DEBUG_SHIRQ is not set
@@ -6182,7 +6131,7 @@
   # CONFIG_RT_MUTEX_TESTER is not set
   # CONFIG_DEBUG_SPINLOCK is not set
 ***************
-*** 3680,3727 ****
+*** 3702,3749 ****
   CONFIG_STACKTRACE=y
   # CONFIG_DEBUG_STACK_USAGE is not set
   # CONFIG_DEBUG_KOBJECT is not set
@@ -6273,7 +6222,7 @@
   CONFIG_HAVE_SYSCALL_TRACEPOINTS=y
   CONFIG_HAVE_C_RECORDMCOUNT=y
 ***************
-*** 3729,3777 ****
+*** 3751,3799 ****
   CONFIG_RING_BUFFER=y
   CONFIG_RING_BUFFER_ALLOW_SWAP=y
   CONFIG_TRACING_SUPPORT=y
@@ -6373,7 +6322,7 @@
   #
   # Security options
 ***************
-*** 3782,3788 ****
+*** 3804,3810 ****
   # CONFIG_SECURITY_DMESG_RESTRICT is not set
   # CONFIG_SECURITY is not set
   # CONFIG_SECURITYFS is not set
@@ -6383,7 +6332,7 @@
   CONFIG_XOR_BLOCKS=m
 --- 3163,3168 ----
 ***************
-*** 3806,3869 ****
+*** 3828,3891 ****
   CONFIG_CRYPTO_HASH2=y
   CONFIG_CRYPTO_RNG=m
   CONFIG_CRYPTO_RNG2=y
@@ -6509,7 +6458,7 @@
   CONFIG_CRYPTO_SHA512=m
   CONFIG_CRYPTO_TGR192=m
 ***************
-*** 3873,3921 ****
+*** 3895,3943 ****
   # Ciphers
   #
   CONFIG_CRYPTO_AES=y
@@ -6602,7 +6551,7 @@
   
   #
 ***************
-*** 3925,3952 ****
+*** 3947,3974 ****
   CONFIG_BITREVERSE=y
   CONFIG_GENERIC_STRNCPY_FROM_USER=y
   CONFIG_GENERIC_STRNLEN_USER=y
@@ -6660,7 +6609,7 @@
   CONFIG_XZ_DEC_POWERPC=y
   CONFIG_XZ_DEC_IA64=y
 ***************
-*** 3956,3980 ****
+*** 3978,4002 ****
   CONFIG_XZ_DEC_BCJ=y
   # CONFIG_XZ_DEC_TEST is not set
   CONFIG_DECOMPRESS_GZIP=y
