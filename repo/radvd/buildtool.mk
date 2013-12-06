@@ -4,7 +4,7 @@ RADVD_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(RADVD_SOURCE) 2>/dev/null )
 RADVD_TARGET_DIR:=$(BT_BUILD_DIR)/radvd
 
 $(RADVD_DIR)/.source:
-	zcat $(RADVD_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(RADVD_SOURCE)
 	touch $(RADVD_DIR)/.source
 
 source: $(RADVD_DIR)/.source
