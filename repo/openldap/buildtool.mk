@@ -9,7 +9,6 @@ OPENLDAP_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(OPENLDAP_SOURCE) 2>/dev/null )
 OPENLDAP_TARGET_DIR:=$(BT_BUILD_DIR)/openldap
 
 # Option settings for 'configure':
-#  Move files out from under /usr/local/
 #  Do not build the Standalone LDAP Daemon, just the libraries
 #  Explicitly disable Cyrus SASL support
 CONFOPTS:= --host=$(GNU_TARGET_NAME) \
