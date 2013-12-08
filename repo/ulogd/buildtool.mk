@@ -8,9 +8,6 @@ ULOGD_TARGET_DIR:=$(BT_BUILD_DIR)/ulogd
 
 $(ULOGD_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(ULOGD_SOURCE)
-#	cat $(ULOGD_PATCH1) | patch -d $(ULOGD_DIR) -p1
-#	cat $(ULOGD_PATCH2) | patch -d $(ULOGD_DIR) -p1
-#	cat $(ULOGD_PATCH3) | patch -d $(ULOGD_DIR) -p1
 	touch $(ULOGD_DIR)/.source
 
 source: $(ULOGD_DIR)/.source
