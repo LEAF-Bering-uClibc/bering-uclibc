@@ -2,7 +2,7 @@
 # Save daily LOGDEPTH versions of logfile 
 LOGDEPTH=4
 # Space separated list of logfiles
-LOGFILE="/var/log/shorewall.log"
+LOGFILE="/var/log/shorewall.log /var/log/shorewall6.log"
 
 for log in $LOGFILE ; do
     if [ -f $log ]; then
