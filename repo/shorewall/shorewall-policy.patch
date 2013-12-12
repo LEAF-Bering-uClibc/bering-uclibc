@@ -1,6 +1,6 @@
-diff -urN shorewall-4.5.4.1.orig/configfiles/policy shorewall-4.5.4.1/configfiles/policy
---- shorewall-4.5.4.1.orig/configfiles/policy	2012-05-30 23:37:29.000000000 +0200
-+++ shorewall-4.5.4.1/configfiles/policy	2012-06-07 17:00:11.221568605 +0200
+diff -urN shorewall-4.5.20.orig/configfiles/policy shorewall-4.5.20/configfiles/policy
+--- shorewall-4.5.20.orig/configfiles/policy	2013-08-24 18:37:56.000000000 +0200
++++ shorewall-4.5.20/configfiles/policy	2013-12-08 12:46:48.870742337 +0100
 @@ -9,3 +9,12 @@
  ###############################################################################
  #SOURCE	DEST	POLICY		LOG	LIMIT:		CONNLIMIT:
@@ -12,5 +12,5 @@ diff -urN shorewall-4.5.4.1.orig/configfiles/policy shorewall-4.5.4.1/configfile
 +#fw             net             ACCEPT
 +# THE FOLLOWING POLICY MUST BE LAST
 +#
-+all           all             REJECT          info
++all           all             REJECT          NFLOG(4)
 +
