@@ -28,12 +28,17 @@ $(PERL_DIR)/.build: $(PERL_DIR)/.configured
 	mkdir -p $(PERL_TARGET_DIR)/usr/bin
 	mkdir -p $(PERL_TARGET_DIR)/usr/include/perl5/CORE
 	mkdir -p $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)
+	mkdir -p $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/Sys
+
 
 # Build in single thread - -jN failed
 	$(MAKE) -C $(PERL_DIR)
+	(cd $(PERL_DIR); $(MAKE) ext/Sys-Hostname )
 	cp -af  $(PERL_DIR)/perl $(PERL_TARGET_DIR)/usr/bin/
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PERL_TARGET_DIR)/usr/bin/*
 	cp -af  $(PERL_DIR)/lib/* $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/
+	cp -af  $(PERL_DIR)/ext/Sys-Hostname/Hostname.pm $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/Sys
+
 	cp -af  $(PERL_DIR)/*.h $(PERL_TARGET_DIR)/usr/include/perl5/CORE/
 	cp -afL $(PERL_SOCKET6_PM) $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/
 	cp -afL $(PERL_TEMP_PM) $(PERL_TARGET_DIR)/usr/lib/perl5/$(PERL_VER)/File/
