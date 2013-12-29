@@ -9,6 +9,7 @@ test -x /usr/sbin/dropbear || exit 0
 DB_PORT=22
 DB_RSAFILE=/etc/dropbear/dropbear_rsa_host_key
 DB_DSSFILE=/etc/dropbear/dropbear_dss_host_key
+DB_ECDSAFILE=/etc/dropbear/dropbear_ecdsa_host_key
 DB_BANNER=""
 
 # custom config options
@@ -26,6 +27,11 @@ fi
 if [ -n "$DB_DSSFILE" ]; then
 	DB_OPTIONS="$DB_OPTIONS -d $DB_DSSFILE"
 	test -f $DB_DSSFILE || dropbearkey -t dss -f $DB_DSSFILE
+fi
+
+if [ -n "$DB_ECDSAFILE" ]; then
+	DB_OPTIONS="$DB_OPTIONS -d $DB_ECDSAFILE"
+	test -f $DB_ECDSAFILE || dropbearkey -t ecdsa -f $DB_ECDSAFILE
 fi
 
 if [ -n "$DB_BANNER" ]; then
