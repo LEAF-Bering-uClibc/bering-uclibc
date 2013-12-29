@@ -90,7 +90,7 @@ much traffic. */
  * Protocol RFC requires 3DES and recommends AES128 for interoperability.
  * Including multiple keysize variants the same cipher 
  * (eg AES256 as well as AES128) will result in a minimal size increase.*/
-/*#define DROPBEAR_AES128*/
+#define DROPBEAR_AES128
 #define DROPBEAR_3DES
 #define DROPBEAR_AES256
 /* Compiling in Blowfish will add ~6kB to runtime heap memory usage */
@@ -123,8 +123,8 @@ much traffic. */
  * which are not the standard form. */
 #define DROPBEAR_SHA1_HMAC
 #define DROPBEAR_SHA1_96_HMAC
-/*#define DROPBEAR_SHA2_256_HMAC*/
-/*#define DROPBEAR_SHA2_512_HMAC*/
+#define DROPBEAR_SHA2_256_HMAC
+#define DROPBEAR_SHA2_512_HMAC
 #define DROPBEAR_MD5_HMAC
 
 /* You can also disable integrity. Don't bother disabling this if you're
