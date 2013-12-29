@@ -15,6 +15,8 @@ export ARCH_CFLAGS:=-mtune=generic
 export KERN_IMAGE:=bzImage
 # Name of OpenSSL target
 export OPENSSL_TARGET:=linux-x86_64
+# enable enable-ec_nistp_64_gcc_128 for X86_64
+export OPENSSL_EC_NISTP_64:=enable-ec_nistp_64_gcc_128
 # Compile a pure 64bits toolchain
 export GCC_PURE64:=yes
 

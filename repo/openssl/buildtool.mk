@@ -4,7 +4,6 @@
 #
 #############################################################
 
-
 SOURCE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE_TGZ) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
@@ -14,6 +13,7 @@ TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
 source: .source
 
+# enable threads - needs testing
 .configured: .source
 	# $(OPENSSL_TARGET) is set in make/toolchain/*.mk
 	(cd $(SOURCE_DIR); \
@@ -23,7 +23,8 @@ source: .source
 		--libdir=lib \
 		--install_prefix=$(TARGET_DIR) \
 		--cross-compile-prefix=$(CROSS_COMPILE) \
-		no-idea no-mdc2 no-rc5  no-krb5 shared no-fips no-threads  \
+		$(OPENSSL_EC_NISTP_64) \
+		no-idea no-mdc2 no-rc5  no-krb5 shared no-fips threads  \
 		-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib \
 		-I$(BT_STAGING_DIR)/include -I$(BT_STAGING_DIR)/usr/include \
 		 );
@@ -48,7 +49,6 @@ source: .source
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/engines/*.so
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	rm -rf $(TARGET_DIR)/usr/ssl/man
-#	perl -i -p -e "s,=/usr,=$(BT_STAGING_DIR)/usr," $(TARGET_DIR)/usr/lib/pkgconfig/*.pc
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch .build
 
