@@ -4,7 +4,6 @@
 #
 ######################################
 
-
 PCRE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(PCRE_SOURCE) 2>/dev/null )
 PCRE_TARGET_DIR:=$(BT_BUILD_DIR)/pcre
 
