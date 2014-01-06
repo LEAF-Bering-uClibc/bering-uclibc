@@ -3,6 +3,9 @@
 # Intended for generic x86_64 target
 #
 ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
+# Kernel versions
+export BT_KERNEL_BRANCH:=3.4
+export BT_KERNEL_PATCH:=68
 # Primary kernel architecture
 export ARCH:=x86_64
 # Arch for includes symlink

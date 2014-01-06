@@ -94,5 +94,11 @@ EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib
 
 # Check for linux version
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
-export BT_KERNEL_RELEASE=$(shell $(BT_GET_KERNEL_VERSION) $(BT_LINUX_DIR))
+export BT_KERNEL_RELEASE=$(BT_KERNEL_BRANCH).$(BT_KERNEL_PATCH)
 export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
+
+kversion:
+	echo $(BT_KERNEL_RELEASE)
+
+kbranch:
+	echo $(BT_KERNEL_BRANCH)
