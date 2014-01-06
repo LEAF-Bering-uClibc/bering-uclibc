@@ -149,6 +149,16 @@ create_dir( make_absolute_path( $globConf{'log_dir'}, $baseDir ) );
 # make the logfile absolute
 $globConf{'logfile'} = make_absolute_path( $globConf{'logfile'}, $baseDir );
 
+# set kernel version
+my $kver = qx(BT_BUILDROOT=$baseDir GNU_TARGET_NAME=$globConf{'toolchain'} make -s -f $baseDir/make/MasterInclude.mk kversion);
+my $kbranch = qx(BT_BUILDROOT=$baseDir GNU_TARGET_NAME=$globConf{'toolchain'} make -s -f $baseDir/make/MasterInclude.mk kbranch);
+chomp $kver;
+die "Can't determine kernel version!"
+  unless $kver =~ /^\d+\.\d+/ && $kbranch =~ /^\d+\.\d+/;
+
+$globConf{'kernel_branch'} = $kbranch;
+$globConf{'kernel_version'} = $kver;
+
 # read in global file-config
 my %sourcesConfig;
 eval {
