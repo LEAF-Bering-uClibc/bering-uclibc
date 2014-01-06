@@ -335,8 +335,9 @@ sub _export_env_by_format {
     my $value     = $options{value}     || die "You must specified a value";
     my $format    = $options{format}    || 'shell';
 
-    $value =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},;
-    $value =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},;
+    $value =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},g;
+    $value =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},g;
+    $value =~ s,__TOOLCHAIN__,$self->{'CONFIG'}{'toolchain'},g;
 
     if ( $format eq 'shell' ) {
         print $output_fh "export $key='$value'", $/;

@@ -85,8 +85,9 @@ sub download () {
 
     # file replace
     my $filename = $file;
-    $filename =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},;
-    $filename =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},;
+    $filename =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},g;
+    $filename =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},g;
+    $filename =~ s,__TOOLCHAIN__,$self->{'CONFIG'}{'toolchain'},g;
     $self->debug("file name: $filename");
 
     #check for server:
@@ -117,6 +118,10 @@ sub download () {
     } else {
       $dir = "";
     }
+
+    $dir =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},g;
+    $dir =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},g;
+    $dir =~ s,__TOOLCHAIN__,$self->{'CONFIG'}{'toolchain'},g;
 
     $spath = $self->strip_slashes($server->{$dlserver}{'serverpath'});
 
