@@ -98,7 +98,7 @@ export BT_KERNEL_RELEASE=$(BT_KERNEL_BRANCH).$(BT_KERNEL_PATCH)
 export ac_cv_linux_vers=$(BT_KERNEL_RELEASE)
 
 kversion:
-	echo -n $(BT_KERNEL_RELEASE)
+	echo $(BT_KERNEL_RELEASE)
 
 kbranch:
-	echo -n $(BT_KERNEL_BRANCH)
+	echo $(BT_KERNEL_BRANCH)

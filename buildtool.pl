@@ -153,6 +153,7 @@ $globConf{'logfile'} = make_absolute_path( $globConf{'logfile'}, $baseDir );
 my $kver = qx(BT_BUILDROOT=$baseDir GNU_TARGET_NAME=$globConf{'toolchain'} make -s -f $baseDir/make/MasterInclude.mk kversion);
 my $kbranch = qx(BT_BUILDROOT=$baseDir GNU_TARGET_NAME=$globConf{'toolchain'} make -s -f $baseDir/make/MasterInclude.mk kbranch);
 chomp $kver;
+chomp $kbranch;
 die "Can't determine kernel version!"
   unless $kver =~ /^\d+\.\d+/ && $kbranch =~ /^\d+\.\d+/;
 
