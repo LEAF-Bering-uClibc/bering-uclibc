@@ -71,7 +71,7 @@ then
    $TCFR dev $OUTPUT parent 1:0 protocol ip prio 1 handle 1 fw flowid 1:10
    if [ -n "$IXSPEED" ] && [ -n "$IXDEV" ]; then
      [ "$UPSPEED" -gt "$IXSPEED" ] && IS=$UPSPEED || IS=$IXSPEED
-     $TCCR dev $OUTPUT parent 1: classid 1:2 htb rate ${IXSPEED}kbit $UBURST prio 2 quantum 1514
+     $TCCR dev $OUTPUT parent 1: classid 1:2 htb rate ${IS}kbit $UBURST prio 2 quantum 1514
      $TCQR dev $OUTPUT parent 1:2 handle 2: sfq perturb 10 quantum 1514
      $TCFR dev $OUTPUT parent 1:0 protocol ip prio 0 handle 2 fw flowid 1:2
   fi
