@@ -13,7 +13,6 @@ TARGET_DIR:=$(BT_BUILD_DIR)/openssl
 
 source: .source
 
-# enable threads - needs testing
 .configured: .source
 	# $(OPENSSL_TARGET) is set in make/toolchain/*.mk
 	(cd $(SOURCE_DIR); \
