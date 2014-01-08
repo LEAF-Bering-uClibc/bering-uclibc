@@ -42,12 +42,6 @@
 #ppp_generic
 #pppoatm
 
-# Modules needed for ISDN
-# Look for type, io and irq settings at help page of isdn.lrp documentation
-#slhc
-#isdn
-#hisax type= io= irq=
-
 # Watchdog support, always choose one
 # standard software watchdog
 softdog
@@ -62,7 +56,6 @@ softdog
 # Warning: the following modules are not provided on Bering-uClibc floppy
 # they must be downloaded
 
-#
 # Bridge support
 #bridge
 
@@ -72,15 +65,6 @@ softdog
 # IFB support
 ifb
 
-#
-# USB support
-# do not forget to mount none /proc/bus/usb -t usbdevfs
-#usbcore
-#usb-uhci
-# .. or ..
-#usb-ohci
-
-#
 # Traffic control modules
 act_police
 cls_fw
