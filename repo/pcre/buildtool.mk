@@ -28,8 +28,8 @@ $(PCRE_DIR)/.build: $(PCRE_DIR)/.configured
 	mkdir -p $(PCRE_TARGET_DIR)
 	make $(MAKEOPTS) -C $(PCRE_DIR)
 	perl -i -p -e "s,-rpath /usr/lib,," $(PCRE_DIR)/*.la
-	cp $(PCRE_DIR)/.libs/libpcreposix.so.0.0.0 $(PCRE_DIR)/.libs/libpcreposix.so.0.0.0T
-	cp $(PCRE_DIR)/.libs/libpcrecpp.so.0.0.2 $(PCRE_DIR)/.libs/libpcrecpp.so.0.0.2T
+	cp $(PCRE_DIR)/.libs/libpcreposix.so.0.0.2 $(PCRE_DIR)/.libs/libpcreposix.so.0.0.2T
+	cp $(PCRE_DIR)/.libs/libpcrecpp.so.0.0.0 $(PCRE_DIR)/.libs/libpcrecpp.so.0.0.0T
 	make -C $(PCRE_DIR) DESTDIR=$(PCRE_TARGET_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(PCRE_TARGET_DIR)/usr/lib/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PCRE_TARGET_DIR)/usr/bin/*
