@@ -17,19 +17,22 @@ unexport CROSS_COMPILE
 #	cat $(KERNEL_PATCH3) | patch -d $(LINUX_DIR) -p1
 	cat $(KERNEL_PATCH4) | patch -d $(LINUX_DIR) -p1
 #	cat $(KERNEL_PATCH6) | patch -d $(LINUX_DIR) -p1
+	cat $(KERNEL_PATCH_BCMRPI) | patch -d $(LINUX_DIR) -p1
 #	bzcat $(WIRELESS_REGDB) | tar -xvf -
 #	cp $(WIRELESS_REGDB:.tar.bz2=)/db.txt linux/net/wireless
 	mkdir -p $(BT_TOOLCHAIN_DIR)/usr
 	touch .source
 
+#	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
 
 .configured: .source
 	(for i in $(KARCHS); do \
+	echo $$i && \
 	patch -i $(LINUX_CONFIG)-$$i.patch -o $(LINUX_CONFIG)-$$i $(LINUX_CONFIG) && \
 	mkdir -p linux-$$i && cp $(LINUX_CONFIG)-$$i linux-$$i/.config && \
 	ARCH=$(ARCH) $(MAKE) -C $(LINUX_DIR) O=../linux-$$i oldconfig || \
 	exit 1; done ; \
-	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
+	ARCH=$(ARCH) $(MAKE) -C linux-$$i headers_install && \
 	cp -r linux-$$i/usr/include $(BT_TOOLCHAIN_DIR)/usr)
 	touch .configured
 

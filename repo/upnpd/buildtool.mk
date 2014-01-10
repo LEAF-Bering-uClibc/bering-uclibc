@@ -47,7 +47,7 @@ $(UPNPD_DIR)/.source:
 	zcat $(LINUXIGD_SOURCE) | tar -xvf -
 	cat $(LINUXIGD_PATCH1) | patch -d $(UPNPD_DIR) -p1
 	cat $(LINUXIGD_PATCH2) | patch -d $(UPNPD_DIR) -p1
-	cat $(LINUXIGD_PATCH3) | patch -d $(UPNPD_DIR) -p1
+#	cat $(LINUXIGD_PATCH3) | patch -d $(UPNPD_DIR) -p1
 	cat $(LINUXIGD_PATCH4) | patch -d $(UPNPD_DIR) -p1
 	cat $(LINUXIGD_PATCH5) | patch -d $(UPNPD_DIR) -p1
 	touch $(UPNPD_DIR)/.source

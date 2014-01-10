@@ -40,5 +40,3 @@ MENU END
 
 LABEL memtest
   linux memtest.bin
-
-

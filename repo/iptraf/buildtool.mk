@@ -10,7 +10,8 @@ ENVVAR=WORKDIR=/var/lib/iptraf \
 	CC=$(TARGET_CC) \
 	AR=$(TARGET_AR) \
 	RANLIB=$(TARGET_RANLIB) \
-	CFLAGS="$(CFLAGS) -std=gnu99"  LDOPTS="$(LDFLAGS)"
+	CFLAGS="$(CFLAGS) -std=gnu99"  LDOPTS="$(LDFLAGS)" \
+	NCURSES_LDFLAGS="-lncurses -lpanel"
 
 $(IPTRAF_DIR)/.source:
 	zcat $(IPTRAF_SOURCE) | tar -xvf -
@@ -22,7 +23,8 @@ $(IPTRAF_DIR)/.configured: $(IPTRAF_DIR)/.source
 	(cd $(IPTRAF_DIR) ; ./configure \
 	--prefix=/usr \
 	--with-ncurses \
-	--host=$(GNU_TARGET_NAME))
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME))
 	touch $(IPTRAF_DIR)/.configured
 
 $(IPTRAF_DIR)/.build: $(IPTRAF_DIR)/.configured

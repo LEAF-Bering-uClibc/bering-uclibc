@@ -4,7 +4,6 @@
 #
 #############################################################
 
-
 ISCSI_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(ISCSI_SOURCE) 2>/dev/null )
 ISCSI_TARGET_DIR:=$(BT_BUILD_DIR)/iscsi
 

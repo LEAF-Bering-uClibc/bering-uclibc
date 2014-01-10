@@ -12,6 +12,7 @@ export LDFLAGS += $(EXTCCLDFLAGS)
 $(KEEPALIVED_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(KEEPALIVED_SOURCE)
 	cat $(LIBNL3_PATCH)  | patch -d $(KEEPALIVED_DIR) -p1
+	cat $(INCLUDES_PATCH) | patch -p1 -d $(KEEPALIVED_DIR)
 	touch $(KEEPALIVED_DIR)/.source
 
 $(KEEPALIVED_DIR)/.configured: $(KEEPALIVED_DIR)/.source
