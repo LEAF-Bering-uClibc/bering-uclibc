@@ -14,6 +14,9 @@ export KERN_IMAGE:=zImage
 # Name of OpenSSL target
 export OPENSSL_TARGET:=linux-armv4
 
+# use nano for arm (used in etc.lrp /etc/profile)
+export ARM_EDITOR:=nano
+
 # Primary kernel architecture for U-Boot
 export UBOOT_ARCH:=arm
 export UBOOT_BOARDTYPE:=rpi_b
