@@ -17,6 +17,7 @@ use buildtool::Clean;
 use buildtool::Make::Tar;
 use buildtool::Make::Source;
 use buildtool::Make::Build;
+use buildtool::Make::Headers;
 use buildtool::Make::PackageList;
 use buildtool::Config;
 use Config::General qw(ParseConfig);
@@ -148,6 +149,17 @@ create_dir( make_absolute_path( $globConf{'log_dir'}, $baseDir ) );
 # make the logfile absolute
 $globConf{'logfile'} = make_absolute_path( $globConf{'logfile'}, $baseDir );
 
+# set kernel version
+my $kver = qx(BT_BUILDROOT=$baseDir GNU_TARGET_NAME=$globConf{'toolchain'} make -s -f $baseDir/make/MasterInclude.mk kversion);
+my $kbranch = qx(BT_BUILDROOT=$baseDir GNU_TARGET_NAME=$globConf{'toolchain'} make -s -f $baseDir/make/MasterInclude.mk kbranch);
+chomp $kver;
+chomp $kbranch;
+die "Can't determine kernel version!"
+  unless $kver =~ /^\d+\.\d+/ && $kbranch =~ /^\d+\.\d+/;
+
+$globConf{'kernel_branch'} = $kbranch;
+$globConf{'kernel_version'} = $kver;
+
 # read in global file-config
 my %sourcesConfig;
 eval {
@@ -220,6 +232,12 @@ if ($ARGV[0] eq "describe") {
   $source->make(@ARGV);
   # now do a make build...
   my $make= buildtool::Make::Build->new(\%globConf, \%sourcesConfig);
+  $make->make(@ARGV);
+
+} elsif ($ARGV[0] eq "headers") {
+  # make platform headers from packages/sources
+  shift;
+  my $make= buildtool::Make::Headers->new(\%globConf, \%sourcesConfig);
   $make->make(@ARGV);
 
 } elsif ($ARGV[0] eq "buildclean") {

@@ -1071,7 +1071,7 @@ my $installedFile = make_absolute_path( $btConfig{'installedfile'}, $baseDir );
 
 # kernel Version
 my $linux_source_dir = File::Spec->catdir( $sourceDir, 'linux', 'linux' );
-$kver = qx($toolsDir/get-kernel-version $linux_source_dir);
+$kver = qx(BT_BUILDROOT=$baseDir GNU_TARGET_NAME=$toolchain make -s -f $baseDir/make/MasterInclude.mk kversion);
 chomp $kver;
 die "Can't find kernel version from linux sources directory '$linux_source_dir'"
   unless $kver =~ /^\d+\.\d+/;

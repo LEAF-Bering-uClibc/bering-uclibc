@@ -3,6 +3,9 @@
 # Intended for Raspberry Pi target
 #
 ifeq ($(GNU_TARGET_NAME),armv6zk-unknown-linux-uclibcgnueabi)
+# Kernel versions
+export BT_KERNEL_BRANCH:=3.10
+export BT_KERNEL_PATCH:=25
 # Primary kernel architecture
 export ARCH:=arm
 # Space-separated list of kernel sub-archs to generate

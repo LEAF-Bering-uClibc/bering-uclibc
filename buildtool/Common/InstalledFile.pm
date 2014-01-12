@@ -22,7 +22,9 @@ sub _initialize() {
     my $listfile = $self->absoluteFilename( $self->{'CONFIG'}{installedfile} );
 
     # what type we have
-    $self->{'TYPES'} = [ "source", "build" ];
+    my $common_targets = $self->{'COMMON_TARGETS'};
+    my $specific_targets = $self->{'SPECIFIC_TARGETS'};
+    $self->{'TYPES'} = [ @$common_targets, @$specific_targets ];
     $self->{'FILENAME'} = $listfile;
 
     # Default config (empty list)

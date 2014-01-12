@@ -83,6 +83,13 @@ sub download () {
     confess "empty entry for server in file section for $file"
       if ($dlserver eq "");
 
+    # file replace
+    my $filename = $file;
+    $filename =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},g;
+    $filename =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},g;
+    $filename =~ s,__TOOLCHAIN__,$self->{'CONFIG'}{'toolchain'},g;
+    $self->debug("file name: $filename");
+
     #check for server:
     if (ref($server->{$dlserver}) ne "HASH") {
       $self->die("maybe config error:","unknown server $dlserver");
@@ -92,7 +99,7 @@ sub download () {
 
     $self->die("Error in Config:","no server type given for server $dlserver") if ((! $dltype) or ($dltype eq ""));
 
-    print "downloading: $file from server $dlserver type $dltype "
+    print "downloading: $filename from server $dlserver type $dltype "
       unless $options{quiet};
 
     if ( $myconf{'nodownload'} ) {
@@ -112,13 +119,17 @@ sub download () {
       $dir = "";
     }
 
+    $dir =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},g;
+    $dir =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},g;
+    $dir =~ s,__TOOLCHAIN__,$self->{'CONFIG'}{'toolchain'},g;
+
     $spath = $self->strip_slashes($server->{$dlserver}{'serverpath'});
 
     # first add to conf what we need all:_
     my %allconf = ('config' => \%myconf,
 		   'dlroot' => $dlroot,
 		   'serverpath' => $spath,
-		   'filename' => $file,
+		   'filename' => $filename,
 		   'dir' => $dir,
 		   'srcfile' => $srcfile
 		   );

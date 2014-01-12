@@ -3,8 +3,13 @@
 # Intended for generic x86 target
 #
 ifeq ($(GNU_TARGET_NAME),i486-unknown-linux-uclibc)
+# Kernel versions
+export BT_KERNEL_BRANCH:=3.10
+export BT_KERNEL_PATCH:=25
 # Primary kernel architecture
 export ARCH:=i386
+# Arch for includes symlink
+export ARCH_INC:=x86
 # Space-separated list of kernel sub-archs to generate
 export KARCHS:=i686 i486 geode
 # Available kernel archs with pci-express support

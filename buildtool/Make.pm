@@ -89,7 +89,8 @@ sub _makeCompleteList($) {
                 next;
             } else {
                 $self->debug("$deppack added to required $type list");
-                push @require_list, $deppack;
+                push @require_list, $deppack 
+                    if $self->_hasTarget($type, $deppack);
             }
         }
 
@@ -99,7 +100,8 @@ sub _makeCompleteList($) {
         if ( $self->{'CONFIG'}{'force'} ) {
             $self->debug("force enabled");
             push @require_list, $part
-              unless $self->isInList( $part, @require_list );
+              unless $self->isInList( $part, @require_list ) ||
+                    !$self->_hasTarget($type, $part);
         }
     }
 
@@ -333,6 +335,10 @@ sub _export_env_by_format {
     my $value     = $options{value}     || die "You must specified a value";
     my $format    = $options{format}    || 'shell';
 
+    $value =~ s,__KVER__,$self->{'CONFIG'}{'kernel_version'},g;
+    $value =~ s,__KBRANCH__,$self->{'CONFIG'}{'kernel_branch'},g;
+    $value =~ s,__TOOLCHAIN__,$self->{'CONFIG'}{'toolchain'},g;
+
     if ( $format eq 'shell' ) {
         print $output_fh "export $key='$value'", $/;
     } elsif ( $format eq 'makefile' ) {
@@ -420,6 +426,19 @@ sub _callMake {
     # everything is ok, print it:
     $self->print_ok();
     print "\n";
+}
+
+##############################################################################
+## internal method to check if package has required target
+sub _hasTarget {
+    my $self      = shift;
+    my $target    = shift || confess("no target rule given");
+    my $part      = shift || confess("no part given");
+
+    my $common_targets = $self->{'COMMON_TARGETS'};
+    return (grep { /$target/ } @$common_targets) ||
+	   ($self->{'FILECONF'}->{'source'}->{$part}->{$target}) ||
+	   ($self->{'FILECONF'}->{'package'}->{$part}->{$target});
 }
 
 1;

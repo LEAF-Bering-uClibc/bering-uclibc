@@ -25,7 +25,10 @@ sub new {
     confess( "Config is not a valid hash, is a " . ref($p_h_config) )
       if ref($p_h_config) ne "HASH";
 
-    $self = { 'CONFIG' => $p_h_config, };
+    $self = { 'CONFIG' => $p_h_config,
+	      'COMMON_TARGETS' => ['source', 'build'],
+	      'SPECIFIC_TARGETS' => ['headers'],
+	    };
 
 	bless($self, $type);
 

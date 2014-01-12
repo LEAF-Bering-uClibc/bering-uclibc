@@ -3,8 +3,13 @@
 # Intended for generic x86_64 target
 #
 ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
+# Kernel versions
+export BT_KERNEL_BRANCH:=3.10
+export BT_KERNEL_PATCH:=25
 # Primary kernel architecture
 export ARCH:=x86_64
+# Arch for includes symlink
+export ARCH_INC:=x86
 # Space-separated list of kernel sub-archs to generate
 export KARCHS:=x86_64
 # Available kernel archs with pci-express support

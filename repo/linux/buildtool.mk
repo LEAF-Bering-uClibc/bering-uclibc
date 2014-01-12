@@ -31,15 +31,16 @@ unexport CROSS_COMPILE
 	patch -i $(LINUX_CONFIG)-$$i.patch -o $(LINUX_CONFIG)-$$i $(LINUX_CONFIG) && \
 	mkdir -p linux-$$i && cp $(LINUX_CONFIG)-$$i linux-$$i/.config && \
 	ARCH=$(ARCH) $(MAKE) -C $(LINUX_DIR) O=../linux-$$i oldconfig || \
-	exit 1; done ; \
-	ARCH=$(ARCH) $(MAKE) -C linux-$$i headers_install && \
-	cp -r linux-$$i/usr/include $(BT_TOOLCHAIN_DIR)/usr)
+	exit 1; done)
 	touch .configured
 
-source: .source .configured
+source: .source
 
 build: 	.configured
 	echo "nothing done here right now, all done by buildenv and kernel package"
+
+headers: .configured
+	ARCH=$(ARCH) $(MAKE) -C linux$(FIRSTKARCH) headers_install_all INSTALL_HDR_PATH=$(BT_HEADERS_DIR)
 
 clean:
 	-rm .configured
