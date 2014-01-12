@@ -33,7 +33,11 @@ $(ETC_DIR)/.build: $(ETC_DIR)/.source
 	cp -aL lrp.conf $(ETC_TARGET_DIR)/etc
 	cp -aL networks $(ETC_TARGET_DIR)/etc
 	cp -aL passwd $(ETC_TARGET_DIR)/etc
+ifdef $(ARM_EDITOR)
 	cp -aL profile-$(ARM_EDITOR) $(ETC_TARGET_DIR)/etc/profile
+else
+	cp -aL profile $(ETC_TARGET_DIR)/etc/profile
+endif
 	cp -aL protocols $(ETC_TARGET_DIR)/etc
 	cp -aL resolv.conf $(ETC_TARGET_DIR)/etc
 	cp -aL rpc $(ETC_TARGET_DIR)/etc
