@@ -17,8 +17,10 @@ export KERN_IMAGE:=zImage
 # Name of OpenSSL target
 export OPENSSL_TARGET:=linux-armv4
 
-# use nano for arm (used in etc.lrp /etc/profile)
-export ARM_EDITOR:=nano
+# the PLATFORM_EDITOR allows to change default editor e3
+# to anything else working on the platform.(Used in etc.lrp /etc/profile).
+# Use nano for arm/rpi
+export PLATFORM_EDITOR:=nano
 
 # Primary kernel architecture for U-Boot
 export UBOOT_ARCH:=arm
