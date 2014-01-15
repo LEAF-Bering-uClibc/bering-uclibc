@@ -21,7 +21,6 @@ export OPENSSL_TARGET:=linux-armv4
 
 # the PLATFORM_EDITOR allows to change default editor e3
 # to anything else working on the platform.(Used in etc.lrp /etc/profile).
-# Use nano for arm/rpi
 export PLATFORM_EDITOR:=nano
 
 # Set variables to "prime" the configure scripts' cache for cross-compiling
@@ -30,6 +29,8 @@ export PLATFORM_EDITOR:=nano
 ifndef GCC_SOURCE
 # Generic endianness setting used by many applications
 export ac_cv_c_bigendian=no
+# Fix "../include/libnet.h:117:10: error: macro names must be identifiers"
+export ac_cv_libnet_endianess=lil
 # Fix "checking packing order of bit fields... no defaults for cross-compiling"
 export rpppoe_cv_pack_bitfields=rev
 # Fix "WARNING: cross compiling; assuming big endianess"
