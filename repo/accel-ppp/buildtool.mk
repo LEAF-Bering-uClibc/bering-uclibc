@@ -23,6 +23,7 @@ $(ACCEL_DIR)/.kbuild: $(ACCEL_DIR)/.source
 
 $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.source
 	mkdir -p $(ACCEL_TARGET_DIR)/etc/init.d
+	mkdir -p $(ACCEL_TARGET_DIR)/etc/default
 
 	(cd $(ACCEL_DIR); rm -rf CMakeFiles; cmake \
 	    -DCMAKE_C_COMPILER=$(CROSS_COMPILE)gcc \
@@ -43,6 +44,7 @@ $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.source
 	$(MAKE) -C $(ACCEL_DIR) install DESTDIR=$(ACCEL_TARGET_DIR)
 	cp -aL accel-ppp.conf accel-ppp.lua $(ACCEL_TARGET_DIR)/etc
 	cp -aL accel-ppp.init $(ACCEL_TARGET_DIR)/etc/init.d/accel-ppp
+	cp -aL accel-ppp.default $(ACCEL_TARGET_DIR)/etc/default/accel-ppp
 	cp -aL dictionary.abills $(ACCEL_TARGET_DIR)/usr/share/accel-ppp/radius
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ACCEL_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ACCEL_TARGET_DIR)/usr/lib/accel-ppp/*

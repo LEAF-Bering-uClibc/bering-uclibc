@@ -1,0 +1,2 @@
+# Enable coredump
+#ACCEL_PPPD_COREDUMP=yes

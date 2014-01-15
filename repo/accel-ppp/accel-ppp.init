@@ -5,7 +5,7 @@ RCDLINKS="2,S50 3,S50 4,S50 5,S50 0,K50 1,K50 6,K50"
 test -x /usr/sbin/accel-pppd || exit 1
 
 #maybe in future we'll need additional command line arguments
-#[ -f /etc/default/accel-ppp ] && . /etc/default/accel-ppp
+[ -f /etc/default/accel-ppp ] && . /etc/default/accel-ppp
 
 #if [ -z $ACCEL_PPPD_OPTS ]; then
 	ACCEL_PPPD_OPTS="-c /etc/accel-ppp.conf"
@@ -13,6 +13,9 @@ test -x /usr/sbin/accel-pppd || exit 1
 
 case "$1" in
     start)
+	if [ "$ACCEL_PPPD_COREDUMP" = yes ] || [ "$ACCEL_PPPD_COREDUMP" = 1 ]; then
+		ulimit -c unlimited
+	fi
 	echo -n "Starting PPtP/L2TP/PPPoE server: "
 	if start-stop-daemon --start --quiet --pidfile /var/run/accel-pppd.pid \
 	    --exec /usr/sbin/accel-pppd -- -d -p /var/run/accel-pppd.pid $ACCEL_PPPD_OPTS; then
