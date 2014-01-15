@@ -8,6 +8,8 @@ export BT_KERNEL_BRANCH:=3.10
 export BT_KERNEL_PATCH:=25
 # Primary kernel architecture
 export ARCH:=arm
+# Arch for includes symlink
+export ARCH_INC:=arm
 # Space-separated list of kernel sub-archs to generate
 export KARCHS:=bcmrpi
 # Arch-specific CFLAGS
