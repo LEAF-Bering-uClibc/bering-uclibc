@@ -46,8 +46,8 @@ $(ACCEL_DIR)/.build: $(ACCEL_DIR)/.source
 	cp -aL accel-ppp.init $(ACCEL_TARGET_DIR)/etc/init.d/accel-ppp
 	cp -aL accel-ppp.default $(ACCEL_TARGET_DIR)/etc/default/accel-ppp
 	cp -aL dictionary.abills $(ACCEL_TARGET_DIR)/usr/share/accel-ppp/radius
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ACCEL_TARGET_DIR)/usr/sbin/*
-	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ACCEL_TARGET_DIR)/usr/lib/accel-ppp/*
+#	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(ACCEL_TARGET_DIR)/usr/sbin/*
+#	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(ACCEL_TARGET_DIR)/usr/lib/accel-ppp/*
 	rm -rf $(ACCEL_TARGET_DIR)/usr/share/man
 	cp -a $(ACCEL_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(ACCEL_DIR)/.build
