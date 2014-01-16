@@ -1,19 +1,20 @@
-# makefile for squid
+##########################################
+# makefile for BIND
+##########################################
 
-DIR:=bind-9.8.1-P1
+BIND_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(BIND_SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/bind
 
-$(DIR)/.source:
-	zcat $(SOURCE) | tar -xvf -
-	cat $(PATCH1) | patch -p1 -d $(DIR)
-	cat $(PATCH2) | patch -p1 -d $(DIR)
-#	perl -i -p -e 's,\s+driver.o, .libs/driver.o,'  $(DIR)/bin/tests/system/dlzexternal/Makefile.in
-	touch $(DIR)/.source
+$(BIND_DIR)/.source:
+	$(BT_SETUP_BUILDDIR) -v $(BIND_SOURCE)
+	cat $(PATCH1) | patch -p1 -d $(BIND_DIR)
+	cat $(PATCH2) | patch -p1 -d $(BIND_DIR)
+	touch $(BIND_DIR)/.source
 
-source: $(DIR)/.source
+source: $(BIND_DIR)/.source
 
-$(DIR)/.configured: $(DIR)/.source
-	(cd $(DIR) ; BUILD_CC=gcc \
+$(BIND_DIR)/.configured: $(BIND_DIR)/.source
+	(cd $(BIND_DIR) ; BUILD_CC=gcc \
 	./configure prefix=/usr \
 	--sysconfdir=/etc/named \
 	--localstatedir=/var \
@@ -32,15 +33,15 @@ $(DIR)/.configured: $(DIR)/.source
 	--disable-symtable \
 	--without-libxml2 \
 	--disable-static)
-	touch $(DIR)/.configured
+	touch $(BIND_DIR)/.configured
 
-$(DIR)/.build: $(DIR)/.configured
+$(BIND_DIR)/.build: $(BIND_DIR)/.configured
 	mkdir -p $(TARGET_DIR)/etc/init.d
 	mkdir -p $(TARGET_DIR)/etc/named
 	mkdir -p $(TARGET_DIR)/etc/default
 	mkdir -p $(TARGET_DIR)/var/named/pri
-	make $(MAKEOPTS) -C $(DIR) all
-	make DESTDIR=$(TARGET_DIR) -C $(DIR) install
+	make $(MAKEOPTS) -C $(BIND_DIR) all
+	make DESTDIR=$(TARGET_DIR) -C $(BIND_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_LIBOPTS) $(TARGET_DIR)/usr/lib/*
@@ -53,16 +54,16 @@ $(DIR)/.build: $(DIR)/.configured
 	cp -aL named.cache $(TARGET_DIR)/var/named
 	cp -aL *.zone $(TARGET_DIR)/var/named/pri
 	cp -a $(TARGET_DIR)/* $(BT_STAGING_DIR)
-	touch $(DIR)/.build
+	touch $(BIND_DIR)/.build
 
-build: $(DIR)/.build
+build: $(BIND_DIR)/.build
 
 clean:
-	make -C $(DIR) clean
+	make -C $(BIND_DIR) clean
 	rm -rf $(TARGET_DIR)
-	rm -rf $(DIR)/.build
-	rm -rf $(DIR)/.configured
+	rm -rf $(BIND_DIR)/.build
+	rm -rf $(BIND_DIR)/.configured
 
 srcclean: clean
-	rm -rf $(DIR)
-	rm -rf $(DIR)/.source
+	rm -rf $(BIND_DIR)
+	rm -rf $(BIND_DIR)/.source
