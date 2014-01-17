@@ -45,6 +45,7 @@ $(UCLIBC_DIR)/.source:
 
 $(BINUTILS_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) $(BINUTILS_SOURCE)
+	cat $(BINUTILS_PATCH1) | patch -p1 -d $(BINUTILS_DIR)
 	#  Patch libiberty so it will not be install in /usr/lib64 on 64bits architecture
 	sed -i 's%\(^MULTIOSDIR = \).*%\1 ../lib%' $(BINUTILS_DIR)/libiberty/Makefile.in
 	touch $(BINUTILS_DIR)/.source
@@ -120,7 +121,7 @@ $(BINUTILS_BUILD_DIR2)/.build: $(BINUTILS_DIR)/.source $(UCLIBC_DIR)/.build $(GC
 	(cd $(BINUTILS_BUILD_DIR2) && CFLAGS="$(BT_CFLAGS) -fPIC" LDFLAGS="$(BT_LDFLAGS)" \
 	 $(BINUTILS_DIR)/configure --host=$(GNU_TARGET_NAME) --prefix=/usr \
 	  --build=$(GNU_BUILD_NAME) \
-	  --with-build-sysroot=$(BT_STAGING_DIR) --disable-multilib && \
+	  --with-build-sysroot=$(BT_STAGING_DIR) --disable-multilib --enable-install-libiberty && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include configure-host && \
 	 make $(MAKEOPTS) KERNEL_HEADERS=$(TARGET_DIR)/usr/include DESTDIR=$(BINUTILS_BUILD_DIR2)-built \
 	 install-libiberty install-intl install-bfd install-binutils install-opcodes) || exit 1

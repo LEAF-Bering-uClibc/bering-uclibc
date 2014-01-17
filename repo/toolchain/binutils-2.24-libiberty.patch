@@ -1,0 +1,24 @@
+Общие подкаталоги: binutils-2.24/libiberty.old/config и binutils-2.24/libiberty/config
+diff -u binutils-2.24/libiberty.old/configure binutils-2.24/libiberty/configure
+--- binutils-2.24/libiberty.old/configure	2013-11-08 12:13:49.000000000 +0200
++++ binutils-2.24/libiberty/configure	2014-01-17 20:46:31.594386526 +0200
+@@ -5507,7 +5507,6 @@
+ 
+ setobjs=
+ CHECK=
+-target_header_dir=
+ if test -n "${with_target_subdir}"; then
+ 
+   # We are being configured as a target library.  AC_REPLACE_FUNCS
+diff -u binutils-2.24/libiberty.old/configure.ac binutils-2.24/libiberty/configure.ac
+--- binutils-2.24/libiberty.old/configure.ac	2013-11-08 12:13:49.000000000 +0200
++++ binutils-2.24/libiberty/configure.ac	2014-01-17 20:46:43.984942074 +0200
+@@ -405,7 +405,6 @@
+ 
+ setobjs=
+ CHECK=
+-target_header_dir=
+ if test -n "${with_target_subdir}"; then
+ 
+   # We are being configured as a target library.  AC_REPLACE_FUNCS
+Общие подкаталоги: binutils-2.24/libiberty.old/testsuite и binutils-2.24/libiberty/testsuite
