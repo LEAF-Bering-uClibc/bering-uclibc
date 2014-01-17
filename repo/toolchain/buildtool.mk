@@ -88,7 +88,7 @@ $(GCC_STAGE1_BUILD_DIR)/.build: $(GCC_DIR)/.source $(BINUTILS_BUILD_DIR)/.build
 	 $(GCC_DIR)/configure --target=$(GNU_TARGET_NAME) --with-sysroot=$(BT_TOOLCHAIN_DIR) \
 	  --includedir=$(BT_TOOLCHAIN_DIR)/usr/include --prefix=$(BT_TOOLCHAIN_DIR) \
 	  --disable-shared --enable-ld=yes $(GCC_CONFOPTS) \
-	  --enable-languages=c && \
+	  --enable-languages=c --disable-libatomic && \
 	  make $(MAKEOPTS) && make install) || exit 1
 	touch $(GCC_STAGE1_BUILD_DIR)/.build
 
