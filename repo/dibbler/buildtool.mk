@@ -20,22 +20,26 @@ $(DIBBLER_DIR)/.source:
 
 source: $(DIBBLER_DIR)/.source
 
-$(DIBBLER_DIR)/.build: $(DIBBLER_DIR)/.source
+$(DIBBLER_DIR)/Makefile: $(DIBBLER_DIR)/.source
+	(cd $(DIBBLER_DIR); ./configure \
+	    --host=$(GNU_TARGET_NAME) \
+	    --build=$(GNU_BUILD_NAME) \
+	    --prefix=/usr )
+
+$(DIBBLER_DIR)/.build: $(DIBBLER_DIR)/Makefile
 	mkdir -p $(DIBBLER_TARGET_DIR)
 	mkdir -p $(BT_STAGING_DIR)/usr/sbin/
 	mkdir -p $(BT_STAGING_DIR)/etc/init.d/
 	mkdir -p $(BT_STAGING_DIR)/etc/dibbler/
 #
-	make CHOST=$(GNU_TARGET_NAME) -C $(DIBBLER_DIR) libposlib
-	make $(MAKEOPTS) CHOST=$(GNU_TARGET_NAME) \
-		CC=$(TARGET_CC) CXX=$(TARGET_CXX) \
-		LD=$(TARGET_LD) -C $(DIBBLER_DIR) all
-	touch $(DIBBLER_DIR)/doc/dibbler-devel.pdf
+#	make CHOST=$(GNU_TARGET_NAME) -C $(DIBBLER_DIR) libposlib
+	make $(MAKEOPTS) -C $(DIBBLER_DIR) all
+#	touch $(DIBBLER_DIR)/doc/dibbler-devel.pdf
 	make DESTDIR=$(DIBBLER_TARGET_DIR) -C $(DIBBLER_DIR) install
 #
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(DIBBLER_TARGET_DIR)/usr/sbin/*
 	cp -a $(DIBBLER_TARGET_DIR)/usr/sbin/* $(BT_STAGING_DIR)/usr/sbin/
-	cp -a $(DIBBLER_TARGET_DIR)/etc/dibbler/server.conf $(BT_STAGING_DIR)/etc/dibbler/
+	cp -a $(DIBBLER_TARGET_DIR)/usr/share/doc/dibbler/examples/server.conf $(BT_STAGING_DIR)/etc/dibbler/
 	cp dibbler-server.init $(BT_STAGING_DIR)/etc/init.d/dibbler-server
 	cp dibbler-server.daily $(BT_STAGING_DIR)/etc/cron.daily/dibbler-server
 	touch $(DIBBLER_DIR)/.build
