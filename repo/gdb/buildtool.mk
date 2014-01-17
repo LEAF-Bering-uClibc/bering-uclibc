@@ -5,12 +5,11 @@
 #
 #############################################################
 
-DIR:=gdb-7.3.1
+DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/gdb
 
 $(DIR)/.source:
-	zcat $(SOURCE) | tar -xvf -
-	cat $(PATCH1) | patch -p1 -d $(DIR)
+	bzcat $(SOURCE) | tar -xvf -
 	touch $(DIR)/.source
 
 $(DIR)/.configured: $(DIR)/.source
