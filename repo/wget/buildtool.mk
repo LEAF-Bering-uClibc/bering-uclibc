@@ -1,12 +1,14 @@
+###################################
 # makefile for wget
+###################################
 
-WGET_DIR:=wget-1.13.4
+WGET_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(WGET_SOURCE) 2>/dev/null )
 WGET_TARGET_DIR:=$(BT_BUILD_DIR)/wget
 #CFLAGS="$(BT_COPT_FLAGS) -g -Wall -Wno-implicit -DINET6"
 export CFLAGS += -g -Wall -Wno-implicit
 
 $(WGET_DIR)/.source:
-	zcat $(WGET_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(WGET_SOURCE)
 	touch $(WGET_DIR)/.source
 
 source: $(WGET_DIR)/.source
