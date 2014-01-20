@@ -4,7 +4,6 @@
 #
 #############################################################
 
-
 BUSYBOX_DIR:=$(shell echo $(BUSYBOX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
 
 $(BUSYBOX_DIR)/.source:
@@ -13,17 +12,15 @@ $(BUSYBOX_DIR)/.source:
 	touch $(BUSYBOX_DIR)/.source
 
 $(BUSYBOX_DIR)/.build: $(BUSYBOX_DIR)/.source
-#	mkdir -p $(BUSYBOX_BUILD_DIR)
-#	mkdir -p $(BUSYBOX_BUILD_DIR)/etc/init.d
-#	mkdir -p $(BUSYBOX_BUILD_DIR)/etc/default
 	mkdir -p $(BT_STAGING_DIR)/bin
-	cp .config $(BUSYBOX_DIR)/
+ifeq ($(PLATFORM_EDITOR), vi)
+	cp .config-vi $(BUSYBOX_DIR)/.config
+else 
+	cp .config $(BUSYBOX_DIR)/	
+endif
 	make $(MAKEOPTS) -C $(BUSYBOX_DIR) busybox
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BUSYBOX_DIR)/busybox
 	cp -a $(BUSYBOX_DIR)/busybox $(BT_STAGING_DIR)/bin/
-#	cp -a $(BUSYBOX_BUILD_DIR)/* $(BT_STAGING_DIR)/bin
-#	cp -a $(BUSYBOX_BUILD_DIR)/etc/init.d/* $(BT_STAGING_DIR)/etc/init.d/
-#	cp -a $(BUSYBOX_BUILD_DIR)/etc/default/* $(BT_STAGING_DIR)/etc/default/
 	touch $(BUSYBOX_DIR)/.build
 
 source: $(BUSYBOX_DIR)/.source
