@@ -8,6 +8,9 @@
 SOURCE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE_TGZ) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/krb5
 
+# krb5 needs 02, build fails with -Os
+export CFLAGS=-O2 $(ARCH_CFLAGS) -I$(BT_STAGING_DIR)/usr/include
+
 # Variable definitions for 'configure'
 CONFDEFS = \
 	krb5_cv_attr_constructor_destructor=yes,yes
