@@ -84,7 +84,7 @@ export MAKEOPTS:=-j$(shell echo $$(($(CPUCOUNT)+1)))
 export LANG=en_US
 
 # Default settings for compiling code 
-export CFLAGS=-O2 $(ARCH_CFLAGS) -I$(BT_STAGING_DIR)/usr/include
+export CFLAGS=-Os $(ARCH_CFLAGS) -I$(BT_STAGING_DIR)/usr/include
 export CPPFLAGS=-I$(BT_STAGING_DIR)/usr/include
 
 # Default ld flags
