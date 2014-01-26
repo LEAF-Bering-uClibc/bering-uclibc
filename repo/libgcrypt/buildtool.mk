@@ -4,7 +4,8 @@
 #
 #############################################################
 
-LIBGCRYPT_DIR:=libgcrypt-1.5.0
+#LIBGCRYPT_DIR:=libgcrypt-1.5.0
+LIBGCRYPT_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LIBGCRYPT_SOURCE) 2>/dev/null )
 LIBGCRYPT_TARGET_DIR:=$(BT_BUILD_DIR)/libgcrypt
 
 export LDFLAGS += $(EXTCCLDFLAGS)
