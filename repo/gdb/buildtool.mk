@@ -8,6 +8,11 @@
 DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/gdb
 
+# gdb needs 02, build fails with -Os
+export CFLAGS=-O2 $(ARCH_CFLAGS) -I$(BT_STAGING_DIR)/usr/include
+
+#	echo $(CFLAGS)
+
 $(DIR)/.source:
 	bzcat $(SOURCE) | tar -xvf -
 	touch $(DIR)/.source
