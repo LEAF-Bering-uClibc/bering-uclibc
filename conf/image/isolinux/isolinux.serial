@@ -1,4 +1,4 @@
 DISPLAY isolinux.dpy
 TIMEOUT 0
-APPEND reboot=bios console=ttyS0,19200n8 VERBOSE=1 KMODULES=floppy,i2c-core
+APPEND reboot=bios console=ttyS0,19200n8 VERBOSE=1 KMODULES=floppy,i2c-core intel_idle.max_cstate=0
 DEFAULT {KERNEL} initrd=/initrd.lrp,/initmod.lrp LEAFCFG={LEAFCFG}

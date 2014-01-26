@@ -30,7 +30,7 @@ LABEL Bering-uClibc
   MENU LABEL Boot Bering-uClibc
   MENU CLEAR
   KERNEL {KERNEL} initrd=/initrd.lrp,/initmod.lrp LEAFCFG={LEAFCFG} quiet
-  APPEND reboot=bios
+  APPEND reboot=bios intel_idle.max_cstate=0
 MENU END
 
 LABEL Hardware Test

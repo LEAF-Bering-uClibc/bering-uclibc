@@ -30,7 +30,7 @@ LABEL Bering-uClibc
   MENU LABEL Boot Bering-uClibc
   MENU CLEAR
   KERNEL http://192.168.1.12/bering-uclibc/5/pxelinux/linux initrd=http://192.168.1.12/bering-uclibc/5/pxelinux/initrd.lrp LEAFCFG={LEAFCFG}
-  APPEND reboot=bios LEAFPXEIF=eth0 VERBOSE=1
+  APPEND reboot=bios LEAFPXEIF=eth0 VERBOSE=1 intel_idle.max_cstate=0
 MENU END
 
 LABEL Hardware Test

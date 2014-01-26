@@ -30,7 +30,7 @@ LABEL Bering-uClibc
   MENU LABEL Boot Bering-uClibc
   MENU CLEAR
   KERNEL {KERNEL} initrd=/initrd.lrp,/initmod.lrp LEAFCFG={LEAFCFG} quiet
-  APPEND reboot=bios KMODULES=floppy,i2c-core
+  APPEND reboot=bios KMODULES=floppy,i2c-core intel_idle.max_cstate=0
 
 LABEL Hardware Test
   MENU LABEL Hardware Test
