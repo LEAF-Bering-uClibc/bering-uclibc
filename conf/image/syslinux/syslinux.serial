@@ -1,5 +1,5 @@
 SERIAL 0 19200
 DISPLAY syslinux.dpy
 TIMEOUT 0
-APPEND reboot=bios console=ttyS0,19200n8 VERBOSE=1 intel_idle.max_cstate=0
+APPEND reboot=bios console=ttyS0,19200n8 VERBOSE=1 intel_idle.max_cstate=0 processor.max_cstate=1
 DEFAULT {KERNEL} initrd=/initrd.lrp,/initmod.lrp rw root=/dev/ram0 LEAFCFG={LEAFCFG}
