@@ -11,7 +11,8 @@ SAMBA_TARGET_DIR:=$(BT_BUILD_DIR)/samba
 # Variable definitions for 'configure'
 CONFDEFS = samba_cv_CC_NEGATIVE_ENUM_VALUES=yes \
 	ac_cv_file__proc_sys_kernel_core_pattern=no \
-	libreplace_cv_HAVE_GETADDRINFO=no
+	libreplace_cv_HAVE_GETADDRINFO=no \
+	samba_cv_USE_SETREUID=yes
 
 # Option settings for 'configure'
 CONFOPTS = --host=$(GNU_TARGET_NAME) \
