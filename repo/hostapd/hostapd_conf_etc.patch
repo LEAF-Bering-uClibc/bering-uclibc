@@ -1,7 +1,7 @@
-diff -urN hostapd-2.0.orig/hostapd/hostapd.conf hostapd-2.0/hostapd/hostapd.conf
---- hostapd-2.0.orig/hostapd/hostapd.conf	2013-01-12 16:42:53.000000000 +0100
-+++ hostapd-2.0/hostapd/hostapd.conf	2013-02-02 00:58:36.031296487 +0100
-@@ -185,8 +185,8 @@
+diff -urN hostapd-2.1.orig/hostapd/hostapd.conf hostapd-2.1/hostapd/hostapd.conf
+--- hostapd-2.1.orig/hostapd/hostapd.conf	2014-02-04 12:23:35.000000000 +0100
++++ hostapd-2.1/hostapd/hostapd.conf	2014-02-22 11:15:58.344566110 +0100
+@@ -208,8 +208,8 @@
  # Accept/deny lists are read from separate files (containing list of
  # MAC addresses, one per line). Use absolute path name to make sure that the
  # files can be read on SIGHUP configuration reloads.
@@ -12,7 +12,7 @@ diff -urN hostapd-2.0.orig/hostapd/hostapd.conf hostapd-2.0/hostapd/hostapd.conf
  
  # IEEE 802.11 specifies two authentication algorithms. hostapd can be
  # configured to allow both of these or only one. Open system authentication
-@@ -642,20 +642,20 @@
+@@ -681,20 +681,20 @@
  # Path for EAP server user database
  # If SQLite support is included, this can be set to "sqlite:/path/to/sqlite.db"
  # to use SQLite database instead of a text file.
@@ -37,7 +37,7 @@ diff -urN hostapd-2.0.orig/hostapd/hostapd.conf hostapd-2.0/hostapd/hostapd.conf
  
  # Passphrase for private key
  #private_key_passwd=secret passphrase
-@@ -680,8 +680,8 @@
+@@ -738,8 +738,8 @@
  # is in DSA parameters format, it will be automatically converted into DH
  # params. This parameter is required if anonymous EAP-FAST is used.
  # You can generate DH parameters file with OpenSSL, e.g.,
@@ -48,16 +48,16 @@ diff -urN hostapd-2.0.orig/hostapd/hostapd.conf hostapd-2.0/hostapd/hostapd.conf
  
  # Fragment size for EAP methods
  #fragment_size=1400
-@@ -828,7 +828,7 @@
- # multiple BSSIDs or SSIDs. Each line in this text file is defining a new
- # interface and the line must include VLAN ID and interface name separated by
+@@ -887,7 +887,7 @@
  # white space (space or tab).
+ # If no entries are provided by this file, the station is statically mapped
+ # to <bss-iface>.<vlan-id> interfaces.
 -#vlan_file=/etc/hostapd.vlan
 +#vlan_file=/etc/hostapd/vlan
  
  # Interface where 802.1q tagged packets should appear when a RADIUS server is
  # used to determine which VLAN a station is on.  hostapd creates a bridge for
-@@ -901,7 +901,7 @@
+@@ -966,7 +966,7 @@
  
  # File name of the RADIUS clients configuration for the RADIUS server. If this
  # commented out, RADIUS server is disabled.
@@ -66,7 +66,7 @@ diff -urN hostapd-2.0.orig/hostapd/hostapd.conf hostapd-2.0/hostapd/hostapd.conf
  
  # The UDP port number for the RADIUS authentication server
  #radius_server_auth_port=1812
-@@ -938,7 +938,7 @@
+@@ -1003,7 +1003,7 @@
  # of (PSK,MAC address) pairs. This allows more than one PSK to be configured.
  # Use absolute path name to make sure that the files can be read on SIGHUP
  # configuration reloads.
@@ -75,12 +75,3 @@ diff -urN hostapd-2.0.orig/hostapd/hostapd.conf hostapd-2.0/hostapd/hostapd.conf
  
  # Optionally, WPA passphrase can be received from RADIUS authentication server
  # This requires macaddr_acl to be set to 2 (RADIUS)
-@@ -1236,7 +1236,7 @@
- # with pre-configured attributes. This is similar to extra_cred file format,
- # but the AP Settings attributes are not encapsulated in a Credential
- # attribute.
--#ap_settings=hostapd.ap_settings
-+#ap_settings=hostapd/ap_settings
- 
- # WPS UPnP interface
- # If set, support for external Registrars is enabled.
