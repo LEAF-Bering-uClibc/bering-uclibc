@@ -1,16 +1,15 @@
+####################################################
 # makefile for ppp, ppp-filter, pppoe and pppoatm
+####################################################
 
-PPP_DIR:=ppp-2.4.5
+PPP_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(PPP_SOURCE) 2>/dev/null )
 PPP_TARGET_DIR:=$(BT_BUILD_DIR)/ppp
 
 $(PPP_DIR)/.source:
 	zcat $(PPP_SOURCE) | tar -xvf -
-	cat $(PPP_PATCH1) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH2) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH3) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH4) | patch -d $(PPP_DIR) -p1
-	cat $(PPP_PATCH5) | patch -d $(PPP_DIR) -p1
-	cat $(PPP_PATCH6) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH7) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH8) | patch -d $(PPP_DIR) -p1
 	cat $(PPP_PATCH9) | patch -d $(PPP_DIR) -p1
