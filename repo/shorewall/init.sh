@@ -55,7 +55,7 @@ shorewall_stop () {
 # restart the firewall
 shorewall_restart () {
   echo -n "Restarting \"Shorewall firewall\": "
-  $SRWL $OPTIONS restart 2>&1 && echo "done."
+  $SRWL $OPTIONS start 2>&1 && echo "done."
   return 0
 }
 
@@ -76,11 +76,11 @@ case "$1" in
   refresh)
      shorewall_refresh
      ;;
-  restart)
+  force-reload|restart)
      shorewall_restart
      ;;
   *)
-     echo "Usage: /etc/init.d/shorewall {start|stop|refresh|restart}"
+     echo "Usage: /etc/init.d/shorewall {start|stop|refresh|restart|force-reload}"
      exit 1
 esac
 
