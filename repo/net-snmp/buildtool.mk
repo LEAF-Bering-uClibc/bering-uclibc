@@ -5,7 +5,7 @@
 #############################################################
 
 
-SNMP_DIR:=net-snmp-5.7.2
+SNMP_DIR:=net-snmp-5.7.2.1
 SNMP_TARGET_DIR:=$(BT_BUILD_DIR)/net-snmp
 
 export CFLAGS += -D_REENTRANT
