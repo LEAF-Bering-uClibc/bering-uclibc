@@ -1,11 +1,8 @@
 #############################################################
-#
 # iptables
-#
 #############################################################
 
-IPTABLES_VER=1.4.20
-IPTABLES_DIR:=iptables-$(IPTABLES_VER)
+IPTABLES_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(IPTABLES_SOURCE) 2>/dev/null)
 IPT_NF_DIR:=ipt-netflow-1.8
 IPTABLES_TARGET_DIR:=$(BT_BUILD_DIR)/iptables
 
