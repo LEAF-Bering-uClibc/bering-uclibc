@@ -20,6 +20,7 @@ $(DIR)/.configured: $(DIR)/.source
 		./configure \
 		--host=$(GNU_TARGET_NAME) \
 		--build=$(GNU_BUILD_NAME) \
+		--disable-static \
 		--prefix=/usr);
 	touch $(DIR)/.configured
 
@@ -47,6 +48,6 @@ clean:
 	rm -f $(BT_STAGING_DIR)/usr/include/libintl.h
 	$(MAKE) -C $(DIR) clean
 
-srcclean:
+srcclean: clean
 	rm -rf $(DIR)
 
