@@ -16,6 +16,7 @@ $(LIBDAEMON_DIR)/Makefile: $(LIBDAEMON_DIR)/configure
 			--build=$(GNU_BUILD_NAME) \
 			--host=$(GNU_TARGET_NAME) \
 			--prefix=/usr \
+			--disable-static \
 			--without-check );
 	
 build: $(LIBDAEMON_DIR)/Makefile
@@ -38,5 +39,5 @@ clean:
 	rm -f $(BT_STAGING_DIR)/usr/lib/libdaemon
 	rm -f $(BT_STAGING_DIR)/usr/lib/libdaemon.*
 	
-srcclean:
+srcclean: clean
 	rm -rf $(LIBDAEMON_DIR)
