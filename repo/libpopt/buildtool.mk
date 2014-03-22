@@ -19,6 +19,7 @@ $(LIBPOPT_DIR)/.configured: $(LIBPOPT_DIR)/.source
 			--build=$(GNU_BUILD_NAME) \
 			--prefix=/usr \
 			--disable-nls \
+			--disable-static \
 			--disable-rpath );
 	touch $(LIBPOPT_DIR)/.configured
 
@@ -40,9 +41,9 @@ $(LIBPOPT_DIR)/.build: $(LIBPOPT_DIR)/.configured
 build: $(LIBPOPT_DIR)/.build
 
 clean:
-	-rm $(LIBPOPT_DIR)/.build $(LIBPOPT_DIR)/.configured
-	-rm -rf $(LIBPOPT_TARGET_DIR)
+	rm -rf $(LIBPOPT_DIR)/.build $(LIBPOPT_DIR)/.configured
+	rm -rf $(LIBPOPT_TARGET_DIR)
 	$(MAKE) -C $(LIBPOPT_DIR) clean
 
-srcclean:
+srcclean: clean
 	rm -rf $(LIBPOPT_DIR)
