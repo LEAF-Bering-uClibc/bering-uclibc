@@ -16,6 +16,8 @@ $(LIBXML2_DIR)/.configured: $(LIBXML2_DIR)/.source
 	--prefix=/ \
 	--host=$(GNU_TARGET_NAME) \
 	--without-python \
+	--disable-static \
+	--without-debug \
 	--build=$(GNU_BUILD_NAME))
 	touch $(LIBXML2_DIR)/.configured
 
@@ -23,12 +25,17 @@ $(LIBXML2_DIR)/.build: $(LIBXML2_DIR)/.configured
 	mkdir -p $(LIBXML2_TARGET_DIR)
 	mkdir -p $(LIBXML2_TARGET_DIR)/usr/bin
 	mkdir -p $(LIBXML2_TARGET_DIR)/usr/lib
+	mkdir -p $(LIBXML2_TARGET_DIR)/usr/include
+	mkdir -p $(LIBXML2_TARGET_DIR)/usr/include/libxml
 
 	make $(MAKEOPTS) -C $(LIBXML2_DIR) DESTDIR=$(LIBXML2_TARGET_DIR) \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(CFLAGS)" all
-	cp -a $(LIBXML2_DIR)/.libs/libxml2* $(LIBXML2_TARGET_DIR)/usr/lib
+	cp -a $(LIBXML2_DIR)/.libs/libxml2.s* $(LIBXML2_TARGET_DIR)/usr/lib
 	cp -a $(LIBXML2_DIR)/.libs/xmlcatalog $(LIBXML2_TARGET_DIR)/usr/bin
 	cp -a $(LIBXML2_DIR)/.libs/xmllint $(LIBXML2_TARGET_DIR)/usr/bin
+	cp -a $(LIBXML2_DIR)/xml2-config $(LIBXML2_TARGET_DIR)/usr/bin
+	cp -a $(LIBXML2_DIR)/include/*.h $(LIBXML2_TARGET_DIR)/usr/include
+	cp -a $(LIBXML2_DIR)/include/libxml/*.h $(LIBXML2_TARGET_DIR)/usr/include/libxml
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LIBXML2_TARGET_DIR)/usr/bin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(LIBXML2_TARGET_DIR)/usr/lib/*
 	cp -a $(LIBXML2_TARGET_DIR)/* $(BT_STAGING_DIR)
