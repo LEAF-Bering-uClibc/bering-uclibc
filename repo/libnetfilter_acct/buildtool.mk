@@ -1,10 +1,12 @@
-## makefile for libnetfilter_acct
+######################################################
+# makefile for libnetfilter_acct
+######################################################
 
-LIBNETFILTER_ACCT_DIR:=libnetfilter_acct-1.0.2
+LIBNETFILTER_ACCT_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LIBNETFILTERACCT_SOURCE) 2>/dev/null)
 LIBNETFILTER_ACCT_TARGET_DIR:=$(BT_BUILD_DIR)/libnetfilter_acct
 
 $(LIBNETFILTER_ACCT_DIR)/.source:
-	bzcat $(LIBNETFILTERACCT_SOURCE) |  tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(LIBNETFILTERACCT_SOURCE) 
 	touch $(LIBNETFILTER_ACCT_DIR)/.source
 
 $(LIBNETFILTER_ACCT_DIR)/.configured: $(LIBNETFILTER_ACCT_DIR)/.source
@@ -34,5 +36,5 @@ clean:
 	rm -rf $(BT_STAGING_DIR)/usr/include/libnetfilter_acct
 	$(MAKE) -C $(LIBNETFILTER_ACCT_DIR) clean
 
-srcclean:
+srcclean: clean
 	rm -rf $(LIBNETFILTER_ACCT_DIR)
