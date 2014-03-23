@@ -65,6 +65,6 @@ clean:
 	-rm  $(BT_STAGING_DIR)/usr/lib/libwrap*
 	-rm  $(BT_STAGING_DIR)/lib/libwrap*
 
-srcclean:
+srcclean: clean
 	rm -rf $(TCP_WRAPPERS_DIR)
 
