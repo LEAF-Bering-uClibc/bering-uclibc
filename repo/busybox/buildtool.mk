@@ -29,8 +29,7 @@ build: $(BUSYBOX_DIR)/.build
 
 clean:
 	-rm $(BUSYBOX_DIR)/.build
-#	-rm -r $(BUSYBOX_BUILD_DIR)
 	-make -C $(BUSYBOX_DIR) clean
 
-srcclean:
+srcclean: clean
 	rm -rf $(BUSYBOX_DIR)
