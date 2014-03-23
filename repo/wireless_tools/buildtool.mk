@@ -37,6 +37,6 @@ clean:
 	-rmdir  $(BT_STAGING_DIR)/etc/network/if-pre-up.d
 	-rmdir  $(BT_STAGING_DIR)/etc/network
 
-srcclean:
+srcclean: clean
 	rm -rf $(WIRELESS_TOOLS_DIR)
 	rm -f .source
