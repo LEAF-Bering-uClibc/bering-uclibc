@@ -9,7 +9,6 @@ HOSTAPD_TARGET_DIR:=$(BT_BUILD_DIR)/hostapd
 
 $(HOSTAPD_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(HOSTAPD_SOURCE)
-#	cat $(HOSTAPD_PATCH1) | patch -d $(HOSTAPD_DIR)/hostapd -p1
 	cat $(HOSTAPD_PATCH2) | patch -d $(HOSTAPD_DIR) -p1
 	cp defconfig .config
 	echo "CFLAGS += -I$(BT_STAGING_DIR)/usr/include/libnl3/" >> .config
@@ -46,6 +45,6 @@ clean:
 	rm $(HOSTAPD_DIR)/.build
 	rm -rf $(HOSTAPD_TARGET_DIR)
 
-srcclean:
+srcclean: clean
 	rm -rf $(HOSTAPD_DIR)
 	rm -rf .config
