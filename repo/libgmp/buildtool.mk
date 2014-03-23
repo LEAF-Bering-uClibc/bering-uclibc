@@ -1,20 +1,24 @@
 #############################################################
 #
-# $Id:
+# libgmp
 #
 #############################################################
 
-LIBGMP_DIR:=gmp-5.0.5
+#LIBGMP_DIR:=gmp-5.0.5
+LIBGMP_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LIBGMP_SOURCE) 2>/dev/null)
 LIBGMP_TARGET_DIR:=$(BT_BUILD_DIR)/libgmp
 
 $(LIBGMP_DIR)/.source:
-	bzcat $(LIBGMP_SOURCE) |  tar -xvf -
-	#zcat $(LIBGMP_PATCH1) |  patch -d $(LIBGMP_DIR) -p1
+	$(BT_SETUP_BUILDDIR) -v $(LIBGMP_SOURCE)
+#	bzcat $(LIBGMP_SOURCE) |  tar -xvf -
 	touch $(LIBGMP_DIR)/.source
 
 
 $(LIBGMP_DIR)/.configured: $(LIBGMP_DIR)/.source
-	(cd $(LIBGMP_DIR); ./configure --host=$(GNU_TARGET_NAME) --build=$(GNU_BUILD_NAME) --prefix=/usr);
+	(cd $(LIBGMP_DIR); ./configure \
+	--host=$(GNU_TARGET_NAME) \
+	--build=$(GNU_BUILD_NAME) \
+	--prefix=/usr);
 	touch $(LIBGMP_DIR)/.configured
 
 source: $(LIBGMP_DIR)/.source
@@ -42,6 +46,6 @@ clean:
 	rm -f $(BT_STAGING_DIR)/usr/include/mp.h
 	$(MAKE) -C $(LIBGMP_DIR) clean
 
-srcclean:
+srcclean: clean
 	rm -rf $(LIBGMP_DIR)
 
