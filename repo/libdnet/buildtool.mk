@@ -44,5 +44,5 @@ clean:
 	rm -f $(BT_STAGING_DIR)/usr/bin/dnet-config
 	rm -f $(BT_STAGING_DIR)/usr/sbin/dnet
 
-srcclean:
+srcclean: clean
 	rm -rf $(LIBDNET_DIR)
