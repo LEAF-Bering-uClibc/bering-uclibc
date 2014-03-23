@@ -52,5 +52,5 @@ clean:
 	make -C $(EASYRSA_DIR) clean
 	rm -rf $(EASYRSA_TARGET_DIR)
 
-srcclean:
+srcclean: clean
 	rm -rf $(EASYRSA_DIR)
