@@ -59,6 +59,9 @@ softdog
 # Bridge support
 #bridge
 
+# Bonding (link aggregation) support
+#bonding
+
 # Vlan 8021q support
 8021q
 
