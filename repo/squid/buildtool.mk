@@ -1,13 +1,14 @@
+###########################################
 # makefile for squid
+##########################################
 
-#alias gcc=$(BT_STAGING_DIR)/usr/local/kgcc/bin/gcc
-
-SQUID_DIR:=squid-3.2.0.12
+SQUID_DIR:=squid-3.4.4
 SQUID_TARGET_DIR:=$(BT_BUILD_DIR)/squid
 export HOSTCXX=g++
 
 $(SQUID_DIR)/.source:
-	zcat $(SQUID_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(SQUID_SOURCE)
+	cat $(SQUID_CERTIFICATE_PATCH) | patch -d $(SQUID_DIR) -p1
 	cp config.test $(SQUID_DIR)/helpers/external_acl/session/
 	touch $(SQUID_DIR)/.source
 
@@ -87,6 +88,7 @@ $(SQUID_DIR)/.build: $(SQUID_DIR)/.configured
 	cp -a $(SQUID_DIR)/helpers/log_daemon/file/log_file_daemon $(SQUID_TARGET_DIR)/usr/bin
 	cp -a $(SQUID_DIR)/tools/cachemgr.cgi $(SQUID_TARGET_DIR)/usr/lib/cgi-bin
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SQUID_TARGET_DIR)/usr/bin/*
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SQUID_TARGET_DIR)/usr/sbin/*
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(SQUID_TARGET_DIR)/usr/lib/cgi-bin/*
 	cp -a $(SQUID_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(SQUID_DIR)/.build

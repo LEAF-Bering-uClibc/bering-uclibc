@@ -13,7 +13,7 @@ SQ=/usr/sbin/squid
 [ -f /etc/squid/squid.conf ] || exit 0
 [ -f $SQ ] || exit 0
 
-SP=/var/cache
+SP=/var/cache/squid
 LG=/var/log
 
 # determine which one is the cache_swap directory
