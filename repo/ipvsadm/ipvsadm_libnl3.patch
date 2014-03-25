@@ -51,7 +51,7 @@ diff -urN ipvsadm-1.26.orig/Makefile ipvsadm-1.26/Makefile
  LIBS		= $(POPT_LIB)
  ifneq (0,$(HAVE_NL))
 -LIBS		+= -lnl
-+LIBS		+= -lnl-3
++LIBS		+= -lnl-3 -lpopt
  endif
  DEFINES		= -DVERSION=\"$(VERSION)\" -DSCHEDULERS=\"$(SCHEDULERS)\" \
  		  -DPE_LIST=\"$(PE_LIST)\" $(POPT_DEFINE)
