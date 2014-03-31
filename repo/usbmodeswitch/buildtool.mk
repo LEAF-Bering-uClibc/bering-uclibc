@@ -1,6 +1,5 @@
 ################################
 # makefile for usbmodeswitch
-include $(MASTERMAKEFILE)
 ################################
 
 USBMODESWITCH_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(USBMODESWITCH_SOURCE) 2>/dev/null )
