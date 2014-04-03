@@ -22,12 +22,14 @@ $(HEYU_DIR)/.build: $(HEYU_DIR)/.configured
 	mkdir -p $(HEYU_TARGET_DIR)
 	mkdir -p $(HEYU_TARGET_DIR)/usr/bin
 	mkdir -p $(HEYU_TARGET_DIR)/etc/heyu
+	mkdir -p $(HEYU_TARGET_DIR)/etc/init.d
 
 	make $(MAKEOPTS) -C $(HEYU_DIR) DESTDIR=$(HEYU_TARGET_DIR) \
 	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(CFLAGS)" all
 	cp -a $(HEYU_DIR)/heyu $(HEYU_TARGET_DIR)/usr/bin
 	cp -a $(HEYU_DIR)/x10config.sample $(HEYU_TARGET_DIR)/etc/heyu/x10.conf
 	cp -a $(HEYU_DIR)/x10.sched.sample $(HEYU_TARGET_DIR)/etc/heyu/x10.sched
+	cp -aL heyu.init $(HEYU_TARGET_DIR)/etc/init.d/heyu
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(HEYU_TARGET_DIR)/usr/bin/*
 	cp -a $(HEYU_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(HEYU_DIR)/.build
