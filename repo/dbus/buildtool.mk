@@ -22,8 +22,10 @@ CONFOPTS = \
 	--with-sysroot=$(BT_STAGING_DIR) \
 	--with-dbus-user=dbus \
 	--with-init-scripts=none \
-	--without-x --disable-selinux \
-	--disable-xml-docs --disable-doxygen-docs
+	--without-x \
+	--disable-selinux \
+	--disable-xml-docs \
+	--disable-doxygen-docs
 
 .source:
 	zcat $(SOURCE_TGZ) | tar -xvf -
