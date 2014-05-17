@@ -1,8 +1,12 @@
-RSYNC_DIR:=rsync-3.0.9
+################################################################
+# makefile for rsync
+################################################################
+
+RSYNC_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(RSYNC_SOURCE) 2>/dev/null)
 RSYNC_TARGET_DIR:=$(BT_BUILD_DIR)/rsync
 
 $(RSYNC_DIR)/.source:
-	zcat $(RSYNC_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(RSYNC_SOURCE)
 	touch $(RSYNC_DIR)/.source
 
 $(RSYNC_DIR)/.configured: $(RSYNC_DIR)/.source
