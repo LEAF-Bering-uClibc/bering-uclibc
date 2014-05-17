@@ -1,10 +1,11 @@
-diff -urN shorewall-4.5.4.1.orig/configfiles/rules shorewall-4.5.4.1/configfiles/rules
---- shorewall-4.5.4.1.orig/configfiles/rules	2012-05-30 23:37:29.000000000 +0200
-+++ shorewall-4.5.4.1/configfiles/rules	2012-06-08 15:27:00.667036866 +0200
-@@ -13,3 +13,28 @@
- #SECTION ESTABLISHED
- #SECTION RELATED
- SECTION NEW
+diff -urN shorewall-4.6.0.1.orig/configfiles/rules shorewall-4.6.0.1/configfiles/rules
+--- shorewall-4.6.0.1.orig/configfiles/rules	2014-05-16 16:31:44.000000000 +0200
++++ shorewall-4.6.0.1/configfiles/rules	2014-05-17 14:58:37.361084089 +0200
+@@ -15,3 +15,29 @@
+ ?SECTION INVALID
+ ?SECTION UNTRACKED
+ ?SECTION NEW
++
 +#      Accept DNS connections from the firewall to the network
 +#      and from the local network to the firewall (in case dnsmasq is running)
 +DNS(ACCEPT)   fw          net
@@ -28,5 +29,5 @@ diff -urN shorewall-4.5.4.1.orig/configfiles/rules shorewall-4.5.4.1/configfiles
 +HTTPS(ACCEPT)   loc        fw
 +# timeserver (allow syncing with time servers (default: pool.ntp.org))
 +NTP(ACCEPT)         fw       net
-+# timeserver (allow LAN clients to sync with the time service on the router)
+++# timeserver (allow LAN clients to sync with the time service on the router)
 +# NTP(ACCEPT)         loc    fw

@@ -1,6 +1,6 @@
-diff -urN shorewall-4.4.20.1.orig/configfiles/start shorewall-4.4.20.1/configfiles/start
---- shorewall-4.4.20.1.orig/configfiles/start	2011-06-07 01:08:29.000000000 +0200
-+++ shorewall-4.4.20.1/configfiles/start	2011-06-07 17:03:51.679102163 +0200
+diff -urN shorewall-4.6.0.1.orig/configfiles/start shorewall-4.6.0.1/configfiles/start
+--- shorewall-4.6.0.1.orig/configfiles/start	2014-05-16 16:31:44.000000000 +0200
++++ shorewall-4.6.0.1/configfiles/start	2014-05-17 14:48:40.357056902 +0200
 @@ -10,4 +10,7 @@
  # information.
  #
@@ -9,9 +9,9 @@ diff -urN shorewall-4.4.20.1.orig/configfiles/start shorewall-4.4.20.1/configfil
 +    run_user_exit $file
 +done
  return 0
-diff -urN shorewall-4.4.20.1.orig/configfiles/stop shorewall-4.4.20.1/configfiles/stop
---- shorewall-4.4.20.1.orig/configfiles/stop	2011-06-07 01:08:29.000000000 +0200
-+++ shorewall-4.4.20.1/configfiles/stop	2011-06-07 17:04:21.139595966 +0200
+diff -urN shorewall-4.6.0.1.orig/configfiles/stop shorewall-4.6.0.1/configfiles/stop
+--- shorewall-4.6.0.1.orig/configfiles/stop	2014-05-16 16:31:44.000000000 +0200
++++ shorewall-4.6.0.1/configfiles/stop	2014-05-17 14:49:14.541058459 +0200
 @@ -10,3 +10,6 @@
  # information.
  #
@@ -20,9 +20,9 @@ diff -urN shorewall-4.4.20.1.orig/configfiles/stop shorewall-4.4.20.1/configfile
 +    run_user_exit $file
 +done
 \ Kein Zeilenumbruch am Dateiende.
-diff -urN shorewall-4.4.20.1.orig/configfiles/shorewall.conf shorewall-4.4.20.1/configfiles/shorewall.conf
---- shorewall-4.4.20.1.orig/configfiles/shorewall.conf	2011-06-07 01:08:29.000000000 +0200
-+++ shorewall-4.4.20.1/configfiles/shorewall.conf	2011-06-07 17:06:51.679102156 +0200
+diff -urN shorewall-4.6.0.1.orig/configfiles/shorewall.conf shorewall-4.6.0.1/configfiles/shorewall.conf
+--- shorewall-4.6.0.1.orig/configfiles/shorewall.conf	2014-05-16 16:31:44.000000000 +0200
++++ shorewall-4.6.0.1/configfiles/shorewall.conf	2014-05-17 14:50:52.121062903 +0200
 @@ -9,7 +9,7 @@
  #		       S T A R T U P   E N A B L E D
  ###############################################################################
@@ -34,23 +34,23 @@ diff -urN shorewall-4.4.20.1.orig/configfiles/shorewall.conf shorewall-4.4.20.1/
  #		              V E R B O S I T Y
 @@ -31,7 +31,7 @@
  
- LOGBURST=
+ LOGALLNEW=
  
 -LOGFILE=/var/log/messages
 +LOGFILE=/var/log/shorewall.log
  
  LOGFORMAT="Shorewall:%s:%s:"
  
-@@ -63,7 +63,7 @@
+@@ -73,7 +73,7 @@
  
- IPSET=
+ LOCKFILE=
  
 -MODULESDIR=
 +MODULESDIR=/lib/modules
  
- PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin:/usr/local/sbin
+ NFACCT=
  
-@@ -73,7 +73,7 @@
+@@ -85,7 +85,7 @@
  
  SHOREWALL_SHELL=/bin/sh
  
@@ -59,7 +59,7 @@ diff -urN shorewall-4.4.20.1.orig/configfiles/shorewall.conf shorewall-4.4.20.1/
  
  TC=
  
-@@ -124,7 +124,7 @@
+@@ -146,7 +146,7 @@
  
  DETECT_DNAT_IPADDRS=No
  
