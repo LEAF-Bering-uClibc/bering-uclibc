@@ -21,6 +21,7 @@ source: $(SNMP_DIR)/.source
 
 $(SNMP_DIR)/.configured: $(SNMP_DIR)/.source
 	(cd $(SNMP_DIR) ; \
+	 perl -i -p -e 's,-rpath \$$,-rpath \$$(INSTALL_PREFIX)\$$,' Makefile.top; \
 	 ./configure --prefix=/usr --sysconfdir=/etc --host=$(GNU_TARGET_NAME) \
 		--build=$(GNU_BUILD_NAME) \
 		--enable-fast-install \
