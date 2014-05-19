@@ -5,7 +5,7 @@
 ifeq ($(GNU_TARGET_NAME),i486-unknown-linux-uclibc)
 # Kernel versions
 export BT_KERNEL_BRANCH:=3.10
-export BT_KERNEL_PATCH:=37
+export BT_KERNEL_PATCH:=40
 # Primary kernel architecture
 export ARCH:=i386
 # Arch for includes symlink
