@@ -1,0 +1,10 @@
+--- a/clamdscan/proto.c	2014-05-06 21:39:56.000000000 +0300
++++ b/clamdscan/proto.c	2014-05-21 23:45:58.000000000 +0300
+@@ -33,6 +33,7 @@
+ #include <stdlib.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/un.h>
+ #include <fcntl.h>
+ #include <sys/types.h>
+ #ifdef HAVE_SYS_SELECT_H

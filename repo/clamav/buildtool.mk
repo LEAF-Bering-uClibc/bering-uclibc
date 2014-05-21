@@ -16,6 +16,7 @@ $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
 	./configure \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
+	--with-sysroot=$(BT_STAGING_DIR) \
 	--sysconfdir=/etc/clamav --prefix=/ \
 	--includedir=/usr/include \
 	--exec-prefix=/usr --libexecdir=/usr/bin \
@@ -32,6 +33,8 @@ $(CLAMAV_DIR)/.configured: $(CLAMAV_DIR)/.source
 	--disable-llvm \
 	--without-libcurl \
 	--with-zlib=$(BT_STAGING_DIR)/usr \
+	--with-openssl=$(BT_STAGING_DIR)/usr \
+	--with-xml=$(BT_STAGING_DIR)/usr \
 	--disable-zlib-vcheck \
 	--disable-unrar \
 	--datadir=/etc/clamav \
