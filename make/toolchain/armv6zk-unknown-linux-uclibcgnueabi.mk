@@ -5,7 +5,7 @@
 ifeq ($(GNU_TARGET_NAME),armv6zk-unknown-linux-uclibcgnueabi)
 # Kernel versions
 export BT_KERNEL_BRANCH:=3.10
-export BT_KERNEL_PATCH:=40
+export BT_KERNEL_PATCH:=41
 # Primary kernel architecture
 export ARCH:=arm
 # Arch for includes symlink
