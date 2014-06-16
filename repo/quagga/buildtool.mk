@@ -5,6 +5,7 @@ QUAGGA_TARGET_DIR:=$(BT_BUILD_DIR)/quagga
 
 $(QUAGGA_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(QUAGGA_SOURCE)
+	cat $(QUAGGA_PATCH1) | patch -p1 -d quagga-0.99.22.4
 	touch $(QUAGGA_DIR)/.source
 
 source: $(QUAGGA_DIR)/.source
