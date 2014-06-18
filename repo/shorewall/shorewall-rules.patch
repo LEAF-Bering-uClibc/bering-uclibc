@@ -29,5 +29,5 @@ diff -urN shorewall-4.6.0.1.orig/configfiles/rules shorewall-4.6.0.1/configfiles
 +HTTPS(ACCEPT)   loc        fw
 +# timeserver (allow syncing with time servers (default: pool.ntp.org))
 +NTP(ACCEPT)         fw       net
-++# timeserver (allow LAN clients to sync with the time service on the router)
++# timeserver (allow LAN clients to sync with the time service on the router)
 +# NTP(ACCEPT)         loc    fw
