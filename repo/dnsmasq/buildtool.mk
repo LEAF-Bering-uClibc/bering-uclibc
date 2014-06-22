@@ -20,7 +20,7 @@ $(DNSMASQ_DIR)/.build: $(DNSMASQ_DIR)/.source
 
 # Disable the internal tftpd with -DNO_TFTP
 	make $(MAKEOPTS) -C $(DNSMASQ_DIR) DESTDIR=$(DNSMASQ_TARGET_DIR) \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) NETTLE_CFLAGS="$(CFLAGS) -Wall -w -DHAVE_DNSSEC -DNO_TFTP" all
+	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(CFLAGS) -Wall -w -DHAVE_DNSSEC -DNO_TFTP" LDFLAGS="$(LDFLAGS) -lnettle -lgmp -lhogweed" all
 # Adjust the dnsmasq.conf to LEAF standard
 	perl -i -p -e 's,\#dhcp-range=192.168.0.50\,192.168.0.150\,12h,\#dhcp-range=192.168.1.1\,192.168.1.199\,12h,g' $(DNSMASQ_DIR)/dnsmasq.conf.example
 	perl -i -p -e 's,\#domain=thekelleys.org.uk,domain=private.network,g' $(DNSMASQ_DIR)/dnsmasq.conf.example
