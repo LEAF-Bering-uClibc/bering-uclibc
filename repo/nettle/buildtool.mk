@@ -13,7 +13,7 @@ source: $(NETTLE_DIR)/.source
 
 $(NETTLE_DIR)/.configured: $(NETTLE_DIR)/.source
 	(cd $(NETTLE_DIR); ./configure \
-	--prefix=/ \
+	--prefix=/usr \
 	--disable-documentation \
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME))
@@ -21,15 +21,8 @@ $(NETTLE_DIR)/.configured: $(NETTLE_DIR)/.source
 
 $(NETTLE_DIR)/.build: $(NETTLE_DIR)/.configured
 	mkdir -p $(NETTLE_TARGET_DIR)
-	mkdir -p $(NETTLE_TARGET_DIR)/usr/lib
-	mkdir -p $(NETTLE_TARGET_DIR)/usr/include/nettle
-	
-	
-	make $(MAKEOPTS) -C $(NETTLE_DIR) DESTDIR=$(NETTLE_TARGET_DIR) \
-	CC=$(TARGET_CC) LD=$(TARGET_LD) CFLAGS="$(CFLAGS)" all
-	cp -a $(NETTLE_DIR)/libhogweed.so $(NETTLE_TARGET_DIR)/usr/lib
-	cp -a $(NETTLE_DIR)/libnettle.so $(NETTLE_TARGET_DIR)/usr/lib
-	cp -a $(NETTLE_DIR)/*.h $(NETTLE_TARGET_DIR)/usr/include/nettle
+	make $(MAKEOPTS) -C $(NETTLE_DIR) all
+	make $(MAKEOPTS) -C $(NETTLE_DIR) DESTDIR=$(NETTLE_TARGET_DIR) install
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(NETTLE_TARGET_DIR)/usr/lib/*
 	cp -a $(NETTLE_TARGET_DIR)/* $(BT_STAGING_DIR)
 	touch $(NETTLE_DIR)/.build
