@@ -1,0 +1,22 @@
+#! /bin/sh
+ 
+# Multicast-Proxy udpxy
+#
+
+RCDLINKS="0,K04 1,K04 2,S80 3,S80 4,S80 5,S80 6,K04" 
+
+case "$1" in
+  start)
+    /usr/bin/udpxy -p 18080
+    ;;
+  stop)
+    kill udpxy
+    echo "stopped"
+    ;;
+  *)
+    echo "Usage: /etc/init.d/udpxy {start|stop}"
+    exit 1
+    ;;
+esac
+ 
+exit 0
