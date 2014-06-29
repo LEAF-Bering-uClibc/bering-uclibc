@@ -2,7 +2,7 @@
 # makefile for squid
 ##########################################
 
-SQUID_DIR:=squid-3.4.4
+SQUID_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SQUID_SOURCE) 2>/dev/null)
 SQUID_TARGET_DIR:=$(BT_BUILD_DIR)/squid
 export HOSTCXX=g++
 
@@ -22,11 +22,14 @@ $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
 	--host=$(GNU_TARGET_NAME) \
 	--build=$(GNU_BUILD_NAME) \
 	--enable-internal-dns \
-	--exec-prefix=/usr --libexecdir=/usr/bin \
+	--exec-prefix=/usr \
+	--libexecdir=/usr/bin \
 	--enable-snmp \
 	--datadir=/etc/squid \
-	--disable-wccp --disable-wccpv2 \
-	--enable-poll --enable-delay-pools \
+	--disable-wccp \
+	--disable-wccpv2 \
+	--enable-poll \
+	--enable-delay-pools \
 	--enable-default-err-language=English \
 	--enable-err-languages="English" \
 	--disable-strict-error-checking \
@@ -40,6 +43,7 @@ $(SQUID_DIR)/.configured: $(SQUID_DIR)/.source
 	--enable-delay-pools \
 	--enable-arp-acl \
 	--enable-ssl \
+	--with-nettle \
 	--enable-linux-netfilter \
 	--disable-ident-lookups \
 	--enable-useragent-log \
