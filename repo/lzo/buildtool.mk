@@ -4,13 +4,12 @@
 #
 #############################################################
 
-
-LZO_DIR:=lzo-2.06
+LZO_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(LZO_SOURCE) 2>/dev/null )
 LZO_TARGET_DIR:=$(BT_BUILD_DIR)/lzo
 
 
 $(LZO_DIR)/.source:
-	zcat $(LZO_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(LZO_SOURCE)
 	touch $(LZO_DIR)/.source
 
 $(LZO_DIR)/.configured: $(LZO_DIR)/.source
