@@ -13,9 +13,9 @@ $(WAKELAN_DIR)/.source:
 $(WAKELAN_DIR)/.build:
 	mkdir -p $(WAKELAN_TARGET_DIR)/etc
 	mkdir -p $(WAKELAN_TARGET_DIR)/usr/bin
-	cp -a $(WAKELAN_DIR)/wakeonlan $(WAKELAN_TARGET_DIR)/usr/bin/wakeonlan
-	cp -aL wakeonlan.cfg  $(WAKELAN_TARGET_DIR)/etc/
-	cp -aL wakeonlan.arp  $(WAKELAN_TARGET_DIR)/etc/
+	cp -aL $(WAKELAN_DIR)/wakeonlan      $(WAKELAN_TARGET_DIR)/usr/bin/wakeonlan
+	cp -aL $(WAKELAN_DIR)/wakeonlan.cfg  $(WAKELAN_TARGET_DIR)/etc/
+	cp -aL $(WAKELAN_DIR)/wakeonlan.arp  $(WAKELAN_TARGET_DIR)/etc/
 	cp -a $(WAKELAN_TARGET_DIR)/* $(BT_STAGING_DIR)/
 	echo $(BT_STAGING_DIR)
 	touch $(WAKELAN_DIR)/.build
