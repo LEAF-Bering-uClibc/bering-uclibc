@@ -1,0 +1,38 @@
+#!/bin/sh
+
+cfg_file=/etc/wakeonlan.cfg
+arp_file=/etc/wakeonlan.arp
+
+if [ ! -f $cfg_file ]; then
+    echo "No $cfg_file defined"
+    echo "Please create one before !"
+    exit 0
+fi
+
+. $cfg_file
+
+if [ ! -f $arp_file ]; then
+	echo "No $arp_file. defined"
+	echo "Please create one before !"
+	exit 0
+fi
+
+if [ $# -ne 1 ]; then
+    echo "Usage: wakeonlan <name of server to wake up>"
+    exit 1
+fi
+
+host=$1
+ether=`grep "^$host" $arp_file | sed 's/'"$host"' *//'`
+
+if [ -z "$ether" ]; then
+    echo
+    echo "Error: no MAC address found in /etc/wakeonlan.cfg for $host"
+    exit 0
+fi
+
+if [ -n "$use_interface" ]; then
+	ether-wake -i $use_interface $ether
+else
+	ether-wake -b $ether
+fi
