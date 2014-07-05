@@ -1,0 +1,98 @@
+diff -uraN procps-3.2.8.orig/Makefile procps-3.2.8/Makefile
+--- procps-3.2.8.orig/Makefile	2009-05-10 20:50:48.000000000 +0200
++++ procps-3.2.8/Makefile	2014-07-05 19:15:50.489832419 +0200
+@@ -24,13 +24,13 @@
+ ############ vars
+ 
+ # so you can disable them or choose alternates
+-ldconfig := ldconfig
++ldconfig :=
+ ln_f     := ln -f
+ ln_sf    := ln -sf
+-install  := install -D --owner 0 --group 0
++install  := install -D
+ 
+ # Lame x86-64 /lib64 and /usr/lib64 abomination:
+-lib64    := lib$(shell [ -d /lib64 ] && echo 64)
++lib64    := lib
+ 
+ usr/bin                  := $(DESTDIR)/usr/bin/
+ bin                      := $(DESTDIR)/bin/
+@@ -169,7 +169,7 @@
+ 
+ DIRS :=
+ 
+-INSTALL := $(BINFILES) $(MANFILES)
++INSTALL := $(BINFILES)
+ 
+ # want this rule first, use := on ALL, and ALL not filled in yet
+ all: do_all
+@@ -222,14 +222,14 @@
+ ###### install
+ 
+ $(BINFILES) : all
+-	$(install) --mode a=rx $(notdir $@) $@
++	$(install) $(notdir $@) $@
+ 
+ $(MANFILES) : all
+ 	$(install) --mode a=r $(notdir $@) $@
+ 
+ install: $(filter-out $(SKIP) $(addprefix $(DESTDIR),$(SKIP)),$(INSTALL))
+-	cd $(usr/bin) && $(ln_f) skill snice
+-	cd $(usr/proc/bin) && $(ln_f) pgrep pkill
++	cd $(usr/bin) && $(ln_sf) skill snice
++	cd $(usr/proc/bin) && $(ln_sf) pgrep pkill
+ 
+ ############ prog.c --> prog.o
+ 
+@@ -255,7 +255,7 @@
+ ############ progX --> progY
+ 
+ snice kill: skill
+-	$(ln_f) skill $@
++	$(ln_sf) skill $@
+ 
+ pkill: pgrep
+-	$(ln_f) pgrep pkill
++	$(ln_sf) pgrep pkill
+diff -uraN procps-3.2.8.orig/proc/module.mk procps-3.2.8/proc/module.mk
+--- procps-3.2.8.orig/proc/module.mk	2004-09-23 15:10:42.000000000 +0200
++++ procps-3.2.8/proc/module.mk	2014-07-05 18:57:35.908422155 +0200
+@@ -96,7 +96,7 @@
+ #################### install rules ###########################
+ 
+ $(lib)$(SOFILE) : proc/$(SONAME)
+-	$(install) --mode a=rx $< $@
++	$(install) $< $@
+ 
+ ifneq ($(SOLINK),$(SOFILE))
+ .PHONY: $(lib)$(SOLINK)
+diff -uraN procps-3.2.8.orig/ps/module.mk procps-3.2.8/ps/module.mk
+--- procps-3.2.8.orig/ps/module.mk	2005-10-30 04:19:46.000000000 +0100
++++ procps-3.2.8/ps/module.mk	2014-07-05 18:57:35.908422155 +0200
+@@ -1,6 +1,6 @@
+ # This file gets included into the main Makefile, in the top directory.
+ 
+-INSTALL += $(bin)ps $(man1)ps.1
++INSTALL += $(bin)ps
+ 
+ # files to remove
+ CLEAN += ps/ps ps/debug
+@@ -20,7 +20,7 @@
+ TARFILES += $(PSSRC) $(addprefix ps/,$(PS_X))
+ 
+ ps/ps: $(PSOBJ) $(LIBPROC)
+-	$(CC) $(ALL_CFLAGS) $(ALL_LDFLAGS) -o $@ $^ $(ldl)
++	$(CC) $(ALL_CFLAGS) $(ALL_LDFLAGS) $(LIBPROC) -o $@ $^ $(ldl)
+ 
+ # This just adds the stacktrace code
+ ps/debug: $(PSOBJ) stacktrace.o $(LIBPROC)
+@@ -33,7 +33,7 @@
+ 
+ 
+ $(bin)ps: ps/ps
+-	$(install) --mode a=rx $< $@
++	$(install) $< $@
+ 
+ $(man1)ps.1 : ps/ps.1
+ 	$(install) --mode a=r $< $@
