@@ -583,8 +583,9 @@ sub copyBinariesToPackageStaging {
 
 		my $filename = $file->{'filename'};
 
-		my $source_filename = File::Spec->catfile($build_dir,$file->{'source'});
-		$source_filename =~ s/__KVER__/$kver/g;
+        die "Missing Source parameter for Type=Binary for Filename='$filename' !\n" unless exists $file->{'source'};
+        my $source_filename = File::Spec->catfile( $build_dir, $file->{'source'} );
+        $source_filename =~ s/__KVER__/$kver/g;
 
 		my $destination_filename;
 		my $destination_path;
@@ -632,6 +633,7 @@ sub createLinksInStaging($$) {
 
 			next unless exists($p_h_file->{'type'}->{'LINK'});
 
+			die "Missing Target parameter for Type=Link for Filename='$filename' !\n" unless exists $p_h_file->{'target'};
 			my $link_target = File::Spec->catfile($tmpDir,$p_h_file->{'target'});
 			#$link_target = File::Spec->abs2rel( $link_target, $tmpDir ) ;
 
@@ -649,7 +651,6 @@ sub createLinksInStaging($$) {
 			$link_target = '.' unless ($link_target);
 
 			#$link_filename = File::Spec->abs2rel( $link_filename, $tmpDir ) ;
-
 			# create the target directory, if it doesn't exist
 			createDirUnlessItExists($linkPath,$p_h_package);
 
@@ -671,12 +672,20 @@ sub createDevicesInStaging($$) {
 
 			next unless exists($p_h_file->{'type'}->{'DEVICE'});
 
+			die "Missing Devtype parameter for Type=Device for Filename='$filename' !\n" unless exists $p_h_file->{'devtype'};
 			my $devType = lc($p_h_file->{'devtype'});
-			my $devMinor = '';
-			my $devMajor = '';
+            if (   $devType ne 'b'
+                && $devType ne 'c'
+                && $devType ne 'u'
+                && $devType ne 'p' ) {
+                die
+                  "$devType is not a supported device type (should be b,c,u, or p) for  Filename='$filename' !\n";
+            }
 
-			$devMinor = $p_h_file->{'minor'} if exists($p_h_file->{'minor'});	
-			$devMajor = $p_h_file->{'major'} if exists($p_h_file->{'major'});
+			die "Missing Major parameter for Type=Device for Filename='$filename' !\n" unless exists $p_h_file->{'major'};
+			my $devMajor = $p_h_file->{'major'} if exists($p_h_file->{'major'});
+			die "Missing Minor parameter for Type=Device for Filename='$filename' !\n" unless exists $p_h_file->{'minor'};
+			my $devMinor = $p_h_file->{'minor'} if exists($p_h_file->{'minor'});
 
 			my $devFilename = File::Spec->catfile($tmpDir,$filename);
 			my ($volume1,$targetPath) = File::Spec->splitpath($devFilename);
@@ -684,12 +693,6 @@ sub createDevicesInStaging($$) {
 			# create the target directory, if it doesn't exist
 			createDirUnlessItExists($targetPath,$p_h_package);
 
-			if (	$devType ne 'b' && 
-					$devType ne 'c' && 
-					$devType ne 'u' && 
-					$devType ne 'p') {
-				die "$devType is not a supported device type (should be b,c,u, or p" ;
-			}
 			
 			print "Creating device $devFilename: type $devType, major=$devMajor, minor=$devMinor\n" if $verbose;
 
@@ -1211,51 +1214,56 @@ foreach my $target (@$p_l_targets) {
 
 	# ok, finally...
 
-	# create a temporary directory
-	$tmpDir = prepareTempDir($p_h_package, $packageDir, $options);
+    eval {
 
-	# extract the skel file to the tempdir (if we have a skel file)
-	copySkelFileToPackageStaging($skelFile, $pkgSourceDir) if (defined($skelFile));
+        # create a temporary directory
+        $tmpDir = prepareTempDir( $p_h_package, $packageDir, $options );
 
-	# (optional) copy existing lrp
-	if (exists($options->{'lrp'})) {
-		my $lrpFile = File::Spec->catfile(
-							$baseDir,
-							$options->{'lrp'}
-						);
+        # extract the skel file to the tempdir (if we have a skel file)
+        copySkelFileToPackageStaging( $skelFile, $pkgSourceDir )
+          if ( defined($skelFile) );
 
-		print "Importing lrp: $lrpFile\n" if $verbose;
-		copyExistingLrpToPackageStaging($lrpFile) ;
-	}
+        # (optional) copy existing lrp
+        if ( exists( $options->{'lrp'} ) ) {
+            my $lrpFile = File::Spec->catfile( $baseDir, $options->{'lrp'} );
 
-	# create empty directories, if needed
-	createDirectories($p_h_package, $stagingDir);
+            print "Importing lrp: $lrpFile\n" if $verbose;
+            copyExistingLrpToPackageStaging($lrpFile);
+        }
 
-	# copy binaries
-	copyBinariesToPackageStaging($p_h_package, $stagingDir);
+        # create empty directories, if needed
+        createDirectories( $p_h_package, $stagingDir );
+
+        # copy binaries
+        copyBinariesToPackageStaging( $p_h_package, $stagingDir );
+
+        # create devices
+        createDevicesInStaging( $p_h_package, $stagingDir );
+
+        # create links
+        createLinksInStaging( $p_h_package, $stagingDir );
+
+        # TODO
+        # add hook for "interactive" mode
+
+        # create list of files
+        my $p_h_packageContents = {};
+        generateFileList( '.', $p_h_packageContents );
+
+        # generate lrpkg files
+        generateLrpkgFiles( $p_h_package, $p_h_packageContents, $options );
+
+        # set up permissions
+        applyOwnershipsAndPermissions( $p_h_package, $p_h_packageContents );
+
+        # create new lrp file in $packageDir
+        createLrpPacket( $p_h_package, $packageDir, $options, $gzipOptions );
+    };
+
+    if ($@) {
+        print "Error: $@";
+    }
 	
-	# create devices
-	createDevicesInStaging($p_h_package, $stagingDir);
-	
-	# create links
-	createLinksInStaging($p_h_package, $stagingDir);
-
-	# TODO
-	# add hook for "interactive" mode
-
-	# create list of files
-	my $p_h_packageContents = {};
-	generateFileList('.', $p_h_packageContents);
-
-	# generate lrpkg files
-	generateLrpkgFiles($p_h_package, $p_h_packageContents,$options);
-
-	# set up permissions
-	applyOwnershipsAndPermissions($p_h_package, $p_h_packageContents);
-
-	# create new lrp file in $packageDir
-	createLrpPacket($p_h_package, $packageDir, $options, $gzipOptions);
-
 	#clean up tmpDir
 	cleanTempDir();
 }
