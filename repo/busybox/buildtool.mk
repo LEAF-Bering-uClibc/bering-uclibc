@@ -9,11 +9,6 @@ $(BUSYBOX_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) -v $(BUSYBOX_SOURCE)
 	cat $(BUSYBOX_PATCH1) | patch -d $(BUSYBOX_DIR) -p1
 	cp $(BUSYBOX_CONFIG) $(BUSYBOX_DIR)/.config
-ifdef BT_PLATFORM_EDITOR
-	if [ -f "busybox.config-$(BT_PLATFORM_EDITOR).patch" ];then \
-		patch -d "$(BUSYBOX_DIR)" < "busybox.config-$(BT_PLATFORM_EDITOR).patch"; \
-	fi
-endif
 	touch $(BUSYBOX_DIR)/.source
 
 $(BUSYBOX_DIR)/.build: $(BUSYBOX_DIR)/.source
