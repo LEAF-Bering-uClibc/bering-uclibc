@@ -10,7 +10,7 @@ $(PROCPS_DIR)/.source:
 
 source: $(PROCPS_DIR)/.source
 
-$(PROCPS_DIR)/.build:
+$(PROCPS_DIR)/.build: source
 	mkdir -p $(PROCPS_TARGET_DIR)
 	$(MAKE) -C $(PROCPS_DIR) CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
 	$(MAKE) -C $(PROCPS_DIR) install DESTDIR=$(PROCPS_TARGET_DIR)
@@ -44,7 +44,6 @@ clean:
 	make -C $(PROCPS_DIR) clean
 	rm -rf $(PROCPS_TARGET_DIR)
 	-rm $(PROCPS_DIR)/.build
-	-rm $(PROCPS_DIR)/.configured
 
 srcclean: clean
 	rm -rf $(PROCPS_DIR)
