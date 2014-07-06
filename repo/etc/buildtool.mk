@@ -33,10 +33,9 @@ $(ETC_DIR)/.build: $(ETC_DIR)/.source
 	cp -aL lrp.conf $(ETC_TARGET_DIR)/etc
 	cp -aL networks $(ETC_TARGET_DIR)/etc
 	cp -aL passwd $(ETC_TARGET_DIR)/etc
-ifdef PLATFORM_EDITOR
-	cp -aL profile-$(PLATFORM_EDITOR) $(ETC_TARGET_DIR)/etc/profile
-else
 	cp -aL profile $(ETC_TARGET_DIR)/etc/profile
+ifdef BT_PLATFORM_EDITOR
+	sed -ri "s/^(EDITOR\s*=\s*).*/\1$(BT_PLATFORM_EDITOR)/" $(ETC_TARGET_DIR)/etc/profile
 endif
 	cp -aL protocols $(ETC_TARGET_DIR)/etc
 	cp -aL resolv.conf $(ETC_TARGET_DIR)/etc

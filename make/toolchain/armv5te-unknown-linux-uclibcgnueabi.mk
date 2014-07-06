@@ -19,10 +19,6 @@ export KERN_IMAGE:=zImage
 # Name of OpenSSL target
 export OPENSSL_TARGET:=linux-armv4
 
-# the PLATFORM_EDITOR allows to change default editor e3
-# to anything else working on the platform.(Used in etc.lrp /etc/profile).
-export PLATFORM_EDITOR:=nano
-
 # Set variables to "prime" the configure scripts' cache for cross-compiling
 # These are toolchain-specific settings - generic settings go above
 # Export vars only if this is not a toolchain building
