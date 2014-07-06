@@ -5,7 +5,7 @@
 #############################################################
 
 
-SOURCE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE_TGZ) 2>/dev/null )
+SOURCE_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(KRB5_SOURCE) 2>/dev/null )
 TARGET_DIR:=$(BT_BUILD_DIR)/krb5
 
 # krb5 needs 02, build fails with -Os
@@ -24,7 +24,8 @@ CONFOPTS = \
 	--enable-dns-for-realm
 
 .source:
-	zcat $(SOURCE_TGZ) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(KRB5_SOURCE) 
+#	zcat $(SOURCE_TGZ) | tar -xvf -
 	touch .source
 
 source: .source
