@@ -3,21 +3,20 @@
 # busybox
 #
 #############################################################
-
-BUSYBOX_DIR:=$(shell echo $(BUSYBOX_SOURCE) | sed 's/\.\(tar\.\|\t\)\(gz\|bz2\)//')
+BUSYBOX_DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(BUSYBOX_SOURCE) 2>/dev/null )
 
 $(BUSYBOX_DIR)/.source:
-	bzcat $(BUSYBOX_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(BUSYBOX_SOURCE)
 	cat $(BUSYBOX_PATCH1) | patch -d $(BUSYBOX_DIR) -p1
+	cp $(BUSYBOX_CONFIG) $(BUSYBOX_DIR)/.config
+ifdef PLATFORM_EDITOR
+	[ -f "busybox.config-$(PLATFORM_EDITOR).patch" ] && \
+	patch -d "$(BUSYBOX_DIR)" < "busybox.config-$(PLATFORM_EDITOR).patch"
+endif
 	touch $(BUSYBOX_DIR)/.source
 
 $(BUSYBOX_DIR)/.build: $(BUSYBOX_DIR)/.source
 	mkdir -p $(BT_STAGING_DIR)/bin
-ifeq ($(PLATFORM_EDITOR), vi)
-	cp .config-vi $(BUSYBOX_DIR)/.config
-else 
-	cp .config $(BUSYBOX_DIR)/	
-endif
 	make $(MAKEOPTS) -C $(BUSYBOX_DIR) busybox
 	$(BT_STRIP) $(BT_STRIP_BINOPTS) $(BUSYBOX_DIR)/busybox
 	cp -a $(BUSYBOX_DIR)/busybox $(BT_STAGING_DIR)/bin/
