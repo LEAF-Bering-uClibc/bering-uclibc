@@ -10,10 +10,12 @@ $(PCIUTILS_DIR)/.source:
 source: $(PCIUTILS_DIR)/.source
 
 $(PCIUTILS_DIR)/.build: $(PCIUTILS_DIR)/.source
-	mkdir -p $(PCIUTILS_TARGET_DIR)
+	mkdir -p $(PCIUTILS_TARGET_DIR)/usr/sbin
+	mkdir -p $(PCIUTILS_TARGET_DIR)/usr/share
 	$(MAKE) $(MAKEOPTS) -C $(PCIUTILS_DIR) HOST="$(GNU_TARGET_NAME)" CROSS_COMPILE="$(GNU_TARGET_NAME)-"  \
-		OPT="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" PREFIX=/usr DESTDIR=$(PCIUTILS_TARGET_DIR) install
-	rm -rf $(PCIUTILS_TARGET_DIR)/usr/share/man
+		OPT="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" PREFIX=/usr
+	cp -af  $(PCIUTILS_DIR)/lspci  $(PCIUTILS_TARGET_DIR)/usr/sbin/
+	cp -af  $(PCIUTILS_DIR)/setpci $(PCIUTILS_TARGET_DIR)/usr/sbin/
 	cp -aL $(PCI_IDS) $(PCIUTILS_TARGET_DIR)/usr/share/
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PCIUTILS_TARGET_DIR)/usr/sbin/*
 	cp -a -f $(PCIUTILS_TARGET_DIR)/* $(BT_STAGING_DIR)/
