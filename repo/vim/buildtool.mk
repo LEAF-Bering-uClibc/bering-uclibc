@@ -35,7 +35,7 @@ source: .source
 
 .build: .configure
 	mkdir -p $(VIM_TARGET_DIR)/usr/bin
-	make -C $(VIM_DIR)/src $(MAKEOPTS)
+	$(MAKE) $(MAKEOPTS) -C $(VIM_DIR)/src
 	cp -a $(VIM_DIR)/src/vim $(VIM_TARGET_DIR)/usr/bin/vim
 	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(VIM_TARGET_DIR)/bin/*
 	cp -a $(VIM_TARGET_DIR)/* $(BT_STAGING_DIR)
@@ -48,6 +48,7 @@ clean:
 	make -C $(VIM_DIR)/src clean
 	rm -f .build .configured
 
-srcclean: clean
+srcclean:
+	rm -rf $(VIM_TARGET_DIR)
 	rm -rf $(VIM_DIR)
 	-rm .source

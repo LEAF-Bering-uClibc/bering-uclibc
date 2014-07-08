@@ -10,14 +10,11 @@ $(PROCPS_DIR)/.source:
 
 source: $(PROCPS_DIR)/.source
 
-$(PROCPS_DIR)/.build: source
-	mkdir -p $(PROCPS_TARGET_DIR)
-	$(MAKE) -C $(PROCPS_DIR) CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
-	$(MAKE) -C $(PROCPS_DIR) install DESTDIR=$(PROCPS_TARGET_DIR)
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PROCPS_TARGET_DIR)/lib/*
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PROCPS_TARGET_DIR)/bin/*
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PROCPS_TARGET_DIR)/sbin/*
-	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PROCPS_TARGET_DIR)/usr/bin/*
+$(PROCPS_DIR)/.build: $(PROCPS_DIR)/.source
+	mkdir -p $(BT_STAGING_DIR)/{lib,bin,sbin,usr/bin}
+	$(MAKE) $(MAKEOPTS) -C $(PROCPS_DIR) CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" \
+		install DESTDIR=$(PROCPS_TARGET_DIR)
+	-$(BT_STRIP) $(BT_STRIP_BINOPTS) $(PROCPS_TARGET_DIR)/{lib,bin,sbin,usr/bin}/*
 	cp -fd "$(PROCPS_TARGET_DIR)"/lib/libproc-*    "$(BT_STAGING_DIR)"/lib/
 	cp -fd "$(PROCPS_TARGET_DIR)"/bin/kill         "$(BT_STAGING_DIR)"/bin/
 	cp -fd "$(PROCPS_TARGET_DIR)"/bin/ps           "$(BT_STAGING_DIR)"/bin/
@@ -45,5 +42,6 @@ clean:
 	rm -rf $(PROCPS_TARGET_DIR)
 	-rm $(PROCPS_DIR)/.build
 
-srcclean: clean
+srcclean:
+	rm -rf $(PROCPS_TARGET_DIR)
 	rm -rf $(PROCPS_DIR)
