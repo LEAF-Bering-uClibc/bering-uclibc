@@ -26,5 +26,6 @@ clean:
 	rm -rf $(PCIUTILS_TARGET_DIR)
 	-rm $(PCIUTILS_DIR)/.build
 
-srcclean: clean
+srcclean:
+	rm -rf $(PCIUTILS_TARGET_DIR)
 	rm -rf $(PCIUTILS_DIR)
