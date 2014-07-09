@@ -96,6 +96,10 @@ export LDFLAGS=-L$(BT_STAGING_DIR)/lib -L$(BT_STAGING_DIR)/usr/lib
 EXTCCLDFLAGS=-Wl,-rpath,$(BT_STAGING_DIR)/lib -Wl,-rpath,$(BT_STAGING_DIR)/usr/lib
 EXTLDFLAGS=-rpath $(BT_STAGING_DIR)/lib -rpath $(BT_STAGING_DIR)/usr/lib
 
+export HOST_CC=$(GNU_BUILD_NAME)-gcc
+export HOST_CFLAGS=-O2
+export HOST_LDFLAGS=
+
 # Check for linux version
 export FIRSTKARCH=$(shell echo $(KARCHS)|awk '{if (NF>0) print "-" $$1}')
 export BT_KERNEL_RELEASE=$(BT_KERNEL_BRANCH).$(BT_KERNEL_PATCH)
