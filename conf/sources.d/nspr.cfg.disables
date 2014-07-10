@@ -1,0 +1,11 @@
+# Disabled; placed here for future packages that may require it
+
+<Package nspr>
+	Server = localrepo
+	Directory = nspr
+	Revision = HEAD
+	Description = Netscape Portable Runtime
+	<Requires>
+		Name = toolchain
+	</Requires>
+</Package>
