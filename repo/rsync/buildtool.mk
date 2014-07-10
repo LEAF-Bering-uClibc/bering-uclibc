@@ -36,5 +36,5 @@ clean:
 	rm -f $(BT_STAGING_DIR)/usr/bin/rsync
 	-rm $(RSYNC_DIR)/.build
 
-srcclean:
+srcclean: clean
 	rm -rf $(RSYNC_DIR)
