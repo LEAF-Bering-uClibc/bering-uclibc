@@ -2,7 +2,6 @@
 # makefile for gettext
 #############################################################
 
-#DIR:=gettext-0.18.3.1
 DIR:=$(CURDIR)/$(shell $(BT_TGZ_GETDIRNAME) $(SOURCE) 2>/dev/null)
 
 TARGET_DIR:=$(BT_BUILD_DIR)/gettext
@@ -11,9 +10,8 @@ PERLVER:=$(shell ls $(BT_STAGING_DIR)/usr/lib/perl5)
 export PERLLIB=$(BT_STAGING_DIR)/usr/lib/perl5/$(PERLVER)
 
 $(DIR)/.source:
-	zcat $(SOURCE) |  tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(SOURCE)
 	touch $(DIR)/.source
-
 
 $(DIR)/.configured: $(DIR)/.source
 	(cd $(DIR); \
