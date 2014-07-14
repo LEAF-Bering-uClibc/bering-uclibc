@@ -769,7 +769,8 @@ sub generateLrpkgFiles($$$) {
 	my ($p_h_package, $p_h_package_contents, $p_h_options) = @_;;
 	print "Generating lrpkg files\n"  if $verbose;
 
-	my $destDir = File::Spec->catdir($tmpDir, 'var','lib','lrpkg');
+	my $lrpkgDir = File::Spec->catdir( 'var', 'lib', 'lrpkg' );
+	my $destDir  = File::Spec->catdir( $tmpDir, $lrpkgDir );
 	my $str;
 
 	# create the target directory, if it doesn't exist
@@ -786,7 +787,7 @@ sub generateLrpkgFiles($$$) {
 
 			# now inject this file into the list of files in the package
 			# needed so the .list file will be generated properly
-			$p_h_package_contents->{File::Spec->catfile('var','lib','lrpkg',$confFile . ".conf")} = 'FILE';
+			$p_h_package_contents->{File::Spec->catfile($lrpkgDir ,$confFile . ".conf")} = 'FILE';
 		}
 	}
 	
@@ -833,6 +834,15 @@ sub generateLrpkgFiles($$$) {
 				$str . "\n"
 		) unless $str eq '';
 
+	# Apply Ownership and Permissions for lrpkg files
+	opendir(my $dh, $destDir) or die "Can't readdir $destDir: $!\n";
+	my @lrpkgFiles =
+	  grep { -f $_ }
+	  map { File::Spec->catfile( $destDir, $_ ) }
+	  grep( $_ ne '.' && $_ ne '..', readdir($dh) );
+	closedir $dh;
+	chown 0, 0, @lrpkgFiles or die $!;
+	chmod 0664, @lrpkgFiles or die $!;
 }
 
 sub applyOwnershipsAndPermissions($$;$) {
