@@ -1,0 +1,8 @@
+# Virtual IP daemon options
+#VIP_OPTS=''
+
+# Commands that should be executed after daemon starting
+#VIP_POST_UP=''
+
+# Commands that should be executed before daemon stopped
+#VIP_PRE_DOWN=''

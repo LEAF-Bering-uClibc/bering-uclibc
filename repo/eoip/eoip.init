@@ -1,0 +1,56 @@
+#! /bin/sh
+# /etc/init.d/eoip: start eoip daemon.
+RCDLINKS="2,S51 3,S51 4,S51 5,S51 0,K51 1,K51 6,K51"
+
+test -x /usr/bin/eoip || exit 1
+
+#maybe in future we'll need additional command line arguments
+[ -f /etc/default/eoip ] && . /etc/default/eoip
+
+if [ -z $EOIP_OPTS ]; then
+	EOIP_OPTS=""
+fi
+
+case "$1" in
+    start)
+	echo -n "Starting EoIP: "
+	if start-stop-daemon --start --quiet --pidfile /var/run/eoip-eoip.cfg \
+	    --exec /usr/bin/eoip -- $EOIP_OPTS; then
+		echo -n "eoip"
+		if [ -n $EOIP_POST_UP ]; then
+		    echo -n '... '
+		    $EOIP_POST_UP
+		    echo 'configured.'
+		else
+		    echo '.'
+		fi
+	else
+		echo "error!"
+		exit 1
+	fi
+	;;
+    stop)
+	echo -n "Stopping EoIP: "
+	if [ -n $EOIP_PRE_DOWN ]; then
+	    $EOIP_PRE_DOWN
+	    echo -n 'deconfigured... '
+	fi
+	if start-stop-daemon --stop --quiet --pidfile /var/run/eoip-eoip.cfg \
+	    --retry 180 --exec /usr/bin/eoip ; then
+		echo "eoip."
+	else
+		echo "error!"
+		exit 1
+	fi
+	;;
+    restart|reload|force-reload)
+	$0 stop
+	sleep 1
+	$0 start
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+	exit 1
+esac
+
+exit 0

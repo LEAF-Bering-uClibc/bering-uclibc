@@ -1,0 +1,8 @@
+# EoIP daemon options
+#EOIP_OPTS=''
+
+# Commands that should be executed after daemon starting
+#EOIP_POST_UP=''
+
+# Commands that should be executed before daemon stopped
+#EOIP_PRE_DOWN=''

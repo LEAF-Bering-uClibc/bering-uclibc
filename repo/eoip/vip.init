@@ -1,0 +1,56 @@
+#! /bin/sh
+# /etc/init.d/vip: start vip daemon.
+RCDLINKS="2,S51 3,S51 4,S51 5,S51 0,K51 1,K51 6,K51"
+
+test -x /usr/bin/vip || exit 1
+
+#maybe in future we'll need additional command line arguments
+[ -f /etc/default/vip ] && . /etc/default/vip
+
+if [ -z $VIP_OPTS ]; then
+	VIP_OPTS=""
+fi
+
+case "$1" in
+    start)
+	echo -n "Starting Virtual IP: "
+	if start-stop-daemon --start --quiet \
+	    --exec /usr/bin/vip -- $VIP_OPTS; then
+		echo -n "vip"
+		if [ -n $VIP_POST_UP ]; then
+		    echo -n '... '
+		    $VIP_POST_UP
+		    echo 'configured.'
+		else
+		    echo '.'
+		fi
+	else
+		echo "error!"
+		exit 1
+	fi
+	;;
+    stop)
+	echo -n "Stopping Virtual IP: "
+	if [ -n $VIP_PRE_DOWN ]; then
+	    $VIP_PRE_DOWN
+	    echo -n 'deconfigured... '
+	fi
+	if start-stop-daemon --stop --quiet \
+	    --retry 180 --exec /usr/bin/vip ; then
+		echo "vip."
+	else
+		echo "error!"
+		exit 1
+	fi
+	;;
+    restart|reload|force-reload)
+	$0 stop
+	sleep 1
+	$0 start
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+	exit 1
+esac
+
+exit 0
