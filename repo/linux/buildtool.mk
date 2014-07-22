@@ -18,8 +18,8 @@ unexport CROSS_COMPILE
 	cat $(KERNEL_PATCH4) | patch -d $(LINUX_DIR) -p1
 #	cat $(KERNEL_PATCH6) | patch -d $(LINUX_DIR) -p1
 	cat $(KERNEL_PATCH_BCMRPI) | patch -d $(LINUX_DIR) -p1
-	bzcat $(WIRELESS_REGDB) | tar -xvf -
-	cp $(WIRELESS_REGDB:.tar.bz2=)/db.txt linux/net/wireless
+	xzcat $(WIRELESS_REGDB) | tar -xvf -
+	cp $(WIRELESS_REGDB:.tar.xz=)/db.txt linux/net/wireless
 	mkdir -p $(BT_TOOLCHAIN_DIR)/usr
 	touch .source
 
@@ -43,13 +43,11 @@ headers: .configured
 	ARCH=$(ARCH) $(MAKE) -C linux$(FIRSTKARCH) headers_install_all INSTALL_HDR_PATH=$(BT_HEADERS_DIR)
 
 clean:
-	-rm .configured
+	-rm -f .configured
 	for i in $(KARCHS); do rm -rf linux-$$i; done
 
-srcclean:
-	for i in $(KARCHS); do rm -rf linux-$$i; done
+srcclean: clean
 	rm -f linux
 	rm -rf $(LINUX_DIR)
-	-rm .configured
-	-rm .source
-
+	rm -rf wireless-regdb-*/
+	rm -f .source
