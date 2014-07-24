@@ -1,10 +1,14 @@
+#############################################
+#
 # makefile for ethtool
-
+#
+# -disable-pretty-dump reduces size to est. 25%
+#############################################
 ETHTOOL_DIR:=$(shell $(BT_TGZ_GETDIRNAME) $(ETHTOOL_SOURCE) 2>/dev/null )
 ETHTOOL_TARGET_DIR:=$(BT_BUILD_DIR)/ethtool
 
 $(ETHTOOL_DIR)/.source:
-	zcat $(ETHTOOL_SOURCE) | tar -xvf -
+	$(BT_SETUP_BUILDDIR) -v $(ETHTOOL_SOURCE) 
 	touch $(ETHTOOL_DIR)/.source
 
 source: $(ETHTOOL_DIR)/.source
@@ -13,6 +17,7 @@ $(ETHTOOL_DIR)/.configured: $(ETHTOOL_DIR)/.source
 	(cd $(ETHTOOL_DIR) ; ./configure \
 	--build=$(GNU_BUILD_NAME) \
 	--host=$(GNU_TARGET_NAME) \
+	--disable-pretty-dump \
 	--prefix=/usr)
 	touch $(ETHTOOL_DIR)/.configured
 
