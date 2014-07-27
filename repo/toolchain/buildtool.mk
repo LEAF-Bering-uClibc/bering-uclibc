@@ -30,10 +30,6 @@ $(UCLIBC_DIR)/.source:
 	$(BT_SETUP_BUILDDIR) $(UCLIBC_SOURCE)
 	# create config.$(GNU_TARGET_NAME)_headers with no CROSS_COMPILER_PREFIX
 	perl -p -e 's,^CROSS_COMPILER_PREFIX=.*$$,CROSS_COMPILER_PREFIX="",' config.$(GNU_TARGET_NAME) > config.$(GNU_TARGET_NAME)_headers
-#	cat $(UC_PATCH1) | patch -p1 -d $(UCLIBC_DIR)
-#	cat $(UC_PATCH2) | patch -p1 -d $(UCLIBC_DIR)
-#	cat $(UC_PATCH3) | patch -p1 -d $(UCLIBC_DIR)
-#	cat $(UC_PATCH4) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH5) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH6) | patch -p1 -d $(UCLIBC_DIR)
 	cat $(UC_PATCH7) | patch -p1 -d $(UCLIBC_DIR)
@@ -61,7 +57,7 @@ $(DEPMOD_DIR)/.source:
 
 $(BT_TOOLCHAIN_DIR)/.linux_headers:
 	mkdir -p $(BT_TOOLCHAIN_DIR)/usr/include
-	tar xjf $(LINUX_HEADERS) -C $(BT_TOOLCHAIN_DIR)/usr/include/
+	tar xJf $(LINUX_HEADERS) -C $(BT_TOOLCHAIN_DIR)/usr/include/
 	ln -sf asm-$(ARCH_INC) $(BT_TOOLCHAIN_DIR)/usr/include/asm
 	touch $@
 
