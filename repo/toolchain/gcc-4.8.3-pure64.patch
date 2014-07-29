@@ -65,33 +65,17 @@ diff -ur gcc-4.8.2/gcc/config/mips/t-linux64 gcc-4.8.2/gcc/config.new/mips/t-lin
 +	../lib64$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(MIPS_SOFT)) \
 +	../lib32$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)) \
 +	../lib$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))
-diff -ur gcc-4.8.2/gcc/config/rs6000/linux64.h gcc-4.8.2/gcc/config.new/rs6000/linux64.h
---- gcc-4.8.2/gcc/config/rs6000/linux64.h	2013-06-19 04:18:38.000000000 +0300
-+++ gcc-4.8.2/gcc/config.new/rs6000/linux64.h	2014-01-17 01:17:52.000000000 +0200
-@@ -350,9 +350,9 @@
- #undef	LINK_OS_DEFAULT_SPEC
- #define LINK_OS_DEFAULT_SPEC "%(link_os_linux)"
- 
--#define GLIBC_DYNAMIC_LINKER32 "/lib/ld.so.1"
--#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld64.so.1"
--#define UCLIBC_DYNAMIC_LINKER32 "/lib/ld-uClibc.so.0"
-+#define GLIBC_DYNAMIC_LINKER32 "/lib32/ld.so.1"
-+#define GLIBC_DYNAMIC_LINKER64 "/lib/ld64.so.1"
-+#define UCLIBC_DYNAMIC_LINKER32 "/lib32/ld-uClibc.so.0"
- #define UCLIBC_DYNAMIC_LINKER64 "/lib/ld64-uClibc.so.0"
- #if DEFAULT_LIBC == LIBC_UCLIBC
- #define CHOOSE_DYNAMIC_LINKER(G, U) "%{mglibc:" G ";:" U "}"
 diff -ur gcc-4.8.2/gcc/config/rs6000/t-linux64 gcc-4.8.2/gcc/config.new/rs6000/t-linux64
 --- gcc-4.8.2/gcc/config/rs6000/t-linux64	2013-01-10 22:38:27.000000000 +0200
 +++ gcc-4.8.2/gcc/config.new/rs6000/t-linux64	2014-01-17 01:21:18.514975574 +0200
 @@ -28,5 +28,5 @@
- MULTILIB_OPTIONS        = m64/m32
- MULTILIB_DIRNAMES       = 64 32
- MULTILIB_EXTRA_OPTS     = fPIC
--MULTILIB_OSDIRNAMES	= ../lib64$(call if_multiarch,:powerpc64-linux-gnu)
--MULTILIB_OSDIRNAMES    += $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:powerpc-linux-gnu)
-+MULTILIB_OSDIRNAMES	= ../lib$(call if_multiarch,:powerpc64-linux-gnu)
-+MULTILIB_OSDIRNAMES    += ../lib32$(call if_multiarch,:powerpc-linux-gnu)
+ MULTILIB_OPTIONS    := m64/m32
+ MULTILIB_DIRNAMES   := 64 32
+ MULTILIB_EXTRA_OPTS := 
+-MULTILIB_OSDIRNAMES := m64=../lib64$(call if_multiarch,:powerpc64-linux-gnu)
++MULTILIB_OSDIRNAMES := m64=../lib$(call if_multiarch,:powerpc64-linux-gnu)
+ MULTILIB_OSDIRNAMES += m32=$(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:powerpc-linux-gnu)
+
 diff -ur gcc-4.8.2/gcc/config/s390/linux.h gcc-4.8.2/gcc/config.new/s390/linux.h
 --- gcc-4.8.2/gcc/config/s390/linux.h	2013-01-10 22:38:27.000000000 +0200
 +++ gcc-4.8.2/gcc/config.new/s390/linux.h	2014-01-17 01:17:52.000000000 +0200
