@@ -1,0 +1,25 @@
+diff -u ipt-netflow-1.8.orig/ipt_NETFLOW.c ipt-netflow-1.8/ipt_NETFLOW.c
+--- ipt-netflow-1.8.orig/ipt_NETFLOW.c	2014-07-28 23:25:10.000000000 +0300
++++ ipt-netflow-1.8/ipt_NETFLOW.c	2014-07-28 23:58:41.718774555 +0300
+@@ -1405,13 +1405,19 @@
+ 	struct proc_dir_entry *proc_stat;
+ #endif
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,11,0)
++#define NUM_PHYSPAGES num_physpages
++#else
++#define NUM_PHYSPAGES get_num_physpages()
++#endif
++
+ 	get_random_bytes(&ipt_netflow_hash_rnd, 4);
+ 
+ 	/* determine hash size (idea from nf_conntrack_core.c) */
+ 	if (!hashsize) {
+-		hashsize = (((num_physpages << PAGE_SHIFT) / 16384)
++		hashsize = (((NUM_PHYSPAGES << PAGE_SHIFT) / 16384)
+ 					 / sizeof(struct hlist_head));
+-		if (num_physpages > (1024 * 1024 * 1024 / PAGE_SIZE))
++		if (NUM_PHYSPAGES > (1024 * 1024 * 1024 / PAGE_SIZE))
+ 			hashsize = 8192;
+ 	}
+ 	if (hashsize < 16)
