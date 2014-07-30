@@ -152,3 +152,56 @@ _buildimage () {
 }
 
 complete -F _buildimage buildimage.pl
+
+#
+# annex
+#
+_annex () {
+	local cur prev split=false
+
+    COMPREPLY=()
+    cur=`_get_cword`
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    _split_longopt && split=true
+
+    case "$prev" in
+        status)
+            return
+            ;;
+        list)
+            __buccomp "-r -s -t"
+            return
+            ;;
+        describe|dumpenv|build|source|pkglist|remove)
+            local prog=${COMP_WORDS[0]}
+            __buccomp "$(LC_ALL=C $prog pkglist | sed 's/,/ /g')"
+            return
+            ;;
+        buildclean)
+            local prog=${COMP_WORDS[0]}
+            __buccomp "$(LC_ALL=C $prog list built)"
+            return
+            ;;
+        srcclean)
+            local prog=${COMP_WORDS[0]}
+            __buccomp "$(LC_ALL=C $prog list sourced)"
+            return
+            ;;
+        -t)
+            # Need to find a way to list available toolchain
+            return
+            ;;
+    esac
+
+    $split && return 0
+
+    if [[ "$cur" == -* ]]; then
+        __buccomp "-v -f -O -D -d -t"
+    else
+        # Default commands
+        __buccomp "add rm get reset commit push status list"
+    fi
+}
+
+complete -F _annex annex
