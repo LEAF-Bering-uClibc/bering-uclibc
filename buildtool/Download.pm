@@ -5,6 +5,7 @@ package buildtool::Download;
 
 use buildtool::DownloadTypes::ViewCVS;
 use buildtool::DownloadTypes::Gitweb;
+use buildtool::DownloadTypes::GitAnnex;
 use buildtool::DownloadTypes::Http;
 use buildtool::DownloadTypes::Https;
 use buildtool::DownloadTypes::Ftp;
@@ -114,14 +115,15 @@ sub download () {
 
     $spath = $self->strip_slashes($server->{$dlserver}{'serverpath'});
 
-    # first add to conf what we need all:_
-    my %allconf = ('config' => \%myconf,
-		   'dlroot' => $dlroot,
-		   'serverpath' => $spath,
-		   'filename' => $file,
-		   'dir' => $dir,
-		   'srcfile' => $srcfile
-		   );
+    # first add to conf what we need all:
+    my %allconf = (
+        'config'     => \%myconf,
+        'dlroot'     => $dlroot,
+        'serverpath' => $spath,
+        'filename'   => $filename,
+        'dir'        => $dir,
+        'srcfile'    => $srcfile
+    );
 
 	my $dlpath;
     if (exists $files{$file}{'dlpath'} and $files{$file}{'dlpath'}) {
@@ -177,6 +179,14 @@ sub download () {
       my $object = buildtool::DownloadTypes::FileSymlink->new(%allconf);
       # check if download was successful, if not, die with an error message:
       $self->die("download failed", $object->getErrorMsg() . " \n") if  ($object->download()== 0);
+
+    } elsif ($dltype eq "gitannex") {
+
+      $allconf{'basepath'} = $self->strip_slashes($server->{$dlserver}{'basepath'});
+
+      my $object = buildtool::DownloadTypes::GitAnnex->new(%allconf);
+      # check if download was successful, if not, die with an error message:
+      $self->die("download failed", $object->getErrorMsg()) if  ($object->download() == 0);
 
     } elsif ($dltype eq "viewcvs") {
       my $revision = $files{$file}{'revision'};
