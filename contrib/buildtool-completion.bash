@@ -157,39 +157,32 @@ complete -F _buildimage buildimage.pl
 # annex
 #
 _annex () {
-	local cur prev split=false
+    local cur prev split=false cmd="${COMP_WORDS[1]}"
 
     COMPREPLY=()
-    cur=`_get_cword`
+    cur=$(_get_cword)
     prev=${COMP_WORDS[COMP_CWORD-1]}
 
     _split_longopt && split=true
 
-    case "$prev" in
-        status)
+    case "$cmd" in
+        add|delete|rm|reset)
+            _filedir
             return
             ;;
-        list)
-            __buccomp "-r -s -t"
+        commit|cleanup|push|status|st)
             return
             ;;
-        describe|dumpenv|build|source|pkglist|remove)
-            local prog=${COMP_WORDS[0]}
-            __buccomp "$(LC_ALL=C $prog pkglist | sed 's/,/ /g')"
+        get|checkout|co)
+            if [[ "$cur" == -* ]]; then
+                __buccomp "--all"
+            else
+                _filedir
+            fi
             return
             ;;
-        buildclean)
-            local prog=${COMP_WORDS[0]}
-            __buccomp "$(LC_ALL=C $prog list built)"
-            return
-            ;;
-        srcclean)
-            local prog=${COMP_WORDS[0]}
-            __buccomp "$(LC_ALL=C $prog list sourced)"
-            return
-            ;;
-        -t)
-            # Need to find a way to list available toolchain
+        list|ls)
+            __buccomp "--remote --sort-by-size --sort-by-time --reverse-sorting"
             return
             ;;
     esac
@@ -197,7 +190,7 @@ _annex () {
     $split && return 0
 
     if [[ "$cur" == -* ]]; then
-        __buccomp "-v -f -O -D -d -t"
+        __buccomp "--help --version"
     else
         # Default commands
         __buccomp "add rm get reset commit push status list"
