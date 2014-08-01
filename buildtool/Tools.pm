@@ -35,9 +35,8 @@ my $vars_regex = qr{
                       \$        # dollar sign
                       (\()?     # $1: optional opening parenthesis
                       (\w+)     # $2: capturing variable name
-                      (
-                          ?(1)  # $3: if there's the opening parenthesis...
-                          \)    #     ... match closing parenthesis
+                      (?(1)     # $3: if there's the opening parenthesis...
+                        \)      #     ... match closing parenthesis
                       )
               }xo;
 
@@ -70,9 +69,8 @@ my $conditional_include_regex = qr{
                                                 # by zero or more space
                                      (.+)       # $2: capture filename
                                    \s*          # follow by zero or more space
-                                   (
-                                       ?(1)     # $3: if there's the opening <
-                                       >        #     ... match the closing >
+                                   (?(1)        # $3: if there's the opening <
+                                     >          #     ... match the closing >
                                    )
                               }xio;
 
