@@ -439,7 +439,7 @@ annex_push() {
 annex_cleanup() {
     local tmp1=$(mktemp)
     git for-each-ref --format='%(objectname) %(objecttype) %(refname)' | \
-        sed -nr "s|^([A-Fa-f0-9]{40})\s+blob\s+$REFS_ANNEX/.*$|\1|p" | sort -u >"$tmp1"
+        sed -nr "s|^([A-Fa-f0-9]{40})\s+blob\s+$REFS_ANNEX/[A-Fa-f0-9]{40}$|\1|p" | sort -u >"$tmp1"
     local tmp2=$(mktemp)
     [[ -f "${ANNEX}" ]] && sed -nr "s|^([A-Fa-f0-9]{40})[|].*|\1|p" "${ANNEX}" | sort -u >"$tmp2"
 
@@ -447,6 +447,17 @@ annex_cleanup() {
     while read hash; do
         git update-ref -d "$REFS_ANNEX/$hash"
     done < <(comm -2 -3 "$tmp1" "$tmp2")
+
+    [[ -f "${ANNEX}" ]] && sed -nr "s|^([A-Fa-f0-9]{40}[|][^|]+[|]).*|\1|p" "${ANNEX}" >"$tmp1"
+    git show $REFS_ANNEX/all_files 2>/dev/null | sed -nr "s|^([A-Fa-f0-9]{40}[|][^|]+[|]).*|\1|p" >"$tmp2"
+    local file
+    while read file; do
+	local full="$(_get_abspath_from_rootdir "$file")"
+	[[ ! -f "$full" ]] && continue
+	local local_hash=$(git hash-object "$full")
+	[[ $(egrep -c "^$local_hash[|]$file[|]" "$tmp1") -ne 0 ]] && continue
+	[[ $(egrep -c "^$local_hash[|]$file[|]" "$tmp2") -ne 0 ]] && rm -f "$full"
+    done < <( cut -d'|' -f2 "$tmp1" "$tmp2" | sort -u)
 
     rm -f "$tmp1" "$tmp2"
 }

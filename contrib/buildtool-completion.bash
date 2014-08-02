@@ -193,7 +193,7 @@ _annex () {
         __buccomp "--help --version"
     else
         # Default commands
-        __buccomp "add rm get reset commit push status list"
+        __buccomp "add rm get cleanup reset commit push status list"
     fi
 }
 
