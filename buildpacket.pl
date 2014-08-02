@@ -838,8 +838,8 @@ sub generateLrpkgFiles($$$) {
 	  map { File::Spec->catfile( $destDir, $_ ) }
 	  grep( /\.(help|version|modules|local|license|deplrp)$/ , readdir($dh) );
 	closedir $dh;
-	chown 0, 0, @lrpkgFiles or die $!;
 	chmod 0664, @lrpkgFiles or die $!;
+	chown 0, 0, @lrpkgFiles or die $!;
 }
 
 sub applyOwnershipsAndPermissions($$;$) {
