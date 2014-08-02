@@ -9,6 +9,7 @@
 #
 
 REMOTE_ANNEX="leaf-storage"
+REMOTE_ANNEX_PATH='git.code.sf.net/p/leaf/storage'
 REFS_ANNEX="refs/annex"
 
 HEADER_ANNEX=$(cat <<EOF
@@ -253,11 +254,11 @@ annex_checkout() {
 
     local files_to_get=()
     if [[ "$OPT_A" -eq 1 ]]; then
-	# Get all files
-	if [[ -f "$ANNEX" ]]; then
-	   while read file; do
-	       files_to_get+=( "$(_get_abspath_from_rootdir "$file")" )
-	   done < <(egrep -v '^#' "$ANNEX" | cut -d '|' -f2)
+    # Get all files
+    if [[ -f "$ANNEX" ]]; then
+       while read file; do
+           files_to_get+=( "$(_get_abspath_from_rootdir "$file")" )
+       done < <(egrep -v '^#' "$ANNEX" | cut -d '|' -f2)
        fi
     else
        files_to_get=("$@")
@@ -281,7 +282,7 @@ annex_checkout() {
             _do_checkout $hash "$file_path"
         else
             echo "Can't checkout '$file': file not found !" >&2
-			exit 33
+            exit 33
         fi
     done
 }
@@ -427,6 +428,13 @@ annex_status() {
 
 annex_push() {
     local tmp1=$(mktemp)
+    if [[ "$REMOTE_ANNEX_URL" =~ git://* ]]; then
+        echo "Error: you must use a read/write URL to push on remote repository" >&2
+        echo "Actually the remote URL is: $REMOTE_ANNEX_URL" >&2
+        echo "Change it with command like:" >&2
+        echo "git config remote.$REMOTE_ANNEX.url ssh://USERNAME@$REMOTE_ANNEX_PATH" >&2
+        exit 1
+    fi
     git fetch -q "$REMOTE_ANNEX" $REFS_ANNEX/all_files:$REFS_ANNEX/all_files 1>&2
     if [[ $? -ne 0 ]]; then
         die "Can't get remote files index !"
@@ -600,7 +608,7 @@ ANNEX_INDEX="$ANNEX_INDEX_DIR/${self}.idx"
 
 REMOTE_ANNEX_URL="$(git config --get remote.$REMOTE_ANNEX.url)"
 if [[ -z "$REMOTE_ANNEX_URL" ]]; then
-    git remote add "$REMOTE_ANNEX" 'git://git.code.sf.net/p/leaf/annex'
+    git remote add "$REMOTE_ANNEX" "git://$REMOTE_ANNEX_PATH"
     git config --unset remote.$REMOTE_ANNEX.fetch
     REMOTE_ANNEX_URL="$(git config --get remote.$REMOTE_ANNEX.url)" || exit 1
 fi
