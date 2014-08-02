@@ -69,11 +69,16 @@ _get_relative_annex_path_from_rootdir() {
     echo "${full_path/$ROOT_DIR\//}"
 }
 
+_escape_ereg() {
+    sed 's/[]\.|$(){}?+*^]/\\&/g' <<< "$@"
+}
+
 _update_annex_file() {
     local file="${1:?missing argument}"
     local hash=${2:-}
     if [[ -f "$ANNEX" ]]; then
-        egrep -v "^#|[A-Fa-f0-9]{40}[|]${file}[|]" "$ANNEX" > "$ANNEX"~
+        local ereg="$(_escape_ereg "$file")"
+        egrep -v "^#|[A-Fa-f0-9]{40}[|]${ereg}[|]" "$ANNEX" > "$ANNEX"~
     fi
     if [[ -n "$hash" ]]; then
         local size=$(git cat-file -s $hash) || exit $?
@@ -100,20 +105,29 @@ _update_gitignore_file() {
 
 _get_hash_from_annex() {
     search_file="${1:?missing argument}"
-    local relfile=$(_get_relative_annex_path_from_rootdir "$search_file")
-    [[ -f "${ANNEX}" ]] && sed -nr "s|([A-Fa-f0-9]{40})[|]$relfile[|].*|\1|p" "${ANNEX}"
+    if [[ -f "${ANNEX}" ]]; then
+        local relfile=$(_get_relative_annex_path_from_rootdir "$search_file")
+        local ereg="$(_escape_ereg "$relfile")"
+        sed -nr "s|([A-Fa-f0-9]{40})[|]$ereg[|].*|\1|p" "${ANNEX}"
+    fi
 }
 
 _get_hash_from_annex_index() {
     search_file="${1:?missing argument}"
-    local relfile=$(_get_relative_annex_path_from_rootdir "$search_file")
-    [[ -f "${ANNEX_INDEX}" ]] && sed -nr "s|^[AD][|]$relfile[|]([A-Fa-f0-9]{40}).*|\1|p" "${ANNEX_INDEX}"
+    if [[ -f "${ANNEX_INDEX}" ]]; then
+        local relfile=$(_get_relative_annex_path_from_rootdir "$search_file")
+        local ereg="$(_escape_ereg "$relfile")"
+        sed -nr "s|^[AD][|]$ereg[|]([A-Fa-f0-9]{40}).*|\1|p" "${ANNEX_INDEX}"
+    fi
 }
 
 _get_action_from_annex_index() {
     search_file=${1:?missing argument}
-    local relfile=$(_get_relative_annex_path_from_rootdir "$search_file")
-    [[ -f "${ANNEX_INDEX}" ]] && sed -nr "s|^([AD])[|]$relfile[|].*|\1|p" "${ANNEX_INDEX}"
+    if [[ -f "${ANNEX_INDEX}" ]]; then
+        local relfile=$(_get_relative_annex_path_from_rootdir "$search_file")
+        local ereg="$(_escape_ereg "$relfile")"
+        sed -nr "s|^([AD])[|]$ereg[|].*|\1|p" "${ANNEX_INDEX}"
+    fi
 }
 
 annex_add() {
@@ -133,7 +147,8 @@ annex_add() {
         if [[ "$old_hash" != "$hash" ]]; then
             local relfile=$(_get_relative_annex_path_from_rootdir "$full")
             if [[ -f "$ANNEX_INDEX" ]]; then
-                egrep -v "^[AD][|]${file}[|]" "$ANNEX_INDEX" > "$ANNEX_INDEX"~
+                local ereg="$(_escape_ereg "$file")"
+                egrep -v "^[AD][|]${ereg}[|]" "$ANNEX_INDEX" > "$ANNEX_INDEX"~
             fi
             echo "A|$relfile|$hash" >> "$ANNEX_INDEX"~
             mv "$ANNEX_INDEX"~ "$ANNEX_INDEX"
@@ -153,7 +168,8 @@ annex_remove() {
         fi
         local relfile=$(_get_relative_annex_path_from_rootdir "$full")
         if [[ -f "$ANNEX_INDEX" ]]; then
-            egrep -v "^[AD][|]${relfile}[|]" "$ANNEX_INDEX" > "$ANNEX_INDEX"~
+            local ereg="$(_escape_ereg "$relfile")"
+            egrep -v "^[AD][|]${ereg}[|]" "$ANNEX_INDEX" > "$ANNEX_INDEX"~
         fi
         echo "D|$relfile|$hash" >> "$ANNEX_INDEX"~
         mv "$ANNEX_INDEX"~ "$ANNEX_INDEX"
@@ -226,7 +242,9 @@ _do_checkout() {
         fi
     fi
     git update-ref "$REFS_ANNEX/$hash" $hash
-    [[ "$local_hash" != "$hash" ]] && git show $hash -- > "$full" || exit 1
+    if [[ "$local_hash" != "$hash" ]]; then
+        git show $hash -- > "$full" || exit 1
+    fi
 }
 
 annex_checkout() {
@@ -273,7 +291,8 @@ annex_reset() {
     for file in "$@"; do
         local full=$(_get_abspath_from_pwd "$file")
         local relfile=$(_get_relative_annex_path_from_rootdir "$full")
-        sed -i -r "\|^[AD][|]$relfile[|].*|d" "${ANNEX_INDEX}"
+        local ereg="$(_escape_ereg "$relfile")"
+        sed -i -r "\|^[AD][|]$ereg[|].*|d" "${ANNEX_INDEX}"
     done
     _update_gitignore_file
 }
@@ -452,11 +471,12 @@ annex_cleanup() {
     git show $REFS_ANNEX/all_files 2>/dev/null | sed -nr "s|^([A-Fa-f0-9]{40}[|][^|]+[|]).*|\1|p" >"$tmp2"
     local file
     while read file; do
-	local full="$(_get_abspath_from_rootdir "$file")"
-	[[ ! -f "$full" ]] && continue
-	local local_hash=$(git hash-object "$full")
-	[[ $(egrep -c "^$local_hash[|]$file[|]" "$tmp1") -ne 0 ]] && continue
-	[[ $(egrep -c "^$local_hash[|]$file[|]" "$tmp2") -ne 0 ]] && rm -f "$full"
+        local full="$(_get_abspath_from_rootdir "$file")"
+        [[ ! -f "$full" ]] && continue
+        local local_hash=$(git hash-object "$full")
+        local ereg="$(_escape_ereg "$file")"
+        [[ $(egrep -c "^$local_hash[|]$ereg[|]" "$tmp1") -ne 0 ]] && continue
+        [[ $(egrep -c "^$local_hash[|]$ereg[|]" "$tmp2") -ne 0 ]] && rm -f "$full"
     done < <( cut -d'|' -f2 "$tmp1" "$tmp2" | sort -u)
 
     rm -f "$tmp1" "$tmp2"
