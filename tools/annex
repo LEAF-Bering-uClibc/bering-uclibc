@@ -239,6 +239,8 @@ _do_checkout() {
     else
         if [[ "$hash_exist" -eq 0 ]]; then
             # Try to download from remote
+            local relfile=$(_get_relative_annex_path_from_rootdir "$file")
+            printf "Downloading %s from %s...\n" "$(say_color cyan $relfile)" "$(say_color green $REMOTE_ANNEX)"
             git fetch -q "$REMOTE_ANNEX" $REFS_ANNEX/$hash:$REFS_ANNEX/$hash || exit 1
         fi
     fi
