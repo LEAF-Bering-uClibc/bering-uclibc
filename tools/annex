@@ -441,28 +441,37 @@ annex_push() {
     if [[ $? -ne 0 ]]; then
         die "Can't get remote files index !"
     fi
-    git show $REFS_ANNEX/all_files -- | egrep -v '^#' | sort -u > "$tmp1"
+    git show $REFS_ANNEX/all_files -- | egrep -v '^#' > "$tmp1"
+    cut -d'|' -f1-2 "$tmp1" | sort -u > "$tmp1".mini
 
     local tmp2=$(mktemp)
-    cat "$ANNEX" | egrep -v '^#' | sort -u > "$tmp2"
+    cat "$ANNEX" | egrep -v '^#' > "$tmp2"
+    cut -d'|' -f1-2 "$tmp2" | sort -u > "$tmp2".mini
+
+    local count=0
 
     # push new hashs
-    while IFS='|' read hash file size; do
+    while IFS='|' read hash file; do
         # check if the blob exists locally
         git cat-file -e $hash
         if [[ $? -eq 0 ]]; then
             printf "Pushing %s to %s...\n" "$(say_color cyan $file)" "$(say_color green $REMOTE_ANNEX)"
             git push -q "$REMOTE_ANNEX" $hash:$REFS_ANNEX/$hash || exit $?
+            grep "$hash|$file|" "$ANNEX" >> "$tmp1"
+            (( count++ ))
         fi
-    done < <(comm -1 -3 "$tmp1" "$tmp2")
-    # concatenate the local and remote files
-    local tmp3=$(mktemp)
-    cat "$tmp1" "$tmp2" | egrep -v '^#' | sort -u -t'|' -k2 > "$tmp3"
+    done < <(comm -1 -3 "$tmp1".mini "$tmp2".mini)
+    rm -f "$tmp1".mini "$tmp2".mini
+
+    sort -u -t'|' -k2 "$tmp1" > "$tmp2"
+    local hash=$(git hash-object -t blob -w "$tmp2")
     rm -f "$tmp1" "$tmp2"
-    local hash=$(git hash-object -t blob -w "$tmp3")
-    rm -f "$tmp3"
-    git push --force -q "$REMOTE_ANNEX" $hash:$REFS_ANNEX/all_files 2>/dev/null || exit $?
-    git update-ref "$REFS_ANNEX/all_files" $hash || exit $?
+
+    if [[ $count -gt 0 ]]; then
+        # Push the new all_files file
+        git push --force -q "$REMOTE_ANNEX" $hash:$REFS_ANNEX/all_files 2>/dev/null || exit $?
+        git update-ref "$REFS_ANNEX/all_files" $hash || exit $?
+    fi
 }
 
 annex_cleanup() {
