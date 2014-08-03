@@ -84,6 +84,9 @@ sub download () {
     confess "empty entry for server in file section for $file"
       if ($dlserver eq "");
 
+    # file replace
+    my $filename = $file;
+
     #check for server:
     if (ref($server->{$dlserver}) ne "HASH") {
       $self->die("maybe config error:","unknown server $dlserver");
