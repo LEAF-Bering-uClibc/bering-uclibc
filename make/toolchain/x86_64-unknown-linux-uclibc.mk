@@ -5,7 +5,7 @@
 ifeq ($(GNU_TARGET_NAME),x86_64-unknown-linux-uclibc)
 # Kernel versions
 export BT_KERNEL_BRANCH:=3.10
-export BT_KERNEL_PATCH:=49
+export BT_KERNEL_PATCH:=51
 # Primary kernel architecture
 export ARCH:=x86_64
 # Arch for includes symlink
