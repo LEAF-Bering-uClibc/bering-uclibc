@@ -32,6 +32,7 @@ $(IPT_NF_DIR)/.source:
 	zcat $(IPT_NF_SOURCE) |  tar -xvf -
 	perl -i -p -e 's/gcc/\$$(CC)/' $(IPT_NF_DIR)/Makefile.in
 	cat $(IPT_NF_PATCH1) | patch -l -d $(IPT_NF_DIR) -p1
+	cat $(IPT_NF_PATCH2) | patch -l -d $(IPT_NF_DIR) -p1
 	touch $(IPT_NF_DIR)/.source
 
 $(IPTABLES_DIR)/Makefile: $(IPTABLES_DIR)/.source
