@@ -21,6 +21,8 @@ unexport CROSS_COMPILE
 	xzcat $(WIRELESS_REGDB) | tar -xvf -
 	cp $(WIRELESS_REGDB:.tar.xz=)/db.txt linux/net/wireless
 	mkdir -p $(BT_TOOLCHAIN_DIR)/usr
+# workaround -- patch 2.7.1 needs --follow-symlinks, patch 2.61 will not work
+	cp -L $(LINUX_CONFIG) $(LINUX_CONFIG).n; rm $(LINUX_CONFIG); mv $(LINUX_CONFIG).n $(LINUX_CONFIG)
 	touch .source
 
 #	ARCH=$(ARCH) $(MAKE) -C linux-$$i include/linux/version.h headers_install && \
