@@ -1,9 +1,9 @@
-*** Bering-3.10.25.config	2014-01-02 13:46:59.167431239 +0100
---- Bering-3.10.25.config-i686	2014-01-02 13:47:17.631432080 +0100
+*** Bering-3.10.53.config	2014-08-15 15:08:21.160350312 +0200
+--- Bering-3.10.53.config-i686	2014-08-15 15:08:56.488349181 +0200
 ***************
 *** 2,8 ****
   # Automatically generated file; DO NOT EDIT.
-  # Linux/i386 3.10.25 Kernel Configuration
+  # Linux/i386 3.10.53 Kernel Configuration
   #
 ! # CONFIG_64BIT is not set
   CONFIG_X86_32=y
@@ -11,7 +11,7 @@
   CONFIG_INSTRUCTION_DECODER=y
 --- 2,8 ----
   # Automatically generated file; DO NOT EDIT.
-  # Linux/i386 3.10.25 Kernel Configuration
+  # Linux/i386 3.10.53 Kernel Configuration
   #
 ! # CONFIG_64BIT is not set 
   CONFIG_X86_32=y
