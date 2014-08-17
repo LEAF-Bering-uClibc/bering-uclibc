@@ -171,8 +171,7 @@ abspath() {
                 fi
                 ;;
             *)
-               local len=${#outp[@]}
-               outp[$len]="$i"
+               outp+=("$i")
                ;;
         esac
     done
