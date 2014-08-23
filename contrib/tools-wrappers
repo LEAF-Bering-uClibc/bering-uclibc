@@ -2,14 +2,14 @@
 #
 # Tools Wrappers for Leaf Bering-uClibc
 #
-# Copyright (C) 2012 Yves Blusseau
+# Copyright (C) 2012-2014 Yves Blusseau
 
 function buildtool {
     local root_dir=$(git rev-parse --show-toplevel 2>/dev/null)
     if [[ -n "$root_dir" ]]; then
         local buildtool_script="$root_dir/buildtool.pl"
         if [[ -x "$buildtool_script" ]];then
-            "$buildtool_script" $@
+            "$buildtool_script" "$@"
             return $?
         fi
     fi
@@ -23,7 +23,7 @@ function buildpacket {
         local buildpacket_script="$root_dir/buildpacket.pl"
         if [[ -x "$buildpacket_script" ]];then
             if [[ "${#@}" -gt 0 ]]; then
-                $COME_ROOT "$buildpacket_script" $@
+                $COME_ROOT "$buildpacket_script" "$@"
             else
                 "$buildpacket_script"
             fi
@@ -40,7 +40,7 @@ function buildimage {
         local buildimage_script="$root_dir/buildimage.pl"
         if [[ -x "$buildimage_script" ]];then
             if [[ "${#@}" -gt 0 ]]; then
-                $COME_ROOT "$buildimage_script" $@
+                $COME_ROOT "$buildimage_script" "$@"
             else
                 "$buildimage_script"
             fi
@@ -48,6 +48,18 @@ function buildimage {
         fi
     fi
     echo "No buildimage script in this worktree !" >&2
+}
+
+function annex {
+    local root_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -n "$root_dir" ]]; then
+        local annex_script="$root_dir/tools/annex"
+        if [[ -x "$annex_script" ]];then
+            "$annex_script" "$@"
+            return $?
+        fi
+    fi
+    echo "No tools/annex script in this worktree !" >&2
 }
 
 function _tools_wrappers_add_completion {

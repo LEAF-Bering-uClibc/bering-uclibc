@@ -152,3 +152,49 @@ _buildimage () {
 }
 
 complete -F _buildimage buildimage.pl
+
+#
+# annex
+#
+_annex () {
+    local cur prev split=false cmd="${COMP_WORDS[1]}"
+
+    COMPREPLY=()
+    cur=$(_get_cword)
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    _split_longopt && split=true
+
+    case "$cmd" in
+        add|delete|rm|reset)
+            _filedir
+            return
+            ;;
+        commit|cleanup|push|status|st)
+            return
+            ;;
+        get|checkout|co)
+            if [[ "$cur" == -* ]]; then
+                __buccomp "--all"
+            else
+                _filedir
+            fi
+            return
+            ;;
+        list|ls)
+            __buccomp "--remote --sort-by-size --sort-by-time --reverse-sorting"
+            return
+            ;;
+    esac
+
+    $split && return 0
+
+    if [[ "$cur" == -* ]]; then
+        __buccomp "--help --version"
+    else
+        # Default commands
+        __buccomp "add rm get cleanup reset commit push status list"
+    fi
+}
+
+complete -F _annex annex
